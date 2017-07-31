@@ -13,13 +13,13 @@ position: hidden
 ## Introduction
 
 Nobody will dispute the importance of availability in today's service provider networks.  What is less obvious is how you achieve it. A network is a complex, dynamic system that must continually adapt to changing conditions. Some changes are normal, necessary and planned (e.g. software and hardware upgrades, configuration changes), while others are unplanned and unpredictable (e.g. software or hardware faults, human error).  This whitepaper discusses different approaches to availability in both cases and lays out current best practices which can be distilled into a few simple themes:
-•	Solve for the Network First
-•	Reduce Complexity
-•	Automate Operations
+- Solve for the Network First
+- Reduce Complexity
+- Automate Operations
 
 ## Defining Availability
 
-Before diving into the mechanics of availability, it’s worth considering what a highly available network means to you.  Tolerance for failure is driven by your service SLAs.  Not every service requires the same kind of availability as high frequency trading or systems supporting hospitals.  So take some time to understand the availability requirements for your services across your network.  Many people assume that higher availability is always better.  This may result in over-engineering the network and introducing unneeded complexity and cost.
+Before diving into the mechanics of availability, it’s worth considering what a highly available network means _to you_.  Tolerance for failure is driven by your service SLAs.  Not every service requires the same kind of availability as high frequency trading or systems supporting hospitals.  So take some time to understand the availability requirements for your services across your network.  Many people assume that higher availability is always better.  This may result in over-engineering the network and introducing unneeded complexity and cost.
 
 ## Approaches to Availability
 
@@ -33,7 +33,7 @@ On the protocol side, availability is improved by reducing both the Mean Time To
 
 Reducing MTTR involves multiple approaches, starting with optimizing protocol convergence after the failure has been detected.  Incremental SPF (iSPF) has long been used in IGPs to reduce the time it takes to recompute the best path.  Convergence can also be improved by installing a precomputed backup path in the routing table using BGP Protocol Independent Convergence (PIC) and Loop Free Alternative Fast ReRoute (LFA FRR).
 
-MPLS Traffic Engineering (TE) can also help reduce MTTR by giving you the ability to use links and nodes that are not necessarily in the shortest path.  By increasing the pool of available resources, TE helps ensure that the loss of one link or node results in the loss of a small amount of total capacity.  When links or nodes fail, MPLS TE Fast Reroute (MPLS TE FRR) can locally repair LSPs while the headend re-establish the end-to-end LSP with an impressive 50 millisecond failover time. Still, it’s also worth remembering that FRR might be overkill for some services: not all SLAs actually require 50 millisecond failover.  
+MPLS Traffic Engineering (TE) can also help reduce MTTR by giving you the ability to use links and nodes that are not necessarily in the shortest path.  By increasing the pool of available resources, TE helps ensure that the loss of one link or node results in the loss of only a small amount of total capacity.  When links or nodes fail, MPLS TE Fast Reroute (MPLS TE FRR) can locally repair LSPs while the headend re-establish the end-to-end LSP with an impressive 50 millisecond failover time. Still, it’s also worth remembering that FRR might be overkill for some services: not all SLAs actually require 50 millisecond failover.  
 
 For these convergence optimizations and fast reroute technologies to work, the underlying architecture must support them.  Multiple paths are essential to delivering fault tolerance.  Well-designed architectures use redundant uplinks and multi-homing to avoid single points of failure.  In such architectures, fast failure detection and fast convergence optimizations together provide a good balance of minimizing packet loss while re-converging the control plane at a pace that doesn’t destabilize the network.
 
@@ -53,7 +53,7 @@ Building on NSF and NSR, Cisco tackled the specific problem of planned outages b
 
 #### The Complexity Problem
 
-In Normal Accidents, Charles Perrow introduced the now widely-accept idea that systems with interactive complexity and tight coupling are at higher risk for accidents and outages. It simply isn’t possible for engineers to imagine, anticipate, plan for and prevent every possible interaction in the system.  Moreover, system designers have learned the hard way that, in practice, using redundancy to compensate for local failures often has the effect of increasing complexity which, in turn, causes the outage you were trying to avoid!  Given that a router with two-way active-standby redundancy is a complex, tightly coupled system, it is perhaps inevitable that successfully and reliably executing NSR and ISSU at service provider speeds and scale has proven challenging for the entire industry.
+In __Normal Accidents__, Charles Perrow introduced the now widely-accept idea that systems with interactive complexity and tight coupling are at higher risk for accidents and outages. It simply isn’t possible for engineers to imagine, anticipate, plan for and prevent every possible interaction in the system.  Moreover, system designers have learned the hard way that, in practice, using redundancy to compensate for local failures often has the effect of increasing complexity which, in turn, causes the outage you were trying to avoid!  Given that a router with two-way active-standby redundancy is a complex, tightly coupled system, it is perhaps inevitable that successfully and reliably executing NSR and ISSU at service provider speeds and scale has proven challenging for the entire industry.
 
 
 ## New Heuristics
@@ -66,15 +66,11 @@ Given the unavoidable cost and complexity of device-level availability, it makes
 
 ### Minimize Impact with Scale-Out Architectures
 
-If you’re looking at your next-generation network architecture, it’s worth considering emerging design patterns that can significantly improve availability.  Traditional, hierarchical network designs typically include an aggregation layer, where a small number of large devices with a large number of ports aggregate traffic from southbound layers in preparation for transit northbound.  These aggregation devices are commonly deployed in a 1+1 redundancy topology:
+If you’re looking at your next-generation network architecture, it’s worth considering emerging design patterns that can significantly improve availability.  Traditional, hierarchical network designs typically include an aggregation layer, where a small number of large devices with a large number of ports aggregate traffic from southbound layers in preparation for transit northbound.  These aggregation devices are commonly deployed in a 1+1 redundancy topology.
 
 From an availability perspective, the weak point is those aggregation boxes.  If one of those boxes go down, you’ll lose half your network capacity.  That’s a large blast radius.   Network-level availability mechanisms like fast-reroute and QoS may mitigate the impact to high priority services, but unless you have vast amount of excess capacity, your network will run in a degraded state.  Hence, those devices are prime candidates for dual RPs with NSF and NSR.  But we’ve already seen that those strategies can introduce complexity and, consequently, reduce availability.
 
-Faced with new traffic patterns and scale requirements, pioneers in massively-scaled data center design developed a new design pattern that continues to find new applications outside the data center [1].  The spine-and-leaf topology replaces the large boxes in the aggregation layer with many smaller leafs and spines that can be scaled horizontally.  
-
-Facebook’s Data Center Fabric: A New Design Pattern for the WAN?
-
-Because the traffic is spread across more, smaller boxes in a spine-leaf topology, the loss of any single device has a much smaller blast radius.  Cisco’s NCS 5500 product line is well aligned with this type of CLOS-based fabric design as it moves to the core and beyond.
+Faced with new traffic patterns and scale requirements, pioneers in massively-scaled data center design developed a new design pattern that continues to find new applications outside the data center [1].  The spine-and-leaf topology replaces the large boxes in the aggregation layer with many smaller leafs and spines that can be scaled horizontally. Because the traffic is spread across more, smaller boxes in a spine-leaf topology, the loss of any single device has a much smaller blast radius.  Cisco’s NCS 5500 product line is well aligned with this type of CLOS-based fabric design as it moves to the core and beyond.
 
 ### Manage Scale With Automation
 
@@ -88,16 +84,16 @@ Knowing what’s failed in the past is essential to avoiding that failure in the
 
 More than one forensic analysis has shown that 60 – 90% of failures in the network are caused by having a human being in the loop: fat-fingering the configuration, killing the wrong process, applying the wrong software patch.  Maintenance operations are responsible for twice the number of failures as bugs.   Upgrades in particular are a magnet for these kinds of failure, as they are often complex, manual and multi-stage. 
 
-When manual intervention is the cause of the problem, automation provides a way forward.  By automating and vigorously validating upgrade procedures, you can significantly improve device availability while reducing operational overhead.  This is the motivation for tools like the Cisco Software Manager which has been proven to reduce errors and improve availability.  
+When manual intervention is the cause of the problem, automation provides a way forward.  By automating and vigorously validating upgrade procedures, you can significantly improve device availability while reducing operational overhead.  This is the motivation for tools like the [Cisco Software Manager](https://www.youtube.com/watch?v=isxN08x-mr4) which has been proven to reduce errors and improve availability.  
 
 ### Simplify Upgrades 
 
 We can’t just stop at automating the upgrade process.  Automating complex processes removes the human element, but as long as the complexity remains, so does the risk of “normal accidents.”  After all, in the worst case, automation just provides you a way to do stupid things faster! 
-To get the most out of automation, the upgrade process itself needs to be simplified.  The current state of the art for software installs and upgrades is the standard Linux model of package management.  Starting with IOS XR 6.0, all IOS XR packages use the RPM Package Manager (RPM) format and the install process is yum-based (with extensions for distributed and multi-chassis systems).
+To get the most out of automation, the upgrade process itself needs to be simplified.  The current state of the art for software installs and upgrades is the standard Linux model of package management.  Starting with IOS XR 6.0, all [IOS XR packages use the RPM Package Manager](https://xrdocs.github.io/software-management/tutorials/2016-08-06-introduction-to-rpm/) (RPM) format, the first step in our upgrade simplification journey.
 
 ### Design Simple Failures
 
-The truth is that device failure is normal at scale.  Even if an individual device has the vaunted 5 9s availability, if you have 10,000 of those devices, you will have hours of collective downtime every day of the year.  Instead of trying to avoid failures at all costs, embrace it!  Just make sure you embrace the right kind of failure.  Experience has taught us that simple, obvious failures with predictable consequences are easier to manage than complex, subtle failures with poorly understood consequences even when the simple failure has a larger “blast radius.” 
+The truth is that device failure is normal at scale.  Even if an individual device has the vaunted 5 9s availability, if you have 10,000 of those devices, you will have hours of collective downtime every day of the year.  Instead of trying to avoid failures at all costs, embrace it!  Just make sure you embrace the right kind of failure.  Experience has taught us that simple, obvious failures with predictable consequences are easier to manage than complex, subtle failures with poorly understood consequences _even when_ the simple failure has a larger “blast radius.” 
 
 Take the case of a stateful switchover from the active to the standby RP.  There aren’t many network operators who haven’t been scarred by a planned or unplanned switchover that did not go as expected.  For whatever reason, the standby RP ends up in state that does not match the active RP’s state when it went down.  Because device-level availability techniques like NSR try to “hide” the failure from the outside world, it can be very difficult to diagnose and troubleshoot the underlying issue.   In many cases, the partial failure of the switchover is often worse than just having the router go away and come back.  A rebooting router is a well-understood event that can be handled by the control plane protocols.  On the other hand, a misbehaving RP in an unknown state is not well understood and may lead to much worse behavior than a temporary degradation.  
 
@@ -109,7 +105,7 @@ Following this principle, many service providers have settled on simpler switcho
 
 If you have a single RP system, you won’t be doing a switchover for maintenance operations.  Operators who have pioneered this kind of deployment have developed a “drain-and-maintain” strategy.  In this workflow, devices targeted for traffic-impacting maintenance will be drained of traffic in a controlled manner by shutting down links, lowering the preference of the link, or assigning an infinite cost to the link so routing neighbors will not select it.  Once the traffic has been redirected away from the router, the maintenance operation (such as software upgrade) can proceed.  When the maintenance is complete, links can be brought back into service.  This works well for redundant, transport-only nodes like LSRs and P routers.
 
-For drain-and-maintain to be successful, you have to first validate that there is sufficient excess capacity to carry the drained traffic while the device is offline.  Because of all the moving parts, automation is a key element of this strategy.  You will want an orchestration system to validate the excess capacity, choreograph the drain, maintenance, and undrain, and validate the return to the desired steady-state.  That’s why we are developing the Cisco Morph application to automate this workflow.
+For drain-and-maintain to be successful, you have to first validate that there is sufficient excess capacity to carry the drained traffic while the device is offline.  Because of all the moving parts, automation is a key element of this strategy.  You will want an orchestration system to validate the excess capacity, choreograph the drain, maintenance, and undrain, and validate the return to the desired steady-state.
 
 ### Return to A Known State
 
@@ -119,22 +115,27 @@ If a router reboot is to be a “normal failure” in the network, the system ne
 
 Redundant, multi-homed topologies are the hallmarks of good network design, but it is not always possible to design out all the single points point of failure. Some common examples include:
 
-•	Edge devices such as an LER or PE router may have single-attached customers.
-•	End-users are typically single-homed to an edge device that may contain significant amounts of non-duplicated user state (e.g. BNG or CMTS).  
-•	Long-haul transport can be prohibitively expensive, increasing the likelihood that of an architecture that leverages single devices with a limited number of links.
+- Edge devices such as an LER or PE router may have single-attached customers.
+- End-users are typically single-homed to an edge device that may contain significant amounts of non-duplicated user state (e.g. BNG or CMTS).  
+- Long-haul transport can be prohibitively expensive, increasing the likelihood that of an architecture that leverages single devices with a limited number of links.
 
 The first question to ask yourself is if there is any way to design redundancy into the network using new technologies.  For example, IOS XR supports Network Function Virtualization (NFV), allowing it to be deployed as a virtual PE (vPE). Deployed in a redundant pair, vPEs can provide edge customers with better network availability over the same physical link. 
 
-If you can’t eliminate it altogether, a single point of failure is also a good candidate for the spine-and-leaf fabric described above.  If a node in the fabric fails, the blast radius is much smaller than if a 20-slot chassis fails.  Barring that, in-chassis hardware redundancy and switchover techniques like NSF may be considered.  
+If you can’t eliminate it altogether, a single point of failure is also a good candidate for the spine-and-leaf fabric described above.  If a 2 RU node in the fabric fails, the blast radius is much smaller than if a 20-slot chassis fails.  Barring that, in-chassis hardware redundancy and switchover techniques like NSF may be considered.  
 
 ## Conclusion
 
 Decades of experience have proven that network availability mechanisms provide simpler, more efficient, lower cost alternatives when the architecture supports them.  Beyond that, the frontier for availability is all about operations.  By automating workflows, particularly upgrades, you can eliminate the most common causes of failure in the first place.  Investing in operations may seem like an odd strategy for availability but the truth is that simple, automated networks are the most available networks of all.
 
 ## References And Further Reading
-[1] Introducing Data Center Fabric 
+
+[1] Introducing Data Center Fabric
+
 [2] Evolve or Die - High-Availability Design Principles Drawn from Google’s Network Infrastructure
+
 [3] https://code.facebook.com/posts/156810174519680/making-facebook-self-healing/ 
+
 Normal Accidents: Living with High Risk Technologies (Updated). Princeton University Press, 1999, Charles Perrow.
+
 Site Reliability Engineering, O'Reilly Media, April 2016, Betsy Beyer, Chris Jones, Jennifer Petoff, Niall Richard Murphy.
 
