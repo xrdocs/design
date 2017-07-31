@@ -129,11 +129,11 @@ Decades of experience have proven that network availability mechanisms provide s
 
 ## References And Further Reading
 
-[1] Introducing Data Center Fabric
+[1] [Introducing Data Center Fabric] https://code.facebook.com/posts/360346274145943/introducing-data-center-fabric-the-next-generation-facebook-data-center-network/
 
-[2] Evolve or Die - High-Availability Design Principles Drawn from Google’s Network Infrastructure
+[2] [Evolve or Die - High-Availability Design Principles Drawn from Google’s Network Infrastructure](https://research.google.com/pubs/pub45623.html)
 
-[3] https://code.facebook.com/posts/156810174519680/making-facebook-self-healing/ 
+[3] [Making Facebook Self-Healing] (https://code.facebook.com/posts/156810174519680/making-facebook-self-healing)
 
 Normal Accidents: Living with High Risk Technologies (Updated). Princeton University Press, 1999, Charles Perrow.
 
