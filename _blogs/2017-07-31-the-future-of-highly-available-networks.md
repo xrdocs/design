@@ -1,7 +1,14 @@
 ---
-published: false
+published: true
 date: '2017-07-31 10:00 -0600'
 title: The Future of Highly Available Networks
+author: scadora
+excerpt: Describes current challenges and future directions for network availability.
+tags:
+  - iosxr
+  - HA
+  - ISSU
+position: hidden
 ---
 ## Introduction
 
