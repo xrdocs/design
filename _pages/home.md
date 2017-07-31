@@ -2,7 +2,7 @@
 layout: archive
 permalink: /
 author_profile: true
-author: "Cisco Web Team"
+author: "Cisco Design Team"
 
 feature_row1:
   - image_path: techdoc.jpg
