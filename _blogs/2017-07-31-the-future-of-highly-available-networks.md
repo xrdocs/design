@@ -88,7 +88,7 @@ Knowing what’s failed in the past is essential to avoiding that failure in the
 
 More than one forensic analysis has shown that 60 – 90% of failures in the network are caused by having a human being in the loop: fat-fingering the configuration, killing the wrong process, applying the wrong software patch.  Maintenance operations are responsible for twice the number of failures as bugs.   Upgrades in particular are a magnet for these kinds of failure, as they are often complex, manual and multi-stage. 
 
-When manual intervention is the cause of the problem, automation provides a way forward.  By automating and vigorously validating upgrade procedures, you can significantly improve device availability while reducing operational overhead.  This is the motivation for tools like the [Cisco Software Manager](https://www.youtube.com/watch?v=isxN08x-mr4) which has been proven to reduce errors and improve availability.  
+When manual intervention is the cause of the problem, automation provides a way forward.  By automating and vigorously validating upgrade procedures, you can significantly improve device availability while reducing operational overhead.  This is the motivation for tools like the [Cisco Software Manager](https://supportforums.cisco.com/document/13154846/cisco-software-manager-csm-33-overview-documentation) which has been proven to reduce errors and improve availability.  
 
 ### Simplify Upgrades 
 
