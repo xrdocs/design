@@ -45,7 +45,7 @@ One of the main drawbacks with network-level availability mechanisms is that you
 
 ### Device Level 
 
-Network-level availability mechanisms are great for coping with unreliable components but, over the years, we’ve also put a lot of work into making those individual networking devices more reliable, too. In the industry parlance, device-level availability often focuses on reducing the Mean Time Between Failure (MTBF) of the router and its components.  Following the paradigm of traditional hardware fault tolerance, device-level HA duplicates major components in the system (RPs, power supplies, fan trays) for 1+1 redundancy.  The duplicate components may load share in an Active-Active configuration (e.g. redundant power shelves in the CRS) or run in an Active-Standby configuration (e.g. Active-Standby RPs).
+Network-level availability mechanisms are great for coping with unreliable components but, over the years, we’ve also put a lot of work into making those individual networking devices more reliable, too. In the industry parlance, device-level availability often focuses on increasing the Mean Time Between Failure (MTBF) of the router and its components.  Following the paradigm of traditional hardware fault tolerance, device-level HA duplicates major components in the system (RPs, power supplies, fan trays) for 1+1 redundancy.  The duplicate components may load share in an Active-Active configuration (e.g. redundant power shelves in the CRS) or run in an Active-Standby configuration (e.g. Active-Standby RPs).
 
 As reassuring as backup power supplies and fans may be, straight-forward hardware redundancy doesn’t cut it for complex components with significant software elements.  Take the route processor (RP), a complex bundle of hardware and software that is responsible for running the control plane and programming the data plane.  In the event of a failover, a standby RP cannot assume the duties of the active RP without either 1) re-building the state (re-establishing neighbor relationships, re-building routing tables, etc) or 2) having an exact, real-time copy of the active state.  The first takes time and the second has proven difficult to achieve in practice.
 
@@ -142,4 +142,3 @@ Decades of experience have proven that network availability mechanisms provide s
 Normal Accidents: Living with High Risk Technologies (Updated). Princeton University Press, 1999, Charles Perrow.
 
 Site Reliability Engineering, O'Reilly Media, April 2016, Betsy Beyer, Chris Jones, Jennifer Petoff, Niall Richard Murphy.
-
