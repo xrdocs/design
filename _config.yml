@@ -28,6 +28,7 @@ comments:
     num_posts            : # 5 (default)
     colorscheme          : # "light" (default), "dark"
 
+
 # SEO Related
 google_site_verification :
 bing_site_verification   :
