@@ -459,5 +459,5 @@ compress_html:
   ignore:
     envs: development
 
-host: "10.0.0.22"
+host: "localhost"
 port: 4000

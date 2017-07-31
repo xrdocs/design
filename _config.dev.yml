@@ -7,14 +7,14 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "IOS XR Documentation @xrdocs"
-title_short              : "xrdocs-Base"
+title                    : "IOS XR Network Compass Designs @xrdocs"
+title_short              : "compass-design"
 title_separator          : "|"
 name                     : &name "Cisco Systems Inc"
-description              : &description "Documentation, Blogs and Tutorials on the IOS-XR software"
+description              : &description "Documentation, Blogs and Tutorials on Network Compass Designs using the IOS-XR software and enabled platforms"
 url                      : "http://localhost:4000" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
-gh_repo                  : "https://github.com/xrdocs/application-hosting"
+gh_repo                  : "https://github.com/xrdocs/design"
 teaser                   : # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : true # true, false (default)
 words_per_minute         : 200
@@ -307,6 +307,7 @@ prose:
     - /images
     - /_sass
     - /_data/ui-text.yml
+    - /_common
     - Gemfile
     - Gemfile.lock
     - LICENSE
