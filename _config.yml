@@ -7,11 +7,11 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "IOS XR Network Compass Designs @xrdocs"
-title_short              : "compass-design"
+title                    : "IOS XR Network Designs and Architectures @xrdocs"
+title_short              : "Design"
 title_separator          : "|"
 name                     : &name "Cisco Systems Inc"
-description              : &description "Documentation, Blogs and Tutorials on Network Compass Designs using the IOS-XR software and enabled platforms"
+description              : &description "Documentation, Blogs and Tutorials on Network Designs and architectures using IOS-XR and its associated platforms."
 url                      : "https://xrdocs.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "/design" # the subpath of your site, e.g. "/blog"
 gh_repo                  : "https://github.com/xrdocs/design"
