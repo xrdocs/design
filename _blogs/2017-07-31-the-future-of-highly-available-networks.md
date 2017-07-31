@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 date: '2017-07-31 10:00 -0600'
 title: The Future of Highly Available Networks
 author: Shelly Cadora
@@ -8,7 +8,7 @@ tags:
   - iosxr
   - HA
   - ISSU
-position: hidden
+position: top
 ---
 ## Introduction
 
