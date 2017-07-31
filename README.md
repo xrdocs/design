@@ -1,2 +1,2 @@
 # design
-Blogs and Tutorials on  Network Compass Designs and Architectures
+Blogs and Tutorials on Network Designs and Architectures
