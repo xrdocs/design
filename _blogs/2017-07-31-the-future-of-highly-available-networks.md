@@ -13,9 +13,13 @@ position: hidden
 ## Introduction
 
 Nobody will dispute the importance of availability in today's service provider networks.  What is less obvious is how you achieve it. A network is a complex, dynamic system that must continually adapt to changing conditions. Some changes are normal, necessary and planned (e.g. software and hardware upgrades, configuration changes), while others are unplanned and unpredictable (e.g. software or hardware faults, human error).  This whitepaper discusses different approaches to availability in both cases and lays out current best practices which can be distilled into a few simple themes:
+
 - Solve for the Network First
+
 - Reduce Complexity
+
 - Automate Operations
+
 
 ## Defining Availability
 
