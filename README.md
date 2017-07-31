@@ -1,2 +1,1 @@
-# design
-Blogs and Tutorials on  Network Compass Designs and Architectures
+Base-Template Repository for xrdocs sub-websites
