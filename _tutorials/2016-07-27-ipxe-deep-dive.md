@@ -2,7 +2,7 @@
 published: true
 date: '2016-07-27 13:58 -0700'
 title: iPXE Deep Dive
-author: Patrick Warichet
+author: Shelly Cadora
 excerpt: iPXE Deep Dive
 tags:
   - iosxr
