@@ -23,7 +23,7 @@ Nobody will dispute the importance of availability in today's service provider n
 
 ## Defining Availability
 
-Before diving into the mechanics of availability, it’s worth considering what a highly available network means _to you_.  Tolerance for failure is driven by your service SLAs.  Not every service requires the same kind of availability as high frequency trading or systems supporting hospitals.  So take some time to understand the availability requirements for your services across your network.  Many people assume that higher availability is always better.  This may result in over-engineering the network and introducing unneeded complexity and cost.
+Before diving into the mechanics of availability, it’s worth considering what a highly available network means _to you_.  Tolerance for failure is driven by your SLAs.  Not every service requires the same kind of availability as high frequency trading or systems supporting hospitals.  So take some time to understand the availability requirements for your services across your network.  Many people assume that higher availability is always better.  This may result in over-engineering the network and introducing unneeded complexity and cost.
 
 ## Approaches to Availability
 
@@ -37,7 +37,7 @@ On the protocol side, availability is improved by reducing both the Mean Time To
 
 Reducing MTTR involves multiple approaches, starting with optimizing protocol convergence after the failure has been detected.  Incremental SPF (iSPF) has long been used in IGPs to reduce the time it takes to recompute the best path.  Convergence can also be improved by installing a precomputed backup path in the routing table using BGP Protocol Independent Convergence (PIC) and Loop Free Alternative Fast ReRoute (LFA FRR).
 
-MPLS Traffic Engineering (TE) can also help reduce MTTR by giving you the ability to use links and nodes that are not necessarily in the shortest path.  By increasing the pool of available resources, TE helps ensure that the loss of one link or node results in the loss of only a small amount of total capacity.  When links or nodes fail, MPLS TE Fast Reroute (MPLS TE FRR) can locally repair LSPs while the headend re-establish the end-to-end LSP with an impressive 50 millisecond failover time. Still, it’s also worth remembering that FRR might be overkill for some services: not all SLAs actually require 50 millisecond failover.  
+MPLS Traffic Engineering (TE) can also help reduce MTTR by giving you the ability to use links and nodes that are not necessarily in the shortest path.  By increasing the pool of available resources, TE helps ensure that the loss of one link or node results in the loss of only a small amount of total capacity.  When links or nodes fail, MPLS TE Fast Reroute (MPLS TE FRR) can locally repair LSPs while the headend re-establishes the end-to-end LSP with an impressive 50 millisecond failover time. Still, it’s also worth remembering that FRR might be overkill for some services: not all SLAs actually require 50 millisecond failover.  
 
 For these convergence optimizations and fast reroute technologies to work, the underlying architecture must support them.  Multiple paths are essential to delivering fault tolerance.  Well-designed architectures use redundant uplinks and multi-homing to avoid single points of failure.  In such architectures, fast failure detection and fast convergence optimizations together provide a good balance of minimizing packet loss while re-converging the control plane at a pace that doesn’t destabilize the network.
 
@@ -53,11 +53,11 @@ One way to buy time is to separate the control plane and data plane by allowing 
 
 Instead of buying time with NSF and Graceful Restart, IOS XR also supports Non-Stop-Routing (NSR).  With NSR, all the protocol state required to maintain peering state is precisely synchronized across the active and standby RPs.  When the active fails over, the standby can immediately take over the peering sessions.  Because the failure is handled internally, it is hidden from the outside world.  In practice, NSR is a very complex, resource-intensive operation that doesn’t always result in the perfect state synchronization that is required.  And precisely because NSR “hides” the failure of the RP from neighbors, troubleshooting can be very difficult if something goes wrong.
 
-Building on NSF and NSR, Cisco tackled the specific problem of planned outages by developing an upgrade process called In Service Software Upgrades (ISSU).  ISSU is a complex process that coordinates the standard RP failover with various other mechanisms to ensure that the line card stops forwarding for only as much time as it takes to re-program the hardware.  Under ideal conditions, the outage is less than 10 seconds.  However, in real networks, conditions are almost never ideal.  Like NSR, ISSU has proven difficult to achieve in practice for the entire industry.  Even when an in-service upgrade is possible, the operational overhead of understanding and troubleshooting ISSU’s many stages and caveats often outweighs the value of keeping the node in service during the upgrade.  
+Building on NSF and NSR, Cisco tackled the specific problem of planned outages by developing an upgrade process called In Service Software Upgrades (ISSU).  ISSU is a complex process that coordinates the standard RP failover with various other mechanisms to ensure that the line card stops forwarding for only as much time as it takes to re-program the hardware.  Under ideal conditions, the outage is less than 10 seconds.  However, in real networks, conditions are almost never ideal.  Like NSR, ISSU has proven difficult to achieve in practice _for the entire industry_.  Even when an in-service upgrade is possible, the operational overhead of understanding and troubleshooting ISSU’s many stages and caveats often outweighs the value of keeping the node in service during the upgrade.  
 
 #### The Complexity Problem
 
-In __Normal Accidents__, Charles Perrow introduced the now widely-accept idea that systems with interactive complexity and tight coupling are at higher risk for accidents and outages. It simply isn’t possible for engineers to imagine, anticipate, plan for and prevent every possible interaction in the system.  Moreover, system designers have learned the hard way that, in practice, using redundancy to compensate for local failures often has the effect of increasing complexity which, in turn, causes the outage you were trying to avoid!  Given that a router with two-way active-standby redundancy is a complex, tightly coupled system, it is perhaps inevitable that successfully and reliably executing NSR and ISSU at service provider speeds and scale has proven challenging for the entire industry.
+In __Normal Accidents__, Charles Perrow introduced the now widely-accept idea that systems with interactive complexity and tight coupling are at higher risk for accidents and outages. It simply isn’t possible for engineers to imagine, anticipate, plan for and prevent every possible interaction in the system.  Moreover, system designers have learned the hard way that, in practice, using redundancy to compensate for local failures often has the effect of increasing complexity which, in turn, causes the outage you were trying to avoid!  Given that a router with two-way active-standby redundancy is a complex, tightly coupled system, it is perhaps inevitable that successfully and reliably executing NSR and ISSU at service provider speeds and scale has proven challenging industry-wide.
 
 
 ## New Heuristics
@@ -78,7 +78,7 @@ Faced with new traffic patterns and scale requirements, pioneers in massively-sc
 
 ### Manage Scale With Automation
 
-The sheer numbers in fabric-based network architectures can be intimidating.  In the past, we’ve often assumed that complexity (and therefore, failure) increases with the number of devices.  But as the design of large-scale data centers have shown, you can easily manage vast numbers of devices if you have sufficiently hardened automation.  On the IOS-XR side, we are committed to Model-Driven Programmability to enable complete automation to make the network full programmable through tools like Ansible and Cisco’s Network Service Orchestrator (NSO). 
+The sheer numbers in fabric-based network architectures can be intimidating.  In the past, we’ve often assumed that complexity (and therefore, failure) increases with the number of devices.  But as the design of large-scale data centers have shown, you can easily manage vast numbers of devices if you have sufficiently hardened automation.  On the IOS-XR side, we are committed to [Model-Driven Programmability](https://xrdocs.github.io/programmability/blogs/2016-09-12-model-driven-programmability/) to enable complete automation to make the network full programmable through tools like Ansible and Cisco’s Network Service Orchestrator (NSO). 
 
 ### Understand Your Failures
 
@@ -97,7 +97,7 @@ To get the most out of automation, the upgrade process itself needs to be simpli
 
 ### Design Simple Failures
 
-The truth is that device failure is normal at scale.  Even if an individual device has the vaunted 5 9s availability, if you have 10,000 of those devices, you will have hours of collective downtime every day of the year.  Instead of trying to avoid failures at all costs, embrace it!  Just make sure you embrace the right kind of failure.  Experience has taught us that simple, obvious failures with predictable consequences are easier to manage than complex, subtle failures with poorly understood consequences _even when_ the simple failure has a larger “blast radius.” 
+The truth is that device failure is normal at scale.  Even if an individual device has the vaunted 5 9s availability, if you have 10,000 of those devices, you will have downtime every day of the year.  Instead of trying to avoid failures at all costs, embrace it!  Just make sure you embrace the right kind of failure.  Experience has taught us that simple, obvious failures with predictable consequences are easier to manage than complex, subtle failures with poorly understood consequences _even when_ the simple failure has a larger “blast radius.” 
 
 Take the case of a stateful switchover from the active to the standby RP.  There aren’t many network operators who haven’t been scarred by a planned or unplanned switchover that did not go as expected.  For whatever reason, the standby RP ends up in state that does not match the active RP’s state when it went down.  Because device-level availability techniques like NSR try to “hide” the failure from the outside world, it can be very difficult to diagnose and troubleshoot the underlying issue.   In many cases, the partial failure of the switchover is often worse than just having the router go away and come back.  A rebooting router is a well-understood event that can be handled by the control plane protocols.  On the other hand, a misbehaving RP in an unknown state is not well understood and may lead to much worse behavior than a temporary degradation.  
 
@@ -113,7 +113,7 @@ For drain-and-maintain to be successful, you have to first validate that there i
 
 ### Return to A Known State
 
-If a router reboot is to be a “normal failure” in the network, the system needs to ensure that the router returns to a known state as quickly as possible.  For this to work, the router’s “source of truth” (i.e. its configuration) needs to be stored off the box.  If the source of truth is on the router, the truth will be irretrievably lost if the router is wiped out.  With an off-box source of truth, you can PXE-boot your way back to the known state with confidence.
+If a router reboot is to be a “normal failure” in the network, the system needs to ensure that the router returns to a known state as quickly as possible.  For this to work, the router’s “source of truth” (i.e. its configuration) needs to be stored off the box.  If the source of truth is on the router, the truth will be irretrievably lost if the router is wiped out.  With an off-box source of truth, you can [iPXE-boot your router](https://xrdocs.github.io/software-management/tutorials/2016-07-27-ipxe-deep-dive/) back to the known state with confidence.
 
 ### Protect Single Points of Failure
 
@@ -133,7 +133,7 @@ Decades of experience have proven that network availability mechanisms provide s
 
 ## References And Further Reading
 
-[1] [Introducing Data Center Fabric] https://code.facebook.com/posts/360346274145943/introducing-data-center-fabric-the-next-generation-facebook-data-center-network/
+[1] [Introducing Data Center Fabric](https://code.facebook.com/posts/360346274145943/introducing-data-center-fabric-the-next-generation-facebook-data-center-network/)
 
 [2] [Evolve or Die - High-Availability Design Principles Drawn from Google’s Network Infrastructure](https://research.google.com/pubs/pub45623.html)
 
