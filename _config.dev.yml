@@ -307,7 +307,7 @@ prose:
     - /images
     - /_sass
     - /_data/ui-text.yml
-    - /_common
+    - /_data
     - Gemfile
     - Gemfile.lock
     - LICENSE
