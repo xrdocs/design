@@ -66,7 +66,7 @@ Traditional SP IXP Network Design
 
 Traditional SP peering is distributed to one or more geographic locations driven by the convenience of having peers in the same IXP location. There is a need to maintain those locations today as not everyone has the capability of interconnecting everywhere. Peering center network design has typically been done with two or more larger edge peering routers with either direct connections to an optical backbone or connections to another stage of backbone routers as seen in left hand side of Figure 1. In recent years, there has been a trend to more modular network design within the peering center using smaller fixed or chassis systems, allowing the use of best of breed hardware and flexibility to add capacity more granularly. The topology mimics the folded CLOS networks, scaling horizontally across peer connections and minimizing impact during failures. Also, datacenter space in traditional IXP facilities has become more limited in recent years, leading the carrier neutral facility providers to expand to multiple facilities within a metropolitan area. Placing smaller high-density systems to multiplex peer connections onto higher speed links is more cost effective than paying the MRC of inter-facility cross-connects per peer connection.
 
-
+![peering-wp-fig-1.png]({{site.baseurl}}/images/peering-wp-fig-1.png)
 
 Figure 1 - IXP Network Design Evolution
 
@@ -79,7 +79,7 @@ An initial step may be to create a single localized peering facility within a re
 
 Reduced footprint high capacity routers are ideal for serving the needs of a distributed peering network. The NCS 5501, 5502, and 5504 are ideal, providing high density peer termination in a compact, efficient package while not sacrificing features or protocol scale.
 
-<embed src="media/image2.emf" width="492" height="310" />
+![peering-wp-fig-2.png]({{site.baseurl}}/images/peering-wp-fig-2.png)
 
 Figure 2 - Localized Peering
 
@@ -88,7 +88,7 @@ Regional Core Bypass / Express Peering
 
 Regional SP networks serving residential subscribers are typically deployed in an aggregation/access hierarchy using logical Ethernet connections over a metro optical transport network. The aggregation nodes serve as an aggregation point for connections to regional sites along with acting as the ingress point for traffic coming from the SP backbone. If a distributed peering fabric is implemented, SPs can drive even greater efficiency by selecting specific high bandwidth regional sites for core bypass. This is simply connecting the regional hub routers directly to a localized peering facility, bypassing the regional core aggregation nodes which are simply acting as a pass through for the traffic. Due to the growth in Internet video traffic, this secondary express peering network in time will likely be higher capacity than the original SP converged network. The same express peering network can also be used to serve content originated by the SP, leaving the converged regional network to serve other higher priority traffic needs.
 
-<embed src="media/image3.emf" width="488" height="246" />
+![peering-wp-fig-3.png]({{site.baseurl}}/images/peering-wp-fig-3.png)
 
 Figure 3 - Express Peering Fabric
 
