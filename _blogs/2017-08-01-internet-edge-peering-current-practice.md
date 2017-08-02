@@ -12,7 +12,8 @@ position: hidden
 ---
 
 {% include toc %}
-&nbsp;
+
+
 
 **Introduction**
 ===============
