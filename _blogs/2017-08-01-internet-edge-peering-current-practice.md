@@ -1,6 +1,6 @@
 ---
 published: true
-date: '2017-08-01 13:18 -0400'
+date: '2017-08-02 11:00-0400'
 title: Internet Edge Peering - Current Practice
 excerpt: Design and deployment practices for today's Internet peering networks
 author: Phil Bedard
@@ -8,7 +8,7 @@ tags:
   - iosxr
   - Peering
   - Design
-position: hidden
+position: top
 ---
 
 {% include toc %}
