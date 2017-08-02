@@ -12,13 +12,13 @@ position: hidden
 ---
 
 {% include toc %}
-
-Introduction
+<br>
+**Introduction**
 ============
 
 The Internet was created to provide transparent data services across interconnected packet switched networks. The interconnection and exchange of Internet routing data between two networks is known as Peering. Peering is the glue holding together the Internet, without it the flow of data across the Internet would not be possible. Peering represents an important administrative, operational, and security boundary between networks. Peering is a subject of great interest in many areas, from analytics to politics. This paper will focus on the technical aspects of peering covering peering history and current peering architecture in the areas of network, security, and telemetry.
 
-Peering Background
+**Peering Background**
 ==================
 
 Peering History
@@ -45,7 +45,7 @@ B2B IP Peering
 
 An often-overlooked form of peering is B2B peering between different networks. There are many examples of B2B peering, the most visible today are those connecting datacenter colocation providers to cloud service providers. Additionally, B2B peering is used for linear video content providers to send video to end providers, carry voice services over IP instead of PSTN, and interconnect various service owners to consumers.
 
-Peering Hardware
+**Peering Hardware**
 ================
 
 The main requirements when looking at peering network hardware are
@@ -60,7 +60,7 @@ The Cisco Visual Networking Index has shown a 1270% rise in Internet traffic ove
 
 More information on the Network Convergence System 5500 series can be found at <http://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html>
 
-Peering Network Design
+**Peering Network Design**
 ======================
 
 Traditional SP IXP Network Design
@@ -99,7 +99,7 @@ Peering Network Resiliency
 
 Peering resiliency refers to the ability for the network to cope with the loss of a peer, peering router, or peering facility. Apart from B2B peering instances, almost all traffic coming over a peering link is considered best-effort low priority traffic. Even though most traffic is BE, it is recommended for SPs to dual-home to high bandwidth sources of inbound traffic within the same facility or region. Since most larger SPs peer with the same providers in diverse geographic locations, it is more cost-effective to maintain multiple connections in a facility or region than to have traffic fail-over to a path originating in another geographic region. The traffic may result in congestion on backbone links or building excess capacity on expensive long-haul optical networks. The same holds true for localized peering facilities, dual-homing a peer to multiple routers is more cost effective than relying on backup paths across longer distances.
 
-Management, Control-Plane, and Security
+**Management, Control-Plane, and Security**
 ========================================
 
 Robust and feature-rich software is required in all three of these areas to build a successful peering network. IOS-XR has been a critical part of many peering networks across the world, and continued innovation in the areas of telemetry, programmability, and security is enhancing service provider peering edge networks.
@@ -133,7 +133,7 @@ TE enabled networks with full or partial mesh configurations can easily determin
 
 Unique to IOS-XR is the BGP Policy Accounting feature. BGP PA allows providers to use criteria defined in RPL such as matching a single or set of origin ASNs via regex to create traffic counters when the route is installed in the FIB. This is done through the application of RIB to FIB table policies via the table-policy command. BGP PA can add to the data acquired via other means or be used to quickly isolate operational issues. \[pointer to BGP PA?\]
 
-Peering Engineering
+**Peering Engineering**
 ====================
 
 Ingress and Egress Peer Engineering
@@ -160,7 +160,7 @@ BGP routing policies are used to filter inbound or outbound advertised prefixes 
 
 IOS-XR from its inception has supported flexible routing policy definitions via its Routing Policy Language. RPL supports advanced functionality such as hierarchical policies, global parameters, and passing parameters to policies. Replacing common policy components with variables passed as parameters when the policy is applied allows abstraction and eliminates duplication. More information about RPL including many examples of its functionality can be found at <http://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/routing/62x/b-routing-cg-ncs5500-62x/b-routing-cg-ncs5500-62x_chapter_0101.html>
 
-Peering Security
+**Peering Security**
 ================
 
 Peering by definition is at the edge of the network, where security is mandatory. While not exclusive to peering, there are a number of best practices and software features when implemented will protect your own network as well as others from malicious sources within your network.
