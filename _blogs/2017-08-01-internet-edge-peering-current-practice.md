@@ -12,9 +12,10 @@ position: hidden
 ---
 
 {% include toc %}
-&nbsp; 
+&nbsp;
+
 **Introduction**
-============
+===============
 
 The Internet was created to provide transparent data services across interconnected packet switched networks. The interconnection and exchange of Internet routing data between two networks is known as Peering. Peering is the glue holding together the Internet, without it the flow of data across the Internet would not be possible. Peering represents an important administrative, operational, and security boundary between networks. Peering is a subject of great interest in many areas, from analytics to politics. This paper will focus on the technical aspects of peering covering peering history and current peering architecture in the areas of network, security, and telemetry.
 
