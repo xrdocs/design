@@ -53,7 +53,7 @@ BGP Operational State
 
 There is a variety of BGP operational state data to be mined for information. Doing so can lead to enhanced peering operations. A wealth of information on global and per-peer BGP state is available via OpenConfig and native IOS-XR YANG models. This includes data such as per-AFI and per-neighbor prefix counts, update message counts, and associated configuration data. Using the OpenConfig BGP RIB modesl, you can retrieve the global best-path Loc-RIB and per-neighbor adj-RIB-in and adj-RIB-out pre and post policy along with the reason why a given route was not selected as best-path. This gives additional operational insight through automation which would normally require one to login to various routers, issue show commands, and parse the verbose output.
 
-A list of recommended BGP OpState data fields, their related MDT sensor paths, and SNMP OIDs can be found in Appendix A.2
+A list of recommended BGP OpState YANG Paths can be found in Appendix A.2
 
 Sampled Netflow / IPFIX 
 ------------------------
