@@ -101,9 +101,9 @@ Monitoring peer session state can be critical for detecting transient outages, t
 
 Setting a realistic max-prefix limit on peers is an important security mechanism. Most router operating systems support the ability to trigger an event based on a percentage threshold of this max prefix limit. This is an important event to monitor since reaching the limit generally results in a traffic-affecting session teardown event.
 
-### Per-Peer RIB Changes
+### Globla and Per-Peer RIB Changes
 
-BMP allows one to monitor incoming advertisements on a per-peer basis and record them for historical purposes. Having a record of all changes allows one to playback updates to determine the past impact of peer advertisement changes. BMP is the preferred mechanism to stream BGP updates as they happen, but NETCONF can also be used to retrieve BGP RIB data globally and per-peer.
+BMP allows one to monitor incoming advertisements on a per-peer basis and record them for historical purposes. Having a record of all changes allows one to playback updates to determine the past impact of peer advertisement changes. BMP is the preferred mechanism to stream BGP updates as they happen, but NETCONF can also be used to retrieve BGP RIB data globally and per-peer on IOS-XR.
 
 Enabling Telemetry 
 ===================
@@ -601,7 +601,7 @@ IOS-XR native models do not have a BGP specific RIB, but a protocol of 'bgp' can
 </rpc>   
 ```
  
-**The following native XR NETCONF RPC retrieves a list of BGP prefixes in its global (vrf default) IPv4 RIB, with only the prefix,prefix-length, source (route-path), and active attributes. Replacing &lt;active/&gt; with &lt;active&gt;true&lt;/active&gt; would only return active prefixes, removing the prefix,prefix-length-xr, and active leaf attributes under route will return all attributes for each route**
+The following native XR NETCONF RPC retrieves a list of BGP prefixes in its global (vrf default) IPv4 RIB, with only the prefix,prefix-length, source (route-path), and active attributes. Replacing &lt;active/&gt; with &lt;active&gt;true&lt;/active&gt; would only return active prefixes, removing the prefix,prefix-length-xr, and active leaf attributes under route will return all attributes for each route{: .notice--warning}
 
 ```
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
