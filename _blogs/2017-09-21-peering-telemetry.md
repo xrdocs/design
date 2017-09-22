@@ -8,7 +8,7 @@ tags:
   - iosxr
   - Peering
   - Design
-position: hidden 
+position: top 
 ---
 
 {% include toc %}
@@ -193,7 +193,6 @@ It is often difficult to troubleshoot exact network behavior across administrati
 -   Per-peer BGP session state
 
 ## Network Visibility 
-
 ### Peer Traffic Anomaly Detection 
 
 Simple interface stats are again the starting point for peering network visibility. Having accurate and timely logical and physical interface stats can quickly alert you to service-affecting anomalies for both ingress and egress traffic. Using the faster sampling frequency of MDT on IOS-XR decreases the time to catch events from what was typically 5+ minutes using SNMP to 30 seconds or less.
