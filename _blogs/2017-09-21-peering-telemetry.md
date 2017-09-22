@@ -426,7 +426,9 @@ Cisco-IOS-XR-drivers-media-eth-oper<br>
 | Native YANG               | Cisco-IOS-XR-drivers-media-eth-oper/ethernet-interface/statistics/statistic/dropped-packets-with-crc-align-errors |
 | MDT                       | Native                                                                                                            |
 
-**The following transceiver paths retrieve the total power for the transceiver, there are specific per-lane power levels which can be retrieved from both native and OC models, please refer to the model YANG file for additional information.**
+The following transceiver paths retrieve the total power for the transceiver, there are specific per-lane power levels which can be retrieved from both native and OC models, please refer to the model YANG file for additional information
+{: .notice--warning}
+
 
 |                               |                                                                                                                                                                     |
 |-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -480,7 +482,9 @@ IOS-XR native models do not store route information in the BGP Oper model, they 
 
 #### Example Usage
 
-**Due the construction of the YANG model, the neighbor-address key must be included as a container in all OC BGP state RPCs. The following RPC gets the session state for all configured peers:**
+The following OC NETCONF RPC returns the BGP session state for all configured peers. The neighbor-address key must be included as a container in all OC BGP state RPCs 
+{: .notice--warning}
+
 
 ```
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -572,7 +576,8 @@ IOS-XR native models do not have a BGP specific RIB, but a protocol of 'bgp' can
 
 #### Example Usage 
 
-**The following OC YANG NETCONF RPC retrieves a list of best-path IPv4 prefixes without attributes from the loc-RIB:**
+The following OC YANG NETCONF RPC retrieves a list of best-path IPv4 prefixes without attributes from the loc-RIB
+{: .notice--warning}
 
 ```
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -667,7 +672,8 @@ The following native XR NETCONF RPC retrieves a list of BGP prefixes in its glob
 | Native YANG                                 | Cisco-IOS-XR-ip-rib-ipv4-oper/rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes/route **(see example RPC)**|
 | MDT                                         | Native                                                                 |
 
-**The following per-neighbor RIB paths can be qualified with a specific neighbor address to retrieve RIB data for a specific peer. Below is an example of a NETCONF RPC to retrieve the number of post-policy routes from the 192.168.2.51 peer and the returned output.  Native IOS-XR models do not support per-neighbor RIBs, but using the above example with the route-path address leaf set to the neighbor address will filter prefixes to a specific neighbor.** 
+The following per-neighbor RIB paths can be qualified with a specific neighbor address to retrieve RIB data for a specific peer. Below is an example of a NETCONF RPC to retrieve the number of post-policy routes from the 192.168.2.51 peer and the returned output.  Native IOS-XR models do not support per-neighbor RIBs, but using the above example with the route-path address leaf set to the neighbor address will filter prefixes to a specific neighbor 
+{: .notice--warning}
 
 ```
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -749,14 +755,14 @@ A.3 Device Resource YANG Paths
 ------------------------------
 
 Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper.YANG<br>
-openconfig-platform
+openconfig-platform<br>
 
 |                  |                         |
 |------------------|-------------------------|
 | Device Inventory | List                    |
-| SNMP OID         |                         |
+| SNMP OID         | ENTITY-MIB:entityMIBObjects.entityPhysical.entPhysicalTable |
 | OC YANG          |oc-platform:components |
-| MDT              |                         |
+| MDT              |NA                         |
 
 |                             |                                                                                                         |
 |-----------------------------|---------------------------------------------------------------------------------------------------------|
@@ -764,6 +770,6 @@ openconfig-platform
 | SNMP OID                    | NA                                                                                                      |
 | OC YANG                     | NA                                                                                                      |
 | Native YANG                 | Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper/dpa/stats/nodes/node/hw-resources-datas/hw-resources-data |
-| MDT                         |                                                                                                         |
+| MDT                         | Native                                                                                                     |
 
 
