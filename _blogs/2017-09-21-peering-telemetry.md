@@ -329,6 +329,7 @@ Cisco-IOS-XR-drivers-media-eth-oper<br>
 | OC YANG                     | oc-if:/interfaces/interface/state/counters/in-errors                                                      |
 | Native YANG                 | Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters/input-errors |
 | MDT                         | Native                                                                                                    |
+
 |                             |                                                                                                            |
 |-----------------------------|------------------------------------------------------------------------------------------------------------|
 | Logical Interface TX Errors | Counter                                                                                                    |
