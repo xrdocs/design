@@ -120,9 +120,26 @@ Tuning Netflow parameters is critical to extracting the most useful data from Ne
 There are a wide range of Netflow collection engines on the market today as well as cloud-based solutions. PMACCT found at <http://www.pmacct.net> is a popular open-source Netflow and IPFIX collector.
 
 ## BMP 
-BMP is easily configured in the following steps in IOS-XR. Configure a BMP destination host using the global bmp server <1-8> command with its associated parameters. The minimum configuration is bmp server <1-8> host <fqdn|ip> port <port>. BMP uses TCP as its transport protocol, and has no standard port so a port must be specified. Additionally, in order to send periodic BGP statistics, a statistics interval must be configured via the bmp server <1-8> stats-reporting-period <1-3600> command
+BMP is easily configured in the following steps in IOS-XR. Configure a BMP destination host using the global "bmp server <1-8> command with its associated parameters. The minimum configuration is bmp server <1-8> host <fqdn|ip> port <port>. BMP uses TCP as its transport protocol, and has no standard port so a port must be specified. Additionally, in order to send periodic BGP statistics, a statistics interval must be configured via the bmp server <1-8> stats-reporting-period <1-3600> command. Once a destination BMP host is configured, BMP is activated on a per-peer basis (or all peers via a shared peer-group configuration) using the “bmp-activate server <1-8>” under the neighbor configuration with the BGP routing configuration. The following is an example configuration. 
 
-Once a destination BMP host is configured, BMP is activated on a per-peer basis (or all peers via a shared peer-group configuration) using the “bmp-activate server <1-8>” under the neighbor configuration with the BGP routing configuration. Collecting BMP data is best done using the open source SNAS collector, formally known as OpenBMP. SNAS can be found at <http://snas.io>.
+<code>
+!
+bmp server 1
+ host 192.168.2.51 port 8500
+ update-source GigabitEthernet0/0/0/0
+ stats-reporting-period 60
+!
+router bgp 65001 
+neighbor 192.168.1.1
+ remote-as 65002 
+ bmp-activate server 1
+ !
+! 
+</code>
+
+
+Collecting BMP data is best done using the open source SNAS collector, formally known as OpenBMP. SNAS can be found at <http://snas.io>.  
+
 
 ## SNMP and SNMP Traps 
 The NCS5500 IOS-XR SNMP configuration guide can be found here: <https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/sysman/62x/b-system-management-cg-ncs5500-62x/b-system-management-cg-ncs5500-62x_chapter_0110.html>. 
