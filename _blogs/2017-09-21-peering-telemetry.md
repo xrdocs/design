@@ -599,7 +599,8 @@ IOS-XR native models do not have a BGP specific RIB, but a protocol of 'bgp' can
 </rpc>   
 ```
  
-The following native XR NETCONF RPC retrieves a list of BGP prefixes in its global (vrf default) IPv4 RIB, with only the prefix,prefix-length, source (route-path), and active attributes. Replacing &lt;active/&gt; with &lt;active&gt;true&lt;/active&gt; would only return active prefixes, removing the prefix,prefix-length-xr, and active leaf attributes under route will return all attributes for each route{: .notice--warning}
+The following native XR NETCONF RPC retrieves a list of BGP prefixes in its global (vrf default) IPv4 RIB, with only the prefix,prefix-length, source (route-path), and active attributes. Replacing &lt;active/&gt; with &lt;active&gt;true&lt;/active&gt; would only return active prefixes, removing the prefix,prefix-length-xr, and active leaf attributes under route will return all attributes for each route 
+{: .notice--warning}
 
 ```
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -747,7 +748,7 @@ The following native XR NETCONF RPC retrieves a list of BGP prefixes in its glob
 A.3 Device Resource YANG Paths
 ------------------------------
 
-Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper.YANG
+Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper.YANG<br>
 openconfig-platform
 
 |                  |                         |
