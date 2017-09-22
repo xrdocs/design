@@ -94,7 +94,7 @@ Monitoring peer session state can be critical for detecting transient outages, t
 
 Setting a realistic max-prefix limit on peers is an important security mechanism. Most router operating systems support the ability to trigger an event based on a percentage threshold of this max prefix limit. This is an important event to monitor since reaching the limit generally results in a traffic-affecting session teardown event.
 
-### Globla and Per-Peer RIB Changes
+### Global and Per-Peer RIB Changes
 
 BMP allows one to monitor incoming advertisements on a per-peer basis and record them for historical purposes. Having a record of all changes allows one to playback updates to determine the past impact of peer advertisement changes. BMP is the preferred mechanism to stream BGP updates as they happen, but NETCONF can also be used to retrieve BGP RIB data globally and per-peer on IOS-XR.
 
