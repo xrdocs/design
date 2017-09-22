@@ -120,8 +120,7 @@ Tuning Netflow parameters is critical to extracting the most useful data from Ne
 There are a wide range of Netflow collection engines on the market today as well as cloud-based solutions. PMACCT found at <http://www.pmacct.net> is a popular open-source Netflow and IPFIX collector.
 
 ## BMP 
-
-BMP is easily configured in the following steps in IOS-XR. Configure a BMP destination host using the global “bmp server <1-8>” command with its associated parameters. The minimum configuration is “bmp server <1-8> host <fqdn|ip> port <port>.” BMP uses TCP as its transport protocol, and has no standard port so a port must be specified. Additionally, in order to send periodic BGP statistics, a statistics interval must be configured via the “bmp server <1-8> stats-reporting-period <1-3600> command”
+BMP is easily configured in the following steps in IOS-XR. Configure a BMP destination host using the global bmp server <1-8> command with its associated parameters. The minimum configuration is bmp server <1-8> host <fqdn|ip> port <port>. BMP uses TCP as its transport protocol, and has no standard port so a port must be specified. Additionally, in order to send periodic BGP statistics, a statistics interval must be configured via the bmp server <1-8> stats-reporting-period <1-3600> command
 
 Once a destination BMP host is configured, BMP is activated on a per-peer basis (or all peers via a shared peer-group configuration) using the “bmp-activate server <1-8>” under the neighbor configuration with the BGP routing configuration. Collecting BMP data is best done using the open source SNAS collector, formally known as OpenBMP. SNAS can be found at <http://snas.io>.
 
