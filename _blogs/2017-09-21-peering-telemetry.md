@@ -449,7 +449,8 @@ IOS-XR native models do not store route information in the BGP Oper model, they 
 
 #### Example Usage
 
-The following OC NETCONF RPC returns the BGP session state for all configured peers. The neighbor-address key must be included as a container in all OC BGP state RPCs {: .notice--warning}
+The following OC NETCONF RPC returns the BGP session state for all configured peers. The neighbor-address key must be included as a container in all OC BGP state RPCs
+{: .notice--warning}
 
 
 ```
