@@ -67,8 +67,7 @@ Peering Event Data
 
 Peering event telemetry data is ideally sent when an event occurs on the device, as opposed to polling the state. The timestamped event is sent to a collection system which may simply log the event or the event may trigger the collection of additional data or remediation action.
 
-Peering Event Data Protocols 
------------------------------
+## Peering Event Data Protocols 
 
 ### BGP Monitoring Protocol
 
@@ -84,8 +83,7 @@ Syslog has long been used as a method for reporting event data from both host se
 
 SNMP traps are event-driven SNMP messages sent by a device following a well-defined SNMP OID schema. SNMP trap receivers can easily decode the message type by the OID and apply the appropriate policy. SNMP trap policies must be defined on the device itself to filter out unwanted messages.
 
-Peering Related Events
-----------------------
+## Peering Related Events
 
 Monitoring all event data on a router can often overwhelm collectors, so prescriptive monitoring is needed to only ingest applicable events. Applicable SNMP trap OIDs can be found in Appendix A.3.
 
