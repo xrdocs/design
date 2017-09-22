@@ -574,7 +574,7 @@ IOS-XR native models do not have a BGP specific RIB, but a protocol of 'bgp' can
 
 #### Example Usage 
 
-**The following OC YANG path retrieves a list of best-path IPv4 prefixes without attributes from the loc-RIB:**
+**The following OC YANG NETCONF RPC retrieves a list of best-path IPv4 prefixes without attributes from the loc-RIB:**
 
 ```
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
