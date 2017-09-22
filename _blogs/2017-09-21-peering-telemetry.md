@@ -298,14 +298,14 @@ Appendix A
 A.1 Interface Metric SNMP OIDs and YANG Paths 
 ----------------------------------------------
 
-### Yang Models 
+### Relevant YANG Models 
 
-ietf-interfaces
-openconfig-interfaces
-openconfig-if-ethernet
-oc-platform
-Cisco-IOS-XR-infra-statsd-oper
-Cisco-IOS-XR-drivers-media-eth-oper
+ietf-interfaces<br>
+openconfig-interfaces<br>
+openconfig-if-ethernet<br>
+oc-platform<br>
+Cisco-IOS-XR-infra-statsd-oper<br>
+Cisco-IOS-XR-drivers-media-eth-oper<br>
 
 |                               |                                                                                |
 |-------------------------------|--------------------------------------------------------------------------------|
@@ -449,12 +449,12 @@ A.2 BGP Operational State YANG Paths
 
 ### Relevant YANG Models
 
-openconfig-bgp.yang
-openconfig-bgp-rib.yang
-Cisco-IOS-XR-ipv4-bgp-oper
-Cisco-IOS-XR-ipv6-bgp-oper
-Cisco-IOS-XR-ip-rib-ipv4-oper
-Cisco-IOS-XR-ip-rib-ipv6-oper
+openconfig-bgp.YANG<br>
+openconfig-bgp-rib.YANG<br>
+Cisco-IOS-XR-ipv4-bgp-oper<br>
+Cisco-IOS-XR-ipv6-bgp-oper<br>
+Cisco-IOS-XR-ip-rib-ipv4-oper<br>
+Cisco-IOS-XR-ip-rib-ipv6-oper<br>
 
 ### Global BGP Protocol State
 
@@ -486,7 +486,7 @@ IOS-XR native models do not store route information in the BGP Oper model, they 
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <get>
     <filter>
-      <bgp xmlns="http://openconfig.net/yang/bgp">
+      <bgp xmlns="http://openconfig.net/YANG/bgp">
         <neighbors>
           <neighbor>
             <neighbor-address/>
@@ -502,7 +502,7 @@ IOS-XR native models do not store route information in the BGP Oper model, they 
 
 <nc:rpc-reply message-id="urn:uuid:24db986f-de34-4c97-9b2f-ac99ab2501e3" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <nc:data>
-    <bgp xmlns="http://openconfig.net/yang/bgp">
+    <bgp xmlns="http://openconfig.net/YANG/bgp">
       <neighbors>
         <neighbor>
           <neighbor-address>172.16.0.2</neighbor-address>
@@ -561,9 +561,7 @@ IOS-XR native models do not store route information in the BGP Oper model, they 
 | Current queue depth for all BGP neighbors | Counter                                                                                                            |
 | SNMP OID                                  | NA                                                                                                                 |
 | OC YANG                                   | /oc-bgp:bgp/neighbors/neighbor/state/queues                                                                        |
-| Native YANG                               | Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/sessions/session/messages-queued-out 
-                                                                                                                      
-  Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/sessions/session/messages-queued-in   |
+| Native YANG                               | Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/sessions/session/messages-queued-out<br> Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/sessions/session/messages-queued-in   |
 | MDT                                       | Native                                                                                                             |
 
 ### BGP RIB Data
@@ -580,7 +578,7 @@ IOS-XR native models do not have a BGP specific RIB, but a protocol of 'bgp' can
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <get>
     <filter>
-      <bgp-rib xmlns="http://openconfig.net/yang/rib/bgp">
+      <bgp-rib xmlns="http://openconfig.net/YANG/rib/bgp">
         <afi-safis>
           <afi-safi>
             <ipv4-unicast>
@@ -607,7 +605,7 @@ The following native XR NETCONF RPC retrieves a list of BGP prefixes in its glob
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <get>
     <filter>
-      <rib xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ip-rib-ipv4-oper">
+      <rib xmlns="http://cisco.com/ns/YANG/Cisco-IOS-XR-ip-rib-ipv4-oper">
         <vrfs>
           <vrf>
             <afs>
@@ -674,7 +672,7 @@ The following native XR NETCONF RPC retrieves a list of BGP prefixes in its glob
 <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <get>
     <filter>
-      <bgp-rib xmlns="http://openconfig.net/yang/rib/bgp">
+      <bgp-rib xmlns="http://openconfig.net/YANG/rib/bgp">
         <afi-safis>
           <afi-safi>
             <ipv4-unicast>
@@ -696,10 +694,10 @@ The following native XR NETCONF RPC retrieves a list of BGP prefixes in its glob
 
 <nc:rpc-reply message-id="urn:uuid:7d9a0468-4d8d-4008-972b-8e703241a8e9" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <nc:data>
-    <bgp-rib xmlns="http://openconfig.net/yang/rib/bgp">
+    <bgp-rib xmlns="http://openconfig.net/YANG/rib/bgp">
       <afi-safis>
         <afi-safi>
-          <afi-safi-name xmlns:idx="http://openconfig.net/yang/rib/bgp-types">idx:IPV4_UNICAST</afi-safi-name>
+          <afi-safi-name xmlns:idx="http://openconfig.net/YANG/rib/bgp-types">idx:IPV4_UNICAST</afi-safi-name>
           <ipv4-unicast>
             <neighbors>
               <neighbor>
@@ -749,7 +747,7 @@ The following native XR NETCONF RPC retrieves a list of BGP prefixes in its glob
 A.3 Device Resource YANG Paths
 ------------------------------
 
-Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper.yang
+Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper.YANG
 openconfig-platform
 
 |                  |                         |
