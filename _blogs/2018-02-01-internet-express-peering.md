@@ -14,197 +14,112 @@ position: top
 {% include toc %}
 
 
+Cover the rise in video traffic 
+Put a reference in for Cisco video index 
+Peering architecture concepts: local peering, express peering networks over DWDM transport, deep CDN/MEC, ICN? 
+
 
 **Introduction**
 ===============
 
-The Internet was created to provide transparent data services across interconnected packet switched networks. The interconnection and exchange of Internet routing data between two networks is known as Peering. Peering is the glue holding together the Internet, without it the flow of data across the Internet would not be possible. Peering represents an important administrative, operational, and security boundary between networks. Peering is a subject of great interest in many areas, from analytics to politics. This paper will focus on the technical aspects of peering covering peering history and current peering architecture in the areas of network, security, and telemetry.
+Over the last few years a Internet traffic has been driven by one dominant source, unicast video. The rise in unicast video has its roots in how users began consuming video content versus traditional broadcast video. These new delivery mechansisms require rethinking networks to make the most efficient use of resources at all layers. This blog will first cover howe we arrived where we are today, and then cover network architecture and technology to help improve network efficiency to deal with the rising tide of unicast video.  
 
-**Peering Background**
+**Unicast Video Growth**
 ==================
 
-Peering History
+Broadcast Video History
+-----------------------
+Television video delivery for many years followed the same path blazed by radio before it, broadcasting a single program over the air at a specific time to anyone within range of the signal. Cable networks were built in the 70s and 80s, with the promise of delivering a wider variety of content to subscribers not subject to the same impairments as over the air (OTA) broadcasts without the use of antennas. The networks however were still analog and built for broadcast delivery of all video to every user. Satellite video delivery worked in much the same way, simply broadcasting all signals and requiring the end device tune to the channel at a specific time. While broadcast video has limitations on flexibility for users, it has the ultiimate efficiency when it comes to network resources as the signal is broadcast once to all users at the origin.   
+
+Video on Demand
+-----------
+Video on Demand, or VoD, originated in the late 1980s and rose to prominence in the 1990s as a way to deliver video content to users on their own timeframe. Users could now select what they wanted to view and have it be delivered to them immediately. It took the reduction in cost of the base infrastructure components, mainly storage and compute, to make a service like VoD a reality. VoD was also seen as a way to further monetize the cable network and challenge the huge video rental business that existed during those times with Pay Per View (PPV) content. 
+
+VoD delivery used two different methods for delivery back in its original form, push or pull. In the push method, content was delivered via broadcast to a single or all subscribers and stored locally on a device such as a set-top box, for viewing later. The pull method streamed the content to the subscriber device from a remote server on user demand. In the end, the pull method easily won out due to the much larger variety of content available and less costly end user device. In order to support a single user viewing content destined for only their device, it required dedicating analog spectrum for the channel. It was still broadcast to a number of users, but encrypted such that only the paying subscriber could view it. Even though it was still broadcast at the lowest level, the content was unicast to a specific subscriber by the stream consuming resources for a single video stream. VoD fundamentally changed users viewing habits and also introduced the first unicast video delivery.    
+
+Video over IP 
+--------------
+Service providers who built out wireline networks using DSL and Ethernet technology, data-link protocols not having a native analog video delivery method, looked at IP as the higher layer protocol to deliver video content to users. These networks were deployed to take advantage of multicast, a subset of the broadcast capability inherent in Ethernet, and standardized for IP in RFC 1112. IP multicast improves network efficiency by implementing frame replication in the network devices, combined with a set of control-plane protocols to create optimized distribution trees. In its simplest form IP multicast replicates a broadcast network, sending all channels to all users (dense mode), and some providers used this method. However, to improve network efficiency it is now most common for end devices to use protocols like IGMP (v4) and MLD (v6) so optimized multicast trees are built. This type of multicast IP delivery is known as IPTV and is implemented in NA by networks such as AT&T UVerse and Google Fiber.  
+
+Supporting VoD on these networks requires delivering video over IP. Similar mechansims can be used as analog networks, using a specific multicast address for the subscriber stream. However, instead of simulating a unicast stream using a more complex multicast process, streaming the content as a to a unicast IP address assigned to a device is much simpler and supported a wider range of devices, even across networks do not support native multicast delivery. Today more and more content on wireline networks is delivered using unicast IP, even on traditional cable networks, due to its flexibility and the ability to serve content to a variety of end user devices from a single content source. The flexibility and ease of delivery using unicast IP has superceded the inefficiencies of delivering sometimes even the same content over the same network resources.   
+
+Over the Top IP Video
+--------------------- 
+The unicast video content described above has typically been contained within a service provider network. As the Internet has grown and bandwidth to end users increased, video content from alternative sources emerged. Broadband Internet became more widely available in the mid 2000s and with it came user-generated video providers like YouTube along with traditional media rental companies like Netflix embracing streaming video for rental delivery. These Internet content providers deliver video "over the top" (OTT) of service provider networks since the origin and destination are applications controlled by the content provider. The growth of OTT Internet video has continued to climb rapidly over the last decade along with IP video in general. IP video accounted for 73% of all Internet traffic in 2016, and by 2021 will account for 82% of all Internet traffic.  (cite Cisco VNI).
+
+It is not only on-demand content driving OTT growth, streaming of traditional broadcast video like sports to mobile devices, 3rd party devices like tablets, smart TVs, and additional endpoints is increasing in popularity. The last few years have seen a number of new services delivering traditional linear TV using OTT IP delivery. Over the top video is by nature unicast, as each stream is simply sent on demand when a user clicks "play." Since there is little efficiency in sending a single stream to each user, it causes tremendous strain on network resources. It is however a trend that is unlikely change, so new methods need to be employed to improve network efficiency.   
+
+
+**Producers and Consumers** 
+==========================
+
+Content Providers 
+-----------------
+Content providers are those who originate video streams. A content source could also be an eyeball network providing video content to its own subscriber base, or an OTT Internet video source. A content provider may not be the original origin of the content, but is simply a means to deliver the content to the end user.  
+
+Caching and Content Delivery Networks
+-------------------------
+Caching is the process of keeping local copies of content to serve to local users instead of utilizing network resources to retrieve the content each time the content is accessed. Caching of Internet content became popular with the rise of the Internet in the late 1990s with open-source software such as Squid and commercial products like Cacheflow. The content in those days was mainly primitive static content, but with the lack of bandwidth for providers was still sometimes beneficial to cache. These types of generic object caches have evolved into systems today targeted at OTT providers, and use more sophisticated tecniques to cache video content from any source. However, with the rise of encryption use, generic caches are no longer a realistic option for serving content closer to users.  
+Content Delivery Networks (CDN) have been around for many years now, with the first major CDN Akamai going live in 1999. The aim of a CDN is to place content closer to end users by distributing servers closer to end users. CDNs such as Akamai, Limelight, and Fastly host and deliver a variety of content from their customers. In addition to more generic CDNs, content owners have built their own CDNs to deliver their own content. Examples of dedicated CDNs include the Netflix OpenConnect network and Google Global Cache network. Most new streaming video providers utilize a distributed CDN to deliver content.   
+
+Eyeball Networks
 ----------------
+Wireless and wireline service providers providing the last mile Internet connection to end users are commonly known as "Eyeball" networks, because the all content must pass through those networks for end users to view it. Around the world, and especially in North America, consolidation of service providers have left relatively few Eyeball networks serving a large number of subscribers.   
 
-The Internet became ubiquitous across the globe in the early 1990s largely due to the construction of Internet connection points known as IXPs or Internet Exchange Points. The IXP provided a place for networks to connect and exchange traffic. The initial IXPs constructed were slightly different than the exchange points of today, but by the middle of the 1990s they began to look markedly similar to today’s IXPs. The initial four major North American IXPs, known as NAPs or Network Access Points were operated by traditional telephone companies. As the Internet grew the steep rise in traffic necessitated the creation of more IXPs and private enterprises created a number of carrier-neutral IXPs across the globe. These facilities also provide physical cross-connect services to allow networks to peer directly with each other, bypassing the IXP fabric. Hundreds of IXPs exist today across the world, along with thousands of private interconnections between organizations.
+**Efficient Unicast Video Delivery** 
 
-IXP Fabric vs. Private Network Interconnect
---------------------------------------------
+What is Network Efficiency? 
+---------------------------
+Network efficiency in this context refers to minimizing the cost and consumption of network resources such as physical fiber, wavelengths,and IP interfaces to deliver unicast video content to end users. The equation to delivering video traffic efficiently is to create a network model reducing the distance, network hops, and network layer transitions between the content provider and content consumer while maintaining statistical multiplexing through aggregation where beneficial.  
 
-The easiest way to interconnect the large number of networks joining the Internet was for the IXP itself to create a peering “fabric” facilitating connectivity from one network to many other networks via a single physical connection to each member network. Multiplexing technology such as ATM VCs were used initially, replaced with Ethernet VLANs or flat Ethernet broadcast domains as Ethernet became the dominant medium.
-
-In the earlier days of the Internet, producers and consumers were more widely distributed as regional residential and business providers provided services to both along with major telephony carriers. As broadband connectivity has become ubiquitous across the world, service and content providers have evolved to meet user’s needs. In North America for example, Internet connectivity to residential consumers has been consolidated to a small number of providers. There are also relatively few mobile providers, an area seeing tremendous traffic growth. In addition, the content being consumed is produced by a much smaller number of content providers, most of whom have created their own peering presence. This has led the “eyeball” consumer networks to peer directly with content provider networks over PNI (Private Network Interconnection) instead of utilizing IXP fabrics. The reduction in pricing of Internet transit has also lead to more use of transit for low bandwidth peers, also negating the need for IXP fabric connections.
-
-Outside North America broadband consolidation has not occurred at the same rate and the decoupling of physical infrastructure from network service has led to many more network providers who interconnect with each other and content providers. IXP fabrics are still widely used across the world today in regional IXPs and large IXPs outside North America. In North America peering fabrics have largely been replaced by the use of Private Network Interconnection.
+Role of Internet Peering 
+------------------------
+Internet Peering is the exchange of traffic between two providers. Peering originated at third party carrier-neutral facilities known as Internet Exchange Points, with the exchange providing a public fabric to interconnect service providers. Due to consolidation and the dominant traffic type being video, the Internet has evolved from most content flowing through a Tier-1 Internet provider via transit connections to one of direct traffic exchange between content providers and eyeball networks. (Quote death of transit NANOG presentation). The majority of Internet video traffic today is exchanged via private network interconnection (PNI) between content providers and eyeball networks. While a lot of Internet video traffic still flows through traditional IXP facilities, improving network efficiency demands traffic take shorter paths through the network.   
 
 Localized Peering
 -----------------
+ Reducing the distance and network hops between where unicast video packets enter your network and exit to the consumer is a key priority for service providers to reduce network cost. Each pass through an optical transponder or router interface adds additional cost to the transit path, especially on long-haul paths from traditional IXPs to subscriber regions. The aforementioned rise in video traffic demands peering move closer to the edges of the network to serve wireline broadband subscribers along with high-bandwidth 5G mobile users. Content providers have invested heavily in their own networks as well as distributed caches serving content from any network location with Internet access. Third party colocation providers have begun building more regional locations supporting PNI between content distributors and the end subscribers on the SP network. This leads to a localized peering option for SPs and content providers, greatly reducing the distance and hops across the network. As more traffic shifts to becoming locally delivered building additional regional or metro peering locations becomes important to ensure less reliance on longer paths during failures. 
 
-While the bulk of Internet peering still occurs in a relatively small number of IXPs in the US, there has been an effort in the last several years to interconnect closer to consumers. The main driver is the cost to carry traffic across long-haul networks from the traditional peering locations to the consumers they serve in larger markets across a large geographic distance. Building and maintaining equipment in a more distributed peering fabric has become more feasible vs increasing capacity on long-haul fiber networks. In addition, it improves the quality of experience for end users since content is served closer to the consumer.
+ Service Provider Unicast Delivery Headend 
+------------------------------------------
+As mentioned, service providers are seeing growth not only in OTT unicast video delivery, but also delivery for their own video services. Most service providers have deployed their own internal CDNs to provide unicast video content to their subscribers and migrate VoD off legacy analog systems onto an all-IP infrastructure. The same efficiency tools for deling with off-net content from peers applies to on-net video services. There may be efficiencies gained in placing SP content servers in the same facilities as other content peers, aggregating all content traffic in a single location for efficient delivery to end users.   
 
-B2B IP Peering
----------------
 
-An often-overlooked form of peering is B2B peering between different networks. There are many examples of B2B peering, the most visible today are those connecting datacenter colocation providers to cloud service providers. Additionally, B2B peering is used for linear video content providers to send video to end providers, carry voice services over IP instead of PSTN, and interconnect various service owners to consumers.
-
-**Peering Hardware**
-================
-
-The main requirements when looking at peering network hardware are
-
--   Physical, power, and cooling footprint
-
--   10G/100G interface density
-
--   Software support for necessary peering features
-
-The Cisco Visual Networking Index has shown a 1270% rise in Internet traffic over the last 12 years and projects a threefold increase over the next five years. Peering routers require flexible high-density hardware supporting the required software feature sets needed for Internet peering. The Cisco NCS 5500 platform powered by IOS-XR satisfies today’s peering needs along with capacity for future traffic growth. Most peering locations are third party facilities where space and power can add considerable cost. Across the entire NCS 5500 series density is greater than 24x100GE per RU, with the NCS 5504, 5508, and 5516 chassis systems providing 36x100GE per RU, all at power consumption of approximately .3/Gbps. In addition to high density 100GE, every NCS 5500 QSFP+ port supports 4x10GE breakout options to connect to 10GE peers as well as downstream caching devices in the case of content provider edge peering.
-
-More information on the Network Convergence System 5500 series can be found at <http://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html>
-
-**Peering Network Design**
-======================
-
-Traditional SP IXP Network Design
-----------------------------------
-
-Traditional SP peering is distributed to one or more geographic locations driven by the convenience of having peers in the same IXP location. There is a need to maintain those locations today as not everyone has the capability of interconnecting everywhere. Peering center network design has typically been done with two or more larger edge peering routers with either direct connections to an optical backbone or connections to another stage of backbone routers as seen in left hand side of Figure 1. In recent years, there has been a trend to more modular network design within the peering center using smaller fixed or chassis systems, allowing the use of best of breed hardware and flexibility to add capacity more granularly. The topology mimics the folded CLOS networks, scaling horizontally across peer connections and minimizing impact during failures. Also, datacenter space in traditional IXP facilities has become more limited in recent years, leading the carrier neutral facility providers to expand to multiple facilities within a metropolitan area. Placing smaller high-density systems to multiplex peer connections onto higher speed links is more cost effective than paying the MRC of inter-facility cross-connects per peer connection.
-
-![peering-wp-fig-1.png]({{site.baseurl}}/images/peering-wp-fig-1.png)
-
-Figure 1 - IXP Network Design Evolution
-
-Distributed SP Peering Fabric
-------------------------------
-
-While traditional IXP facilities are still important, reducing the distance and network hops between where packets enter your network and exit to the consumer is a high priority for service providers. Each pass through an optical transponder or router interface adds additional cost to the transit path. The rise in video traffic over the next several years demands Internet peering at the edges of the network to serve wireline broadband subscribers along with high-bandwidth 5G mobile users. Content providers have invested heavily in their own networks as well as distributed caches serving content from any network location with Internet access. Third party colocation providers have begun building more regional locations supporting PNI between content distributors and the end subscribers on the SP network. This leads to a localized peering option for SPs and content providers, greatly reducing the distance and hops across the network. The right-hand diagram of Figure 1 is an example of how more distributed peering is changing the landscape of peering.
-
-An initial step may be to create a single localized peering facility within a region but as traffic demands increase or more resiliency is needed it can drive the addition of multiple facilities within a region.
-
-Reduced footprint high capacity routers are ideal for serving the needs of a distributed peering network. The NCS 5501, 5502, and 5504 are ideal, providing high density peer termination in a compact, efficient package while not sacrificing features or protocol scale.
 
 ![peering-wp-fig-2.png]({{site.baseurl}}/images/peering-wp-fig-2.png)
 
-Figure 2 - Localized Peering
+**Express Video Delivery Network**
+============================
 
-Regional Core Bypass / Express Peering
----------------------------------------
+Overview 
+---------
+Regional SP networks serving residential subscribers are typically deployed in an aggregation/access hierarchy using logical Ethernet connections over a regional optical transport network. The aggregation nodes serve as an aggregation point for connections to regional sites along with acting as the ingress point for traffic coming from the SP backbone. If an express peering fabric is implemented, SPs can drive even greater efficiency by selecting specific high bandwidth regional sites for core bypass. This is simply connecting the regional hub routers directly to a localized peering facility or facilities, bypassing the regional core aggregation nodes which are simply acting as a pass through for the traffic. Due to the growth in Internet video traffic, this secondary express peering network in time will likely be higher capacity than the original SP converged network. The same express peering network can also be used to serve content originated by the SP, leaving the converged regional network to serve other higher priority traffic needs.
 
-Regional SP networks serving residential subscribers are typically deployed in an aggregation/access hierarchy using logical Ethernet connections over a metro optical transport network. The aggregation nodes serve as an aggregation point for connections to regional sites along with acting as the ingress point for traffic coming from the SP backbone. If a distributed peering fabric is implemented, SPs can drive even greater efficiency by selecting specific high bandwidth regional sites for core bypass. This is simply connecting the regional hub routers directly to a localized peering facility, bypassing the regional core aggregation nodes which are simply acting as a pass through for the traffic. Due to the growth in Internet video traffic, this secondary express peering network in time will likely be higher capacity than the original SP converged network. The same express peering network can also be used to serve content originated by the SP, leaving the converged regional network to serve other higher priority traffic needs.
+Not only is the express delivery network design a more efficient logical design, it can also used a simplified control-plane as the network does not need to support more complex network services or multicast video delivery. The RIB and FIB resources to carry video delivery routes is very small, requiring less power and memory resources than a full peering router. The NCS5500 series has flexible options to fit high or low FIB needs at greater power efficiency than the competition.   
 
-![peering-wp-fig-3.png]({{site.baseurl}}/images/peering-wp-fig-3.png)
 
-Figure 3 - Express Peering Fabric
+Regional Transport Design 
+-------------------------
+The key to building an express network is to first build a transport network allowing DWDM wavelength reach between peeering and content locations to subscriber locations without additional router hops. In some instances, providers have built linear extensions from regional peering locations to core aggregation sites since all connectivity went between the peering routers to the metro core aggregation routers. In order to eliminate redundant hops, the peering locations must be connected to upstream ROADMs to directly reach subscriber locations. There is generally very little cost incurred with adding additional multi-degree ROADMs today, and their use greatly increases network flexibility. While it's most beneficial to have the peering location connected to diverse sites via a fiber ring, even a linear route connected via ROADM will pay dividends in greater efficiency. Another key to the transport design is the use of coherent transponders or integrated IPoDWDM ports. High-density 100G is typically done through 100G muxponders and transponders, while integrated IPoDWDM can provide 200G per port for sites which may not support a transport shelf deployment. The Cisco NCS5500 supports 1.2Tbps per slot using its 6x200G IPoDWDM line card.   
 
-Peering Network Resiliency
---------------------------
+Network Modeling 
+----------------
+Network modeling must be performed to determine which sites are candidates for direct connectivity to content locations. The modeling is based on factors such as statmux gain, component cost, and resource cost such as DWDM wavelengths. A simplified traffic demand matrix needs to be computed from the ingress traffic location to the egress customer sites. Netflow can be used as a tool to determine how much traffic is being sent to customer prefixes at each site. Alternative to Netflow, networks using MPLS can derive the stats to each egress router using either MPLS FEC or TE Tunnel statistics. Once the traffic matrix has been computed, a network model can be created with and without bypass links to calculate the total number of router interfaces and transport links needed. There will be an optimal traffic percentage where connecting a bypass link aids efficiency. In some cases however, traffic growth may be projected to be high enough over time to connect all sites day one.  
 
-Peering resiliency refers to the ability for the network to cope with the loss of a peer, peering router, or peering facility. Apart from B2B peering instances, almost all traffic coming over a peering link is considered best-effort low priority traffic. Even though most traffic is BE, it is recommended for SPs to dual-home to high bandwidth sources of inbound traffic within the same facility or region. Since most larger SPs peer with the same providers in diverse geographic locations, it is more cost-effective to maintain multiple connections in a facility or region than to have traffic fail-over to a path originating in another geographic region. The traffic may result in congestion on backbone links or building excess capacity on expensive long-haul optical networks. The same holds true for localized peering facilities, dual-homing a peer to multiple routers is more cost effective than relying on backup paths across longer distances.
+Control Plane Design 
+--------------------
+In most cases the peering or content location routers will be connected to both an end location as well as the metro core aggregation network. Care must be taken to make sure the end site locations do not act as transit paths between content location and the core. In order to create an isolated domain, use carefully selected metrics to ensure traffic does not flow through the wrong links. Another option is to use a separate IGP process entirely for the express network, ensuring the end site nodes cannot become transit nodes from the content location to the core aggregation nodes. Using multiple loopback addresses is recommended in that instance to create additional separation between networks. More advanced techniques may also be used such as using Segment Routing Policies to define an express routing plane across the regional network.  
 
-**Management, Control-Plane, and Security**
-========================================
+**Additional Efficiency Options** 
 
-Robust and feature-rich software is required in all three of these areas to build a successful peering network. IOS-XR has been a critical part of many peering networks across the world, and continued innovation in the areas of telemetry, programmability, and security is enhancing service provider peering edge networks.
-
-Peering Telemetry
------------------
-
-Peering exists to drive greater efficiency in the network by reducing network transit path length. The insight to determine when to peer with another network and if the peering is resulting in savings is paramount. The streaming data capabilities of IOS-XR using Netflow/IPFIX, Model-Driven Telemetry, and BGP Monitoring Protocol give unprecedented visibility into the peering edge of the network.
-
-### Flow Information
-
-Netflow was invented by Cisco due to requirements for traffic visibility and accounting. Netflow in its simplest form exports 5-tuple data for each flow traversing a Netflow-enabled interface. Netflow data was further enhanced with the inclusion of BGP information in the exported Netflow data, namely AS\_PATH and destination prefix. It was now possible to see where traffic originated by ASN and derive the destination for the traffic per BGP prefix, aiding in peering analysis and planning. The latest iteration of Cisco Netflow is Netflow v9, with the next-generation IETF standardized version called IPFIX (IP Flow Information Export). Netflow continues to be an important source of information for discovering traffic patterns, detecting traffic anomalies, and for detecting security issues such as DDoS attacks. IPFIX has expanded on Netflow’s capabilities by introducing hundreds of entities Netflow is a mandatory component for SPs at the peering edge and Cisco continues to lead in support and development of Netflow and IPFIX on all platforms.
-
-### Peer Statistics and Operational Data
-
-The most basic information needed on a per-peering connection basis is interface traffic statistics. Collected via SNMP or newer methods like Model-Driven Streaming Telemetry, having insight into both real-time traffic statistics and historical trends is a necessary component for operating and planning peering networks. In addition to statistics data, it’s important to monitor the state of the peer such as current operational state, max prefix limits, and
-
-### Model-Driven Telemetry
-
-Model-driven streaming telemetry is a foundational element to a modern peering network architecture. Apart from insights gained from the higher frequency of data like interface statistics, MDT also supports operational data such as BGP session state and BGP prefix counts. In addition to periodic streaming data, event driven streaming telemetry can also enhance peering monitoring and automation capabilities. In the case of a RSVP-TE or SR-TE enabled peering router, traffic matrix data can also be streamed and when combined with Netflow data provides powerful insight into the traffic entering or leaving your network. Cisco IOS-XR coupled with the capabilities of the NCS and ASR hardware platforms deliver a wide range of streaming telemetry data. <http://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/telemetry/b-telemetry-cg-ncs5500-62x.html> is a resource for configuring both policy and model driven telemetry on IOS-XR based platforms.
-
-### BGP Monitoring Protocol
-
-BGP Monitoring Protocol, standardized in RFC 7854, streaming data regarding received BGP prefixes from peers both pre and post routing policy. Since all prefix changes from peers are streamed you gain instant visibility into why outbound traffic shifts are occurring on the network. SNAS, Streaming Network Analytics System, implements a BMP collector and a number of BGP monitoring applications focused on deriving greater meaning from BGP updates. Protocol analytics and security are two main focus areas. The SNAS project can be found at <http://snas.io>. IOS-XR was the first vendor to support BMP and continues to be enhanced to support additional NLRI.
-
-### TE Traffic Matrix Information
-
-TE enabled networks with full or partial mesh configurations can easily determine traffic between peering facilities and origin/destination facilities by looking at TE tunnel statistics. Netflow data can show similar statistics, but requires collection and aggregation, which is not a realtime operation. IOS-XR supports near realtime monitoring of TE tunnel statistics via streaming telemetry, enhancing the capability to catch anomalies and dynamically react to traffic changes. In addition to traditional RSVP-TE tunnel statistics, IOS-XR has been enhanced to gather persistent traffic matrix statistics for Segment Routing enabled networks. The Demand Matrix feature measures traffic from external interfaces destined for Prefix SIDs, making it ideal for peering edge applications.
-
-### BGP Policy Accounting
-
-Unique to IOS-XR is the BGP Policy Accounting feature. BGP PA allows providers to use criteria defined in RPL such as matching a single or set of origin ASNs via regex to create traffic counters when the route is installed in the FIB. This is done through the application of RIB to FIB table policies via the table-policy command. BGP PA can add to the data acquired via other means or be used to quickly isolate operational issues. \[pointer to BGP PA?\]
-
-**Peering Engineering**
-====================
-
-Ingress and Egress Peer Engineering
-------------------------------------
-
-Ingress peer engineering is influencing the point traffic is coming into your network. Since you are peering with a network you do not own, the options for ingress peer engineering are limited. The use of selective advertisement, deaggregation of shorter prefixes into longer ones, and AS\_PATH prepending are the standard options available that guarantee IPE. Other mechanisms like MED may be available if agreements with the peer are negotiated for them to adhere to those attributes.
-
-Egress peer engineering is much easier since you are controlling the path on your own network. There are standard mechanisms to influence best path selection such as LOCALPREF and MED and also more advanced options for per-peer selection such as SR EPE.
-
-Peer Selection via Analytics
------------------------------
-
-Using the data provided by the peering edge devices and telemetry collectors, traffic analysis can reveal who to peer with and where to peer with them. Analyzing transit connections is key to determining good candidates for peering. Netflow exported data will contain the source ASN of traffic flows, and when aggregated over a time period by source ASN gives a clear picture of how much traffic you can expect via direct peering with the ASN. The aggregate traffic to a destination prefix can help determine where to peer, helping minimize the transit hops from source to destination.
-
-Segment Routing Egress Peer Engineering
-----------------------------------------
-
-Egress Peering Engineering or EPE using SR is a newer method of directing traffic to a specific peer based on a unique label, in the case of SR the peer is addressed via a specific prefix SID. It allows a TE path decision from deeper in the network to not only specify an egress node but a specific egress peer or set of peers. Through the use of Anycast SIDs, traffic can be load balanced between several peer nodes as well, simplifying the process of balancing egress traffic.
-
-Flexible Routing Policies via RPL
-----------------------------------
-
-BGP routing policies are used to filter inbound or outbound advertised prefixes and apply modifications to BGP attributes. These mechanisms are used to steer traffic towards egress points, or steer traffic into networks via the application of MED and AS\_PATH or prefix suppression.
-
-IOS-XR from its inception has supported flexible routing policy definitions via its Routing Policy Language. RPL supports advanced functionality such as hierarchical policies, global parameters, and passing parameters to policies. Replacing common policy components with variables passed as parameters when the policy is applied allows abstraction and eliminates duplication. More information about RPL including many examples of its functionality can be found at <http://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/routing/62x/b-routing-cg-ncs5500-62x/b-routing-cg-ncs5500-62x_chapter_0101.html>
-
-**Peering Security**
-================
-
-Peering by definition is at the edge of the network, where security is mandatory. While not exclusive to peering, there are a number of best practices and software features when implemented will protect your own network as well as others from malicious sources within your network.
-
-BCP Implementation
+Local Caching Nodes 
 -------------------
+Placing CDN cache nodes directly into service provider aggregation or end subscriber location can also be a way to reduce cost and netowrk complexity in delivery unicast video content. The CDN nodes can be 3rd party cache nodes supplied by a content provider, such as the Netflix OpenConnect appliance, or internal CDN nodes deliverying SP video content. The main benefits to using local cache nodes are reduction in network resources and improved QoE for subscribers. The cache hit rate or efficiency of the nodes varies but in general they are very good and for very high bandwidth flash events, like the release of a new season of a TV series, are extremely high. Using distributed caches which also serve as origins for downstream caches can help emulate a multicast delivery network without the operational headaches of multicast. 
 
-Best Current Practices are informational documents published by the IETF to give guidelines on operational practices. This document will not outline the contents of the recommended BCPs, but two in particular are of interest to Internet peering. BCP38 explains the need to filter unused address space at the edges of the network, minimizing the chances of spoofed traffic from DDoS sources reaching their intended target. BCP38 is applicable for ingress traffic and especially egress traffic, as it stops spoofed traffic before it reaches outside your network. BCP84 proposes automated ways to verify ingress traffic is valid via the use of Unicast Reverse Path Check or uRPF, a mechanism dropping traffic if the source address does not match a valid route. BCP194, BGP Operations and Security, covers a number of BGP operational practices, many of which are used in Internet peering. IOS-XR supports all of the mechanisms recommended in BCP38, BCP84, and BCP194, including software features such as GTTL, BGP dampening, and prefix limits.
+Work has been done to standardize caching infrastructure through the Streaming Video Alliance, found at https://www.streamingvideoalliance.org. The Streaming Video Alliance is a consortium of service providers, network hardware and software vendors, and content networks. The Open Cache initiative is meant to create a caching server capable of caching any content, owned and operated by the service provider. Work has been done by the IETF CDNI working group to define a framework of how caching nodes interconnect and route requests between providers, and the Open Cache WG in the SVA has adopted most of that architecture. There are however many challenges to open caching such as content encryption, quality of experience metrics, and efficient request routing.    
+There are also a few downsides to placing cache nodes in SP facilities. The space and power required for servers may be relatively high compared to their delivery throughput. As storage, compute, and server networking become more efficient this hurdle becomes less over time. In many cases it may also require another device to aggregate those connections.    
 
-BGP Attribute and CoS Scrubbing
---------------------------------
+ICN 
+---
+Information Centric Networking has gained much research exposure over the last several years, with two primary archtectures being Concent Centric Networking and Named Data Networking. The premise behind ICN is the Internet is almost completely content-driven today, so requesting routing and delivery should be based off content names and not IP addresses. It tackles the concept of location vs. content identifier. Caching is ubiquitous in the ICN architecture to aid in efficient content delivery. Typically every ICN router has one or more cache nodes to serve local content from when additional requests are made. ICN currently is mostly a research effort, with work being led by the IETF ICNNG working group. CCN and NDN networks can be created as overlays over IP networks using current software.    
 
-Scrubbing of data on ingress and egress of your network is an important security measure. Scrubbing falls into two categories, control-plane and dataplane. The control-plane for Internet peering is BGP and there are a few BGP transitive attributes one should take care to normalize. Your internal BGP communities should be deleted from outbound BGP NLRI via egress policy. Most often you are setting communities on inbound prefixes, make sure you are replacing existing communities from the peer and not adding communities. Unless you have an agreement with the peer, normalize the MED attribute to zero or another standard value on all inbound prefixes.
-
-In the dataplane, it’s important to treat the peering edge as untrusted and clear any CoS markings on inbound packets, assuming a prior agreement hasn’t been reached with the peer to carry them across the network boundary. It’s an overlooked aspect which could lead to peer traffic being prioritized on your network, leading to unexpected network behavior.
-
-Per-Peer Control Plane Policers
---------------------------------
-
-BGP protocol packets are handled at the RP level, meaning each packet is handled by the router CPU with limited bandwidth and processing resources. In the case of a malicious or misconfigured peer this could exhaust the processing power of the CPU impacting other important tasks. Most vendors implement policers to prohibit impact to other processes, but at a per-protocol level, meaning even with a policer in place sessions to other BGP peers could be disrupted. IOS-XR’s powerful control plane policing feature implements separate dynamic policers for each peer, meaning no impact outside of that peer.
-
-BGP Prefix Security
--------------------
-
-### RPKI Origin Validation
-
-Prefix hijacking has been prevalent throughout the last decade as the Internet became more integrated into our lives. This led to the creation of RPKI origin validation, a mechanism to validate a prefix was being originated by its rightful owner by checking the originating ASN vs. a secure database. IOS-XR fully supports RPKI for origin validation. Complete details of IOS-XR’s Flowspec implementation plus configuration examples can be found at
-
-<http://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r6-2/routing/configuration/guide/b-routing-cg-asr9000-62x/b-routing-cg-asr9000-62x_chapter_011.html>
-
-### BGPSEC
-
-RPKI origin validation works to validate the source of a prefix, but does not validate the entire path of the prefix. Origin validation also does not use cryptographic signatures to ensure the originator is who they say they are, so spoofing the ASN as well does not stop someone form hijacking a prefix. BGPSEC is an evolution where a BGP prefix is cryptographically signed with the key of its valid originator, and each BGP router receiving the path checks to ensure the prefix originated from the valid owner. BGPSEC standards are being worked on in the SIDR working group.
-
-BGP Flowspec
--------------
-
-BGP Flowspec was standardized in RFC 5575 and defines additional BGP NLRI to inject traffic manipulation policy information to be dynamically implemented by a receiving router. BGP acts as the control-plane for disseminating the policy information while it is up to the BGP Flowspec receiver to implement the dataplane rules specified in the NLRI. At the Internet peering edge, DDoS protection has become extremely important, and automating the remediation of an incoming DDoS attack has become very important. IOS-XR on the ASR9000 and ASR9900 implements most functionality defined in RFC 5575 and the RFCs and drafts extending BGP Flowspec’s capabilities. IOS-XR supports many of the options
-
-Summary
-=======
-
-Cisco routers have powered the Internet for decades now, including playing a critical role in peering between Internet networks. Through continued innovation Cisco platforms such as the NCS 5500 powered by IOS-XR enable providers to unlock efficiency today in their peering edge driving Capex and Opex savings.
-
-Stay tuned for the next paper in the series covering Next-Generation peering, where we introduce Intelligent Peering through rich analytics, router programmability, and more flexible path selection.
