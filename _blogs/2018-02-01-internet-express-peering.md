@@ -1,6 +1,6 @@
 ---
 published: false  
-date: '2017-08-02 11:00-0400'
+date: '2018-08-01 11:00-0400'
 title: Express Peering Fabrics  
 excerpt: Dedicated Networks for High-Bandwidth Unicast Delivery 
 author: Phil Bedard
@@ -85,21 +85,20 @@ Localized Peering
 As mentioned, service providers are seeing growth not only in OTT unicast video delivery, but also delivery for their own video services. Most service providers have deployed their own internal CDNs to provide unicast video content to their subscribers and migrate VoD off legacy analog systems onto an all-IP infrastructure. The same efficiency tools for deling with off-net content from peers applies to on-net video services. There may be efficiencies gained in placing SP content servers in the same facilities as other content peers, aggregating all content traffic in a single location for efficient delivery to end users.   
 
 
-**Express Video Delivery Network**
+**Express Peering Fabric**
 ============================
 
 Overview 
 ---------
-Regional SP networks serving residential subscribers are typically deployed in an aggregation/access hierarchy using logical Ethernet connections over a regional optical transport network. The aggregation nodes serve as an aggregation point for connections to regional sites along with acting as the ingress point for traffic coming from the SP backbone. If an express peering fabric is implemented, SPs can drive even greater efficiency by selecting specific high bandwidth regional sites for core bypass. This is simply connecting the regional hub routers directly to a localized peering facility or facilities, bypassing the regional core aggregation nodes which are simply acting as a pass through for the traffic. Due to the growth in Internet video traffic, this secondary express peering network in time will likely be higher capacity than the original SP converged network. The same express peering network can also be used to serve content originated by the SP, leaving the converged regional network to serve other higher priority traffic needs.
+Regional SP networks serving residential subscribers are typically deployed in an aggregation/access hierarchy using logical Ethernet connections over a regional optical transport network, as shown in Figure 1 below.  The aggregation nodes serve as an aggregation point for connections to regional sites along with acting as the ingress point for traffic coming from the SP backbone. If an express peering fabric is implemented, SPs can drive even greater efficiency by selecting specific high bandwidth regional sites for core bypass. This is simply connecting the regional hub routers directly to a localized peering facility or facilities, bypassing the regional core aggregation nodes which are simply acting as a pass through for the traffic. Due to the growth in Internet video traffic, this secondary express peering network in time will likely be higher capacity than the original SP converged network. The same express peering network can also be used to serve content originated by the SP, leaving the converged regional network to serve other higher priority traffic needs.
 
 Not only is the express delivery network design a more efficient logical design, it can also used a simplified control-plane as the network does not need to support more complex network services or multicast video delivery. The RIB and FIB resources to carry video delivery routes is very small, requiring less power and memory resources than a full peering router. The NCS5500 series has flexible options to fit high or low FIB needs at greater power efficiency than the competition.   
 
-## Traditional Content Delivery
+## Figure 1: Traditional Peering and Content Delivery
 ![peering-express-bypass2.png]({{site.baseurl}}/images/peering-express-bypass2.png)
 
-## Optimized Regional Express Content Delivery Network 
+## Optimized Regional Express Peering Fabric  
 ![peering-express-bypass1.png]({{site.baseurl}}/images/peering-express-bypass1.png)
-
 
 Regional Transport Design 
 -------------------------
