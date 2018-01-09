@@ -66,7 +66,8 @@ Eyeball Networks
 ----------------
 Wireless and wireline service providers providing the last mile Internet connection to end users are commonly known as "Eyeball" networks, because the all content must pass through those networks for end users to view it. Around the world, and especially in North America, consolidation of service providers have left relatively few Eyeball networks serving a large number of subscribers.   
 
-**Efficient Unicast Video Delivery** 
+**Efficient Unicast Video Delivery**
+==================================== 
 
 What is Network Efficiency? 
 ---------------------------
