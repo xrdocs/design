@@ -96,10 +96,10 @@ Regional SP networks serving residential subscribers are typically deployed in a
 Not only is the express delivery network design a more efficient logical design, it can also used a simplified control-plane as the network does not need to support more complex network services or multicast video delivery. The RIB and FIB resources to carry video delivery routes is very small, requiring less power and memory resources than a full peering router. The NCS5500 series has flexible options to fit high or low FIB needs at greater power efficiency than the competition.   
 
 ## Figure 1: Traditional Peering and Content Delivery
-![peering-express-bypass2.png]({{site.baseurl}}/images/peering-express-bypass2.png)
+![peering-express-bypass1.png]({{site.baseurl}}/images/peering-express-bypass2.png)
 
-## Optimized Regional Express Peering Fabric  
-![peering-express-bypass1.png]({{site.baseurl}}/images/peering-express-bypass1.png)
+## Figure 2: Optimized Regional Express Peering Fabric  
+![peering-express-bypass2.png]({{site.baseurl}}/images/peering-express-bypass1.png)
 
 Regional Transport Design 
 -------------------------
@@ -120,7 +120,8 @@ Control Plane Design
 --------------------
 In most cases the peering or content location routers will be connected to both an end location as well as the metro core aggregation network. Care must be taken to make sure the end site locations do not act as transit paths between content location and the core. In order to create an isolated domain, use carefully selected metrics to ensure traffic does not flow through the wrong links. Another option is to use a separate IGP process entirely for the express network, ensuring the end site nodes cannot become transit nodes from the content location to the core aggregation nodes. Using multiple loopback addresses is recommended in that instance to create additional separation between networks. More advanced techniques may also be used such as using Segment Routing Policies to define an express routing plane across the regional network.  
 
-**Additional Efficiency Options** 
+**Additional Efficiency Options**
+--------------------------------- 
 
 Local Caching Nodes 
 -------------------
