@@ -96,10 +96,10 @@ Regional SP networks serving residential subscribers are typically deployed in a
 Not only is the express delivery network design a more efficient logical design, it can also used a simplified control-plane as the network does not need to support more complex network services or multicast video delivery. The RIB and FIB resources to carry video delivery routes is very small, requiring less power and memory resources than a full peering router. The NCS5500 series has flexible options to fit high or low FIB needs at greater power efficiency than the competition.   
 
 ## Figure 1: Traditional Peering and Content Delivery
-![peering-express-bypass1.png]({{site.baseurl}}/images/peering-express-bypass2.png)
+![peering-express-bypass1.jpg]({{site.baseurl}}/images/peering-express-bypass1.jpg)
 
 ## Figure 2: Optimized Regional Express Peering Fabric  
-![peering-express-bypass2.png]({{site.baseurl}}/images/peering-express-bypass1.png)
+![peering-express-bypass2.jpg]({{site.baseurl}}/images/peering-express-bypass2.jpg)
 
 Regional Transport Design 
 -------------------------
