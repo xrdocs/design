@@ -103,13 +103,13 @@ Not only is the express delivery network design a more efficient logical design,
 
 Regional Transport Design 
 -------------------------
-## Flexible Photonic Network 
+### Flexible Photonic Network 
 One of the key building blocks to an express delivery networks is flexibility in placement of circuits between ingress peering endpoints and end user locations. The regional transport network must allow DWDM wavelengths direct reach between peeering and content locations to subscriber locations without additional router hops. The lowest layer block is a flexible photonic layer providing any-to-any wavelength connectivity through multi-degree colorless and contentionless ROADMs and add-drop complexes. The Cisco NCS2000 with its intelligent high-density multi-degree ROADMs and GMPLS control-plane give providers the flexible photonic layer they need to build a more efficient express traffic delivery network. 
 
-## On-net Content Source Facilities 
+### On-net Content Source Facilities 
 In some instances, providers have built linear extensions from regional peering locations to core aggregation sites since all connectivity went between the peering routers to the metro core aggregation routers. In order to eliminate redundant hops, the peering locations must be connected to upstream ROADMs to directly reach subscriber locations. There is generally very little cost incurred with adding additional multi-degree ROADMs today, and their use greatly increases network flexibility. While it's most beneficial to have the peering location connected to diverse sites via a fiber ring, even a linear route connected via ROADM will pay dividends in greater efficiency. 
 
-## Coherent Optics 
+### Coherent Optics 
 Another key to the transport design is the use of coherent transponders or coherent integrated IPoDWDM ports. High-density 100G is typically done through 100G muxponders and transponders, while integrated IPoDWDM can provide 200G per port for sites which may not support a transport shelf deployment. The NCS2000 and its family of integrated muxponders can support 96 channels at up to 250G per wavelength. The 2RU NCS10002 muxponder provides a flexible 2Tbps of capacity in an external shelf in a platform running IOS-XR, supporting rich telemetry and automation capabilities. In IPoDWDM use cases, the Cisco NCS5500 supports 1.2Tbps per slot using its 6x200G IPoDWDM line card.   
 
 Network Modeling 
