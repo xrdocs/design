@@ -120,6 +120,11 @@ Control Plane Design
 --------------------
 In most cases the peering or content location routers will be connected to both an end location as well as the metro core aggregation network. Care must be taken to make sure the end site locations do not act as transit paths between content location and the core. In order to create an isolated domain, use carefully selected metrics to ensure traffic does not flow through the wrong links. Another option is to use a separate IGP process entirely for the express network, ensuring the end site nodes cannot become transit nodes from the content location to the core aggregation nodes. Using multiple loopback addresses is recommended in that instance to create additional separation between networks. More advanced techniques may also be used such as using Segment Routing Policies to define an express routing plane across the regional network.  
 
+**Should I build an Express Fabric?**
+=====================================
+There are several factors that go into whether or not building an Express Peering fabric is the right approach for your network. Most important is to analyze the traffic coming into your network from external peers and determine the true network cost of the traffic path from ingress to egress. Building a detailed network cost model incoporating physical fiber, optical transport, and IP networks will allow you to gain insight into how much each hop of the network path costs at each layer and combined. An advanced network modeling tool such as Cisco WAE Planning can help build a network model and simulate the current network as well as potential Express Fabric designs to determine if building an Express Network is an efficient solution. However, if you have taken the steps to build a local peering location, an Express Fabric is the next logical step in reducing cost from ingress peer to customer endpoints.  
+
+ 
 **Additional Efficiency Options**
 --------------------------------- 
 
@@ -134,4 +139,3 @@ There are also a few downsides to placing cache nodes in SP facilities. The spac
 ICN 
 ---
 Information Centric Networking has gained much research exposure over the last several years, with two primary archtectures being Concent Centric Networking and Named Data Networking. The premise behind ICN is the Internet is almost completely content-driven today, so request routing and delivery should be based off content names and not IP addresses. It tackles the concept of location vs. content identifier. Caching is ubiquitous in the ICN architecture to aid in efficient content delivery. Typically every ICN router has one or more cache nodes to serve local content from when additional requests are made. ICN currently is mostly a research effort, with work being led by the IETF ICNNG working group. CCN and NDN networks can be created as overlays over IP using Linux software as a way to explore the architecture and routing constructs of ICN.   
-
