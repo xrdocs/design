@@ -13,12 +13,6 @@ position: hidden
 
 {% include toc %}
 
-
-Cover the rise in video traffic 
-Put a reference in for Cisco video index 
-Peering architecture concepts: local peering, express peering networks over DWDM transport, deep CDN/MEC, ICN? 
-
-
 **Introduction**
 ===============
 
