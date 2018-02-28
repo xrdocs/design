@@ -1,9 +1,8 @@
-
 ---
 published: true 
 date: '2018-08-01 11:00-0400'
 title: Express Peering Fabrics 
-excerpt: Dedicated Networks for High-Bandwidth Unicast Delivery 
+excerpt: In Part 2 of this blog series on transforming regional and metro networks for efficient OTT video delivery, we'll explore how an Express Peering Fabric can optimize networks for unicast video delivery.  
 author: Phil Bedard
 tags:
   - iosxr
