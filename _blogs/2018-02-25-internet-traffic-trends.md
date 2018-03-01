@@ -41,7 +41,7 @@ Over the Top IP Video
 --------------------- 
 The unicast video content described above has typically been contained within a service provider network. As the Internet has grown and bandwidth to end users increased, video content from alternative sources emerged. Broadband Internet became more widely available in the mid 2000s and with it came user-generated video providers like YouTube along with traditional media rental companies like Netflix embracing streaming video for rental delivery. These Internet content providers deliver video "over the top" (OTT) of service provider networks since the origin and destination are applications controlled by the content provider. The growth of OTT Internet video has continued to climb rapidly over the last decade along with IP video in general. IP video accounted for 73% of all Internet traffic in 2016, and by 2021 will account for 82% of all Internet traffic.  
 
-![vni_video_traffic.png]({{site.baseurl}}/images/vni_video_traffic.jpg) 
+![vni_video_traffic.png]({{site.baseurl}}/images/vni_video_traffic.png) 
 
 It is not only on-demand content driving OTT growth, streaming of traditional broadcast video like sports to mobile devices, 3rd party devices like tablets, smart TVs, and additional endpoints is increasing in popularity. The last few years have seen a number of new services delivering traditional linear TV using OTT IP delivery. Over the top video is by nature unicast, as each stream is simply sent on demand when a user clicks "play." Since there is little efficiency in sending a single stream to each user, it causes tremendous strain on network resources. It is however a trend that is unlikely change, so new methods need to be employed to improve network efficiency.   
 
