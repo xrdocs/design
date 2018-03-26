@@ -31,7 +31,7 @@ Not only is the express delivery network design a more efficient logical design,
 Regional Transport Design 
 -------------------------
 ### Flexible Photonic Network 
-One of the key building blocks to an express delivery networks is flexibility in placement of circuits between ingress peering endpoints and end user locations. The regional transport network must allow DWDM wavelengths direct reach between peeering and content locations to subscriber locations without additional router hops. The lowest layer block is a flexible photonic layer providing any-to-any wavelength connectivity through multi-degree colorless and contentionless ROADMs and add-drop complexes. The Cisco NCS2000 with its intelligent high-density multi-degree ROADMs and GMPLS control-plane give providers the flexible photonic layer they need to build a more efficient express traffic delivery network. 
+One of the key building blocks to express delivery networks is flexible placement of DWDM circuits between ingress peering endpoints and end user locations. The regional transport network must allow DWDM wavelengths direct reach between peering and content locations to subscriber locations without additional router hops. The lowest layer block is a flexible photonic layer providing any-to-any wavelength connectivity through multi-degree colorless and contentionless ROADMs and add-drop complexes. T
 
 ### On-net Content Source Facilities 
 In some instances, providers have built linear extensions from regional peering locations to core aggregation sites since all connectivity went between the peering routers to the metro core aggregation routers. In order to eliminate redundant hops, the peering locations must be connected to upstream ROADMs to directly reach subscriber locations. There is generally very little cost incurred with adding additional multi-degree ROADMs today, and their use greatly increases network flexibility. While it's most beneficial to have the peering location connected to diverse sites via a fiber ring, even a linear route connected via ROADM will pay dividends in network agility and efficient connectivity. 
@@ -53,9 +53,15 @@ There are several factors that go into whether or not building an Express Peerin
 
 **Cisco Express Peering Fabric Components**
 ===========================================
-Cisco optical transport and routing platforms allow providers to build the most efficient transport delivery. The NCS2000 and its family of integrated muxponders can support 96 channels at up to 250G per wavelength. The 2RU NCS10002 muxponder provides a flexible 2Tbps of capacity in an external shelf in a platform running IOS-XR, supporting rich telemetry and automation capabilities. The NCS5500 routing platform has flexible fixed and modular chassis options. The 1RU NCS-55A1-36H-SE has 36 100G interfaces with a 4M IPv4 FIB capacity. The modular NCS-5504 and NCS-5508 support the same scale in each line card slot. A 6x200G IPoDWDM line card can be used to extend connections over passive optical muxes or dark fiber at up to 200G per interface.    
+Cisco's family of Network Convergence System components bring both the scale and flexibility to maximize network efficiency.  
 
- 
+One of the keys to building an optimized peering fabric is an agile photonic network. The Cisco NCS2000 with its intelligent high-density multi-degree ROADMs and GMPLS control-plane give providers the flexible photonic layer needed to construct a more efficient express traffic delivery network. The NCS2000 and its family of integrated muxponders can support 96 channels at 200G per wavelength. The NCS1010 flexible ROADM. The 2RU NCS1002 muxponder provides a flexible 2Tbps of capacity. The new NCS1004 increases scale to 4.8Tbps with wavelength capacities up to 600G. The NCS 1002 and 1004 are powered by IOS-XR, supporting rich telemetry and automation capabilities. The NCS5500 routing platform has flexible fixed and modular chassis options. The 1RU NCS-55A1-36H-SE has 36 100G interfaces with a 4M IPv4 FIB capacity. The modular NCS-5504 and NCS-5508 support the same scale in each line card slot. A 6x200G IPoDWDM line card can be used to extend connections over passive optical muxes or dark fiber at up to 200G per interface.    
+
+Learn more about Cisco NCS optical networking at https://www.cisco.com/c/en/us/products/optical-networking/index.html
+
+Learn more about the Cisco NCS 5500 series of IP routers at https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html 
+
+
 **Additional Efficiency Options**
 --------------------------------- 
 
