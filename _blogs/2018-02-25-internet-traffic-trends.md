@@ -42,7 +42,7 @@ Supporting VoD on these networks requires delivering video over IP. Similar mech
 
  ![multicast_video.png]({{site.baseurl}}/images/multicast_video.png) | ![unicast_video.png]({{site.baseurl}}/images/unicast_video.png) | 
 :----------------:|:---------------:
-Multicast Delivery|Unicast Delivery|
+**Multicast Delivery**|**Unicast Delivery**|
 
 
 Over the Top IP Video
