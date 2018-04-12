@@ -26,6 +26,7 @@ Broadcast Video History
 Television video delivery for many years followed the same path blazed by radio before it, broadcasting a single program over the air at a specific time to anyone within range of the signal. Cable networks were built in the 70s and 80s, with the promise of delivering a wider variety of content to subscribers not subject to the same impairments as over the air (OTA) broadcasts, while eliminating the use of antennas. A physical medium like coaxial cable exhibits similar properties as transmission through the air as electrical signals are replicated across branches in the medium. The original primitive cable networks were still analog end to end and built for broadcast delivery of all video to every user. Satellite video delivery worked in much the same way, simply broadcasting all signals and requiring the end device tune to the channel at a specific analog frequency and the user tune in to watch at a specific time of day. In the 1980s and 1990s, TV viewers could always cite the exact day and time of their favorite programs. While broadcast video has limitations on flexibility for users, it has the ultimate efficiency when it comes to network resources as the signal is broadcast once to all users once at the origin.  
 
 ![broadcast_video.png]({{site.baseurl}}/images/broadcast_video.png)  
+<center>Broadcast Delivery</center>
 
 Video on Demand
 -----------
