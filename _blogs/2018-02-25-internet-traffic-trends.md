@@ -40,9 +40,9 @@ Service providers who built out wireline networks using DSL and Ethernet technol
 Supporting VoD on these networks requires delivering video over IP. Similar mechanisms can be used as analog networks, using a specific multicast address for the subscriber stream. However, instead of simulating a unicast stream using a more complex multicast process, streaming the content as a to a unicast IP address assigned to a device is much simpler and supported a wider range of devices, even across networks that do not support native multicast delivery. Today more and more content on wireline networks is delivered using unicast IP, even on traditional cable networks, due to its flexibility and the ability to serve content to a variety of end user devices from a single content source. The flexibility and ease of delivery using unicast IP has superceded the inefficiencies of delivering duplicate content over the same network resources.   
 
 
-![multicast_video.png]({{site.baseurl}}/images/multicast_video.png)  
-![unicast_video.png]({{site.baseurl}}/images/unicast_video.png)  
-
+| ![multicast_video.png]({{site.baseurl}}/images/multicast_video.png) | ![unicast_video.png]({{site.baseurl}}/images/unicast_video.png) | 
+|:------------:|:-----------:|
+|Text|Text|
 
 
 Over the Top IP Video
