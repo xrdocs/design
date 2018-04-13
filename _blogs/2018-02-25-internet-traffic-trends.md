@@ -39,15 +39,13 @@ Video over IP
 Service providers who built out wireline networks using DSL and Ethernet technology, network infrastructure types not having a native analog video delivery method, looked at IP as the higher layer protocol to deliver video content to users. These networks were deployed to take advantage of multicast, a subset of the broadcast capability inherent in Ethernet, and standardized for IP in RFC 1112. IP multicast improves network efficiency by implementing frame replication in the network devices, combined with a set of control-plane protocols to create optimized distribution trees. In its simplest form IP multicast replicates a broadcast network, sending all channels to all users (dense mode), and some providers used this method. However, to improve network efficiency it is now most common for end devices to use protocols like IGMP (v4) and MLD (v6) so optimized multicast trees are built. This type of multicast IP delivery is known as IPTV and is implemented in North America by networks such as AT&T UVerse and Google Fiber.  
 
  ![multicast_video.png]({{site.baseurl}}/images/multicast_video.png)
-<center>Multicast Video Delivery</center>
+<center><b>Multicast Video Delivery<b></center>
 
 
 Supporting VoD on these networks requires delivering video over IP. Similar mechanisms can be used as analog networks, using a specific multicast address for the subscriber stream. However, instead of simulating a unicast stream using a more complex multicast process, streaming the content as a to a unicast IP address assigned to a device is much simpler and supported a wider range of devices, even across networks that do not support native multicast delivery. Today more and more content on wireline networks is delivered using unicast IP, even on traditional cable networks, due to its flexibility and the ability to serve content to a variety of end user devices from a single content source. The flexibility and ease of delivery using unicast IP has superceded the inefficiencies of delivering duplicate content over the same network resources.   
 
 ![unicast_video.png]({{site.baseurl}}/images/unicast_video.png)
-<center>Unicast Video Delivery</center>
-
-**Multicast Delivery**|**Unicast Delivery**|
+<center><b>Unicast Video Delivery</b></center>
 
 
 Over the Top IP Video
