@@ -1,5 +1,5 @@
 ---
-layout: archive
+layout: homepage
 permalink: /
 author_profile: true
 author: "Cisco Design Team"
@@ -13,7 +13,7 @@ date: null
 <div class="feature__wrapper">
     <div class="feature__item--right">
       <div class="archive__item">
-          <div class="archive__item-teaser center" style="max-height: 200px; max-width: 200px;display: block;
+          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
            margin-left: auto; margin-right: auto;">
             <img src="{{ base_path }}/images/design_lp/traffic_cloud.png" alt="" />
           </div>
