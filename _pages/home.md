@@ -32,3 +32,25 @@ date: null
     </div>
 </div>
 
+
+
+<div class="feature__wrapper">    
+<div class="feature__item--left">
+      <div class="archive__item" style="margin-left: 2em;">
+          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
+           margin-left: auto; margin-right: auto;">
+            <img src="{{ base_path }}/images/design_lp/peering.png" alt="" />
+          </div>
+        <div class="archive__item-body">
+            <h2 class="archive__item-title">Internet Edge Peering - Current Practice</h2>
+            <div class="archive__item-excerpt" style="font-size: 0.65em;">
+            <p> The Internet was created to provide transparent data services across interconnected packet switched
+             networks. The interconnection and exchange of Internet routing data between two networks is known as 
+             Peering. Peering is the glue holding together the Internet.</p>
+            </div>
+            <p><a href="https://xrdocs.github.io/design/blogs/2017-08-01-internet-edge-peering-current-practice/" 
+                  class="btn ">Read more</a></p>
+        </div>
+      </div>
+</div>
+</div>
