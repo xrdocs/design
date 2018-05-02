@@ -57,9 +57,9 @@ Cisco's family of Network Convergence System components bring both the scale and
 
 One of the keys to building an optimized peering fabric is an agile photonic network. The Cisco NCS2000 with its intelligent high-density multi-degree ROADMs and GMPLS control-plane give providers the flexible photonic layer needed to construct a more efficient express traffic delivery network. The NCS2000 and its family of integrated muxponders can support 96 channels at 200G per wavelength. The NCS1010 flexible ROADM. The 2RU NCS1002 muxponder provides a flexible 2Tbps of capacity. The new NCS1004 increases scale to 4.8Tbps with wavelength capacities up to 600G. The NCS 1002 and 1004 are powered by IOS-XR, supporting rich telemetry and automation capabilities. The NCS5500 routing platform has flexible fixed and modular chassis options. The 1RU NCS-55A1-36H-SE has 36 100G interfaces with a 4M IPv4 route FIB capacity. The modular NCS-5504 and NCS-5508 support the same scale in each line card slot. A 6x200G IPoDWDM line card can be used to extend connections over passive optical muxes or dark fiber at up to 200G per interface.    
 
-Learn more about Cisco NCS optical networking at https://www.cisco.com/c/en/us/products/optical-networking/index.html
+Learn more about Cisco NCS optical networking at <https://www.cisco.com/c/en/us/products/optical-networking/index.html>
 
-Learn more about the Cisco NCS 5500 series of IP routers at https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html 
+Learn more about the Cisco NCS 5500 series of IP routers at <https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html> 
 
 
 **Additional Efficiency Options**
