@@ -1,18 +1,21 @@
 ---
-published: true 
+published: true
 date: '2018-04-30 11:00-0400'
-title: Compass Metro Fabric High Level Design 
-excerpt: Compass Metro Fabric (CMF) design introduces an SDN-ready architecture which evolves traditional Metro network  design towards an SDN enabled, programmable network capable of delivering all services.  
+title: Compass Metro Fabric High Level Design
+excerpt: >-
+  Compass Metro Fabric (CMF) design introduces an SDN-ready architecture which
+  evolves traditional Metro network  design towards an SDN enabled, programmable
+  network capable of delivering all services.
 author: Jiri Chaloupka
 tags:
   - iosxr
   - Metro
   - Design
   - Compass
-position: hidden 
+position: hidden
 ---
-
 {% include toc %}
+
 
 
 # Value Proposition
@@ -582,7 +585,7 @@ BGP-LS.
 
 _Figure 13: PCE Path Computation_
 
-#### Delegated Computation to XTC
+### #Delegated Computation to XTC
 
 1.  NSO provisions the service. Alternatively, the service can be
     provisioned via CLI
@@ -598,7 +601,7 @@ _Figure 13: PCE Path Computation_
 6.  (Optional) When WAE is deployed for LSP visibility, XTC updates WAE
     with the newer LSP
     
-#### WAE Instantiated LSP
+### #WAE Instantiated LSP
 
 1.  WAE computes the path
 
@@ -610,7 +613,7 @@ _Figure 13: PCE Path Computation_
 
 5.  XTC updates WAE with newer LSP
     
-#### Delegated Computation to WAE
+### #Delegated Computation to WAE
 
 1.  NSO provisions the service – Service can also be provisioned via CLI
 
@@ -629,7 +632,7 @@ _Figure 13: PCE Path Computation_
 8.  XTC updates WAE with newer LSP
 
 
-# Transport – Segment Routing IPv6 Data Plane (SRv6)
+#Transport – Segment Routing IPv6 Data Plane (SRv6)
 
 The Compass Metro Fabric design will use Segment Routing IPv6 Data Plane
 (SRv6) in later phases.
