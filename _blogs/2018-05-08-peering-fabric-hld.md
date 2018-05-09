@@ -1263,7 +1263,7 @@ IOS-XR enforces protocol policers and BGP peer policers by default.
 
 ### BGP Prefix Security
 
-### RPKI Origin Validation
+#### RPKI Origin Validation
 
 Prefix hijacking has been prevalent throughout the last decade as the
 Internet became more integrated into our lives. This led to the creation
@@ -1271,7 +1271,7 @@ of RPKI origin validation, a mechanism to validate a prefix was being
 originated by its rightful owner by checking the originating ASN vs. a
 secure database. IOS-XR fully supports RPKI for origin validation.
 
-### BGPSEC
+#### BGPSEC
 
 RPKI origin validation works to validate the source of a prefix, but
 does not validate the entire path of the prefix. Origin validation also
@@ -1284,7 +1284,7 @@ from the valid owner. BGPSEC standards are being worked on in the SIDR
 working group.
 
 
-### BGP Flowspec
+#### BGP Flowspec
 
 BGP Flowspec was standardized in RFC 5575 and defines additional BGP
 NLRI to inject traffic manipulation policy information to be dynamically
@@ -1310,9 +1310,9 @@ packet filters can make se use of its capabilities.
 </thead>
 <tbody>
 <tr class="odd">
-<td><p>openconfig-interfaces</p>
-<p>Cisco-IOS-XR-infra-statsd-oper</p>
-<p>Cisco-IOS-XR-pfi-im-cmd-oper</p></td>
+<td><p><strong>openconfig-interfaces</strong></p>
+<p><strong>Cisco-IOS-XR-infra-statsd-oper</strong></p>
+<p><strong>Cisco-IOS-XR-pfi-im-cmd-oper</strong></p></td>
 <td><p><strong>Interface config and state </strong></p>
 <p><strong>Common counters found in SNMP IF-MIB </strong></p></td>
 </tr>
@@ -1516,7 +1516,7 @@ information.
 | OC YANG                       | oc-platform:components/component/oc-transceiver:transceiver/oc-transceiver:physical-channels/oc-transceiver:channel/oc-transceiver:state/oc-transceiver:input-power |
 | Native YANG                   | Cisco-IOS-XR-drivers-media-eth-oper/ethernet-interface/interfaces/interface/phy-info/phy-details/transceiver-tx-power                                               |
 
-BGP Operational State
+## BGP Operational State
 
 ### Global BGP Protocol State
 
@@ -1819,38 +1819,38 @@ paths.
 |Cisco-IOS-XR-wdsysmon-fd-oper:system-monitoring/cpu-utilization
 |Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface
 |Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics
-|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics/basic-i|nterface-stats
+|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics/basic-interface-stats
 |Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info
 |Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counter|s
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statisti|cs/
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statisti|cs/class-stats/general-stats
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statisti|cs/class-stats/queue-stats-array
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/general-stats
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/queue-stats-array
 |Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbors
 |Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces
 |Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/adjacencies
 |Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/bmp
 |Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors
-|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/|vrf
-|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/neighbors/nei|ghbor
-|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/|global
-|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/|performance-statistics
+|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/vrf
+|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/neighbors/neighbor
+|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/global
+|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/performance-statistics
 |\*\*Cisco-IOS-XR-ipv6-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-i|nfo/vrf
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/neighbors|/neighbor
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-i|nfo/global
+|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/vrf
+|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/neighbors/neighbor
+|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/global
 |\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/bmp
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-i|nfo/performance-statistics
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-bgp-ext
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-bgp-int
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-isis-l1
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-isis-l2
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-isis-sum
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/p|roto-route-count
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-bgp-ext
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-bgp-int
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-isis-l1
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-isis-l2
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/r|type-isis-sum
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/p|roto-route-count
-|Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper/dpa/stats/nodes/node/hw-resources-datas/hw-re|sources-data
+|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/performance-statistics
+|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext
+|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int
+|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l1
+|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2
+|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-sum
+|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count
+|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext
+|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int
+|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l1
+|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2
+|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-sum
+|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count
+|Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper/dpa/stats/nodes/node/hw-resources-datas/hw-resources-data
 |                                            |
