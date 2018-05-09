@@ -8,14 +8,13 @@ tags:
   - iosxr
   - Peering
   - Design
+  - Compass
 position: hidden 
 ---
 
 {% include toc %}
 
 # Compass Peering Fabric Design 1.0
-
-![](media/image1.emf)
 
 ## Key Drivers
 
@@ -83,8 +82,10 @@ peer termination. The first, similar to more traditional peering
 deployments, collapses the Peer Termination and Core Connectivity
 network functions into a single physical device using the device’s
 internal fabric to connect each function. The second option utilizes a
-fabric with separating the functional into separate physical layers,
+fabric separating the network functions into separate physical layers,
 connected via an external fabric running over standard Ethernet.
+
+![]({{site.baseurl}}/images/cmf-hld/cpf-topology.png)
 
 In many typical SP peering deployments, a traditional two-node setup is
 used where providers vertically upgrade nodes to support the higher
@@ -178,6 +179,9 @@ Validation is done exceeding real-world scaling requirements to ensure
 the design fulfills its rule in existing networks with room for future
 growth.
 
+![]({{site.baseurl}}/images/cpf-hld/peering-validation.png)
+
+
 ## Peering Fabric Use Cases
 
 ### Traditional IXP Peering Migration to Compass Peering Fabric
@@ -200,7 +204,7 @@ The diagram below shows a fully distributed fabric, where peers are now
 distributed across three PFL nodes, each with full connectivity to
 upstream PFS nodes.
 
-![](media/image2.emf)
+![]({{site.baseurl}}/images/cpf-hld/peering-migration.png)
 
 ### Peering Fabric Extension
 
@@ -213,7 +217,7 @@ geographic area you do not wish to install a complete peering fabric
 into. In those cases, connecting remote PFL nodes to a larger peering
 fabric can be done using optical transport or longer range gray optics.
 
-![](media/image3.emf)
+![]({{site.baseurl}}/images/cpf-hld/peering-extension.png)
 
 ### Localized Metro Peering and Content Delivery
 
@@ -227,7 +231,7 @@ or content delivery center, connected via a common peering fabric. In
 these cases the PFS nodes connect directly to the metro core to enable
 delivery across the region or metro.
 
-![](media/image4.emf)
+![]({{site.baseurl}}/images/cpf-hld/local-peering.png)
 
 ### Express Peering Fabric
 
@@ -239,7 +243,7 @@ muxponders such as the NCS1002 along with flexible photonic ROADM
 architectures enabled by the NCS2000 can help make the most efficient
 use of metro fiber assets.
 
-![](media/image5.emf)
+![]({{site.baseurl}}/images/cpf-hld/express-peering.png)
 
 ### Datacenter Edge Peering
 
@@ -252,7 +256,7 @@ Peering Fabric supports interconnected to the DC via the SP core or with
 the PFS nodes as leafs to the DC spine. These would act as traditional
 border routers in the DC design.
 
-![](media/image6.emf)
+![]({{site.baseurl}}/images/cpf-hld/spdc-peering.png)
 
 ### Peer Traffic Engineering with Segment Routing
 
@@ -276,9 +280,12 @@ evolution can be found at <http://segment-routing.net>
 
 ## Low-Level Design
 
-#### Peering Fabric Reference Diagram
+#### Integrated Peering Fabric Reference Diagram
+![]({{site.baseurl}}/images/cpf-hld/integrated.png)
 
-![](media/image7.emf)
+#### Distributed Peering Fabric Reference Diagram
+![]({{site.baseurl}}/images/cpf-hld/distributed.png)
+
 
 ### Peering Fabric Hardware Detail
 
@@ -292,7 +299,7 @@ on each platform can be found at
 
 #### NCS-5501-SE
 
-![](media/image8.png)
+![]({{site.baseurl}}/images/cpf-hld/5501-se.png)
 
 The NCS 5501 is a 1RU fixed router with 40X10GE SFP+ and 4X100GE QSFP28
 interfaces. The 5501 has IPv4 FIB scale of at least 2M routes. The
@@ -301,7 +308,7 @@ interface flexibility such as ER, ZR, or DWDM.
 
 #### NCS-55A1-36H-SE
 
-![](media/image9.png)
+![]({{site.baseurl}}/images/cpf-hld/55a1-36h.png)
 
 The 55A1-36H-SE is a second generation 1RU NCS5500 fixed platform with
 36 100GE QSFP28 ports operating at line rate. The –SE model contains an
@@ -314,7 +321,7 @@ time by simply adding additional 55A1-36H-SE spine nodes.
 
 #### NCS-55A1-24H
 
-![](media/image10.png)
+![]({{site.baseurl}}/images/cpf-hld/55a1-24h.png)
 
 The NCS-55A1-24H is a second generation 1RU NCS5500 fixed platform with
 24 100GE QSFP28 ports. The device uses two 900GB NPUs, with 12X100GE
@@ -325,9 +332,9 @@ The 55A1-24H also has a powerful multi-core processor and 32GB of RAM.
 
 #### NCS 5504 and 5508 Modular Chassis and NC55-36X100G-A-SE line card
 
-![](media/image11.png)
+![]({{site.baseurl}}/images/cpf-hld/nc55-36-100g.png)
 
-![](media/image12.png) ![](media/image13.png)
+![]({{site.baseurl}}/images/cpf-hld/ncs-5504.png) ![]({{site.baseurl}}/images/cpf-hld/ncs-5508.png)
 
 Very large peering fabric deployments or those needing interface
 flexibility such as IPoDWDM connectivity can use the modular NCS5500
@@ -400,7 +407,7 @@ oversubscription ratio.
 
 ### Peering Fabric Control Plane
 
-![](media/image14.emf)
+![]({{site.baseurl}}/images/cpf-hld/control-plane.png)
 
 #### PFL to Peer
 
@@ -477,7 +484,7 @@ Node EPE directs traffic to a specific peering node within the fabric.
 The node is targeted using first the PFS cluster anycast IP along with
 the specific PFL node SID.
 
-![](media/image15.png)
+![]({{site.baseurl}}/images/cpf-hld/epe-node.png)
 
 #### Peer Interface EPE
 
@@ -485,7 +492,7 @@ This example uses an Egress Peer Engineering peer-adj-SID value assigned
 to a single peer interface. The result is traffic sent along this SR
 path will use only the prescribed interface for egress traffic.
 
-![](media/image16.png)
+![]({{site.baseurl}}/images/cpf-hld/epe-interface.png)
 
 #### Abstract Peering
 
@@ -494,7 +501,7 @@ the anycast SIDs of its cluster of PFS nodes. In this case PHP is used
 for the anycast SIDs and traffic is simply forwarded as IP to the final
 destination across the fabric.
 
-![](media/image17.png)
+![]({{site.baseurl}}/images/cpf-hld/epe-abstract.png)
 
 ### Peering Fabric Telemetry
 
@@ -522,7 +529,7 @@ systems.
 
 #### Telemetry Diagram
 
-![](media/image18.emf)
+![]({{site.baseurl}}/images/cpf-hld/peering-telemetry.png)
 
 #### Model-Driven Telemetry
 
