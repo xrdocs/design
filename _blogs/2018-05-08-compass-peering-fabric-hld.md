@@ -1,20 +1,19 @@
 ---
 published: true 
 date: '2018-05-01 11:00-0400'
-title: Compass Peering Fabric Design 
-excerpt: Explore the high-level design of Cisco's Compass Peering Fabric v1.0  
+title:  Peering Fabric Design 
+excerpt: Explore the high-level design of Cisco's  Peering Fabric v1.0  
 author: Phil Bedard
 tags:
   - iosxr
   - Peering
   - Design
-  - Compass
 position: hidden 
 ---
 
 {% include toc %}
 
-# Compass Peering Fabric Design 1.0
+#  Peering Fabric Design 1.0
 
 ## Key Drivers
 
@@ -54,19 +53,19 @@ extend networks must exist.
 
 ## High-Level Design
 
-The Compass Peering design incorporates high-density environmentally
+The  Peering design incorporates high-density environmentally
 efficient edge routers, a prescriptive topology and peer termination
 strategy, and features delivered through IOS-XR to solve the needs of
 service and content providers. Also included as part of the Peering
 design are ways to monitor the health and operational status of the
 peering edge and through Cisco NSO integration assist providers in
-automating peer configuration and validation. All Compass designs are
+automating peer configuration and validation. All  designs are
 both feature tested and validated as a complete design to ensure
 stability once implemented.
 
 ### Peering Strategy
 
-Compass proposes a localized peering strategy to reduce network cost for
+ proposes a localized peering strategy to reduce network cost for
 “eyeball” service providers by placing peering or content provider cache
 nodes closer to traffic consumers. This reduces not only reduces
 capacity on long-haul backbone networks carrying traffic from IXPs to
@@ -77,7 +76,7 @@ solution in a SP location or 3<sup>rd</sup> party peering facility.
 
 ### Topology and Peer Distribution
 
-Compass peering fabric introduces two options for fabric topology and
+ peering fabric introduces two options for fabric topology and
 peer termination. The first, similar to more traditional peering
 deployments, collapses the Peer Termination and Core Connectivity
 network functions into a single physical device using the device’s
@@ -111,7 +110,7 @@ The Cisco NCS5500 platform is ideal for edge peer termination, given its
 high-density, large RIB and FIB scale, buffering capability, and IOS-XR
 software feature set. The NCS5500 is also space and power efficient with
 36x100GE supporting up to 7.5M IPv4 routes in a 1RU fixed form factor or
-single modular line card. A minimal Compass Peering fabric can provide
+single modular line card. A minimal  The Peering fabric can provide
 36x100GE, 144x10GE, or a mix of non-blocking peering connections with
 full resiliency in 4RU. The fabric can also scale to support 10s of
 terabits of capacity in a single rack for large peering deployments.
@@ -125,14 +124,14 @@ peering location has a need for services termination the ASR9000 family
 or XRv-9000 virtual edge node can be incorporated into the fabric.
 
 All NCS5500 routers also contain powerful Route Processors to unlock
-powerful telemetry and programmability. The Compass Peering Fabric fixed
+powerful telemetry and programmability. The  Peering Fabric fixed
 chassis contain 1.6Ghz 8-core processors and 32GB of RAM. The latest
 NC55-RP-E for the modular NCS5500 chassis has a 1.9Ghz 6-core processor
 and 32G of RAM.
 
 ### Control-Plane
 
-The Compass peering design introduces a simplified control-plane built
+The peering fabric design introduces a simplified control-plane built
 upon IPv4/IPv6 with Segment Routing. In the collapsed design, each
 peering node is connected to EBGP peers and upstream to the core via
 standard IS-IS, OSPF, and TE protocols, acting as a PE or LER in a
@@ -154,9 +153,9 @@ traffic engineering on a per-peering center basis.
 
 ### Telemetry
 
-The Compass Peering design uses the rich telemetry available in IOS-XR
+The Peering fabric design uses the rich telemetry available in IOS-XR
 and the NCS5500 platform to enable an unprecedented level of insight
-into network and device behavior. Compass peering leverages Model-Driven
+into network and device behavior. The Peering Fabric leverages Model-Driven
 Telemetry and NETCONF along with both standard and native YANG models
 for metric statistics collection. Telemetry configuration and applicable
 sensor paths have been identified to assist providers in knowing what to
@@ -165,14 +164,14 @@ monitor and how to monitor it.
 ### Automation
 
 NETCONF and YANG using OpenConfig and native IOS-XR models are used to
-help automate peer configuration and validation. Cisco has developed a
-specific Peering NSO service models to help automate common tasks such
+help automate peer configuration and validation. Cisco has developed 
+specific Peering Fabric NSO service models to help automate common tasks such
 as peer interface configuration, peer BGP configuration, and adding
 physical interfaces to an existing peer bundle.
 
 ### Validated Design
 
-The Compass Design control, management, and forwarding planes have
+The  Design control, management, and forwarding planes have
 undergone validation testing to ensure individual design features work
 as intended and the peering fabric as a whole performs without fault.
 Validation is done exceeding real-world scaling requirements to ensure
@@ -184,17 +183,17 @@ growth.
 
 ## Peering Fabric Use Cases
 
-### Traditional IXP Peering Migration to Compass Peering Fabric
+### Traditional IXP Peering Migration to  Peering Fabric
 
 A traditional SP IXP design traditionally uses one or two large modular
 systems terminating all peering connections. In many cases, since
 providers are constrained on space and power they use a collapsed design
 where the minimal set of peering nodes not only terminates peer
 connections but also provides services and core connectivity to the
-location. The Compass Peering Fabric uses best of breed high density,
+location. The Peering Fabric uses best of breed high density,
 low footprint hardware requiring much less space than older generation
 modular systems. Many older systems provide densities at approximately
-4x100GE per rack unit, while Compass Peering PFL nodes start at 24x100GE
+4x100GE per rack unit, while Peering Fabric PFL nodes start at 24x100GE
 or 36x100GE per 1RU with high FIB capability. Due to the superior space
 efficiency, there is no longer a limitation of using just a pair of
 nodes for these functions. In either a collapsed function or distributed
@@ -251,7 +250,7 @@ In order to serve traffic as close to consumer endpoints as possible a
 provider may construct a peering edge attached to an edge or central
 datacenter. As gateway functions in the network become virtualized for
 applications such as vPE, vCPE, and mobile 5G, the need to attach
-Internet peering to the SP DC becomes more important. The Compass
+Internet peering to the SP DC becomes more important. The 
 Peering Fabric supports interconnected to the DC via the SP core or with
 the PFS nodes as leafs to the DC spine. These would act as traditional
 border routers in the DC design.
@@ -467,7 +466,7 @@ destinations or egress traffic destinations within the SP network. A
 stack of globally addressable labels is created at the traffic entry
 point, requiring no additional protocol state at midpoints in the
 network and preserving qualities of normal IGP routing such as ECMP at
-each hop. The Compass Peering Fabric proposes end-to-end visibility from
+each hop. The  Peering Fabric proposes end-to-end visibility from
 the PFL nodes to the destinations and vice-versa. This will allow a
 range of TE capabilities targeting a peering location, peering exit
 node, or as granular as a specific peering interface on a particular
@@ -635,7 +634,7 @@ nodes.
 Cisco Network Services Orchestrator is a widely deployed network
 automation and orchestration platform, performing intent-driven
 configuration and validation of networks from a single source of truth
-configuration database. The Compass Peering design includes a Cisco NSO
+configuration database. The  Peering design includes a Cisco NSO
 modules to perform specific peering tasks such as peer turn-up, peer
 modification, deploying routing policy and ACLs to multiple nodes,
 providing a jumpstart to peering automation.
