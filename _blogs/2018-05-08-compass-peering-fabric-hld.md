@@ -1658,7 +1658,8 @@ to use BMP as the mechanism to retrieve RIB table data.
 The following retrieves a list of best-path IPv4 prefixes without
 attributes from the loc-RIB:
 
-```<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+```
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
   <get>
     <filter>
       <bgp-rib xmlns="http://openconfig.net/yang/rib/bgp">
@@ -1681,8 +1682,6 @@ attributes from the loc-RIB:
   </get>
 </rpc>   
 ```
-
-##  
 
 |                               |                                                                               |
 | ----------------------------- | ----------------------------------------------------------------------------- |
@@ -1773,8 +1772,7 @@ from the 192.168.2.51 peer and the returned output.
 | IPv4 Neighbor adj-rib-out post-policy | List                                                                                          |
 | OC YANG                               | openconfig-bgp-rib:bgp-rib/afi-safis/afi-safi/ipv4-unicast/neighbors/neighbor/adj-rib-out-pre |
 
-### Device Resource YANG
-Paths
+### Device Resource YANG Paths
 
 |                  |                        |
 | ---------------- | ---------------------- |
