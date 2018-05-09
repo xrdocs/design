@@ -13,8 +13,8 @@ title_separator          : "|"
 name                     : &name "Cisco Systems Inc"
 description              : &description "Documentation, Blogs and Tutorials on Network Designs and architectures using IOS-XR and its associated platforms."
 url                      : "https://xrdocs.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-baseurl                  : "/compass-design" # the subpath of your site, e.g. "/blog"
-gh_repo                  : "https://github.com/xrdocs/compass-design"
+baseurl                  : "/design" # the subpath of your site, e.g. "/blog"
+gh_repo                  : "https://github.com/xrdocs/design"
 teaser                   : # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : true # true, false (default)
 words_per_minute         : 200
