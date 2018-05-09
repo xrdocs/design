@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2018-04-30 11:00-0400'
-title: Compass Metro Fabric High Level Design
+title: Metro Fabric High Level Design
 excerpt: >-
   Compass Metro Fabric (CMF) design introduces an SDN-ready architecture which
   evolves traditional Metro network  design towards an SDN enabled, programmable
@@ -38,7 +38,7 @@ quite challenging to manage, especially on large-scale networks, because
 of the large number of distributed network protocols involved which
 increases operational complexity.
 
-Compass Metro Fabric (CMF) design introduces an SDN-ready architecture
+Cisco Metro Fabric (CMF) design introduces an SDN-ready architecture
 which evolves traditional Metro network design towards an SDN enabled,
 programmable network capable of delivering all services (Residential,
 Business, 5G Mobile Backhauling, Video, IoT) on the premise of
@@ -47,7 +47,7 @@ service level agreements (SLAs).
 
 ![]({{site.baseurl}}/images/cmf-hld/image1.png)
 
-The Compass Metro Fabric design brings tremendous value to the Service
+The Metro Fabric design brings tremendous value to the Service
 Providers:
 
   - **Fast service deployment** and **rapid time to market** through
@@ -64,7 +64,7 @@ Providers:
   - **Enhanced and optimized operations** using telemetry/analytics in
     conjunction with automation tools
 
-**The Compass Metro Fabric design is targeted at Service Provider
+**The Metro Fabric design is targeted at Service Provider
 customers who:**
 
   - Want to evolve their existing Unified MPLS Network
@@ -77,8 +77,7 @@ customers who:**
 
 ## Summary
 
-The Compass Metro Fabric design meets the criteria identified for
-compass designs:
+The Metro Fabric design meets the criteria identified for designs:
 
   - **Simple:** based on Segment Routing as unified forwarding plane and
     EVPN and L3VPN as a common BGP based control plane
@@ -99,16 +98,16 @@ compass designs:
 
 ![]({{site.baseurl}}/images/cmf-hld/image2.png)
 
-The Compass Metro Fabric design evolves from the successful Cisco
+The Metro Fabric design evolves from the successful Cisco
 Evolved Programmable Network (EPN) 5.0 architecture framework, to bring
 greater programmability and automation.
 
-In the Compass Metro Fabric design, the transport and service are built
+In the Metro Fabric design, the transport and service are built
 on-demand when the customer service is requested. The end-to-end
 inter-domain network path is programmed through controllers and selected
 based on the customer SLA, such as the need for a low latency path.
 
-**The Compass Metro Fabric is made of the following main building
+**The Metro Fabric is made of the following main building
 blocks:**
 
   - **IOS-XR as a common Operating System** proved in Service Provider
@@ -135,7 +134,7 @@ blocks:**
     
       - Zero Touch Provisioning and Deployment (ZTP/ZTD)
 
-By leveraging analytics collected through model driven telemetry on IOS-XR platforms, in conjunction with automation tools, Compass Metro Fabric provides Service Providers with enhancements in network and services operations experience.
+By leveraging analytics collected through model driven telemetry on IOS-XR platforms, in conjunction with automation tools, Metro Fabric provides Service Providers with enhancements in network and services operations experience.
 
 # Transport – Design
     
@@ -146,11 +145,11 @@ any to any connectivity requirements, without compromising in stability
 and availability. Moreover, transport programmability is essential to
 bring SLA awareness into the network,
 
-The goals of the Compass Metro Fabric is to provide a flexible network
+The goals of the Metro Fabric is to provide a flexible network
 blueprint that can be easily customized to meet customer specific
 requirements.
 
-To provide unlimited network scale, the Compass Metro Fabric is
+To provide unlimited network scale, the Metro Fabric is
 structured into multiple IGP Domains: Access, Aggregation, and Core.
 Refer to the network topology in Figure 1.
 
@@ -176,17 +175,17 @@ domain.
 
 _Figure 3: Distributed Central Office with Access domain extension_
 
-The Compass Metro Fabric transport design supports all three network
+The Metro Fabric transport design supports all three network
 options, while remaining easily customizable.
 
-The first phase of the Compass Metro Fabric, discussed later in this
+The first phase of the Metro Fabric, discussed later in this
 document, will cover in depth the scenario described in Figure 3.
 
 ## Intra-Domain
     
 ### Intra-Domain Routing and Forwarding
 
-The Compass Metro Fabric is based on a fully programmable transport that
+The Metro Fabric is based on a fully programmable transport that
 satisfies the requirements described earlier. The foundation technology
 used in the transport design is Segment Routing (SR) with a MPLS based
 Data Plane in Phase 1 and a IPv6 based Data Plane (SRv6) in future.
@@ -213,7 +212,7 @@ and Adjacency-SID are represented by the MPLS label and both are
 advertised by the IGP protocol. This IGP extension eliminates the need
 to use LDP or RSVP protocol to exchange MPLS labels.
 
-The Compass Metro Fabric design uses ISIS as the IGP protocol.
+The Metro Fabric design uses ISIS as the IGP protocol.
 
 ### Intra-Domain Forwarding - Fast Re-Route
 
@@ -237,7 +236,7 @@ Section: "Inter-Domain Forwarding - High Availability and Fast Re-Route" for add
     
 ### Inter-Domain Forwarding
 
-The Compass Metro Fabric achieves network scale by IGP domain
+The Metro Fabric achieves network scale by IGP domain
 separation. Each IGP domain is represented by separate IGP process on
 the Area Border Routers (ABRs).
 
@@ -461,13 +460,13 @@ The proposed design is very scalable and can be easily extended to
 support even higher numbers of BGP-SRTE/PCEP sessions by adding
 additional RRs and XTCs into the Access Domain.
 
-Figure 11 shows the Compass Metro Fabric physical topology with examples
+Figure 11 shows the Metro Fabric physical topology with examples
 of product
 placement.
 
 ![]({{site.baseurl}}/images/cmf-hld/image12.png)
 
-_Figure 11: Compass Metro Fabric – Physical Topology with transport
+_Figure 11: Metro Fabric – Physical Topology with transport
 programmability_
 
 Note that the design of the Central Office is not covered by this
@@ -488,7 +487,7 @@ Segment Routing provides a simple and scalable way of defining an
 end-to-end application-aware traffic engineering path computed once
 again through SRTE Policy.
 
-In the Compass Metro Fabric design, the Service End Point uses PCEP or
+In the Metro Fabric design, the Service End Point uses PCEP or
 BGP-SRTE (Phase 1 uses PCEP only) along with Segment Routing On-Demand
 Next-hop (SR-ODN) capability, to request from the controller a path that
 satisfies specific constraints (such as low latency). This is done by
@@ -497,7 +496,7 @@ request, the XTC controller calculates the path based on the requested
 SLA, and uses PCEP or BGP-SRTE to dynamically program the ingress node
 with a specific SRTE Policy.
 
-The Compass Metro Fabric design also uses MPLS Performance Management to
+The Metro Fabric design also uses MPLS Performance Management to
 monitor link delay/jitter/drop (RFC6374).
 
 ## Transport Controller Path Computation Engine (PCE)
@@ -634,7 +633,7 @@ _Figure 13: PCE Path Computation_
 
 #Transport – Segment Routing IPv6 Data Plane (SRv6)
 
-The Compass Metro Fabric design will use Segment Routing IPv6 Data Plane
+The Metro Fabric design will use Segment Routing IPv6 Data Plane
 (SRv6) in later phases.
 
 SRv6 brings another level of simplification with IPv6 data plane and
@@ -843,8 +842,8 @@ SRv6 brings the following benefits to an SP network
     
 ## Overview
 
-The Compass Metro Fabric Design aims to enable simplification across all
-layers of a Service Provider network. Thus, the Compass Metro Fabric
+The Metro Fabric Design aims to enable simplification across all
+layers of a Service Provider network. Thus, the Metro Fabric
 services layer focuses on a converged Control Plane based on BGP.
 
 BGP based Services include EVPNs and Traditional L3VPNs (VPNv4/VPNv6).
@@ -1001,7 +1000,7 @@ using well-established designs based on Data Central Interconnect (DCI).
 Figure 27 shows hierarchical services deployed on PE routers, but the
 same design applies when services are deployed on AG or DCI routers.
 
-The Compass Metro Design offers scalable hierarchical services with
+The Metro Design offers scalable hierarchical services with
 simplified provisioning. The three most important use cases are
 described in the following sections:
 
@@ -1081,7 +1080,7 @@ Figure 31 shows the design of Services Router-Reflectors
 
 _Figure 31: Services – Router-Reflectors_
 
-The Compass Metro Fabric Design focuses mainly on BGP-based services,
+The Metro Fabric Design focuses mainly on BGP-based services,
 therefore it is important to provide a robust and scalable Services
 Route-Reflector (S-RR) design.
 
@@ -1111,7 +1110,7 @@ physical underlay network elements with the help of standard open APIs
 such as NETCONF/YANG or a vendor-specific CLI using Network Element
 Drivers (NED).
 
-In the Compass Metro Fabric design, the NSO is used for Services
+In the Metro Fabric design, the NSO is used for Services
 Management, Service Provisioning, and Service Orchestration.
 
 **The NSO provides several options for service designing as shown in**
@@ -1159,14 +1158,14 @@ Any-To-Any Highly-Available transport together with Fast Re-Route. A
 converged BGP Control Plane provides a scalable and flexible solution
 also at the services layer.
 
-Figure 33 shows a consolidated view of the Compass Metro Fabric network
+Figure 33 shows a consolidated view of the Metro Fabric network
 from a Control-Plane standpoint. Note that while network operators could
 use both PCEP and BGR-SRTE at the same time, it is not
 typical.
 
 ![]({{site.baseurl}}/images/cmf-hld/image34.png)
 
-_Figure 33: Compass Metro Fabric – Control-Plane_
+_Figure 33: Metro Fabric – Control-Plane_
 
 As mentioned, service provisioning is independent of the transport
 layer. However, transport is responsible for providing the path based on
@@ -1178,23 +1177,23 @@ path request. Upon receiving the request, the XTC controller calculates
 the path based on the requested SLA and use PCEP or BGP-SRTE to
 dynamically program the Service End Point with a specific SRTE Policy.
 
-The Compass Metro Fabric design also use MPLS Performance Management to
+The Metro Fabric design also use MPLS Performance Management to
 monitor link delay/jitter/drop (RFC6374) to be able to create a Low
 Latency topology dynamically.
 
-Figure 34 shows a consolidated view of Compass Metro Fabric network from
+Figure 34 shows a consolidated view of Metro Fabric network from
 a Data Plane
 standpoint.
 
 ![]({{site.baseurl}}/images/cmf-hld/image35.png)
 
-_Figure 34: Compass Metro Fabric – Data-Plane_
+_Figure 34: Metro Fabric – Data-Plane_
 
-# The Compass Metro Fabric Design – Phase 1
+# The Metro Fabric Design – Phase 1
     
 ## Transport - Phase 1
 
-This section describes in detail Phase 1 of the Compass Metro Fabric
+This section describes in detail Phase 1 of the Metro Fabric
 design. This Phase focuses on transport programmability and BGP-based
 services adoption.
 
@@ -1203,7 +1202,7 @@ Plane details for Phase 1. Refer also to the Access domain extension use
 case in Section: "Use Cases".
 
 The network is split into Access and Core IGP domains. Each IGP domain
-is represented by separate IGP processes. The Compass Metro Fabric
+is represented by separate IGP processes. The Metro Fabric
 design uses ISIS IGP protocol for validation.
 
 Validation will be done on two types of access platforms, IOS-XR and
@@ -1238,7 +1237,7 @@ or Prefix-SID is used for the transport LSP.
 
 ## Transport Programmability – Phase 1
 
-The Compass Metro Fabric employs a distributed and highly available XTC
+The Metro Fabric employs a distributed and highly available XTC
 design as described in Section: "Transport Programmability". Transport programmability is based
 on PCEP. Figure 37 shows the design when XTC uses PCEP.
 
@@ -1275,7 +1274,7 @@ _Figure 38: PCE Path Computation – Phase 1_
     
 ## Services – Phase 1
 
-This section describes the Services used in the Compass Metro Fabric
+This section describes the Services used in the Metro Fabric
 Phase 1.
 
 The table in Figure 39 describes the End-To-End services, while the
@@ -1305,7 +1304,7 @@ _Figure 41: Hierarchical Services table_
 
 _Figure 42: Hierarchical Services_
 
-The Compass Metro Fabric uses the hierarchical Services Route-Reflectors
+The Metro Fabric uses the hierarchical Services Route-Reflectors
 (S-RRs) design described in Section: "Services - Router-Reflector (S-RR)". Figure 43 shows in detail the S-RRs design used for Phase 1.
 
 ![]({{site.baseurl}}/images/cmf-hld/image44.png)
@@ -1338,9 +1337,9 @@ validation.
 
 _Figure 46: Testbed – Phase 1_
 
-# The Compass Metro Fabric Design - Summary
+# The Metro Fabric Design - Summary
 
-The Compass Metro Fabric brings huge simplification at the Transport as
+The Metro Fabric brings huge simplification at the Transport as
 well as at the Services layers of a Service Provider network.
 Simplification is a key factor for real Software Defined Networking
 (SDN). Cisco continuously improves Service Provider network designs to
@@ -1356,7 +1355,7 @@ centralized path computation.
 
 ![]({{site.baseurl}}/images/cmf-hld/image48.png)
 
-_Figure 47: Compass Metro Fabric – Evolution_
+_Figure 47: Metro Fabric – Evolution_
 
 The transport layer requires only IGP protocols with Segment Routing
 extensions for Intra and Inter Domain forwarding. Fast recovery for node
