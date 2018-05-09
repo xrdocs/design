@@ -1046,7 +1046,7 @@ interface GigabitEthernet0/0/1
   encapsulation default
 ```
 
-###   #Provider Edge Router Service Provisioning (IOS-XR):
+#### Provider Edge Router Service Provisioning (IOS-XR):
 
 **VRF configuration**  
 
@@ -1221,7 +1221,7 @@ interface GigabitEthernet0/0/5
  !
 ```
 
-###   #Provider Edge Routers Service Provisioning (IOS-XR):
+#### Provider Edge Routers Service Provisioning (IOS-XR):
 
 ```
 cef adjacency route override rib
@@ -1439,7 +1439,7 @@ interface GigabitEthernet0/0/5
  !
 ```
 
-###   #Provider Edge Routers Service Provisioning (IOS-XR):
+#### Provider Edge Routers Service Provisioning (IOS-XR):
 
 ```
 cef adjacency route override rib
