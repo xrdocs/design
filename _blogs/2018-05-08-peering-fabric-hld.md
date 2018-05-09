@@ -13,11 +13,10 @@ position: hidden
 
 {% include toc %}
 
-#  Peering Fabric Design 1.0
 
-## Key Drivers
+# Key Drivers
 
-### Traffic Growth
+## Traffic Growth
 
 Internet traffic has seen a compounded annual growth rate of 30% or
 higher over the last five years, as more devices are connected and more
@@ -28,7 +27,7 @@ their peering networks to scale for a future of more connected devices
 with traffic sources and destinations spanning the globe. Efficient
 peering is required to deliver traffic to consumers.
 
-### Network Simplification
+## Network Simplification
 
 Simple networks are easier to build and easier to operate. As networks
 scale to handle traffic growth, the level of network complexity must
@@ -40,7 +39,7 @@ stability and availability. Dedicating nodes to specific functions of
 the network also helps isolate the rest of the network from malicious
 behavior, defects, or instability.
 
-### Network Efficiency
+## Network Efficiency
 
 Network efficiency refers not only to maximizing network resources but
 also optimizing the environmental impact of the deployed network. Much
@@ -51,7 +50,7 @@ without exceeding the capabilities of a facility. In cases where
 multiple facilities must be connected, a simple and efficient way to
 extend networks must exist.
 
-## High-Level Design
+# High-Level Design
 
 The  Peering design incorporates high-density environmentally
 efficient edge routers, a prescriptive topology and peer termination
@@ -63,7 +62,7 @@ automating peer configuration and validation. All  designs are
 both feature tested and validated as a complete design to ensure
 stability once implemented.
 
-### Peering Strategy
+## Peering Strategy
 
  proposes a localized peering strategy to reduce network cost for
 “eyeball” service providers by placing peering or content provider cache
@@ -74,7 +73,7 @@ reducing latency to content sources. The same design can also be used
 for content provider networks wishing to deploy a smaller footprint
 solution in a SP location or 3<sup>rd</sup> party peering facility.
 
-### Topology and Peer Distribution
+## Topology and Peer Distribution
 
 The Cisco Peering Fabric introduces two options for fabric topology and
 peer termination. The first, similar to more traditional peering
@@ -104,7 +103,7 @@ network port. Making a conscious design decision to spread peer
 connections, even to the same peer, across multiple edge nodes helps
 increase resiliency and limit traffic-affecting network events.
 
-### Platforms
+## Platforms
 
 The Cisco NCS5500 platform is ideal for edge peer termination, given its
 high-density, large RIB and FIB scale, buffering capability, and IOS-XR
@@ -129,7 +128,7 @@ chassis contain 1.6Ghz 8-core processors and 32GB of RAM. The latest
 NC55-RP-E for the modular NCS5500 chassis has a 1.9Ghz 6-core processor
 and 32G of RAM.
 
-### Control-Plane
+## Control-Plane
 
 The peering fabric design introduces a simplified control-plane built
 upon IPv4/IPv6 with Segment Routing. In the collapsed design, each
@@ -151,7 +150,7 @@ PFS is supported. We also introduce the abstract peering concept where
 PFS nodes utilize a next-hop address bound to an anycast SR SID to allow
 traffic engineering on a per-peering center basis.
 
-### Telemetry
+## Telemetry
 
 The Peering fabric design uses the rich telemetry available in IOS-XR
 and the NCS5500 platform to enable an unprecedented level of insight
@@ -161,7 +160,7 @@ for metric statistics collection. Telemetry configuration and applicable
 sensor paths have been identified to assist providers in knowing what to
 monitor and how to monitor it.
 
-### Automation
+## Automation
 
 NETCONF and YANG using OpenConfig and native IOS-XR models are used to
 help automate peer configuration and validation. Cisco has developed 
@@ -169,7 +168,7 @@ specific Peering Fabric NSO service models to help automate common tasks such
 as peer interface configuration, peer BGP configuration, and adding
 physical interfaces to an existing peer bundle.
 
-### Validated Design
+## Validated Design
 
 The  Design control, management, and forwarding planes have
 undergone validation testing to ensure individual design features work
@@ -181,9 +180,9 @@ growth.
 ![]({{site.baseurl}}/images/cpf-hld/peering-validation.png)
 
 
-## Peering Fabric Use Cases
+# Peering Fabric Use Cases
 
-### Traditional IXP Peering Migration to  Peering Fabric
+## Traditional IXP Peering Migration to  Peering Fabric
 
 A traditional SP IXP design traditionally uses one or two large modular
 systems terminating all peering connections. In many cases, since
@@ -205,7 +204,7 @@ upstream PFS nodes.
 
 ![]({{site.baseurl}}/images/cpf-hld/peering-migration.png)
 
-### Peering Fabric Extension
+## Peering Fabric Extension
 
 In some cases, there may be peering facilities within close geographic
 proximity which need to integrate into a single fabric. This may happen
@@ -218,7 +217,7 @@ fabric can be done using optical transport or longer range gray optics.
 
 ![]({{site.baseurl}}/images/cpf-hld/peering-extension.png)
 
-### Localized Metro Peering and Content Delivery
+## Localized Metro Peering and Content Delivery
 
 In order to drive greater network efficiency, content sources should be
 places as close to the end destination as possible. Traditional wireline
@@ -232,7 +231,7 @@ delivery across the region or metro.
 
 ![]({{site.baseurl}}/images/cpf-hld/local-peering.png)
 
-### Express Peering Fabric
+## Express Peering Fabric
 
 An evolution to localized metro peering is to interconnect the PFS
 peering nodes directly or a metro-wide peering core. The main driver for
@@ -244,7 +243,7 @@ use of metro fiber assets.
 
 ![]({{site.baseurl}}/images/cpf-hld/express-peering.png)
 
-### Datacenter Edge Peering
+## Datacenter Edge Peering
 
 In order to serve traffic as close to consumer endpoints as possible a
 provider may construct a peering edge attached to an edge or central
@@ -257,7 +256,7 @@ border routers in the DC design.
 
 ![]({{site.baseurl}}/images/cpf-hld/spdc-peering.png)
 
-### Peer Traffic Engineering with Segment Routing
+## Peer Traffic Engineering with Segment Routing
 
 Segment Routing performs efficient source routing of traffic across a
 provider network. Traffic engineering is particular applicable to
@@ -277,16 +276,16 @@ In the Low-Level Design we explore common peer engineering use cases.
 Much more information on Segment Routing technology and its future
 evolution can be found at <http://segment-routing.net>
 
-## Low-Level Design
+# Low-Level Design
 
-#### Integrated Peering Fabric Reference Diagram
+### Integrated Peering Fabric Reference Diagram
 ![]({{site.baseurl}}/images/cpf-hld/integrated.png)
 
-#### Distributed Peering Fabric Reference Diagram
+### Distributed Peering Fabric Reference Diagram
 ![]({{site.baseurl}}/images/cpf-hld/distributed.png)
 
 
-### Peering Fabric Hardware Detail
+## Peering Fabric Hardware Detail
 
 The NCS5500 family of routers provide high density, high routing scale,
 idea buffer sizes, and environmental efficiency to help providers
@@ -296,7 +295,7 @@ either a collapsed or distributed fabric. Further detailed information
 on each platform can be found at
 <https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html>.
 
-#### NCS-5501-SE
+### NCS-5501-SE
 
 ![]({{site.baseurl}}/images/cpf-hld/5501-se.png)
 
@@ -305,7 +304,7 @@ interfaces. The 5501 has IPv4 FIB scale of at least 2M routes. The
 5501-SE is ideal as a peering leaf node when providers need 10GE
 interface flexibility such as ER, ZR, or DWDM.
 
-#### NCS-55A1-36H-SE
+### NCS-55A1-36H-SE
 
 ![]({{site.baseurl}}/images/cpf-hld/55a1-36h.png)
 
@@ -318,7 +317,7 @@ efficiency, and buffering capability make it ideal in 10GE or 100GE
 deployments. Peering fabrics can scale to much higher capacity 1RU at a
 time by simply adding additional 55A1-36H-SE spine nodes.
 
-#### NCS-55A1-24H
+### NCS-55A1-24H
 
 ![]({{site.baseurl}}/images/cpf-hld/55a1-24h.png)
 
@@ -329,7 +328,7 @@ minimum of 1.3M IPv4/256K IPv6 routes. At just 675W it is ideal for 10GE
 peering fabric deployments with a migration path to 100GE connectivity.
 The 55A1-24H also has a powerful multi-core processor and 32GB of RAM.
 
-#### NCS 5504 and 5508 Modular Chassis and NC55-36X100G-A-SE line card
+### NCS 5504 and 5508 Modular Chassis and NC55-36X100G-A-SE line card
 
 ![]({{site.baseurl}}/images/cpf-hld/nc55-36-100g.png)
 
@@ -341,7 +340,7 @@ series chassis. Large deployments can utilize the second-generation
 36X100G-A-SE line card with external TCAM, supporting a minimum of 3M
 IPv4 routes.
 
-### Peer Termination Strategy
+## Peer Termination Strategy
 
 Often overlooked when connecting to Internet peers is determining a
 strategy to maximize efficiency and resiliency within a local peering
@@ -357,9 +356,9 @@ multiple leafs in the fabric. The added resiliency leads to greater
 efficiency when failures do happen, with less reliance on peering
 capacity further away from the traffic destination.
 
-### Distributed Fabric Device Roles
+## Distributed Fabric Device Roles
 
-#### PFL – Peering Fabric Leaf
+### PFL – Peering Fabric Leaf
 
 The Peering Fabric Leaf is the node physically connected to external
 peers. Peers could be aggregation routers or 3<sup>rd</sup> party CDN
@@ -367,7 +366,7 @@ nodes. In a deconstructed design the PFL is analogous to a line card in
 a modular chassis solution. PFL nodes can be added as capacity needs
 grow.
 
-#### PFS – Peering Fabric Spine
+### PFS – Peering Fabric Spine
 
 The Peering Fabric Spine acts as an aggregation node for the PFLs and is
 also physical connected to the rest of the provider network. The
@@ -375,7 +374,7 @@ provider network could refer to a metro core in the case of localized
 peering, a backbone core in relation to IXP peering, a DC spine layer in
 the case of DC peering.
 
-### Device Interconnection
+## Device Interconnection
 
 In order to maximize resiliency in the fabric, each PFL node is
 connected to each PFS. While the design shown includes three PFLs and
@@ -386,7 +385,7 @@ traffic between those nodes. The PFS nodes are also not interconnected
 to each other, as no end device should terminate on the PFL, only other
 routers.
 
-### Capacity Scaling
+## Capacity Scaling
 
 Capacity of the peering fabric is scaled horizontally. The uplink
 capacity from PFL to PFS will be determine by an appropriate
@@ -404,18 +403,18 @@ connections and 5x100GE to each spine node. A 10GE deployment would
 support 72x10GE client ports and 3x100GE to each spine, at a 1.2:1
 oversubscription ratio.
 
-### Peering Fabric Control Plane
+## Peering Fabric Control Plane
 
 ![]({{site.baseurl}}/images/cpf-hld/control-plane.png)
 
-#### PFL to Peer
+### PFL to Peer
 
 The Peering Fabric Leaf is connected directly to peers via traditional
 EBGP. BFD may additionally be used for fault detection if agreed to by
 the peer. Each EBGP peer will utilize SR EPE to enable TE to the peer
 from elsewhere on the provider network.
 
-#### PFL to PFS
+### PFL to PFS
 
 PFL to Peering Fabric Spine uses widely deployed standard routing
 protocols. IS-IS is the prescribed IGP protocol within the peering
@@ -444,7 +443,7 @@ failure. On reception of a BGP withdraw update for a multipath route,
 traffic loss is minimized as the existing valid route is still
 programmed into the FIB.
 
-#### PFS to Core
+### PFS to Core
 
 The PFS nodes will participate in the global Core control plane and act
 as the gateway between the peering fabric and the rest of the SP
@@ -457,9 +456,9 @@ infrastructure, the PFS nodes will also support OSPF and RSVP-TE for
 interconnection to the core. The PFS acts as an ABR or ASBR between the
 peering fabric and the larger metro or backbone core network.
 
-### SR Peer Traffic Engineering
+## SR Peer Traffic Engineering
 
-#### Summary
+### Summary
 
 SR allows a provider to create engineered paths to egress peering
 destinations or egress traffic destinations within the SP network. A
@@ -477,7 +476,7 @@ Segment Routing Policy Configuration
 
 Need to add detail
 
-#### Nodal EPE
+### Nodal EPE
 
 Node EPE directs traffic to a specific peering node within the fabric.
 The node is targeted using first the PFS cluster anycast IP along with
@@ -485,7 +484,7 @@ the specific PFL node SID.
 
 ![]({{site.baseurl}}/images/cpf-hld/epe-node.png)
 
-#### Peer Interface EPE
+### Peer Interface EPE
 
 This example uses an Egress Peer Engineering peer-adj-SID value assigned
 to a single peer interface. The result is traffic sent along this SR
@@ -493,7 +492,7 @@ path will use only the prescribed interface for egress traffic.
 
 ![]({{site.baseurl}}/images/cpf-hld/epe-interface.png)
 
-#### Abstract Peering
+### Abstract Peering
 
 Abstract peering allows a provider to simply address a Peering Fabric by
 the anycast SIDs of its cluster of PFS nodes. In this case PHP is used
@@ -502,7 +501,7 @@ destination across the fabric.
 
 ![]({{site.baseurl}}/images/cpf-hld/epe-abstract.png)
 
-### Peering Fabric Telemetry
+# Peering Fabric Telemetry
 
 Once a peering fabric is deployed, it is extremely important to monitor
 the health of the fabric as well as harness the wealth of data provided
@@ -526,11 +525,11 @@ The peering fabric also fully supports traditional collections methods
 such as SNMP, and NETCONF using YANG models to integrate with legacy
 systems.
 
-#### Telemetry Diagram
+### Telemetry Diagram
 
 ![]({{site.baseurl}}/images/cpf-hld/peering-telemetry.png)
 
-#### Model-Driven Telemetry
+## Model-Driven Telemetry
 
 MDT uses standards-based or native IOS-XR YANG data models to stream
 operational state data from deployed devices. The ability to push
@@ -545,7 +544,7 @@ or directly to a TSDB such as InfluxDB or Prometheus. The appendix
 contains information about MDT YANG paths relevant to the peering fabric
 and their applicability to PFS and PFL nodes.
 
-#### BGP Monitoring Protocol
+## BGP Monitoring Protocol
 
 BMP, defined in RFC7854, is a protocol to monitor BGP RIB information,
 updates, and protocol statistics. BMP was created to alleviate the
@@ -569,7 +568,7 @@ routes, routes from other protocols, and locally originated routes.
 Adj-RIB-out will add the ability to monitor routes advertised to peers
 pre and post routing policy.
 
-#### Netflow / IPFIX
+## Netflow / IPFIX
 
 Netflow was invented by Cisco due to requirements for traffic visibility
 and accounting. Netflow in its simplest form exports 5-tuple data for
@@ -596,9 +595,9 @@ routers are 1 in 8192 packets, however customers implementing Netflow or
 IPFIX should work with Cisco to fine tune parameters for optimal data
 fidelity and performance.
 
-### Automation and Programmability
+# Automation and Programmability
 
-#### Netconf
+## Netconf
 
 Netconf is an industry standard method for configuration network
 devices. Standardized in RFC 6241, Netconf has standard Remote Procedure
@@ -607,7 +606,7 @@ Netconf on IOS-XR supports the candidate datastore, meaning
 configuration must be explicitly committed for application to the
 running configuration.
 
-#### YANG Model Support
+## YANG Model Support
 
 While Netconf created standard RPCs for managing configuration on a
 device, it did not define a language for expressing configuration. The
@@ -629,7 +628,7 @@ The appendix contains information about YANG paths relevant to
 configuring the peering fabric and their applicability to PFS and PFL
 nodes.
 
-#### Cisco NSO Modules
+## Cisco NSO Modules
 
 Cisco Network Services Orchestrator is a widely deployed network
 automation and orchestration platform, performing intent-driven
@@ -639,7 +638,7 @@ modules to perform specific peering tasks such as peer turn-up, peer
 modification, deploying routing policy and ACLs to multiple nodes,
 providing a jumpstart to peering automation.
 
-3<sup>rd</sup> Party Hosted Applications
+## 3<sup>rd</sup> Party Hosted Applications
 
 IOS-XR starting in 6.0 runs on an x86 64-bit Linux foundation. The move
 to an open and well supported operating system, with XR components
@@ -650,7 +649,7 @@ and out of the application. Example applications are telemetry
 collection, custom network probes, or tools to manage other portions of
 the network within a location.
 
-#### XR Service Layer API
+## XR Service Layer API
 
 The XR service layer API is a gRPC based API to extract data from a
 device as well as provide a very fast programmatic path into the
@@ -661,9 +660,9 @@ external controller can use the data and additional external constraints
 to programmatically direct traffic across the fabric. SL API also
 supports transmission of event data via subscriptions.
 
-## Recommended Device and Protocol Configuration
+# Recommended Device and Protocol Configuration
 
-### Overview
+## Overview
 
 The following configuration guidelines will step through the major
 components of the device and protocol configuration specific to the
@@ -672,21 +671,21 @@ each device role and the reasons behind those choices. Complete example
 configurations for each role can be found in the Appendix of this
 document. Configuration specific to telemetry is covered in section 4.
 
-### Common Node Configuration
+## Common Node Configuration
 
 The following configuration is common to both PFL and PFS NCS5500 series
 nodes.
 
-#### Enable LLDP Globally
+### Enable LLDP Globally
 ```
 lldp
 ```
-### PFS Nodes
+## PFS Nodes
 
 As the PFS nodes will integrate into the core control-plane, only
 recommended configuration for connectivity to the PFL nodes is given.
 
-#### IGP Configuration
+### IGP Configuration
 ```
 router isis pf-internal-core
  set-overload-bit on-startup wait-for-bgp 
@@ -729,7 +728,7 @@ interface HundredGigE0/0/0
   metric 10
 ```
 
-#### Segment Routing Traffic Engineering 
+### Segment Routing Traffic Engineering 
 
 In IOS-XR there are two mechanisms for configuring SR-TE. Prior to IOS-XR 6.3.2 SR-TE was configured using the MPLS traffic 
 engineering tunnel interface configuration. Starting in 6.3.2 SR-TE can now be configured using the more flexible SR-TE 
@@ -796,7 +795,7 @@ traffic-eng
   !
   ```
 
-#### BGP Global Configuration
+### BGP Global Configuration
 
 ```
 bgp router-id <Lo0 IP>  
@@ -818,7 +817,7 @@ address-family link-state link-state ;Enable BGP-LS AF
 ```
 
 
-#### Model-Driven Telemetry Configuration
+### Model-Driven Telemetry Configuration
 
 *The configuration below creates two sensor groups, one for BGP data and
 one for Interface counters. Each is added to a separate subscription,
@@ -856,9 +855,9 @@ telemetry model-driven
 ```
 
 
-### PFL Nodes
+## PFL Nodes
 
-#### Peer QoS Policy
+### Peer QoS Policy
 
 *Policy applied to edge of the network to rewrite any incoming DSCP value
 to 0.*
@@ -871,7 +870,7 @@ policy-map peer-qos-in
 !
 ```
 
-#### Peer Infrastructure ACL
+### Peer Infrastructure ACL
 
 *See the Security section of the document for recommended best practices
 for ingress and egress infrastructure ACLs.*
@@ -883,7 +882,7 @@ access-group v4-infra-acl-out
 access-group v6-infra-acl-out 
 ```
 
-#### Peer Interface Configuration
+### Peer Interface Configuration
 ```
 interface TenGigE0/0/0/0
  description “external peer” 
@@ -896,7 +895,7 @@ interface TenGigE0/0/0/0
  ipv6 access-group v6-infra-acl-out :IPv6 Egress infrastructure ACL, BCP38 filtering 
 ```
 
-#### IS-IS IGP Configuration
+### IS-IS IGP Configuration
 
 ```
 router isis pf-internal
@@ -938,14 +937,14 @@ interface HundredGigE0/0/0
  address-family ipv6 unicast 
   metric 10
 ```
-#### BGP Add-Path Route Policy
+### BGP Add-Path Route Policy
 ```
 route-policy advertise-all ;Create policy for add-path advertisements 
   set path-selection all advertise
 end-policy
 ```
 
-#### BGP Global Configuration
+### BGP Global Configuration
 ```
 bgp router-id <Lo0 IP>  
 bgp bestpath aigp ignore ;Ignore AIGP community when sent by peer 
@@ -969,7 +968,7 @@ address-family ipv6 unicast
 address-family link-state link-state ;Enable BGP-LS AF  
 ```
 
-#### EBGP Peer Configuration
+### EBGP Peer Configuration
 
 ```
 session-group peer-session 
@@ -1015,7 +1014,7 @@ neighbor 2001:dead:b33f:0:1:1:1:1
  route-policy v6-peer-out(12345) out 
 ```
 
-#### PFL to PFS IBGP Configuration
+### PFL to PFS IBGP Configuration
 ```
 session-group pfs-session 
  ttl-security :Enable gTTL security if neighbor supports it   
@@ -1053,7 +1052,7 @@ neighbor <PFS IP>
  use neighbor-group v4-pfs
 ```
 
-#### Netflow/IPFIX Configuration
+### Netflow/IPFIX Configuration
 ```
 flow exporter-map nf-export
  version v9
@@ -1107,7 +1106,7 @@ interface HundredGigE0/0/0/100
  flow mpls monitor nf-flow-monitor-mpls sampler nf-sample-8192 ingress
 ```
 
-### Model-Driven Telemetry Configuration
+## Model-Driven Telemetry Configuration
 
 *The configuration below creates two sensor groups, one for BGP data and
 one for Interface counters. Each is added to a separate subscription,
@@ -1144,7 +1143,7 @@ telemetry model-driven
   destination-id mdt-dest-1
 ```
 
-### Abstract Peering Configuration
+## Abstract Peering Configuration
 
 Abstract peering uses qualities of Segment Routing anycast addresses to
 allow a provider to steer traffic to a specific peering fabric by simply
@@ -1156,7 +1155,7 @@ through the use of SR-TE Policy, source routed engineered paths can be
 configured to the peering fabric based on business logic and additional
 path constraints.
 
-#### PFS Configuration
+### PFS Configuration
 
 *Only the PFS nodes require specific configuration to perform abstract
 peering. Configuration shown is for example only with IS-IS configured
@@ -1192,14 +1191,14 @@ router bgp <ASN>
   address-family ipv6 unicast route-policy v6-abstract-ibgp-out 
 ```
 
-## Security
+# Security
 
 Peering by definition is at the edge of the network, where security is
 mandatory. While not exclusive to peering, there are a number of best
 practices and software features when implemented will protect your own
 network as well as others from malicious sources within your network.
 
-### Infrastructure ACLs
+## Infrastructure ACLs
 
 Infrastructure ACLs and their associated ACEs (Access Control Entries)
 are the perimeter protection for a network. The recommended PFL device
@@ -1217,7 +1216,7 @@ ttl-exceeded, host unreachable, port unreachable, echo-reply,
 echo-request, and fragmentation needed should always be allowed in some
 capacity.
 
-### BCP Implementation
+## BCP Implementation
 
 Best Current Practices are informational documents published by the IETF
 to give guidelines on operational practices. This document will not
@@ -1232,7 +1231,7 @@ practices, many of which are used in Internet peering. IOS-XR supports
 all of the mechanisms recommended in BCP38, BCP84, and BCP194, including
 software features such as GTTL, BGP dampening, and prefix limits.
 
-### BGP Attribute and CoS Scrubbing
+## BGP Attribute and CoS Scrubbing
 
 Scrubbing of data on ingress and egress of your network is an important
 security measure. Scrubbing falls into two categories, control-plane and
@@ -1253,7 +1252,7 @@ traffic being prioritized on your network, leading to unexpected network
 behavior. An example PFL infrastructure ACL is given resetting incoming
 IPv4/IPv6 DSCP values to 0.
 
-### Per-Peer Control Plane Policers
+## Per-Peer Control Plane Policers
 
 BGP protocol packets are handled at the RP level, meaning each packet is
 handled by the router CPU with limited bandwidth and processing
@@ -1261,9 +1260,9 @@ resources. In the case of a malicious or misconfigured peer this could
 exhaust the processing power of the CPU impacting other important tasks.
 IOS-XR enforces protocol policers and BGP peer policers by default.
 
-### BGP Prefix Security
+## BGP Prefix Security
 
-#### RPKI Origin Validation
+### RPKI Origin Validation
 
 Prefix hijacking has been prevalent throughout the last decade as the
 Internet became more integrated into our lives. This led to the creation
@@ -1271,7 +1270,7 @@ of RPKI origin validation, a mechanism to validate a prefix was being
 originated by its rightful owner by checking the originating ASN vs. a
 secure database. IOS-XR fully supports RPKI for origin validation.
 
-#### BGPSEC
+### BGPSEC
 
 RPKI origin validation works to validate the source of a prefix, but
 does not validate the entire path of the prefix. Origin validation also
@@ -1284,7 +1283,7 @@ from the valid owner. BGPSEC standards are being worked on in the SIDR
 working group.
 
 
-#### BGP Flowspec
+### BGP Flowspec
 
 BGP Flowspec was standardized in RFC 5575 and defines additional BGP
 NLRI to inject traffic manipulation policy information to be dynamically
