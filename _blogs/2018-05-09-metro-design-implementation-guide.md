@@ -724,7 +724,7 @@ _Figure 7: L3VPN MP-BGP VPNv4 On-Demand Next-Hop Control Plane_
 Please refer to “**On Demand Next-Hop (ODN) – IOS-XE**” section for
 initial ODN configuration.
 
-###   #Access Router Service Provisioning (IOS-XE):
+#### Access Router Service Provisioning (IOS-XE):
 
 **VRF definition configuration**
 
@@ -796,7 +796,7 @@ _Figure 8: L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop Control Plane_
 Please refer to “**On Demand Next-Hop (ODN) – IOS-XR**” section for
 initial ODN configuration.
 
-###   #Access Router Service Provisioning (IOS-XR):
+#### Access Router Service Provisioning (IOS-XR):
 
 **PORT Based service configuration**
 
@@ -845,7 +845,7 @@ Plane_
 4.  **Access Router:** Programs Segment Routing Traffic Engineering
     (SRTE) Policy to reach remote access router
     
-###   #Access Router Service Provisioning (IOS-XR):
+#### Access Router Service Provisioning (IOS-XR):
 
 ```
 segment-routing                                                                                                                                                 
@@ -898,7 +898,7 @@ l2vpn
      mpls static label local 1001 remote 1001 pw-class static-pw-class-PE7 
 ```
 
-###   #Access Router Service Provisioning (IOS-XE):
+#### Access Router Service Provisioning (IOS-XE):
 
 **Port Based service with Static OAM configuration**
 
@@ -985,7 +985,7 @@ _Figure 12: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Hea
 4.  **Provider Edge Router:** Path to remote PE is known via CORE-ISIS
     IGP.
     
-###   #Access Router Service Provisioning (IOS-XR):
+#### Access Router Service Provisioning (IOS-XR):
 
 **VLAN based service configuration**
 
@@ -1139,7 +1139,7 @@ routers in same location PE1/2 and PE3/4)**
 8.  **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
     IGP.
     
-###   #Access Router Service Provisioning (IOS-XR):
+#### Access Router Service Provisioning (IOS-XR):
 
 **VLAN based service configuration**
 
@@ -1356,7 +1356,7 @@ same as in “L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4/6 with
 Anycast IRB”. In this use case there is BGP EVPN instead of MP-BGP
 VPNv4/6 in the core.**
 
-###   #Access Router Service Provisioning (IOS-XR):
+#### Access Router Service Provisioning (IOS-XR):
 
 **VLAN based service configuration**
 
@@ -1406,7 +1406,7 @@ l2vpn
   !
 ```
 
-###   #Access Router Service Provisioning (IOS-XE):
+#### Access Router Service Provisioning (IOS-XE):
 
 **VLAN based service configuration**
 
