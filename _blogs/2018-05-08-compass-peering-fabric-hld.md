@@ -1,6 +1,6 @@
 --
 published: true 
-date: '2018-05-8 11:00-0400'
+date: '2018-05-01 11:00-0400'
 title: Compass Peering Fabric Design 
 excerpt: Explore the high-level design of Cisco's Compass Peering Fabric v1.0  
 author: Phil Bedard
