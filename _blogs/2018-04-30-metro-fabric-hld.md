@@ -11,7 +11,6 @@ tags:
   - iosxr
   - Metro
   - Design
-  - Compass
 position: hidden
 ---
 {% include toc %}
