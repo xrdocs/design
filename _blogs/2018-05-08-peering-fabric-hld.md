@@ -2,7 +2,7 @@
 published: true 
 date: '2018-05-01 11:00-0400'
 title:  Peering Fabric Design 
-excerpt: Explore the high-level design of Cisco's  Peering Fabric v1.0  
+excerpt: Explore the high-level design of Cisco's Peering Fabric v1.0  
 author: Phil Bedard
 tags:
   - iosxr
@@ -76,7 +76,7 @@ solution in a SP location or 3<sup>rd</sup> party peering facility.
 
 ### Topology and Peer Distribution
 
- peering fabric introduces two options for fabric topology and
+The Cisco Peering Fabric introduces two options for fabric topology and
 peer termination. The first, similar to more traditional peering
 deployments, collapses the Peer Termination and Core Connectivity
 network functions into a single physical device using the device’s
