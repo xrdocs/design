@@ -84,7 +84,7 @@ internal fabric to connect each function. The second option utilizes a
 fabric separating the network functions into separate physical layers,
 connected via an external fabric running over standard Ethernet.
 
-![]({{site.baseurl}}/images/cmf-hld/cpf-topology.png)
+![]({{site.baseurl}}/images/cpf-hld/cpf-topology.png)
 
 In many typical SP peering deployments, a traditional two-node setup is
 used where providers vertically upgrade nodes to support the higher
