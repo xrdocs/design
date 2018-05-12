@@ -1,6 +1,6 @@
 ---
 published: true 
-date: '2018-08-01 11:00-0400'
+date: '2018-02-25 11:00-0400'
 title: Internet Traffic Trends 
 excerpt: In Part 1 of this blog series on transforming regional and metro networks for efficient OTT video delivery, we'll explore the background on how Internet video has evolved and its impact on the Internet.  
 author: Phil Bedard
