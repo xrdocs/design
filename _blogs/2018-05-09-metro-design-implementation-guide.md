@@ -49,7 +49,7 @@ tags:
 
 ![]({{site.baseurl}}/images/cmfi/image1.png)
 
-_Figure 1: Compass Metro Fabric High Level Topology_
+_Figure 1: Metro Fabric High Level Topology_
 
 ![]({{site.baseurl}}/images/cmfi/image2.png)
 
