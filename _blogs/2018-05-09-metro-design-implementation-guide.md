@@ -2,7 +2,7 @@
 published: true
 date: '2018-05-09 16:54 -0500'
 title: Metro Design Implementation Guide
-position: hidden
+position: top
 author: Jiri Chaloupka
 tags:
   - iosxr

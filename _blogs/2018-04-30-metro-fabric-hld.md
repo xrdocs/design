@@ -11,7 +11,7 @@ tags:
   - iosxr
   - Metro
   - Design
-position: hidden
+position: top
 ---
 {% include toc %}
 
