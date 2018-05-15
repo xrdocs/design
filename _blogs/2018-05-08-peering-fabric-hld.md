@@ -1079,7 +1079,7 @@ flow monitor-map flow-monitor-ipv6
  cache timeout active 60
  cache timeout inactive 10
 !
-flow monitor-map nf-flow-monitor-mpls
+flow monitor-map flow-monitor-mpls
  record mpls ipv4-ipv6-fields
  option bgpattr
  exporter nf-export
@@ -1095,7 +1095,7 @@ sampler-map nf-sample-8192
 interface Bundle-Ether100
  flow ipv4 monitor flow-monitor-ipv4 sampler nf-sample-8192 ingress
  flow ipv6 monitor flow-monitor-ipv6 sampler nf-sample-8192 ingress
- flow mpls monitor nf-flow-monitor-mpls sampler nf-sample-8192 ingress
+ flow mpls monitor flow-monitor-mpls sampler nf-sample-8192 ingress
 ```
 
 *PFS Upstream Interface*
@@ -1103,7 +1103,7 @@ interface Bundle-Ether100
 interface HundredGigE0/0/0/100  
  flow ipv4 monitor flow-monitor-ipv4 sampler nf-sample-8192 ingress
  flow ipv6 monitor flow-monitor-ipv6 sampler nf-sample-8192 ingress
- flow mpls monitor nf-flow-monitor-mpls sampler nf-sample-8192 ingress
+ flow mpls monitor flow-monitor-mpls sampler nf-sample-8192 ingress
 ```
 
 ## Model-Driven Telemetry Configuration
