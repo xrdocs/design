@@ -49,7 +49,7 @@ tags:
 
 ![]({{site.baseurl}}/images/cmfi/image1.png)
 
-_Figure 1: Metro Fabric High Level Topology_
+_Figure 1: Compass Metro Fabric High Level Topology_
 
 ![]({{site.baseurl}}/images/cmfi/image2.png)
 
@@ -57,13 +57,13 @@ _Figure 2: Testbed Physical Topology_
 
 ![]({{site.baseurl}}/images/cmfi/image3.png)
 
-_Figure 3: Testbed Route-Reflector and XTC physical connectivity_
+_Figure 3: Testbed Route-Reflector and SR-PCE physical connectivity_
 
 ![]({{site.baseurl}}/images/cmfi/image4.png)
 
 _Figure 4: Testbed IGP Domains_
 
-##  Devices
+## Devices
 
 **Access Routers**
 
@@ -80,16 +80,16 @@ _Figure 4: Testbed IGP Domains_
   - Cisco IOS XRv 9000 – tRR1-A, tRR1-B, sRR1-A, sRR1-B, sRR2-A, sRR2-B,
     sRR3-A, sRR3-B
 
-**XR Transport Controller (XTC):**
+**Segment Routing Path Computation Element (SR-PCE):**
 
-  - Cisco IOS XRv 9000 – XTC1-A, XTC1-B, XTC2-A, XTC2-B, XTC3-A, XTC3-B
+  - Cisco IOS XRv 9000 – SR-PCE1-A, SR-PCE1-B, SR-PCE2-A, SR-PCE2-B, SR-PCE3-A, SR-PCE3-B
 
 
 # Role-Based Configuration
     
-##  Transport IOS-XR – All IOS-XR nodes
+## Transport IOS-XR – All IOS-XR nodes
         
-###   IGP Protocol (ISIS) and Segment Routing MPLS configuration
+### IGP Protocol (ISIS) and Segment Routing MPLS configuration
 
 **Router isis configuration**
 
@@ -179,7 +179,7 @@ interface TenGigE0/0/0/10
 !
 ```
 
-###   MPLS Segment Routing Traffic Engineering (SRTE) configuration
+### MPLS Segment Routing Traffic Engineering (SRTE) configuration
 
 ```
 ipv4 unnumbered mpls traffic-eng Loopback0
@@ -191,9 +191,9 @@ router isis ACCESS
 ```
 
 
-##  Transport IOS-XE – All IOS-XE nodes
+## Transport IOS-XE – All IOS-XE nodes
     
-###   Segment Routing MPLS configuration
+### Segment Routing MPLS configuration
 
 ```
 mpls label range 6001 32767 static 16 6000
@@ -219,7 +219,7 @@ segment-routing mpls
  !
 ```
 
-###   IGP-ISIS configuration
+### IGP-ISIS configuration
 
 ```
 key chain ISIS-KEY
@@ -277,7 +277,7 @@ interface TenGigabitEthernet0/0/12
 end
 ```
 
-###   MPLS Segment Routing Traffic Engineering (SRTE)
+### MPLS Segment Routing Traffic Engineering (SRTE)
 
 ```
 router isis ACCESS
@@ -288,9 +288,9 @@ interface TenGigabitEthernet0/0/12
  mpls traffic-eng tunnels
 ```
 
-###   Area Border Routers (ABRs) IGP-ISIS Redistribution configuration
+### Area Border Routers (ABRs) IGP-ISIS Redistribution configuration
 
-PEs have to provide IP reachability for RRs, XTCs and NSO between both
+PEs have to provide IP reachability for RRs, SR-PCEs and NSO between both
 ISIS-ACCESS and ISIS-CORE IGP domains. This is done by specific IP
 prefixes redistribution.
 
@@ -329,7 +329,7 @@ router isis ACCESS
   redistribute static route-policy CORE-TO-ACCESS1    
 ```
 
-**redistribute Access XTC and SvRR loopbacks into Core domain**
+**redistribute Access SR-PCE and SvRR loopbacks into Core domain**
 
 ```
 route-policy ACCESS1-TO-CORE                                     
@@ -345,9 +345,9 @@ address-family ipv4 unicast
   redistribute static route-policy CORE-TO-ACCESS1    
 ```
 
-##  BGP – Access or Provider Edge Routers
+## BGP – Access or Provider Edge Routers
     
-###   IOS-XR configuration
+### IOS-XR configuration
 
 ```
 router bgp 100
@@ -376,7 +376,7 @@ router bgp 100
  !
 ```
 
-###   IOS-XE configuration
+### IOS-XE configuration
 
 ```
 router bgp 100
@@ -405,12 +405,12 @@ router bgp 100
  !
 ```
 
-##  Area Border Routers (ABRs) IGP Topology Distribution
+## Area Border Routers (ABRs) IGP Topology Distribution
 
 Next network diagram: “BGP-LS Topology Distribution” shows how Area
 Border Routers (ABRs) distribute IGP network topology from ISIS ACCESS
 and ISIS CORE to Transport Route-Reflectors (tRRs). tRRs then reflect
-topology to XR Transport Controllers (XTCs)
+topology to Segment Routing Path Computation Element (SR-PCEs)
 
 ![]({{site.baseurl}}/images/cmfi/image5.png)
 
@@ -445,7 +445,7 @@ router bgp 100
  !
 ```
 
-##  Transport Route Reflector (tRR)
+## Transport Route Reflector (tRR)
 
 ```
 router static
@@ -495,7 +495,7 @@ router bgp 100
 !
 ```
 
-##  Services Route Reflector (sRR)
+## Services Route Reflector (sRR)
 
 ```
 router static
@@ -557,7 +557,7 @@ router bgp 100
 !
 ```
 
-##  XR Transport Controller (XTC)
+## Segment Routing Path Computation Element (SR-PCE)
 
 ```
 router static
@@ -589,12 +589,12 @@ pce
 !
 ```
 
-##  Segment Routing Traffic Engineering (SRTE) and Services Integration
+## Segment Routing Traffic Engineering (SRTE) and Services Integration
 
 This section shows how to integrate Traffic Engineering (SRTE) with
 Services. Particular usecase refers to next sub-section.
 
-###   On Demand Next-Hop (ODN) configuration – IOS-XR
+### On Demand Next-Hop (ODN) configuration – IOS-XR
 
 ```
 segment-routing
@@ -634,7 +634,7 @@ router bgp 100
 !
 ```
 
-###   On Demand Next-Hop (ODN) configuration – IOS-XE
+### On Demand Next-Hop (ODN) configuration – IOS-XE
 
 ```
 mpls traffic-eng tunnels
@@ -669,7 +669,7 @@ router bgp 100
   neighbor SvRR route-map L3VPN-SR-ODN-Mark-Comm out
 ```
 
-###   Preferred Path configuration – IOS-XR
+### Preferred Path configuration – IOS-XR
 
 ```
 segment-routing
@@ -683,7 +683,7 @@ segment-routing
   !
 ```
 
-###   Preferred Path configuration – IOS-XE
+### Preferred Path configuration – IOS-XE
 
 ```
 mpls traffic-eng tunnels
@@ -694,13 +694,13 @@ mpls traffic-eng pcc report-all
 
 # Services
     
-##  End-To-End Services
+## End-To-End Services
 
 ![]({{site.baseurl}}/images/cmfi/image6.png)
 
 _Figure 6: End-To-End Services Table_
 
-###   L3VPN MP-BGP VPNv4 On-Demand Next-Hop
+### L3VPN MP-BGP VPNv4 On-Demand Next-Hop
 
 ![]({{site.baseurl}}/images/cmfi/image7.png)
 
@@ -713,10 +713,10 @@ _Figure 7: L3VPN MP-BGP VPNv4 On-Demand Next-Hop Control Plane_
 2.  **Access Router:** Advertises/receives VPNv4 routes to/from Services
     Route-Reflector (sRR)
 
-3.  **Access Router**: Request XTC to provide path (shortest IGP metric)
+3.  **Access Router**: Request SR-PCE to provide path (shortest IGP metric)
     to remote access router
 
-4.  **XTC:** Computes and provides the path to remote router(s)
+4.  **SR-PCE:** Computes and provides the path to remote router(s)
 
 5.  **Access Router:** Programs Segment Routing Traffic Engineering
     (SRTE) Policy to reach remote access router
@@ -772,7 +772,7 @@ router bgp 100
  exit-address-family
 ```
 
-###   L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop
+### L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop
 
 ![]({{site.baseurl}}/images/cmfi/image8.png)
 
@@ -785,10 +785,10 @@ _Figure 8: L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop Control Plane_
 2.  **Access Router:** Advertises/receives EVPN-VPWS instance to/from
     Services Route-Reflector (sRR)
 
-3.  **Access Router**: Request XTC to provide path (shortest IGP metric)
+3.  **Access Router**: Request SR-PCE to provide path (shortest IGP metric)
     to remote access router
 
-4.  **XTC:** Computes and provides the path to remote router(s)
+4.  **SR-PCE:** Computes and provides the path to remote router(s)
 
 5.  **Access Router:** Programs Segment Routing Traffic Engineering
     (SRTE) Policy to reach remote access router
@@ -826,7 +826,7 @@ interface TenGigE0/0/0/5.1 l2transport
 !
 ```
 
-###   L2VPN Static Pseudowire (PW) – Preferred Path (PCEP)
+### L2VPN Static Pseudowire (PW) – Preferred Path (PCEP)
 
 ![]({{site.baseurl}}/images/cmfi/image9.png)
 
@@ -837,10 +837,10 @@ Plane_
 
 1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
 
-2.  **Access Router**: Request XTC to provide path (shortest IGP metric)
+2.  **Access Router**: Request SR-PCE to provide path (shortest IGP metric)
     to remote access router
 
-3.  **XTC:** Computes and provides the path to remote router(s)
+3.  **SR-PCE:** Computes and provides the path to remote router(s)
 
 4.  **Access Router:** Programs Segment Routing Traffic Engineering
     (SRTE) Policy to reach remote access router
@@ -948,19 +948,19 @@ pseudowire-class mpls
  preferred-path interface Tunnel1  
 ```
 
-###   End-To-End Services Data Plane
+### End-To-End Services Data Plane
 
 ![]({{site.baseurl}}/images/cmfi/image10.png)
 
 _Figure 10: End-To-End Services Data Plane_
 
-##  Hierarchical Services
+## Hierarchical Services
 
 ![]({{site.baseurl}}/images/cmfi/image11.png)
 
 _Figure 11: Hierarchical Services Table_
 
-###   L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Headend (PWHE)
+### L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Headend (PWHE)
 
 ![]({{site.baseurl}}/images/cmfi/image12.png)
 
@@ -1112,7 +1112,7 @@ l2vpn
 _Figure 13: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with
 Pseudowire-Headend (PWHE) Data Plane_
 
-###   L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4 with Anycast IRB
+### L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4 with Anycast IRB
 
 ![]({{site.baseurl}}/images/cmfi/image14.png)
 
@@ -1321,7 +1321,7 @@ router bgp 100
 _Figure 15: L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4/6 with
 Anycast IRB Datal Plane_
 
-###   L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN with Anycast IRB
+### L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN with Anycast IRB
 
 ![]({{site.baseurl}}/images/cmfi/image16.png)
 
@@ -1342,7 +1342,6 @@ routers in same location PE1/2 and PE3/4)**
 8.  **Provider Edge Routers:** Path to Access Router is known via
     ACCESS-ISIS IGP.
 
-<!-- end list -->
 
 9.  **Operator:** New L2VPN Multipoint EVPN instance together with
     Anycast IRB via CLI or NSO (Anycast IRB is optional when L2 and L3
@@ -1539,4 +1538,3 @@ router bgp 100
 
 _Figure 17: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
 with Anycast IRB Data Plane_
-
