@@ -15,8 +15,6 @@ position: top
 ---
 {% include toc %}
 
-
-
 # Value Proposition
 
 Service Providers are facing the challenge to provide next generation
@@ -37,7 +35,7 @@ quite challenging to manage, especially on large-scale networks, because
 of the large number of distributed network protocols involved which
 increases operational complexity.
 
-Cisco Metro Fabric (CMF) design introduces an SDN-ready architecture
+Compass Metro Fabric (CMF) design introduces an SDN-ready architecture
 which evolves traditional Metro network design towards an SDN enabled,
 programmable network capable of delivering all services (Residential,
 Business, 5G Mobile Backhauling, Video, IoT) on the premise of
@@ -46,7 +44,7 @@ service level agreements (SLAs).
 
 ![]({{site.baseurl}}/images/cmf-hld/image1.png)
 
-The Metro Fabric design brings tremendous value to the Service
+The Compass Metro Fabric design brings tremendous value to the Service
 Providers:
 
   - **Fast service deployment** and **rapid time to market** through
@@ -63,7 +61,7 @@ Providers:
   - **Enhanced and optimized operations** using telemetry/analytics in
     conjunction with automation tools
 
-**The Metro Fabric design is targeted at Service Provider
+**The Compass Metro Fabric design is targeted at Service Provider
 customers who:**
 
   - Want to evolve their existing Unified MPLS Network
@@ -76,12 +74,13 @@ customers who:**
 
 ## Summary
 
-The Metro Fabric design meets the criteria identified for designs:
+The Compass Metro Fabric design meets the criteria identified for
+compass designs:
 
   - **Simple:** based on Segment Routing as unified forwarding plane and
     EVPN and L3VPN as a common BGP based control plane
 
-  - **Programmable:** it uses XTC to program end-to-end paths across the
+  - **Programmable:** it uses SR-PCE to program end-to-end paths across the
     network with guaranteed SLAs
 
   - **Automatable:** service provisioning is fully automated using NSO
@@ -97,16 +96,16 @@ The Metro Fabric design meets the criteria identified for designs:
 
 ![]({{site.baseurl}}/images/cmf-hld/image2.png)
 
-The Metro Fabric design evolves from the successful Cisco
+The Compass Metro Fabric design evolves from the successful Cisco
 Evolved Programmable Network (EPN) 5.0 architecture framework, to bring
 greater programmability and automation.
 
-In the Metro Fabric design, the transport and service are built
+In the Compass Metro Fabric design, the transport and service are built
 on-demand when the customer service is requested. The end-to-end
 inter-domain network path is programmed through controllers and selected
 based on the customer SLA, such as the need for a low latency path.
 
-**The Metro Fabric is made of the following main building
+**The Compass Metro Fabric is made of the following main building
 blocks:**
 
   - **IOS-XR as a common Operating System** proved in Service Provider
@@ -115,7 +114,7 @@ blocks:**
   - **Transport Layer** based on **Segment Routing** as Unified
     Forwarding Plane
 
-  - **SDN - XR Transport Controller (XTC)** as Cisco Path Computation
+  - **SDN - Segment Routing Path Computation Element (SR-PCE)** as Cisco Path Computation
     Engine (PCE) coupled with Segment Routing to provide **simple** and
     **scalable** inter-domain transport connectivity and Traffic
     Engineering and Path control
@@ -133,7 +132,7 @@ blocks:**
     
       - Zero Touch Provisioning and Deployment (ZTP/ZTD)
 
-By leveraging analytics collected through model driven telemetry on IOS-XR platforms, in conjunction with automation tools, Metro Fabric provides Service Providers with enhancements in network and services operations experience.
+By leveraging analytics collected through model driven telemetry on IOS-XR platforms, in conjunction with automation tools, Compass Metro Fabric provides Service Providers with enhancements in network and services operations experience.
 
 # Transport – Design
     
@@ -144,11 +143,11 @@ any to any connectivity requirements, without compromising in stability
 and availability. Moreover, transport programmability is essential to
 bring SLA awareness into the network,
 
-The goals of the Metro Fabric is to provide a flexible network
+The goals of the Compass Metro Fabric is to provide a flexible network
 blueprint that can be easily customized to meet customer specific
 requirements.
 
-To provide unlimited network scale, the Metro Fabric is
+To provide unlimited network scale, the Compass Metro Fabric is
 structured into multiple IGP Domains: Access, Aggregation, and Core.
 Refer to the network topology in Figure 1.
 
@@ -174,17 +173,17 @@ domain.
 
 _Figure 3: Distributed Central Office with Access domain extension_
 
-The Metro Fabric transport design supports all three network
+The Compass Metro Fabric transport design supports all three network
 options, while remaining easily customizable.
 
-The first phase of the Metro Fabric, discussed later in this
+The first phase of the Compass Metro Fabric, discussed later in this
 document, will cover in depth the scenario described in Figure 3.
 
 ## Intra-Domain
     
 ### Intra-Domain Routing and Forwarding
 
-The Metro Fabric is based on a fully programmable transport that
+The Compass Metro Fabric is based on a fully programmable transport that
 satisfies the requirements described earlier. The foundation technology
 used in the transport design is Segment Routing (SR) with a MPLS based
 Data Plane in Phase 1 and a IPv6 based Data Plane (SRv6) in future.
@@ -211,7 +210,7 @@ and Adjacency-SID are represented by the MPLS label and both are
 advertised by the IGP protocol. This IGP extension eliminates the need
 to use LDP or RSVP protocol to exchange MPLS labels.
 
-The Metro Fabric design uses ISIS as the IGP protocol.
+The Compass Metro Fabric design uses ISIS as the IGP protocol.
 
 ### Intra-Domain Forwarding - Fast Re-Route
 
@@ -235,7 +234,7 @@ Section: "Inter-Domain Forwarding - High Availability and Fast Re-Route" for add
     
 ### Inter-Domain Forwarding
 
-The Metro Fabric achieves network scale by IGP domain
+The Compass Metro Fabric achieves network scale by IGP domain
 separation. Each IGP domain is represented by separate IGP process on
 the Area Border Routers (ABRs).
 
@@ -405,8 +404,8 @@ converge first.
 
 ## Transport Programmability
 
-Figure 9 and Figure 10 show the design of Router-Reflectors (RR), XR
-Transport Controllers (XTC) and WAN Automation Engines (WAE).
+Figure 9 and Figure 10 show the design of Router-Reflectors (RR), Segment Routing 
+Path Computation Element (SR-PCE) and WAN Automation Engines (WAE).
 High-Availability is achieved by device redundancy in the Aggregation
 and Core networks.
 
@@ -430,15 +429,15 @@ of the remote Access and Aggregation IGP Domains as well as the network
 topology of the Core IGP Domain. Hence, each RR maintains the overall
 network topology in BGP-LS.
 
-Redundant Domain XTCs have BGP-LS sessions with the local Domain RRs
+Redundant Domain SR-PCEs have BGP-LS sessions with the local Domain RRs
 through which they receive the overall network topology. Refer to
-Section: "XR Transport Controller (XTC)" for more details about XTC.
+Section: "Segment Routing Path Computation Element (SR-PCE)" for more details about SR-PCE.
 
-XTC is then capable of computing the Inter-Domain LSP path on-demand and
+SR-PCE is then capable of computing the Inter-Domain LSP path on-demand and
 to instantiate it. The computed path (SID-List) is then advertised via
 the Path Computation Element Protocol (PCEP), as shown in Figure 9, or
 BGP-SRTE, as shown in Figure 10, to the Service End Points. In the case
-of PCEP, XTCs and Service End Points communicate directly, while for
+of PCEP, SR-PCEs and Service End Points communicate directly, while for
 BGP-SRTE, they communicate via RRs. Phase 1 uses PCEP only.
 
 The Service End Points program the SID-List via SRTE Policy.
@@ -457,21 +456,21 @@ _Figure 10: Transport Programmability – BGP-SRTE_
 
 The proposed design is very scalable and can be easily extended to
 support even higher numbers of BGP-SRTE/PCEP sessions by adding
-additional RRs and XTCs into the Access Domain.
+additional RRs and SR-PCEs into the Access Domain.
 
-Figure 11 shows the Metro Fabric physical topology with examples
+Figure 11 shows the Compass Metro Fabric physical topology with examples
 of product
 placement.
 
 ![]({{site.baseurl}}/images/cmf-hld/image12.png)
 
-_Figure 11: Metro Fabric – Physical Topology with transport
+_Figure 11: Compass Metro Fabric – Physical Topology with transport
 programmability_
 
 Note that the design of the Central Office is not covered by this
 document.
 
-### Traffic Engineering (Tactical Steering) – SRTE Policy
+###Traffic Engineering (Tactical Steering) – SRTE Policy
 
 Operators want to fully monetize their network infrastructure by
 offering differentiated services. Traffic engineering is used to provide
@@ -486,27 +485,27 @@ Segment Routing provides a simple and scalable way of defining an
 end-to-end application-aware traffic engineering path computed once
 again through SRTE Policy.
 
-In the Metro Fabric design, the Service End Point uses PCEP or
+In the Compass Metro Fabric design, the Service End Point uses PCEP or
 BGP-SRTE (Phase 1 uses PCEP only) along with Segment Routing On-Demand
 Next-hop (SR-ODN) capability, to request from the controller a path that
 satisfies specific constraints (such as low latency). This is done by
 associating an SLA tag/attribute to the path request. Upon receiving the
-request, the XTC controller calculates the path based on the requested
+request, the SR-PCE controller calculates the path based on the requested
 SLA, and uses PCEP or BGP-SRTE to dynamically program the ingress node
 with a specific SRTE Policy.
 
-The Metro Fabric design also uses MPLS Performance Management to
+The Compass Metro Fabric design also uses MPLS Performance Management to
 monitor link delay/jitter/drop (RFC6374).
 
 ## Transport Controller Path Computation Engine (PCE)
     
-### XR Transport Controller (XTC)
+### Segment Routing Path Computation Element (SR-PCE)
 
-XR Transport controller, or XTC, is a Cisco Path Computation Engine
+Segment Routing Path Computation Element, or SR-PCE, is a Cisco Path Computation Engine
 (PCE) and it is implemented as a feature included as part of Cisco
 IOS-XR operating system. The function is typically deployed on a Cisco
 IOS-XR cloud appliance XRv9000, as it involves control plane operations
-only. The XTC gains network topology awareness from BGP-LS
+only. The SR-PCE gains network topology awareness from BGP-LS
 advertisements received from the underlying network. Such knowledge is
 leveraged by the embedded multi-domain computation engine to provide
 optimal path to Path Computation Element Clients (PCCs) using the Path
@@ -516,7 +515,7 @@ The PCC is the device where the service originates and therefore it
 requires end-to-end connectivity over the segment routing enabled
 multi-domain network.
 
-The XTC provides a path based on constraints such as:
+The SR-PCE provides a path based on constraints such as:
 
   - Shortest path (IGP metrics).
 
@@ -536,11 +535,11 @@ API-driven configuration platform. The use of open APIs and standardized
 protocols provides a means for intelligent interaction between
 applications and the network. Applications have visibility into the
 global network and can make requests for specific service levels.
-Section: "PCE Controller Summary - XTC & WAE" compares XTC and WAE.
+Section: "PCE Controller Summary - SR-PCE & WAE" compares SR-PCE and WAE.
 
-### PCE Controller Summary – XTC & WAE
+### PCE Controller Summary – SR-PCE & WAE
 
-**XR Transport Controller (XTC):**
+**Segment Routing Path Computation Element (SR-PCE):**
 
   - Runs as a features in a IOS-XR node
 
@@ -554,14 +553,14 @@ Section: "PCE Controller Summary - XTC & WAE" compares XTC and WAE.
 
 **WAN Automation Engine (WAE):**
 
-  - Runs as a XTC application
+  - Runs as a SR-PCE application
 
-  - Collects topology: via XTC
+  - Collects topology: via SR-PCE
 
   - Collects BW utilization: Flexible NetFlow (FNF), Streaming
     Telemetry, SNMP
 
-  - Deploys tunnel via XTC (preferred: stateful) or NSO (optional:
+  - Deploys tunnel via SR-PCE (preferred: stateful) or NSO (optional:
     stateless)
 
   - Computes: Bandwidth Optimization, On demand BW.
@@ -570,69 +569,69 @@ Section: "PCE Controller Summary - XTC & WAE" compares XTC and WAE.
 
 There are three models available to program transport LSPs:
 
-  - Delegated Computation to XTC
+  - Delegated Computation to SR-PCE
 
   - WAE Instantiated LSP
 
   - Delegated Computation to WAE
 
-All models assume XTC has acquired full network topology through
+All models assume SR-PCE has acquired full network topology through
 BGP-LS.
 
 ![]({{site.baseurl}}/images/cmf-hld/image14.png)
 
 _Figure 13: PCE Path Computation_
 
-### #Delegated Computation to XTC
+#### Delegated Computation to SR-PCE
 
 1.  NSO provisions the service. Alternatively, the service can be
     provisioned via CLI
 
 2.  Access Router requests a path
 
-3.  XTC computes the path
+3.  SR-PCE computes the path
 
-4.  XTC provides the path to Access Router
+4.  SR-PCE provides the path to Access Router
 
 5.  Access Router acknowledges
 
-6.  (Optional) When WAE is deployed for LSP visibility, XTC updates WAE
+6.  (Optional) When WAE is deployed for LSP visibility, SR-PCE updates WAE
     with the newer LSP
     
-### #WAE Instantiated LSP
+#### WAE Instantiated LSP
 
 1.  WAE computes the path
 
-2.  WAE sends computed path to XTC
+2.  WAE sends computed path to SR-PCE
 
-3.  XTC provides the path to Access Router
+3.  SR-PCE provides the path to Access Router
 
 4.  Access Router confirms
 
-5.  XTC updates WAE with newer LSP
+5.  SR-PCE updates WAE with newer LSP
     
-### #Delegated Computation to WAE
+#### Delegated Computation to WAE
 
 1.  NSO provisions the service – Service can also be provisioned via CLI
 
 2.  Access Router requests a path
 
-3.  XTC delegates computation to WAE
+3.  SR-PCE delegates computation to WAE
 
 4.  WAE computes the path
 
-5.  WAE sends computed path to XTC
+5.  WAE sends computed path to SR-PCE
 
-6.  XTC provides the path to Access Router
+6.  SR-PCE provides the path to Access Router
 
 7.  Access Router confirms
 
-8.  XTC updates WAE with newer LSP
+8.  SR-PCE updates WAE with newer LSP
 
 
-#Transport – Segment Routing IPv6 Data Plane (SRv6)
+# Transport – Segment Routing IPv6 Data Plane (SRv6)
 
-The Metro Fabric design will use Segment Routing IPv6 Data Plane
+The Compass Metro Fabric design will use Segment Routing IPv6 Data Plane
 (SRv6) in later phases.
 
 SRv6 brings another level of simplification with IPv6 data plane and
@@ -841,8 +840,8 @@ SRv6 brings the following benefits to an SP network
     
 ## Overview
 
-The Metro Fabric Design aims to enable simplification across all
-layers of a Service Provider network. Thus, the Metro Fabric
+The Compass Metro Fabric Design aims to enable simplification across all
+layers of a Service Provider network. Thus, the Compass Metro Fabric
 services layer focuses on a converged Control Plane based on BGP.
 
 BGP based Services include EVPNs and Traditional L3VPNs (VPNv4/VPNv6).
@@ -999,7 +998,7 @@ using well-established designs based on Data Central Interconnect (DCI).
 Figure 27 shows hierarchical services deployed on PE routers, but the
 same design applies when services are deployed on AG or DCI routers.
 
-The Metro Design offers scalable hierarchical services with
+The Compass Metro Design offers scalable hierarchical services with
 simplified provisioning. The three most important use cases are
 described in the following sections:
 
@@ -1079,7 +1078,7 @@ Figure 31 shows the design of Services Router-Reflectors
 
 _Figure 31: Services – Router-Reflectors_
 
-The Metro Fabric Design focuses mainly on BGP-based services,
+The Compass Metro Fabric Design focuses mainly on BGP-based services,
 therefore it is important to provide a robust and scalable Services
 Route-Reflector (S-RR) design.
 
@@ -1109,7 +1108,7 @@ physical underlay network elements with the help of standard open APIs
 such as NETCONF/YANG or a vendor-specific CLI using Network Element
 Drivers (NED).
 
-In the Metro Fabric design, the NSO is used for Services
+In the Compass Metro Fabric design, the NSO is used for Services
 Management, Service Provisioning, and Service Orchestration.
 
 **The NSO provides several options for service designing as shown in**
@@ -1157,14 +1156,14 @@ Any-To-Any Highly-Available transport together with Fast Re-Route. A
 converged BGP Control Plane provides a scalable and flexible solution
 also at the services layer.
 
-Figure 33 shows a consolidated view of the Metro Fabric network
+Figure 33 shows a consolidated view of the Compass Metro Fabric network
 from a Control-Plane standpoint. Note that while network operators could
 use both PCEP and BGR-SRTE at the same time, it is not
 typical.
 
 ![]({{site.baseurl}}/images/cmf-hld/image34.png)
 
-_Figure 33: Metro Fabric – Control-Plane_
+_Figure 33: Compass Metro Fabric – Control-Plane_
 
 As mentioned, service provisioning is independent of the transport
 layer. However, transport is responsible for providing the path based on
@@ -1172,27 +1171,27 @@ service requirements (SLA). The component that enables such integration
 is On-Demand Next Hop (ODN). ODN is the capability of requesting to a
 controller a path that satisfies specific constraints (such as low
 latency). This is achieved by associating an SLA tag/attribute to the
-path request. Upon receiving the request, the XTC controller calculates
+path request. Upon receiving the request, the SR-PCE controller calculates
 the path based on the requested SLA and use PCEP or BGP-SRTE to
 dynamically program the Service End Point with a specific SRTE Policy.
 
-The Metro Fabric design also use MPLS Performance Management to
+The Compass Metro Fabric design also use MPLS Performance Management to
 monitor link delay/jitter/drop (RFC6374) to be able to create a Low
 Latency topology dynamically.
 
-Figure 34 shows a consolidated view of Metro Fabric network from
+Figure 34 shows a consolidated view of Compass Metro Fabric network from
 a Data Plane
 standpoint.
 
 ![]({{site.baseurl}}/images/cmf-hld/image35.png)
 
-_Figure 34: Metro Fabric – Data-Plane_
+_Figure 34: Compass Metro Fabric – Data-Plane_
 
-# The Metro Fabric Design – Phase 1
+# The Compass Metro Fabric Design – Phase 1
     
 ## Transport - Phase 1
 
-This section describes in detail Phase 1 of the Metro Fabric
+This section describes in detail Phase 1 of the Compass Metro Fabric
 design. This Phase focuses on transport programmability and BGP-based
 services adoption.
 
@@ -1201,7 +1200,7 @@ Plane details for Phase 1. Refer also to the Access domain extension use
 case in Section: "Use Cases".
 
 The network is split into Access and Core IGP domains. Each IGP domain
-is represented by separate IGP processes. The Metro Fabric
+is represented by separate IGP processes. The Compass Metro Fabric
 design uses ISIS IGP protocol for validation.
 
 Validation will be done on two types of access platforms, IOS-XR and
@@ -1236,22 +1235,22 @@ or Prefix-SID is used for the transport LSP.
 
 ## Transport Programmability – Phase 1
 
-The Metro Fabric employs a distributed and highly available XTC
+The Compass Metro Fabric employs a distributed and highly available SR-PCE
 design as described in Section: "Transport Programmability". Transport programmability is based
-on PCEP. Figure 37 shows the design when XTC uses PCEP.
+on PCEP. Figure 37 shows the design when SR-PCE uses PCEP.
 
 ![]({{site.baseurl}}/images/cmf-hld/image38.png)
 
-_Figure 37: XTC – PCEP_
+_Figure 37: SR-PCE – PCEP_
 
-XTC in the Access domain is responsible for Inter-Domain LSPs and
+SR-PCE in the Access domain is responsible for Inter-Domain LSPs and
 provides the SID-list. PE ABRs are represented by Prefix-SID.
 
-XTC in the Core domain is responsible for On-Demand Nexthop (ODN) for
+SR-PCE in the Core domain is responsible for On-Demand Nexthop (ODN) for
 hierarchical services. Refer to the table in Figure 41 to see what
 services use ODN. Refer to Section: "Transport Controller - Path Computation Engine (PCE)" to see more details about XR
-Transport Controller (XTC). Note that Phase 1 uses the “Delegated
-Computation to XTC” mode described in Section: "Path Computation Engine - Workflow" without WAE as shown
+Transport Controller (SR-PCE). Note that Phase 1 uses the “Delegated
+Computation to SR-PCE” mode described in Section: "Path Computation Engine - Workflow" without WAE as shown
 in Figure
 38.
 
@@ -1259,21 +1258,21 @@ in Figure
 
 _Figure 38: PCE Path Computation – Phase 1_
 
-**Delegated Computation to XTC**
+**Delegated Computation to SR-PCE**
 
 1.  NSO provisions the service – Service can also be provisioned via CLI
 
 2.  Access Router requests a path
 
-3.  XTC computes the path
+3.  SR-PCE computes the path
 
-4.  XTC provides the path to Access Router
+4.  SR-PCE provides the path to Access Router
 
 5.  Access Router confirms
     
 ## Services – Phase 1
 
-This section describes the Services used in the Metro Fabric
+This section describes the Services used in the Compass Metro Fabric
 Phase 1.
 
 The table in Figure 39 describes the End-To-End services, while the
@@ -1303,7 +1302,7 @@ _Figure 41: Hierarchical Services table_
 
 _Figure 42: Hierarchical Services_
 
-The Metro Fabric uses the hierarchical Services Route-Reflectors
+The Compass Metro Fabric uses the hierarchical Services Route-Reflectors
 (S-RRs) design described in Section: "Services - Router-Reflector (S-RR)". Figure 43 shows in detail the S-RRs design used for Phase 1.
 
 ![]({{site.baseurl}}/images/cmf-hld/image44.png)
@@ -1336,9 +1335,9 @@ validation.
 
 _Figure 46: Testbed – Phase 1_
 
-# The Metro Fabric Design - Summary
+# The Compass Metro Fabric Design - Summary
 
-The Metro Fabric brings huge simplification at the Transport as
+The Compass Metro Fabric brings huge simplification at the Transport as
 well as at the Services layers of a Service Provider network.
 Simplification is a key factor for real Software Defined Networking
 (SDN). Cisco continuously improves Service Provider network designs to
@@ -1354,7 +1353,7 @@ centralized path computation.
 
 ![]({{site.baseurl}}/images/cmf-hld/image48.png)
 
-_Figure 47: Metro Fabric – Evolution_
+_Figure 47: Compass Metro Fabric – Evolution_
 
 The transport layer requires only IGP protocols with Segment Routing
 extensions for Intra and Inter Domain forwarding. Fast recovery for node
