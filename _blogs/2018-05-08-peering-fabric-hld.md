@@ -1791,65 +1791,97 @@ monitoring the Peering Fabric and the data which can be gathered by
 configuring these sensor
 paths.
 
-|                                              |
-|----------------------------------------------|
-|openconfig-bgp:bgp
-|openconfig-acl:acl
-|openconfig-lacp:lacp
-|openconfig-mpls:mpls
-|openconfig-rib-bgp:bgp-rib
-|openconfig-bgp:bgp/neighbors
-|openconfig-platform:components
-|openconfig-interfaces:interfaces
-|openconfig-if-aggregate:aggregate
-|*openconfig-if-aggregate:aggregate/state
-|openconfig-interfaces:interfaces/interface
-|openconfig-interfaces:interfaces/interface/state
-|openconfig-interfaces:interfaces/interface/state/counters
-|openconfig-interfaces:interfaces/interface/subinterfaces/subinterface/state/counters
-|*openconfig-if-ip:ipv4
-|*openconfig-if-ip:ipv6
-|Cisco-IOS-XR-bundlemgr-oper:bundles
-|Cisco-IOS-XR-bundlemgr-oper:bundle-information/bfd-counters
-|Cisco-IOS-XR-bundlemgr-oper:lacp-bundles
-|Cisco-IOS-XR-ethernet-lldp-oper:lldp
-|Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/neighbors
-|Cisco-IOS-XR-shellutil-oper:system-time/uptime
-|Cisco-IOS-XR-wdsysmon-fd-oper:system-monitoring/cpu-utilization
-|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface
-|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics
-|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics/basic-interface-stats
-|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info
-|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/general-stats
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/queue-stats-array
-|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbors
-|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces
-|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/adjacencies
-|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/bmp
-|Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors
-|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/vrf
-|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/neighbors/neighbor
-|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/global
-|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/performance-statistics
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/vrf
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/neighbors/neighbor
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/global
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/bmp
-|\*\*Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/performance-statistics
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l1
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-sum
-|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l1
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-sum
-|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count
-|Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper/dpa/stats/nodes/node/hw-resources-datas/hw-resources-data
-|                                            |
+### Device inventory and monitoring, not transceiver monitoring is covered under openconfig-platform 
+```
+ openconfig-platform:components
+ cisco-ios-xr-fretta-bcm-dpa-hw-resources-oper/dpa/stats/nodes/node/hw-resources-datas/hw-resources-data
+ cisco-ios-xr-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info
+ cisco-ios-xr-shellutil-oper:system-time/uptime
+ cisco-ios-xr-wdsysmon-fd-oper:system-monitoring/cpu-utilization
+```
+
+### LLDP Monitoring 
+```
+Cisco-IOS-XR-ethernet-lldp-oper:lldp
+Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/neighbors
+```
+
+### Interface statistics and state
+
+```
+openconfig-interfaces:interfaces
+Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters
+Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface
+Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics
+Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics/basic-interface-stats
+```
+#### The following sub-paths can be used but it is recommended to use the base openconfig-interfaces model
+```
+openconfig-interfaces:interfaces/interface
+openconfig-interfaces:interfaces/interface/state
+openconfig-interfaces:interfaces/interface/state/counters
+openconfig-interfaces:interfaces/interface/subinterfaces/subinterface/state/counters
+```
+
+### Aggregate bundle information (use interface models for interface counters)
+```
+sensor-group openconfig-if-aggregate:aggregate
+sensor-group openconfig-if-aggregate:aggregate/state
+sensor-group openconfig-lacp:lacp
+sensor-group Cisco-IOS-XR-bundlemgr-oper:bundles
+sensor-group Cisco-IOS-XR-bundlemgr-oper:bundle-information/bfd-counters
+```
+
+### BGP Peering information 
+```
+sensor-path openconfig-bgp:bgp
+sensor-path openconfig-bgp:bgp/neighbors
+sensor-path Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors
+sensor-path Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/vrf
+sensor-path Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/neighbors/neighbor
+sensor-path Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/global
+sensor-path Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/performance-statistics
+sensor-path Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/bmp
+sensor-path Cisco-IOS-XR-ipv6-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors
+sensor-path Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/vrf
+sensor-path Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/neighbors/neighbor
+sensor-path Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/global
+sensor-path Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/bmp
+sensor-path Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info/performance-statistics
+```
+
+### IS-IS IGP information 
+```
+sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbors
+sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces
+sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/adjacencies
+```
+#### It is not recommended to monitor complete RIB tables using MDT but can be used for troubleshooting
+```
+Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l1
+Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2
+Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-sum
+Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count
+Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l1
+Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2
+Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-sum
+Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count
+```
+
+### QoS and ACL monitoring 
+```
+openconfig-acl:acl
+Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/
+Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/general-stats
+Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/queue-stats-array
+```
+
+### BGP RIB information
+#### It is not recommended to monitor these paths using MDT with large tables 
+```
+openconfig-rib-bgp:bgp-rib
+Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext
+Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int
+Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext
+Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int
+```                                            
