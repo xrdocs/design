@@ -472,10 +472,6 @@ node, or as granular as a specific peering interface on a particular
 node. The use of anycast SIDs within a group of PFS nodes increases
 resiliency and load balancing capability.
 
-Segment Routing Policy Configuration
-
-Need to add detail
-
 ### Nodal EPE
 
 Node EPE directs traffic to a specific peering node within the fabric.
