@@ -174,6 +174,30 @@ specific Peering Fabric NSO service models to help automate common tasks such
 as peer interface configuration, peer BGP configuration, and adding
 physical interfaces to an existing peer bundle.
 
+## Advanced Security 
+
+Release 1.5 of the Cisco Peering Fabric enhances the design by adding advanced
+security capabilities using BGP Flowspec and QoS Policy Propagation using BGP
+or QPPB. BGP Flowspec was standardized in RFC 5575 and defines additional BGP
+NLRI to inject packet filter information to receiving routers. BGP is the control-plane for
+disseminating the policy information while it is up to the BGP Flowspec
+receiver to implement the dataplane rules specified in the NLRI. At the
+Internet peering edge, DDoS protection has become extremely important,
+and automating the remediation of an incoming DDoS attack has become
+very important. Automated DDoS protection is only one BGP Flowspec use
+case, any application needing a programmatic way to create interface
+packet filters can make se use of its capabilities.  
+
+QPPB allows using BGP attributes as a match criteria in dataplane packet filters. 
+Matching packets based on attributes like BGP community and AS Path allows service
+providers to create simplified edge QoS policies by not having to manage more 
+cumbersome prefix lists or keep up to date when new prefixes are added. 
+QPPB is supported in the peering fabric for destination prefix BGP attribute matching and has 
+a number of use cases when delivering traffic from external providers to specific 
+internal destinations.   
+ 
+
+
 ## Validated Design
 
 The  Design control, management, and forwarding planes have
@@ -1272,7 +1296,7 @@ of RPKI origin validation, a mechanism to validate a prefix was being
 originated by its rightful owner by checking the originating ASN vs. a
 secure database. IOS-XR fully supports RPKI for origin validation.
 
-### BGPSEC
+### BGPSEC (Reference Only)
 
 RPKI origin validation works to validate the source of a prefix, but
 does not validate the entire path of the prefix. Origin validation also
@@ -1282,21 +1306,9 @@ form hijacking a prefix. BGPSEC is an evolution where a BGP prefix is
 cryptographically signed with the key of its valid originator, and each
 BGP router receiving the path checks to ensure the prefix originated
 from the valid owner. BGPSEC standards are being worked on in the SIDR
-working group.
+working group. Cisco continues to monitor the standards related to BGPSEC and 
+similar technologies to determine which to implement to best serve our customers.  
 
-
-### BGP Flowspec
-
-BGP Flowspec was standardized in RFC 5575 and defines additional BGP
-NLRI to inject traffic manipulation policy information to be dynamically
-implemented by a receiving router. BGP acts as the control-plane for
-disseminating the policy information while it is up to the BGP Flowspec
-receiver to implement the dataplane rules specified in the NLRI. At the
-Internet peering edge, DDoS protection has become extremely important,
-and automating the remediation of an incoming DDoS attack has become
-very important. Automated DDoS protection is only one BGP Flowspec use
-case, any application needing a programmatic way to create interface
-packet filters can make se use of its capabilities.
 
 # Appendix
 
