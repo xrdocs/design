@@ -174,6 +174,12 @@ specific Peering Fabric NSO service models to help automate common tasks such
 as peer interface configuration, peer BGP configuration, and adding
 physical interfaces to an existing peer bundle.
 
+In addition to model-driven configuration and operation, the Peering Fabric also
+support ZTP operation for automated device provisioning. ZTP is useful both in 
+production as well as staging environments to automate initial device software 
+installation, deploy an initial bootstrap configuration, as well as advanced functionality 
+triggered by ZTP scripts. 
+
 ## Advanced Security 
 
 Release 1.5 of the Cisco Peering Fabric enhances the design by adding advanced
@@ -1216,6 +1222,222 @@ router bgp <ASN>
  neighbor x:x:x:x::x 
   address-family ipv6 unicast route-policy v6-abstract-ibgp-out 
 ```
+
+## BGP Flowspec Configuration and Operation
+
+BGP Flowspec consists of two different node types. The BGP Flowspec *Server* is where Flowspec 
+policy is defined and sent to peers via BGP sessions with the BGP Flowspec IPv4 and IPv6 
+AFI/SAFI enabled. The BGP Flowspec *Client* receives Flowspec policy information and 
+applies the proper dataplane match and action criteria via dynamic ACLs applied to each router
+interface. By default, IOS-XR applies the dynamic policy to all interfaces, with an interface-level 
+configuration setting used to disable BGP Flowspec on specific interfaces.
+
+In the Peering Fabric, PFL nodes will act as Flowspec clients. The PFS nodes may act as Flowspec 
+servers, but will never act as clients.  
+
+Flowspec policies are 
+typically defined on an external controller to be advertised to the rest of the network.  The 
+XRv-9000 virtual router works well in these instances. If one is using an external element to 
+advertise Flowspec policies to the peering fabric, they should be advertised to the PFS nodes which 
+will reflect them to the PFL nodes. 
+In the absence of an external policy injector Flowspec policies can be 
+defined on the Peering Fabric PFS nodes for advertisement to all PFL nodes.   
+
+### Enabling BGP Flowspec Address Families on PFS and PFL Nodes 
+
+Following the standard Peering Fabric BGP group definitions the following new groups are augmented. 
+The following configuration assumes the PFS node is the BGP Flowspec server. 
+
+**PFS**
+```
+router bgp <ASN>
+address-family ipv4 flowspec 
+address-family ipv6 flowspec 
+
+af-group v4-flowspec-af-pfl address-family ipv4 flowspec 
+   multipath 
+   route-reflector-client 
+   next-hop-self 
+
+af-group v6-flowspec-af-pfl address-family ipv4 flowspec 
+   multipath 
+   route-reflector-client 
+   next-hop-self 
+
+neighbor-group v4-pfl 
+   address-family ipv4 flowspec 
+      use af-group v4-flowspec-af-pfl 
+
+neighbor-group v6-pfl 
+   address-family ipv6 flowspec 
+      use af-group v6-flowspec-af-pfl 
+```
+**PFL**
+```
+router bgp <ASN>
+address-family ipv4 flowspec 
+address-family ipv6 flowspec 
+
+af-group v4-flowspec-af-pfs address-family ipv4 flowspec 
+   multipath 
+
+af-group v6-flowspec-af-pfs address-family ipv4 flowspec 
+   multipath 
+
+neighbor-group v4-pfs 
+   address-family ipv4 flowspec 
+      use af-group v4-flowspec-af-pfl 
+
+neighbor-group v6-pfs 
+   address-family ipv6 flowspec 
+      use af-group v6-flowspec-af-pfl 
+```
+
+### BGP Flowspec Server Policy Definition 
+Policies are defined using the standard IOS-XR QoS Configuration, the first example 
+below matches the recent memcached DDoS attack and drops all traffic.  Additional 
+examples are given covering various packet matching criteria and actions.   
+ 
+```
+class-map type traffic match-all memcached
+ match destination-port 11211
+ match protocol udp tcp
+ match destination-address ipv4 10.0.0.0 255.255.255.0
+ end-class-map
+!
+!
+policy-map type pbr drop-memcached
+ class type traffic memcached
+  drop
+ !
+ class type traffic class-default
+ !
+ end-policy-map
+```
+```
+class-map type traffic match-all icmp-echo-flood
+ match protocol icmp
+ match ipv4 icmp type 8 
+ match destination-address ipv4 10.0.0.0 255.255.255.0
+ end-class-map
+!
+!
+policy-map type pbr limit-icmp-echo
+ class type traffic memcached
+  police rate 100 kbps 
+ !
+ class type traffic class-default
+ !
+ end-policy-map
+```
+```
+class-map type traffic match-all dns
+ match protocol udp
+ match source port 53 
+ end-class-map
+!
+!
+policy-map type pbr redirect-dns
+ class type traffic dns
+  police rate 100 kbps 
+ !
+ class type traffic class-default
+   redirect nexthop 1.1.1.1
+   redirect nexthop route-target 1000:1  
+ !
+ end-policy-map
+```
+
+### BGP Flowspec Server Enablement 
+The following global configuration will enable the Flowspec server and advertise
+the policy via the BGP Flowspec NLRI
+
+```
+flowspec
+ address-family ipv4
+  service-policy type pbr drop-memcached
+``` 
+
+### BGP Flowspec Client Configuration 
+The following global configuration enables the BGP Flowspec client function and 
+installation of policies on all local interfaces. Flowspec can be disabled on individual 
+interfaces using the *[ipv4|ipv6] flowspec disable* command in interface configuration 
+mode.    
+
+```
+flowspec
+ address-family ipv4
+  local-install interface-all 
+``` 
+
+## QPPB Configuration and Operation 
+
+QoS Policy Propagation using BGP is described in more detail in the Security section.  
+QPPB applies standard QoS policies to packets matching BGP prefix criteria such as BGP 
+community or AS Path. QPPB is supported for both IPv4 and IPv6 address families and 
+packets.  QPPB on the NCS5500 supports matching destination prefix attributes only.  
+
+QPPB configuration starts with a standard RPL route policy that matches BGP attributes 
+and sets a specific QoS group based on that criteria. This routing policy is applied to each 
+address-family as a table-policy in the global BGP configuration. A standard MQC QoS policy is 
+then defined using the specific QoS groups as match criteria to apply additional QoS behavior such 
+as filtering, marking, or policing.  This policy is applied to a logical interface, with a specific 
+QPPB command used to enable the propagation of BGP data as part of the dataplane ACL packet match criteria.  
+
+IPv6 QPPB on the NCS5500 requires the use of the following global command, followed by a device reboot.   
+*hw-module profile qos ipv6 short* 
+
+### Routing Policy Configuration  
+```
+route-policy qppb-test
+  if community matches-every (1000:1) then
+    set qos-group 1
+  endif
+  if community matches-every (1000:2) then
+    set qos-group 2
+  endif
+end-policy
+``` 
+### Global BGP Configuration 
+```
+router bgp <ASN> 
+ address-family ipv4 unicast 
+   table-policy qppb-test 
+ address-family ipv6 unicast 
+   table-policy qppb-test 
+```
+### QoS Policy Definition 
+```
+class-map match-any qos-group-1 
+  match qos-group 1 
+  end-class-map 
+
+class-map match-any qos-group-2 
+  match qos-group 2
+  end-class-map 
+
+policy-map remark-peer-traffic
+ class qos-group1
+  set precedence 5
+  set mpls experimental imposition 5
+ !
+ class qos-group2
+  set precedence 3
+  set mpls experimental imposition 3
+ !
+ class class-default
+ !
+ end-policy-map
+``` 
+
+### Interface-Level Configuration 
+```
+interface gigabitethernet0/0/0/1 
+   service-policy input remark-peer-traffic 
+   ipv4 bgp policy propagation input qos-group destination
+   ipv6 bgp policy propagation input qos-group destination  
+```
+
 
 # Security
 
