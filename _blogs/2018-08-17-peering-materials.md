@@ -27,4 +27,8 @@ excerpt: List of materials related to Peering
 
 ## Vimeo
 
-- [Cisco Peering Solution Video](https://vimeo.com/279353540/e088bc1aa1 )
+- [Cisco Peering Solution Video](https://vimeo.com/279353540/e088bc1aa1)
+
+## Other
+
+- [Peering Days EU 2018](https://cisco.box.com/s/qf12sr271vsveemc5dixqm76aqetg9r9) (PDF - 1.5MB)
