@@ -11,7 +11,7 @@ tags:
 author: Cisco SP BU
 excerpt: List of materials related to Peering
 ---
-<br>All your Peering relared content in one place. 
+<br>All your Peering related content in one place. 
 
 ## XRdocs
 
