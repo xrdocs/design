@@ -181,7 +181,7 @@ production as well as staging environments to automate initial device software
 installation, deploy an initial bootstrap configuration, as well as advanced functionality 
 triggered by ZTP scripts. 
 
-## Advanced Security 
+## Advanced Security using BGP Flowspec and QPPB (1.5)
 
 Release 1.5 of the Cisco Peering Fabric enhances the design by adding advanced
 security capabilities using BGP Flowspec and QoS Policy Propagation using BGP
@@ -202,8 +202,28 @@ cumbersome prefix lists or keep up to date when new prefixes are added.
 QPPB is supported in the peering fabric for destination prefix BGP attribute matching and has 
 a number of use cases when delivering traffic from external providers to specific 
 internal destinations.   
- 
 
+## Internet and Peering in a VRF 
+
+While Internet peering and carrying the Internet table in a provider network is typically done 
+using the Global Routing Table (default VRF in IOS-XR) many modern networks are being built 
+to isolate the GRT from the underlying infrastructure. In this case, the Internet global table 
+is carried as a service just like any other VPN service, leaving the infrastructure layer protected 
+from both the global Internet. Another application using VRFs is to simply 
+isolate peers to specific VRFs in order to isolate the forwarding plane of each peer from each other and 
+be able to control which routes a peer sees by the use of VPN route target communities as opposed to outbound 
+routing policy. In this simplified use the case the global table is still carried in the default VRF, using 
+IOS-XR capabilities to import and export routes to and from specific peer VRFs. Separating Internet and Peering 
+routes into specific VRFs also gives flexibility in creating custom routing tables for specific customers, giving a service 
+provider the flexibility to offer separate regional or global reach on the same network. 
+
+Internet in a VRF and Peering 
+in a VRF for IPv4 and IPv6 are compatible with most Peering Fabric features. Specific caveats are document in the Appendix
+of the document.   
+
+ 
+ 
+ 
 
 ## Validated Design
 
