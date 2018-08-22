@@ -18,7 +18,7 @@ position: hidden
 | Version          |Date                    |Comments| 
 | ---------------- | ---------------------- |-----|
 | 1.0       | 05/08/2018 | Initial Peering Fabric Publication| 
-| 1.5          | 07/31/2018 |Advanced Security Update, ZTP    | 
+| 1.5          | 07/31/2018 |Advanced Security Update, ZTP, Internet/Peering in a VRF    | 
 |                  |                        |     |
 
 # Key Drivers
@@ -175,11 +175,14 @@ specific Peering Fabric NSO service models to help automate common tasks such
 as peer interface configuration, peer BGP configuration, and adding
 physical interfaces to an existing peer bundle.
 
-In addition to model-driven configuration and operation, the Peering Fabric also
-support ZTP operation for automated device provisioning. ZTP is useful both in 
+### Zero Touch Provisioning
+
+In addition to model-driven configuration and operation, Peering Fabric 1.5 also
+supports ZTP operation for automated device provisioning. ZTP is useful both in 
 production as well as staging environments to automate initial device software 
 installation, deploy an initial bootstrap configuration, as well as advanced functionality 
-triggered by ZTP scripts. 
+triggered by ZTP scripts. ZTP is supported on both out of band management interfaces as 
+well as in-band data interfaces.   
 
 ## Advanced Security using BGP Flowspec and QPPB (1.5)
 
@@ -221,13 +224,9 @@ Internet in a VRF and Peering
 in a VRF for IPv4 and IPv6 are compatible with most Peering Fabric features. Specific caveats are document in the Appendix
 of the document.   
 
- 
- 
- 
-
 ## Validated Design
 
-The  Design control, management, and forwarding planes have
+The Peering Fabric Design control, management, and forwarding planes have
 undergone validation testing to ensure individual design features work
 as intended and the peering fabric as a whole performs without fault.
 Validation is done exceeding real-world scaling requirements to ensure
