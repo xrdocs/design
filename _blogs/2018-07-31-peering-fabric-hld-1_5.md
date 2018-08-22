@@ -14,6 +14,7 @@ position: hidden
 {% include toc %}
 
 # Revision History
+
 | Version          |Date                    |Comments| 
 | ---------------- | ---------------------- |-----|
 | 1.0       | 05/08/2018 | Initial Peering Fabric Publication| 
