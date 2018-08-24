@@ -222,7 +222,9 @@ provider the flexibility to offer separate regional or global reach on the same 
 
 Internet in a VRF and Peering 
 in a VRF for IPv4 and IPv6 are compatible with most Peering Fabric features. Specific caveats are document in the Appendix
-of the document.   
+of the document.  
+
+
 
 ## Validated Design
 
@@ -1465,6 +1467,48 @@ Peering by definition is at the edge of the network, where security is
 mandatory. While not exclusive to peering, there are a number of best
 practices and software features when implemented will protect your own
 network as well as others from malicious sources within your network.
+
+## Peering and Internet in a VRF 
+
+Using VRFs to isolate peers and the Internet routing table from the infrastructure 
+can enhance security by keeping internal infrastructure components separate from Internet 
+and end user reachability. VRF separation can be done one of three different ways: 
+
+- Separate each peer into its own VRF, use default VRF on SP Network 
+- Single VRF for all "Internet" endpoints, including peers 
+- Separate each peer into its own VRF, and use a separate "Internet" VRF 
+
+### VRF per Peer, default VRF for Internet
+In this method each peer, or groups of peers, are configured under separate VRFs. The SP carries 
+these and all other routes via the default VRF in IOS-XR commonly known as the Global Routing Table. 
+The VPNv4 and VPNv6 address families are NOT configured on the BGP peering sessions between the 
+PFL and PFS nodes and the PFS nodes and the rest of the network. IOS-XR provides the command 
+*import from default-vrf* and *export to default-vrf* with a route-policy to match specific routes 
+to be imported to/from each peer VRF to the default VRF.  This provides dataplane isolation between 
+peers and another mechanism to determine which SP routes are advertised to each peer.    
+
+![]({{site.baseurl}}/images/cpf-hld/peer-vrf.png)
+
+### Internet in a VRF Only 
+In this method all Internet endpoints are configured in the same "Internet" VRF. The security 
+benefit is removing dataplane connectivity between the global Internet and your underlying 
+infrastructure, which is using the default VRF for all internal connectivity. This method uses 
+the VPNv4/VPNv6 address families on all BGP peers and requires the Internet VRF be configured on 
+all peering fabric nodes as well as SP PEs participating in the global routing table. If there are 
+VPN customers or public-facing services in their own VRF needing Internet access, routes can be imported/exported 
+from the Internet VRF on the PE devices they attach to.   
+
+![]({{site.baseurl}}/images/cpf-hld/internet-vrf.png)
+ 
+ 
+### VRF per Peer, Internet in a VRF 
+This method combines the properties and configuration of the previous two methods for a solution 
+with dataplane isolation per peer and separation of all public Internet traffic from the SP 
+infrastructure layer. The exchange of routes between the peer VRFs and Internet VRF takes place 
+on the PFL nodes with the rest of the network operating the same as the Internet in a VRF use case.  
+The VPNv4 and VPNv6 address families must be configured across all routers in the network.  
+
+![]({{site.baseurl}}/images/cpf-hld/internet-peer-vrf.png)
 
 ## Infrastructure ACLs
 
