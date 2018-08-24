@@ -182,7 +182,9 @@ supports ZTP operation for automated device provisioning. ZTP is useful both in
 production as well as staging environments to automate initial device software 
 installation, deploy an initial bootstrap configuration, as well as advanced functionality 
 triggered by ZTP scripts. ZTP is supported on both out of band management interfaces as 
-well as in-band data interfaces.   
+well as in-band data interfaces.  
+
+![]({{site.baseurl}}/images/cpf-hld/ztp-peering.png)
 
 ## Advanced Security using BGP Flowspec and QPPB (1.5)
 
