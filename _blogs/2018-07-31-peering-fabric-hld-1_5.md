@@ -17,8 +17,8 @@ position: hidden
 
 | Version          |Date                    |Comments| 
 | ---------------- | ---------------------- |-----|
-| 1.0       | 05/08/2018 | Initial Peering Fabric Publication| 
-| 1.5          | 07/31/2018 |Advanced Security Update, ZTP, Internet/Peering in a VRF    | 
+| 1.0       | 05/08/2018 | Initial Peering Fabric publication| 
+| 1.5          | 07/31/2018 |BGP-FS, QPPB, ZTP, Internet/Peering in a VRF, NSO Services|
 |                  |                        |     |
 
 # Key Drivers
@@ -653,6 +653,35 @@ fidelity and performance.
 
 # Automation and Programmability
 
+## Cisco NSO Modules
+
+Cisco Network Services Orchestrator is a widely deployed network
+automation and orchestration platform, performing intent-driven
+configuration and validation of networks from a single source of truth
+configuration database. The  Peering design includes a Cisco NSO
+modules to perform specific peering tasks such as peer turn-up, peer
+modification, deploying routing policy and ACLs to multiple nodes,
+providing a jumpstart to peering automation. The following table highlights the 
+currently available Peering NSO services. The current peering service models use 
+the IOS-XR CLI NED and are validated with NSO 4.5.5.   
+
+| Service          |Description |  
+| ---------------- | ---------------------- |
+| peering-service | Manage full BGP and Interface Configuration for EBGP Peers| 
+| peering-acl | Manage infrastructure ACLs referenced by the peering service|  
+| prefix-set | Manage IOS-XR prefix-sets | 
+| as-path-set | Manage IOS-XR as-path sets | 
+| route-policy | Manage XR routing policies for deployment to multiple peering nodes |  
+| peering-common | A set of services to manage as-path sets, community sets, and static routing policies |
+| drain-service | Service to automate draining traffic away from a node under maintenance | 
+| telemetry | Service to enable telemetry sensors and export to collector | 
+| bmp | Service to enable BMP on configured peers and export to monitoring station | 
+| netflow | Service to enable Netflow on configured peer interfaces and export to collector | 
+| PFL-to-PFS-Routing | Configures IGP and BGP routing between PFL and PFS nodes | 
+| PFS-Global-BGP | Configures global BGP parameters for PFS nodes | 
+| PFS-Global-ISIS | Configures global IS-IS parameters for PFS nodes | 
+|                 |                                                  |
+
 ## Netconf
 
 Netconf is an industry standard method for configuration network
@@ -684,15 +713,7 @@ The appendix contains information about YANG paths relevant to
 configuring the peering fabric and their applicability to PFS and PFL
 nodes.
 
-## Cisco NSO Modules
 
-Cisco Network Services Orchestrator is a widely deployed network
-automation and orchestration platform, performing intent-driven
-configuration and validation of networks from a single source of truth
-configuration database. The  Peering design includes a Cisco NSO
-modules to perform specific peering tasks such as peer turn-up, peer
-modification, deploying routing policy and ACLs to multiple nodes,
-providing a jumpstart to peering automation.
 
 ## 3<sup>rd</sup> Party Hosted Applications
 
