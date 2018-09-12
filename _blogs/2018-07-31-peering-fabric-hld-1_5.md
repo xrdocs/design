@@ -2093,6 +2093,27 @@ from the 192.168.2.51 peer and the returned output.
 | IPv4 Neighbor adj-rib-out post-policy | List                                                                                          |
 | OC YANG                               | openconfig-bgp-rib:bgp-rib/afi-safis/afi-safi/ipv4-unicast/neighbors/neighbor/adj-rib-out-pre |
 
+
+### BGP Flowspec  
+
+
+|                                |                                                                                                                              |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| BGP Flowspec Operational State | Counters                                                                                                                      |
+| SNMP OID                       | NA                                                                                                                           |
+| OC YANG                        | NA                                                                                 |
+| Native YANG                    | Cisco-IOS-XR-flowspec-oper|
+| MDT                            | Native                                                                                                                       |
+
+|                                   |                                                                                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| BGP Total Prefixes (all AFI/SAFI) | Counter                                                                                                                         |
+| SNMP OID                          | NA                                                                                                                              |
+| OC YANG                           | openconfig-bgp:bgp/global/state/total-prefixes                                                                                  |
+| Native YANG                       | Cisco-IOS-XR-ip-rib-ipv4-oper/rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count/active-routes-count |
+| MDT                               | Native                                                                                                                          |
+
+
 ### Device Resource YANG Paths
 
 |                  |                        |
