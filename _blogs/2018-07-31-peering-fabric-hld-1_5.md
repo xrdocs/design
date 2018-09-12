@@ -680,7 +680,6 @@ the IOS-XR CLI NED and are validated with NSO 4.5.5.
 | PFL-to-PFS-Routing | Configures IGP and BGP routing between PFL and PFS nodes | 
 | PFS-Global-BGP | Configures global BGP parameters for PFS nodes | 
 | PFS-Global-ISIS | Configures global IS-IS parameters for PFS nodes | 
-|                 |                                                  |
 
 ## Netconf
 
