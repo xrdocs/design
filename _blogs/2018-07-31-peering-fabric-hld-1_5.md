@@ -1285,7 +1285,9 @@ XRv-9000 virtual router works well in these instances. If one is using an extern
 advertise Flowspec policies to the peering fabric, they should be advertised to the PFS nodes which 
 will reflect them to the PFL nodes. 
 In the absence of an external policy injector Flowspec policies can be 
-defined on the Peering Fabric PFS nodes for advertisement to all PFL nodes.   
+defined on the Peering Fabric PFS nodes for advertisement to all PFL nodes. 
+IPv6 Flowspec on the NCS5500 requires the use of the following global command, followed by a device reboot.   
+*hw-module profile flowspec ipv6-enable* 
 
 ### Enabling BGP Flowspec Address Families on PFS and PFL Nodes 
 
