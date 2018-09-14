@@ -439,8 +439,7 @@ subscription Interface
 </table>
 
 ## XML Configuration Examples <a name="XML-examples"></a>
-### Enable Segment Routing
-
+### Enable Segment Routing (XML)
 ```
 <isis xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-clns-isis-cfg">
   <instances>
@@ -485,8 +484,7 @@ subscription Interface
 </isis>
 ```
 
-### Enable TI-LFA
-
+### Enable TI-LFA (XML)
 ```
 <isis xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-clns-isis-cfg">
   <instances>
@@ -525,8 +523,7 @@ subscription Interface
 </isis>
 ```
 
-### Enable Mapping Server
-
+### Enable Mapping Server (XML)
 ```
 <isis xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-clns-isis-cfg">
   <instances>
@@ -564,8 +561,7 @@ subscription Interface
 </sr>
 ```
 
-### Disable LDP
-
+### Disable LDP (XML)
 ```
 <mpls-ldp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-mpls-ldp-cfg">
    <default-vrf>
@@ -582,7 +578,7 @@ subscription Interface
 
 The following examples show how to configure the SR services and resources using the northbound RESTCONF API on NSO.
 
-### Create SRGB
+### Create SRGB (RESTCONF)
 
 ```
 curl -X POST \
@@ -599,7 +595,7 @@ curl -X POST \
   </id-pool>'
 ```
 
-### Create SR-Infrastructure
+### Create SR-Infrastructure (RESTCONF)
 
 ```
 curl -X POST \
@@ -616,7 +612,7 @@ curl -X POST \
 </sr-infrastructure>'
 ```
 
-### Create SR Service
+### Create SR Service (RESTCONF)
 
 ```
 curl -X POST \
@@ -696,7 +692,7 @@ The following models show the relevant YANG data models for retrieving operation
   <tr class="odd">
 <td><p><strong>Forwarding</strong></p></td>
 <td><p><strong>Traffic is Forwarded using LDP Labels</strong></p></td>
-<td><p><strong>Not available.  Use “traceroute [mpls | sr-mpls]” CLI to validate forwarding.</strong></p></td>
+<td><p>Not available.  Use “traceroute [mpls | sr-mpls]” CLI to validate forwarding.</p></td>
 </tr>
 </tbody>
 </table>
