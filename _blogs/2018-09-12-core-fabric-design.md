@@ -394,16 +394,6 @@ subscription Interface
 <td><strong>openconfig-telemetry</strong></td>
 <td><strong>Configure telemetry sensors and destinations </strong></td>
 </tr>
-<tr class="odd">
-<td><p><strong>Cisco-IOS-XR-ip-bfd-cfg </strong></p>
-<p><strong>Cisco-IOS-XR-ip-bfd-oper</strong></p></td>
-<td><strong>BFD config and state </strong></td>
-</tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-ethernet-lldp-cfg </strong></p>
-<p><strong>Cisco-IOS-XR-ethernet-lldp-oper</strong></p></td>
-<td><strong>LLDP config and state </strong></td>
-</tr>
 </tbody>
 </table>
 
