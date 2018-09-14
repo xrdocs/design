@@ -287,9 +287,9 @@ The configuration tasks required for the migration use cases are encapsulated in
 
 
 | Name              | Purpose                           | Example (ncs_cli)              |
-| **id-pool**           | Resource-pool for common global block of SR labels. Can exclude labels from range. |```resource-pools id-pool SRGB-POOL1 range start 17000 end 19000```            |
+| **id-pool**           | Resource-pool for common global block of SR labels.|```resource-pools id-pool SRGB-POOL1 range start 17000 end 19000```            |
 | **sr-infrastructure** | Associates an IGP Instance, a Loopback and a global block of labels  |```sr-infrastructure``` <br/>```instance-name ISIS-CORE```<br/>```loopback 0```<br/>```sr-global-block-pools SRGB-POOL1``` |
-| **sr**                | Defines an sr service. |```services sr DENVER ```<br/>``` router P3```<br/>```  instance-preference use-sr-infrastructure```<br/>  ```  prefix-preference auto-assign-prefix-sid```|
+| **sr**                | Defines an sr service. |```services sr DENVER ```<br/>``` router P3```<br/>```  instance-preference use-sr-infrastructure```<br/> ```  prefix-preference auto-assign-prefix-sid```|
 | **ti-lfa**            | Defines a TI-LFA services.|```services ti-lfa DENVER-LFA``` <br/> ```address-family ipv4```<br/>``` router P3```<br/>```  instance-name-preference use-sr-infrastructure```<br/>```  interface-preference all-interfaces```|                      
 | **sr-ms**             | Defines an service for creating SR Mapping Servers    |```services sr-ms MAP-SERV-1```<br/>``` router P3```<br/>```  instance-name-preference use-sr-infrastructure```<br/>```  address-family ipv4```<br/>```  ipv4-address 192.168.0.1 ```<br/>```  prefix-length 32```<br/>```  first-sid-value 25```<br/>```  number-of-allocated-sids 100``` |
 | **disable-ldp**       | Defines a service for disabling LDP on a link-by-link basis.     |```services disable-ldp 102```<br/>``` router P3```<br/>```  interface-type HundredGigE```<br/>```  interface-id 0/0/0/4```|
