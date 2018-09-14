@@ -301,24 +301,23 @@ The configuration tasks required for the migration use cases are encapsulated in
 </tr>
 <tr class="even"> 
 <td><p><strong>sr-infrastructure </strong></p></td>
-<td><p>Associates an IGP Instance, a Loopback and a global block of labels to be re-used across the network.</p></td>
 <td><p>sr-infrastructure</p>
   <p> instance-name ISIS-CORE</p>
   <p> loopback 0</p>
   <p> sr-global-block-pools SRGB-POOL1</p>
   </td>
+ <td><p>Associates an IGP Instance, a Loopback and a global block of labels to be re-used across the network.</p></td>
 </tr>
 <tr class="odd">
 <td><p><strong>sr</strong></p></td>
-<td><p>Defines an sr serviceCan leverage sr-infrastructure to ensure consistent IGP, loopback and global block. Can auto-assign prefix SIDs to nodes to ensure uniqueness.  <br/> ,</p></td>
 <td><p>services sr DENVER</p>
   <p> router P3</p>
   <p>  instance-preference use-sr-infrastructure</p>
   <p>  prefix-preference auto-assign-prefix-sid</p></td>
+<td><p>Defines an sr serviceCan leverage sr-infrastructure to ensure consistent IGP, loopback and global block. Can auto-assign prefix SIDs to nodes to ensure uniqueness.  </p></td>
 </tr>
 <tr class="even">
 <td><p><strong>ti-lfa</strong></p></td>
-<td><p>Defines a TI-LFA services. Can leverage sr-infrastructure for consistency and ensure that configuration is applied to all interfaces in a given IGP instance.</p></td>
 <td>
   <p>services ti-lfa DENVER-LFA</p>
   <p> address-family ipv4</p>
@@ -326,10 +325,10 @@ The configuration tasks required for the migration use cases are encapsulated in
   <p>  instance-name-preference use-sr-infrastructure</p>
   <p>  interface-preference all-interfaces</p>
   </td>
+  <td><p>Defines a TI-LFA services. Can leverage sr-infrastructure for consistency and ensure that configuration is applied to all interfaces in a given IGP instance.</p></td>
 </tr>
   <tr class="odd">
 <td><p><strong>sr-ms</strong></p></td>
-<td><p>Defines an service for creating SR Mapping Servers</p></td>
     <td>
       <p>services sr-ms MAP-SERV-1</p>
       <p>router P3</p>
@@ -340,6 +339,7 @@ The configuration tasks required for the migration use cases are encapsulated in
       <p>first-sid-value 25</p>
       <p>number-of-allocated-sids 100</p>
     </td>
+    <td><p>Defines an service for creating SR Mapping Servers</p></td>
 </tr>
 </tbody>
 </table>
