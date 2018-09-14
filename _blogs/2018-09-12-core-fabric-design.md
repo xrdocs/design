@@ -93,7 +93,7 @@ NETCONF and YANG using OpenConfig and native IOS-XR data models are used to help
 
 The control, management, and forwarding planes in this design have undergone validation testing to ensure individual design features work as intended and the peering fabric as a whole performs without fault. Validation is done exceeding real-world scaling requirements to ensure the design fulfills its rule in existing networks with room for future growth.  
 
-![Validation Topology]({{site.baseurl}}/images/corevalidation.png) <!-- .element height="50%" width="50%" -->
+![Validation Topology]({{site.baseurl}}/images/corevalidation.png){:height="750%" width="75%"}
 
 
 # Use Cases
