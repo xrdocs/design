@@ -404,11 +404,6 @@ subscription Interface
 <p><strong>Cisco-IOS-XR-ethernet-lldp-oper</strong></p></td>
 <td><strong>LLDP config and state </strong></td>
 </tr>
-<tr class="odd">
-<td><strong>openconfig-mpls</strong></td>
-<td><strong>MPLS config and state, including Segment Routing</strong></td>
-</tr>
-  
 </tbody>
 </table>
 
