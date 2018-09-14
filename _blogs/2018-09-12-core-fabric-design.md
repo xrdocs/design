@@ -790,12 +790,30 @@ curl -X GET \
 
 ## YANG Models for TI-LFA Operational Data<a name="oper-yang-tilfa"></a>
 
-Component	Validation	Model
-•	Subtree
-IGP	Get A List of Every Prefix with a Backup Path	Cisco-IOS-XR-clns-isis-oper.yang
-•	isis/instances/instance/topologies/topology/ipv4frr-backups/ipv4frr-backup/prefix
-IGP	Number of Paths Protected	Cisco-IOS-XR-clns-isis-oper.yang
-•	isis/instances/instance/topologies/topology/frr-summary
+<table>
+<thead>
+<tr class="header">
+<th><strong>Component</strong></th>
+<th><strong>Validation</strong></th>
+<th><strong>Model <p>Substring</p></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p><strong>IGP</strong></p></td>
+<td><p><strong>Get A List of Every Prefix with a Backup Path</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-clns-isis-oper.yang</strong></p>
+  <p>isis/instances/instance/topologies/topology/ipv4frr-backups/ipv4frr-backup/prefix</p></td>
+</tr>
+<tr class="even">
+<td><p><strong>IGP</strong></p></td>
+<td><p><strong>Number of Paths Protected</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-clns-isis-oper.yang</strong></p>
+  <p>isis/instances/instance/topologies/topology/frr-summary</p></td>
+</tr>
+</tbody>
+</table>
+
 
 Example Usage (IGP Backup Routes)
 
