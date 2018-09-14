@@ -408,12 +408,7 @@ subscription Interface
 <td><strong>openconfig-mpls</strong></td>
 <td><strong>MPLS config and state, including Segment Routing</strong></td>
 </tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-clns-isis-cfg</strong></p>
-<p><strong>Cisco-IOS-XR-clns-isis-oper</strong></p></td>
-<td><strong>IS-IS config and state </strong></td>
-</tr>
-
+  
 </tbody>
 </table>
 
