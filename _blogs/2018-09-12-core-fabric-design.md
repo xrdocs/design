@@ -788,7 +788,7 @@ curl -X GET \
   -H 'Content-Type: application/yang-data+xml' \
 ```
 
-## YANG Models for TI-LFA Operational Data<a name="oper-yang-tilfa"></a>
+## <a name="oper-yang-tilfa">YANG Models for TI-LFA Operational Data</a>
 
 <table>
 <thead>
