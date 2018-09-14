@@ -303,16 +303,18 @@ The configuration tasks required for the migration use cases are encapsulated in
 <td><p><strong>sr-infrastructure </strong></p></td>
 <td><p>Associates an IGP Instance, a Loopback and a global block of labels to be re-used across the network.</p></td>
 <td><p>sr-infrastructure</p>
-  <p>instance-name ISIS-CORE</p>
-  <p>loopback 0</p>
-  <p>sr-global-block-pools SRGB-POOL1</p>
+  <p> instance-name ISIS-CORE</p>
+  <p> loopback 0</p>
+  <p> sr-global-block-pools SRGB-POOL1</p>
   </td>
 </tr>
 <tr class="odd">
-<td><p><strong>RIB</strong></p></td>
-<td><p><strong>SR Labels Are Programmed in RIB</strong></p></td>
-<td><p><strong>Cisco-IOS-XR-ip-rib-ipv4-oper.yang</strong></p>
-  <p>rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes/route</p></td>
+<td><p><strong>sr</strong></p></td>
+<td><p>Defines an sr serviceCan leverage sr-infrastructure to ensure consistent IGP, loopback and global block. Can auto-assign prefix SIDs to nodes to ensure uniqueness.  <br/> ,</p></td>
+<td><p>services sr DENVER</p>
+  <p> router P3</p>
+  <p>  instance-preference use-sr-infrastructure</p>
+  <p>  prefix-preference auto-assign-prefix-sid</p></td>
 </tr>
 <tr class="even">
 <td><p><strong>FIB</strong></p></td>
@@ -335,7 +337,7 @@ The configuration tasks required for the migration use cases are encapsulated in
 instance-name ISIS-CORE
 loopback 0
 sr-global-block-pools SRGB-POOL1 ```                                                                                                           |
-| sr                | Defines an sr service. Can leverage sr-infrastructure to ensure consistent IGP, loopback and global block. Can auto-assign prefix SIDs to nodes to ensure uniqueness. |```services sr DENVER <br> router P3,instance-preference use-sr-infrastructure,prefix-preference auto-assign-prefix-sid        ```                                                                          |
+| sr                | Defines an sr service. Can leverage sr-infrastructure to ensure consistent IGP, loopback and global block. Can auto-assign prefix SIDs to nodes to ensure uniqueness. |```services sr DENVER <br/> router P3,instance-preference use-sr-infrastructure,prefix-preference auto-assign-prefix-sid        ```                                                                          |
 | ti-lfa            | Defines a TI-LFA services.,Can leverage sr-infrastructure for consistency and ensure that configuration is applied to all interfaces in a given IGP instance.        |```services ti-lfa DENVER-LFA,address-family ipv4,router P3,instance-name-preference use-sr-infrastructure,interface-preference all-interfaces  ```                                                    |
 | sr-ms             | Defines an service for creating SR Mapping Servers                                                                                                                   |```services sr-ms MAP-SERV-1,router P3,instance-name-preference use-sr-infrastructure,address-family,ipv4,ipv4-address,192.168.0.1,prefix-length,32,first-sid-value,25,number-of-allocated-sids 100``` |
 | disable-ldp       | Defines a service for disabling LDP on a link-by-link basis.                                                                                                         |```services disable-ldp 102,router P3,interface-type HundredGigE,interface-id,0/0/0/4```                                                                                                               |
