@@ -432,7 +432,7 @@ subscription Interface
 </tr>
 <tr class="odd">
 <td><strong>Cisco-IOS-XR-ip-rib-ipv4-oper</strong></td>
-<td><strong>Platform Independent FIB State </strong></td>
+<td><strong>RIB State </strong></td>
 </tr>
 </tbody>
 </table>
