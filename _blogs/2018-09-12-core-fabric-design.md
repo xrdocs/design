@@ -121,6 +121,7 @@ The goal of the migration is to preserve existing services while migrating the c
 
  
 ### Step 1: Enable SR
+
 In the first step of migration, SR is enabled on the P routers using CLI or (preferably) NETCONF/YANG.  The latter can be orchestrated using the NSO "sr" service, ensuring that:
 
 - Every router uses the same ISIS instance, loopback interface and global block of labels.
@@ -296,24 +297,32 @@ The configuration tasks required for the migration use cases are encapsulated in
 
 ### SR Validation
 
-The following table shows a series of validation steps.  Operational commands are provided in CLI for readability.  Operational YANG models are provided in the Appendix.
+The following table shows a series of validation steps.  Operational commands are provided in CLI for readability.  Operational YANG models are provided in the [Appendix](#oper-yang-sr).
 
-Component	Validation	Common CLI
-Label Database	SRGB Label Range Has Been Allocated to ISIS	show mpls label table summary
-show mpls label table label 17000 detail
-IGP	IGP Is Advertising SR Labels for Every Router’s Loopback That is Enabled for SR	show isis segment-routing label table
-RIB	SR Labels Are Programmed in RIB	show route <address/prefix> detail
-FIB	SR Labels Are Programmed in FIB	show mpls forward labels <label>
-Forwarding	Traffic is Forwarded using LDP Labels	traceroute <address>
-traceroute sr-mpls <address/prefix>
+| Component      | Validation                                           | Common CLI                                                                   |
+|----------------|------------------------------------------------------|------------------------------------------------------------------------------|
+| Label Database | SRGB Label Range Has Been Allocated to ISIS          | ```show mpls label table summary show mpls label table label 17000 detail``` |
+| IGP            | IGP Advertises Labels for Every SR Router's Loopback | ```show isis segment-routing label table```                                  |
+| RIB            | SR Labels are Programmed in RIB                      | ```show route <address/prefix> detail```                                     |
+| FIB            | SR Labels are Programmed in FIB                      | ```show mols forward labels <label>```                                       |
+| Forwarding     | Traffic is Forwarded Using LDP Labels                | ```traceroute <address> trace route sr-mapls <address/prefix>```             |
   
 ### TI-LFA Validation
 
-CLI is given below for readability.  Operational YANG models are provided in the Appendix.
+CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#oper-yang-tilfa).
 
-Component	Validation	Common CLI
-IGP	Every Prefix Has a Backup Path	show isis fast-reroute 
-IGP	Number of Paths Protected	show isis fast-reroute summary
+| Component | Validation                     | Common CLI                           |
+|-----------|--------------------------------|--------------------------------------|
+| IGP       | Every Prefix Has a Backup Path | ```show isis fast-reroute```         |
+| IGP       | Number of Paths Protected      | ```show isis fast-reroute summary``` |
+
+### Mapping Server Validation
+
+CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#oper-yang-srms). 
+
+| Component | Validation                            | Common CLI                                                                     |
+|-----------|---------------------------------------|--------------------------------------------------------------------------------|
+| SR        | Non-SR Endpoints Have Mapping Entries | ```show segment-routing mapping-server prefix-sid-map ipv4 <address/prefix>``` |
 
 
 ## Model-Driven Telemetry
@@ -356,30 +365,78 @@ subscription Interface
 
 ## Applicable YANG Models
 
-Model	Data
-openconfig-interfaces
-Cisco-IOS-XR-infra-statsd-oper
-Cisco-IOS-XR-pfi-im-cmd-oper	Interface config and state 
-Common counters found in SNMP IF-MIB 
-openconfig-if-ethernet 
-Cisco-IOS-XR-drivers-media-eth-oper	Ethernet layer config and state
- XR native transceiver monitoring
-openconfig-platform	Inventory, transceiver monitoring 
-openconfig-telemetry	Configure telemetry sensors and destinations 
-Cisco-IOS-XR-ip-bfd-cfg 
-Cisco-IOS-XR-ip-bfd-oper	BFD config and state 
-Cisco-IOS-XR-ethernet-lldp-cfg 
-Cisco-IOS-XR-ethernet-lldp-oper	LLDP config and state 
-openconfig-mpls	MPLS config and state, including Segment Routing
-Cisco-IOS-XR-mpls-lsd-oper
-	MPLS Label Switch Database state data
-Cisco-IOS-XR-mpls-ldp-cfg
-Cisco-IOS-XR-mpls-ldp-oper	LDP config and state
-Cisco-IOS-XR-fib-common-oper	Platform Independent FIB State
-Cisco-IOS-XR-clns-isis-cfg
-Cisco-IOS-XR-clns-isis-oper	IS-IS config and state 
-Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper	NCS 5500 HW resources 
-Cisco-IOS-XR-ip-rib-ipv4-oper	RIB state
+<table>
+<thead>
+<tr class="header">
+<th><strong>Model</strong></th>
+<th><strong>Data</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p><strong>openconfig-interfaces</strong></p>
+<p><strong>Cisco-IOS-XR-infra-statsd-oper</strong></p>
+<p><strong>Cisco-IOS-XR-pfi-im-cmd-oper</strong></p></td>
+<td><p><strong>Interface config and state </strong></p>
+<p><strong>Common counters found in SNMP IF-MIB </strong></p></td>
+</tr>
+<tr class="even">
+<td><p><strong>openconfig-if-ethernet </strong></p>
+<p><strong>Cisco-IOS-XR-drivers-media-eth-oper</strong></p></td>
+<td><p><strong>Ethernet layer config and state</strong></p>
+<p><strong>XR native transceiver monitoring</strong></p></td>
+</tr>
+<tr class="odd">
+<td><strong>openconfig-platform</strong></td>
+<td><strong>Inventory, transceiver monitoring </strong></td>
+</tr>
+<tr class="even">
+<td><strong>openconfig-telemetry</strong></td>
+<td><strong>Configure telemetry sensors and destinations </strong></td>
+</tr>
+<tr class="odd">
+<td><p><strong>Cisco-IOS-XR-ip-bfd-cfg </strong></p>
+<p><strong>Cisco-IOS-XR-ip-bfd-oper</strong></p></td>
+<td><strong>BFD config and state </strong></td>
+</tr>
+<tr class="even">
+<td><p><strong>Cisco-IOS-XR-ethernet-lldp-cfg </strong></p>
+<p><strong>Cisco-IOS-XR-ethernet-lldp-oper</strong></p></td>
+<td><strong>LLDP config and state </strong></td>
+</tr>
+<tr class="odd">
+<td><strong>openconfig-mpls</strong></td>
+<td><strong>MPLS config and state, including Segment Routing</strong></td>
+</tr>
+<tr class="even">
+<td><p><strong>Cisco-IOS-XR-clns-isis-cfg</strong></p>
+<p><strong>Cisco-IOS-XR-clns-isis-oper</strong></p></td>
+<td><strong>IS-IS config and state </strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper</strong></td>
+<td><strong>NCS 5500 HW resources </strong></td>
+</tr>
+<tr class="even">
+<td><p><strong>Cisco-IOS-XR-mpls-lsd-oper</strong></p>
+<td><strong>MPLS Label Switch Database state data</strong></td>
+</tr>
+<tr class="even">
+<td><p><strong>Cisco-IOS-XR-mpls-ldp-cfg </strong></p>
+<p><strong>Cisco-IOS-XR-mpls-ldp-oper</strong></p></td>
+<td><strong>LDP config and state </strong></td>
+</tr>  
+ <tr class="odd">
+<td><strong>Cisco-IOS-XR-fib-common-oper</strong></td>
+<td><strong>Platform Independent FIB State </strong></td>
+</tr>
+<tr class="even">
+<td><strong>Cisco-IOS-XR-ip-rib-ipv4-oper</strong></td>
+<td><strong>Platform Independent FIB State </strong></td>
+</tr>
+</tbody>
+</table>
+
 
 ## XML Configuration Examples<a name="XML-examples"></a>
 
@@ -600,7 +657,7 @@ curl -X POST \
      </sr>'
 ```
 
-## YANG Models for SR Operational Data
+## YANG Models for SR Operational Data <a name="oper-yang-sr"></a>
 
 The following models show the relevant YANG data models for retrieving operational data about the SR deployment.
 
@@ -706,7 +763,8 @@ curl -X GET \
   -H 'Content-Type: application/yang-data+xml' \
 ```
 
-## YANG Models for TI-LFA Operational Data
+## YANG Models for TI-LFA Operational Data<a name="oper-yang-tilfa"></a>
+
 Component	Validation	Model
 •	Subtree
 IGP	Get A List of Every Prefix with a Backup Path	Cisco-IOS-XR-clns-isis-oper.yang
@@ -777,7 +835,7 @@ An example of the returned data is shown below.
  </data>
 ```
 
-## YANG Models for SR Mapping Server Operational Data
+## YANG Models for SR Mapping Server Operational Data<a name="oper-yang-srms"></a>
 
 Component	Validation	Model
 •	Subtree
