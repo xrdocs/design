@@ -395,45 +395,10 @@ subscription Interface
 <td><strong>openconfig-telemetry</strong></td>
 <td><strong>Configure telemetry sensors and destinations </strong></td>
 </tr>
-  <tr class="odd">
+<tr class="odd">
 <td><p><strong>Cisco-IOS-XR-ip-bfd-cfg </strong></p>
 <p><strong>Cisco-IOS-XR-ip-bfd-oper</strong></p></td>
 <td><strong>BFD config and state </strong></td>
-</tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-ethernet-lldp-cfg </strong></p>
-<p><strong>Cisco-IOS-XR-ethernet-lldp-oper</strong></p></td>
-<td><strong>LLDP config and state </strong></td>
-</tr>
-<tr class="odd">
-<td><strong>openconfig-mpls</strong></td>
-<td><strong>MPLS config and state, including Segment Routing</strong></td>
-</tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-clns-isis-cfg</strong></p>
-<p><strong>Cisco-IOS-XR-clns-isis-oper</strong></p></td>
-<td><strong>IS-IS config and state </strong></td>
-</tr>
-<tr class="odd">
-<td><strong>Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper</strong></td>
-<td><strong>NCS 5500 HW resources </strong></td>
-</tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-mpls-lsd-oper</strong></p>
-<td><strong>MPLS Label Switch Database state data</strong></td>
-</tr>
-<tr class="odd">
-<td><p><strong>Cisco-IOS-XR-mpls-ldp-cfg </strong></p>
-<p><strong>Cisco-IOS-XR-mpls-ldp-oper</strong></p></td>
-<td><strong>LDP config and state </strong></td>
-</tr>  
- <tr class="even">
-<td><strong>Cisco-IOS-XR-fib-common-oper</strong></td>
-<td><strong>Platform Independent FIB State </strong></td>
-</tr>
-<tr class="odd">
-<td><strong>Cisco-IOS-XR-ip-rib-ipv4-oper</strong></td>
-<td><strong>Platform Independent FIB State </strong></td>
 </tr>
 </tbody>
 </table>
