@@ -285,88 +285,15 @@ mpls ldp
 
 The configuration tasks required for the migration use cases are encapsulated in NSO resource-pools and service packages as summarized below.  To download services templates, visit the [Devnet NSO Developer Forum](insert link).  For examples of how to configure these services using the [NSO Northbound RESTCONF API](#RESTCONF-examples), see the Appendix.
 
-<table>
-<thead>
-<tr class="header">
-<th><strong>Name</strong></th>
-<th><strong>Purpose</strong></th>
-<th><strong>Example Usage (ncs_cli) <p>Substring</p></strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><p><strong>id-pool</strong></p></td>
-<td><p>resource-pools id-pool SRGB-POOL1 range start 17000 end 19000</p></td>
-<td><p>Resource-pool for ensuring common global block of SR labels across the network. Can be configured to exclude addresses in a range.Used by sr-infrastructure. </p></td>
-</tr>
-<tr class="even"> 
-<td><p><strong>sr-infrastructure </strong></p></td>
-<td><p>sr-infrastructure</p>
-  <p> instance-name ISIS-CORE</p>
-  <p> loopback 0</p>
-  <p> sr-global-block-pools SRGB-POOL1</p>
-  </td>
- <td><p>Associates an IGP Instance, a Loopback and a global block of labels to be re-used across the network.</p></td>
-</tr>
-<tr class="odd">
-<td><p><strong>sr</strong></p></td>
-<td><p>services sr DENVER</p>
-  <p> router P3</p>
-  <p>  instance-preference use-sr-infrastructure</p>
-  <p>  prefix-preference auto-assign-prefix-sid</p></td>
-<td><p>Defines an sr serviceCan leverage sr-infrastructure to ensure consistent IGP, loopback and global block. Can auto-assign prefix SIDs to nodes to ensure uniqueness.  </p></td>
-</tr>
-<tr class="even">
-<td><p><strong>ti-lfa</strong></p></td>
-<td>
-  <p>services ti-lfa DENVER-LFA</p>
-  <p> address-family ipv4</p>
-  <p> router P3</p>
-  <p>  instance-name-preference use-sr-infrastructure</p>
-  <p>  interface-preference all-interfaces</p>
-  </td>
-  <td><p>Defines a TI-LFA services. Can leverage sr-infrastructure for consistency and ensure that configuration is applied to all interfaces in a given IGP instance.</p></td>
-</tr>
-  <tr class="odd">
-<td><p><strong>sr-ms</strong></p></td>
-    <td>
-      <p>services sr-ms MAP-SERV-1</p>
-      <p>router P3</p>
-      <p>instance-name-preference use-sr-infrastructure</p>
-      <p>address-family ipv4</p>
-      <p>ipv4-address 192.168.0.1</p>
-      <p>prefix-length 32</p>
-      <p>first-sid-value 25</p>
-      <p>number-of-allocated-sids 100</p>
-    </td>
-    <td><p>Defines an service for creating SR Mapping Servers</p></td>
-</tr>
-</tbody>
-</table>
 
 | Name              | Purpose                           | Example (ncs_cli)              |
-| id-pool           | Resource-pool for common global block of SR labels |```resource-pools id-pool SRGB-POOL1 range start 17000 end 19000        ```            |
-| sr-infrastructure | Associates an IGP Instance, a Loopback and a global block of labels  |sr-infrastructure <br/>instance-name ISIS-CORE<br/>loopback 0<br/>sr-global-block-pools SRGB-POOL1 |
-| sr                | Defines an sr service. |```services sr DENVER ```<br/>``` router P3```<br/>```  instance-preference use-sr-infrastructure```<br/>  ```prefix-preference auto-assign-prefix-sid``` |
-| ti-lfa            | Defines a TI-LFA services.       |```services ti-lfa DENVER-LFA``` <br/> ```address-family ipv4```<br/> ```router P3```<br/>  ```instance-name-preference use-sr-infrastructure```<br/>  ```interface-preference all-interfaces```  |                      
-| sr-ms             | Defines an service for creating SR Mapping Servers    |services sr-ms MAP-SERV-1<br/> router P3<br/>  instance-name-preference use-sr-infrastructure<br/>  address-family ipv4<br/>  ipv4-address 192.168.0.1 <br/>  prefix-length 32<br/>  first-sid-value 25<br/>  number-of-allocated-sids 100 |
-| disable-ldp       | Defines a service for disabling LDP on a link-by-link basis.     |services disable-ldp 102<br/> router P3<br/>  interface-type HundredGigE<br/>  interface-id 0/0/0/4 |
+| **id-pool**           | Resource-pool for common global block of SR labels |```resource-pools id-pool SRGB-POOL1 range start 17000 end 19000```            |
+| **sr-infrastructure** | Associates an IGP Instance, a Loopback and a global block of labels  |```sr-infrastructure``` <br/>```instance-name ISIS-CORE```<br/>```loopback 0```<br/>```sr-global-block-pools SRGB-POOL1``` |
+| **sr**                | Defines an sr service. |```services sr DENVER ```<br/>``` router P3```<br/>```  instance-preference use-sr-infrastructure```<br/>  ```prefix-preference auto-assign-prefix-sid``` |
+| **ti-lfa**            | Defines a TI-LFA services.       |```services ti-lfa DENVER-LFA``` <br/> ```address-family ipv4```<br/>``` router P3```<br/>  ```  instance-name-preference use-sr-infrastructure```<br/>```  interface-preference all-interfaces```  |                      
+| **sr-ms**             | Defines an service for creating SR Mapping Servers    |```services sr-ms MAP-SERV-1```<br/>``` router P3```<br/>```  instance-name-preference use-sr-infrastructure```<br/>```  address-family ipv4```<br/>```  ipv4-address 192.168.0.1 ```<br/>```  prefix-length 32```<br/>```  first-sid-value 25```<br/>```  number-of-allocated-sids 100``` |
+| **disable-ldp**       | Defines a service for disabling LDP on a link-by-link basis.     |```services disable-ldp 102```<br/>``` router P3```<br/>```  interface-type HundredGigE```<br/>  ```  interface-id 0/0/0/4``` |
 
-
-
-
-
-| Name              | Purpose                                                                                                                                                              | Example (ncs_cli)                                                                                                                                                                                |
-|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| id-pool           | Resource-pool for ensuring common global block of SR labels across the network.,Can be configured to exclude addresses in a range. Used by sr-infrastructure.        |```resource-pools id-pool SRGB-POOL1 range start 17000 end 19000        ```                                                                                                                            |
-| sr-infrastructure | Associates an IGP Instance, a Loopback and a global block of labels to be re-used across the network.                                                                 |sr-infrastructure<br>
-instance-name ISIS-CORE<br>
-loopback 0<br>
-sr-global-block-pools SRGB-POOL1                                                                                                           |
-| sr                | Defines an sr service. Can leverage sr-infrastructure to ensure consistent IGP, loopback and global block. Can auto-assign prefix SIDs to nodes to ensure uniqueness. |```services sr DENVER <br/> router P3,instance-preference use-sr-infrastructure,prefix-preference auto-assign-prefix-sid        ```                                                                          |
-| ti-lfa            | Defines a TI-LFA services.,Can leverage sr-infrastructure for consistency and ensure that configuration is applied to all interfaces in a given IGP instance.        |```services ti-lfa DENVER-LFA,address-family ipv4,router P3,instance-name-preference use-sr-infrastructure,interface-preference all-interfaces  ```                                                    |
-| sr-ms             | Defines an service for creating SR Mapping Servers                                                                                                                   |```services sr-ms MAP-SERV-1,router P3,instance-name-preference use-sr-infrastructure,address-family,ipv4,ipv4-address,192.168.0.1,prefix-length,32,first-sid-value,25,number-of-allocated-sids 100``` |
-| disable-ldp       | Defines a service for disabling LDP on a link-by-link basis.                                                                                                         |```services disable-ldp 102,router P3,interface-type HundredGigE,interface-id,0/0/0/4```                                                                                                               |
 
 ## Validation
 
