@@ -151,7 +151,7 @@ The operation of TI-LFA should be validated to ensure that all paths are protect
 
 In the example below, model driven telemetry is streaming Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/frr-summary, making it easy to see that the number of protected paths increases when TI-LFA is configured.
 
-![TI-LFAwithMDT.png]({{site.baseurl}}/images/TI-LFAwithMDT.png)
+![TI-LFAwithMDT.png]({{site.baseurl}}/images/TI-LFAwithMDT.png){:height="50%" width="50%"}{: .align-center}
  
 
 ### Step 3: Enable Mapping Servers
@@ -170,7 +170,7 @@ Once the P routers are fully configured for SR, LDP can optionally be disabled o
 
 The “disable-ldp” service can be used in NSO to orchestrate this step on a link-by-link basis.  Telemetry can be used to track the impact of disabling LDP on core-facing interfaces using the Cisco-IOS-XR-mpls-ldp-oper:mpls-ldp/global/active/default-vrf/summary path as shown below.
 
-![LDPMonitoring.png]({{site.baseurl}}/images/LDPMonitoring.png)
+![LDPMonitoring.png]({{site.baseurl}}/images/LDPMonitoring.png){:height="50%" width="50%"}{: .align-center}
 
 Some customers may choose not to disable LDP in the core until all PE routers have been migrated to SR as well, creating an [end-to-end SR](#E2E) deployment.  In that case, LDP provides the primary forwarding path while SR provides TI-LFA until the rest of the network is ready to switch to SR.
 
