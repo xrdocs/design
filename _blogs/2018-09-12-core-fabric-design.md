@@ -366,8 +366,23 @@ subscription Interface
 
 ## Applicable YANG Models
 
-
-
+<table>
+<thead>
+<tr class="header">
+<th><strong>Model</strong></th>
+<th><strong>Data</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p><strong>openconfig-interfaces</strong></p>
+<p><strong>Cisco-IOS-XR-infra-statsd-oper</strong></p>
+<p><strong>Cisco-IOS-XR-pfi-im-cmd-oper</strong></p></td>
+<td><p><strong>Interface config and state </strong></p>
+<p><strong>Common counters found in SNMP IF-MIB </strong></p></td>
+</tr>
+</tbody>
+</table>
 
 ## XML Configuration Examples <a name="XML-examples"></a>
 
