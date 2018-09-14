@@ -380,6 +380,17 @@ subscription Interface
 <p><strong>Cisco-IOS-XR-pfi-im-cmd-oper</strong></p></td>
 <td><p><strong>Interface config and state </strong></p>
 <p><strong>Common counters found in SNMP IF-MIB </strong></p></td>
+  <tr class="even">
+<td><p><strong>openconfig-if-ethernet </strong></p>
+<p><strong>Cisco-IOS-XR-drivers-media-eth-oper</strong></p></td>
+<td><p><strong>Ethernet layer config and state</strong></p>
+<p><strong>XR native transceiver monitoring</strong></p></td>
+</tr>
+<tr class="odd">
+<td><strong>openconfig-platform</strong></td>
+<td><strong>Inventory, transceiver monitoring </strong></td>
+</tr>
+
 </tr>
 </tbody>
 </table>
