@@ -310,7 +310,7 @@ The following table shows a series of validation steps.  Operational commands ar
   
 ### TI-LFA Validation
 
-CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#oper-yang-tilfa).
+CLI is given below for readability.  Operational YANG models are provided in the [Appendix](oper-yang-tilfa).
 
 | Component | Validation                     | Common CLI                           |
 |-----------|--------------------------------|--------------------------------------|
@@ -815,7 +815,7 @@ curl -X GET \
 </table>
 
 
-Example Usage (IGP Backup Routes)
+### Example Usage (IGP Backup Routes)
 
 ```
 The following query retrieves the prefixes that have a backup route.  The <prefix/> filter can be removed for more detail.
@@ -916,7 +916,7 @@ An example of the returned data is shown below.
 </tbody>
 </table>
 
-Example Usage (Mapping Server Verification)
+### Example Usage (Mapping Server Verification)
 
 The following query can be qualified with a specific IP address and prefix (e.g. the loopback addresses of non-SR nodes in the network) to retrieve the mapped SID index for that address.  Note that this query must be done against the node configured as a mapping server.
 
