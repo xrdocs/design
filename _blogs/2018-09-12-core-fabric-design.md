@@ -661,7 +661,32 @@ curl -X POST \
 
 The following models show the relevant YANG data models for retrieving operational data about the SR deployment.
 
-Component	Validation	Model
+<table>
+<thead>
+<tr class="header">
+<th><strong>Component</strong></th>
+<th><strong>Validation</strong></th>
+<th><strong>Model <p>Substring</p></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p><strong>openconfig-interfaces</strong></p>
+<p><strong>Cisco-IOS-XR-infra-statsd-oper</strong></p>
+<p><strong>Cisco-IOS-XR-pfi-im-cmd-oper</strong></p></td>
+<td><p><strong>Interface config and state </strong></p>
+<p><strong>Common counters found in SNMP IF-MIB </strong></p></td>
+</tr>
+<tr class="even">
+<td><p><strong>openconfig-if-ethernet </strong></p>
+<p><strong>Cisco-IOS-XR-drivers-media-eth-oper</strong></p></td>
+<td><p><strong>Ethernet layer config and state</strong></p>
+<p><strong>XR native transceiver monitoring</strong></p></td>
+</tr>
+</tbody>
+</table>
+
+		Model
 •	Subtree
 Label Database	SRGB Label Range Has Been Allocated to ISIS	Cisco-IOS-XR-mpls-lsd-oper.yang
 •	mpls-lsd/label-summary
