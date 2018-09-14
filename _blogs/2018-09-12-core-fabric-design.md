@@ -285,6 +285,46 @@ mpls ldp
 
 The configuration tasks required for the migration use cases are encapsulated in NSO resource-pools and service packages as summarized below.  To download services templates, visit the [Devnet NSO Developer Forum](insert link).  For examples of how to configure these services using the [NSO Northbound RESTCONF API](#RESTCONF-examples), see the Appendix.
 
+<table>
+<thead>
+<tr class="header">
+<th><strong>Name</strong></th>
+<th><strong>Purpose</strong></th>
+<th><strong>Example Usage (ncs_cli) <p>Substring</p></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p><strong>id-pool</strong></p></td>
+<td><p>Resource-pool for ensuring common global block of SR labels across the network.,Can be configured to exclude addresses in a range.Used by sr-infrastructure. </p></td>
+<td><p>```resource-pools id-pool SRGB-POOL1 range start 17000 end 19000```</p></td>
+</tr>
+<tr class="even">
+<td><p><strong>IGP</strong></p></td>
+<td><p><strong>IGP Is Advertising SR Labels</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-clns-isis-oper.yang</strong></p>
+  <p>isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid</p></td>
+</tr>
+<tr class="odd">
+<td><p><strong>RIB</strong></p></td>
+<td><p><strong>SR Labels Are Programmed in RIB</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-ip-rib-ipv4-oper.yang</strong></p>
+  <p>rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes/route</p></td>
+</tr>
+<tr class="even">
+<td><p><strong>FIB</strong></p></td>
+<td><p><strong>SR Labels Are Programmed in FIB</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-fib-common-oper.yang</strong></p>
+  <p>mpls-forwarding/nodes/node/label-fib/forwarding-details/forwarding-detail</p></td>
+</tr>
+  <tr class="odd">
+<td><p><strong>Forwarding</strong></p></td>
+<td><p><strong>Traffic is Forwarded using LDP Labels</strong></p></td>
+<td><p>Not available.  Use “traceroute [mpls | sr-mpls]” CLI to validate forwarding.</p></td>
+</tr>
+</tbody>
+</table>
+
 | Name              | Purpose                                                                                                                                                              | Example (ncs_cli)                                                                                                                                                                                |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | id-pool           | Resource-pool for ensuring common global block of SR labels across the network.,Can be configured to exclude addresses in a range.,Used by sr-infrastructure.        |```resource-pools id-pool SRGB-POOL1 range start 17000 end 19000        ```                                                                                                                            |
