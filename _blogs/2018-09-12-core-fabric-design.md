@@ -317,10 +317,15 @@ The configuration tasks required for the migration use cases are encapsulated in
   <p>  prefix-preference auto-assign-prefix-sid</p></td>
 </tr>
 <tr class="even">
-<td><p><strong>FIB</strong></p></td>
-<td><p><strong>SR Labels Are Programmed in FIB</strong></p></td>
-<td><p><strong>Cisco-IOS-XR-fib-common-oper.yang</strong></p>
-  <p>mpls-forwarding/nodes/node/label-fib/forwarding-details/forwarding-detail</p></td>
+<td><p><strong>ti-lfa</strong></p></td>
+<td><p>Defines a TI-LFA services. Can leverage sr-infrastructure for consistency and ensure that configuration is applied to all interfaces in a given IGP instance.</p></td>
+<td>
+  <p>services ti-lfa DENVER-LFA</p>
+  <p> address-family ipv4</p>
+  <p> router P3</p>
+  <p>  instance-name-preference use-sr-infrastructure</p>
+  <p>  interface-preference all-interfaces</p>
+  </td>
 </tr>
   <tr class="odd">
 <td><p><strong>Forwarding</strong></p></td>
@@ -333,10 +338,10 @@ The configuration tasks required for the migration use cases are encapsulated in
 | Name              | Purpose                                                                                                                                                              | Example (ncs_cli)                                                                                                                                                                                |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | id-pool           | Resource-pool for ensuring common global block of SR labels across the network.,Can be configured to exclude addresses in a range. Used by sr-infrastructure.        |```resource-pools id-pool SRGB-POOL1 range start 17000 end 19000        ```                                                                                                                            |
-| sr-infrastructure | Associates an IGP Instance, a Loopback and a global block of labels to be re-used across the network.                                                                 |```sr-infrastructure
-instance-name ISIS-CORE
-loopback 0
-sr-global-block-pools SRGB-POOL1 ```                                                                                                           |
+| sr-infrastructure | Associates an IGP Instance, a Loopback and a global block of labels to be re-used across the network.                                                                 |sr-infrastructure<br>
+instance-name ISIS-CORE<br>
+loopback 0<br>
+sr-global-block-pools SRGB-POOL1                                                                                                           |
 | sr                | Defines an sr service. Can leverage sr-infrastructure to ensure consistent IGP, loopback and global block. Can auto-assign prefix SIDs to nodes to ensure uniqueness. |```services sr DENVER <br/> router P3,instance-preference use-sr-infrastructure,prefix-preference auto-assign-prefix-sid        ```                                                                          |
 | ti-lfa            | Defines a TI-LFA services.,Can leverage sr-infrastructure for consistency and ensure that configuration is applied to all interfaces in a given IGP instance.        |```services ti-lfa DENVER-LFA,address-family ipv4,router P3,instance-name-preference use-sr-infrastructure,interface-preference all-interfaces  ```                                                    |
 | sr-ms             | Defines an service for creating SR Mapping Servers                                                                                                                   |```services sr-ms MAP-SERV-1,router P3,instance-name-preference use-sr-infrastructure,address-family,ipv4,ipv4-address,192.168.0.1,prefix-length,32,first-sid-value,25,number-of-allocated-sids 100``` |
