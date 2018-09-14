@@ -136,9 +136,9 @@ Deploying SR by itself in this way will not impact the forwarding plane in any w
 - Each router is programming the SR labels in the RIB and FIB.
 - Traffic is forwarded using LDP labels.
 
-YANG-modeled operational data can also be streamed using model-driven telemetry.  In the example below, model driven telemetry is streaming Cisco-IOS-XR-mpls-lsd-oper:mpls-lsd/label-summary data, making it easy to see that the number of labels assigned to ISIS jumps to 2000 when the SR global block of labels is configured.
-
 ![Model-driven telemetry for SR label block allocation]({{site.baseurl}}/images/SRGB-MDT.png){:height="50%" width="50%"}{: .align-right}
+
+YANG-modeled operational data can also be streamed using model-driven telemetry.  In this example, model driven telemetry is streaming Cisco-IOS-XR-mpls-lsd-oper:mpls-lsd/label-summary data, making it easy to see that the number of labels assigned to ISIS jumps to 2000 when the SR global block of labels is configured.
 
  
 ### Step 2: Enable TI-LFA
