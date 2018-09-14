@@ -51,12 +51,12 @@ The ultimate “scale up” topology is a multi-chassis cluster that can add ent
 While scale-up systems are suitable for many applications, failures and operational issues can be difficult to troubleshoot and repair.  Moreover, when there is only one or two large boxes in a role, the “blast radius” of an outage can be substantial.  The large blast radius means that scale-out systems require lengthy planning and timeframes for system upgrades. To address these concerns, the core design offers a horizontally scalable option with the goal of improving availability while simplifying failure types to more deterministic interface or node failures. Horizontal scaling is sometimes referred to as “scaling out.” It also enables throughput scaling beyond what is possible with today’s largest chassis.
 
 Scale out can be as simple as adding more standalone boxes in parallel (e.g. 4 or 8 smaller routers instead of the traditional 2).
+
+![Core Fabric Topology]({{site.baseurl}}/images/corefabric-topology.png){: .align-right}
  
 Having more, smaller routers increases the amount of connectivity for the metro and peering while reducing the blast radius of a single failure.  A single router can fail (or be taken out of service for upgrade) with a much smaller impact on the network.  While scale out results in more boxes to manage, automation can be used to reduce complexity and ensure consistency across the network.
 
 The reference topology for the Core design supports the standard 1+1 deployment, the collapsed P/PE deployment for small deployments, and a simple scale-out.
-
-![Core Fabric Topology]({{site.baseurl}}/images/corefabric-topology.png){: .align-right}
 
 
 ## Platforms 
@@ -93,7 +93,7 @@ NETCONF and YANG using OpenConfig and native IOS-XR data models are used to help
 
 The control, management, and forwarding planes in this design have undergone validation testing to ensure individual design features work as intended and the peering fabric as a whole performs without fault. Validation is done exceeding real-world scaling requirements to ensure the design fulfills its rule in existing networks with room for future growth.  
 
-![Validation Topology| , 50%]({{site.baseurl}}/images/corevalidation.png)
+![Validation Topology]({{site.baseurl}}/images/corevalidation.png) <!-- .element height="50%" width="50%" -->
 
 
 # Use Cases
