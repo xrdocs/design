@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 date: '2018-09-12 15:22 -0600'
 title: Core Fabric Design
 author: Shelly Cadora
@@ -8,6 +8,7 @@ tags:
   - iosxr
   - Design
   - Core
+position: hidden
 ---
 {% include toc %}
 
