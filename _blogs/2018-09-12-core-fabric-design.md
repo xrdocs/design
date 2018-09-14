@@ -413,27 +413,7 @@ subscription Interface
 <p><strong>Cisco-IOS-XR-clns-isis-oper</strong></p></td>
 <td><strong>IS-IS config and state </strong></td>
 </tr>
-<tr class="odd">
-<td><strong>Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper</strong></td>
-<td><strong>NCS 5500 HW resources </strong></td>
-</tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-mpls-lsd-oper</strong></p>
-<td><strong>MPLS Label Switch Database state data</strong></td>
-</tr>
-<tr class="odd">
-<td><p><strong>Cisco-IOS-XR-mpls-ldp-cfg </strong></p>
-<p><strong>Cisco-IOS-XR-mpls-ldp-oper</strong></p></td>
-<td><strong>LDP config and state </strong></td>
-</tr>  
- <tr class="even">
-<td><strong>Cisco-IOS-XR-fib-common-oper</strong></td>
-<td><strong>Platform Independent FIB State </strong></td>
-</tr>
-<tr class="odd">
-<td><strong>Cisco-IOS-XR-ip-rib-ipv4-oper</strong></td>
-<td><strong>RIB State </strong></td>
-</tr>
+
 </tbody>
 </table>
 
