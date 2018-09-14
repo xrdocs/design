@@ -671,32 +671,37 @@ The following models show the relevant YANG data models for retrieving operation
 </thead>
 <tbody>
 <tr class="odd">
-<td><p><strong>openconfig-interfaces</strong></p>
-<p><strong>Cisco-IOS-XR-infra-statsd-oper</strong></p>
-<p><strong>Cisco-IOS-XR-pfi-im-cmd-oper</strong></p></td>
-<td><p><strong>Interface config and state </strong></p>
-<p><strong>Common counters found in SNMP IF-MIB </strong></p></td>
+<td><p><strong>Label Database</strong></p></td>
+<td><p><strong>SRGB Label Range Has Been Allocated to ISIS</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-mpls-lsd-oper.yang</strong></p>
+  <p>mpls-lsd/label-summary</p></td>
 </tr>
 <tr class="even">
-<td><p><strong>openconfig-if-ethernet </strong></p>
-<p><strong>Cisco-IOS-XR-drivers-media-eth-oper</strong></p></td>
-<td><p><strong>Ethernet layer config and state</strong></p>
-<p><strong>XR native transceiver monitoring</strong></p></td>
+<td><p><strong>IGP</strong></p></td>
+<td><p><strong>IGP Is Advertising SR Labels</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-clns-isis-oper.yang</strong></p>
+  <p>isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid</p></td>
+</tr>
+<tr class="odd">
+<td><p><strong>RIB</strong></p></td>
+<td><p><strong>SR Labels Are Programmed in RIB</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-ip-rib-ipv4-oper.yang</strong></p>
+  <p>rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes/route</p></td>
+</tr>
+<tr class="even">
+<td><p><strong>FIB</strong></p></td>
+<td><p><strong>SR Labels Are Programmed in FIB</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-fib-common-oper.yang</strong></p>
+  <p>mpls-forwarding/nodes/node/label-fib/forwarding-details/forwarding-detail</p></td>
+</tr>
+  <tr class="odd">
+<td><p><strong>Forwarding</strong></p></td>
+<td><p><strong>Traffic is Forwarded using LDP Labels</strong></p></td>
+<td><p><strong>Not available.  Use “traceroute [mpls | sr-mpls]” CLI to validate forwarding.</strong></p></td>
 </tr>
 </tbody>
 </table>
-
-		Model
-•	Subtree
-Label Database	SRGB Label Range Has Been Allocated to ISIS	Cisco-IOS-XR-mpls-lsd-oper.yang
-•	mpls-lsd/label-summary
-IGP	IGP Is Advertising SR Labels	Cisco-IOS-XR-clns-isis-oper.yang
-•	isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid
-RIB	SR Labels Are Programmed in RIB	Cisco-IOS-XR-ip-rib-ipv4-oper.yang
-•	rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes/route
-FIB	SR Labels Are Programmed in FIB	Cisco-IOS-XR-fib-common-oper.yang
-•	mpls-forwarding/nodes/node/label-fib/forwarding-details/forwarding-detail
-Forwarding	Traffic is Forwarded using LDP Labels	Not available.  Use “traceroute [mpls | sr-mpls]” CLI to validate forwarding.
+	
 
 ### Example Usage (IGP Verification)
 
