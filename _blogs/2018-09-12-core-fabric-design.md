@@ -214,7 +214,7 @@ The NCS5500 family of routers provide high density, ideal buffer sizes, and envi
  
 The 55A1-36H is a second generation 1RU NCS5500 fixed platform with 36 100GE QSFP28 ports operating at line rate.  All the ports can support 100GE and 40GE optics as well as 25G to 10GE breakout. It also contains a powerful multi-core route processor with 64GB of RAM and an on-board 64GB SSD. Its high density, efficiency, and buffering capability make it ideal in 10GE or 100GE deployments.  
 
-[NCS-55A1-24H(https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/datasheet-c78-739905.html)
+[NCS-55A1-24H](https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/datasheet-c78-739905.html)
  
 The NCS-55A1-24H is a second generation 1RU NCS5500 fixed platform with 24 100GE QSFP28 ports. It uses two 900GB NPUs, with 12X100GE ports connected to each NPU. 
 
@@ -366,80 +366,10 @@ subscription Interface
 
 ## Applicable YANG Models
 
-<table>
-<thead>
-<tr class="header">
-<th><strong>Model</strong></th>
-<th><strong>Data</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><p><strong>openconfig-interfaces</strong></p>
-<p><strong>Cisco-IOS-XR-infra-statsd-oper</strong></p>
-<p><strong>Cisco-IOS-XR-pfi-im-cmd-oper</strong></p></td>
-<td><p><strong>Interface config and state </strong></p>
-<p><strong>Common counters found in SNMP IF-MIB </strong></p></td>
-</tr>
-<tr class="even">
-<td><p><strong>openconfig-if-ethernet </strong></p>
-<p><strong>Cisco-IOS-XR-drivers-media-eth-oper</strong></p></td>
-<td><p><strong>Ethernet layer config and state</strong></p>
-<p><strong>XR native transceiver monitoring</strong></p></td>
-</tr>
-<tr class="odd">
-<td><strong>openconfig-platform</strong></td>
-<td><strong>Inventory, transceiver monitoring </strong></td>
-</tr>
-<tr class="even">
-<td><strong>openconfig-telemetry</strong></td>
-<td><strong>Configure telemetry sensors and destinations </strong></td>
-</tr>
-<tr class="odd">
-<td><p><strong>Cisco-IOS-XR-ip-bfd-cfg </strong></p>
-<p><strong>Cisco-IOS-XR-ip-bfd-oper</strong></p></td>
-<td><strong>BFD config and state </strong></td>
-</tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-ethernet-lldp-cfg </strong></p>
-<p><strong>Cisco-IOS-XR-ethernet-lldp-oper</strong></p></td>
-<td><strong>LLDP config and state </strong></td>
-</tr>
-<tr class="odd">
-<td><strong>openconfig-mpls</strong></td>
-<td><strong>MPLS config and state, including Segment Routing</strong></td>
-</tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-clns-isis-cfg</strong></p>
-<p><strong>Cisco-IOS-XR-clns-isis-oper</strong></p></td>
-<td><strong>IS-IS config and state </strong></td>
-</tr>
-<tr class="odd">
-<td><strong>Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper</strong></td>
-<td><strong>NCS 5500 HW resources </strong></td>
-</tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-mpls-lsd-oper</strong></p>
-<td><strong>MPLS Label Switch Database state data</strong></td>
-</tr>
-<tr class="even">
-<td><p><strong>Cisco-IOS-XR-mpls-ldp-cfg </strong></p>
-<p><strong>Cisco-IOS-XR-mpls-ldp-oper</strong></p></td>
-<td><strong>LDP config and state </strong></td>
-</tr>  
- <tr class="odd">
-<td><strong>Cisco-IOS-XR-fib-common-oper</strong></td>
-<td><strong>Platform Independent FIB State </strong></td>
-</tr>
-<tr class="even">
-<td><strong>Cisco-IOS-XR-ip-rib-ipv4-oper</strong></td>
-<td><strong>Platform Independent FIB State </strong></td>
-</tr>
-</tbody>
-</table>
 
 
-## XML Configuration Examples<a name="XML-examples"></a>
+
+## XML Configuration Examples <a name="XML-examples"></a>
 
 ### Enable Segment Routing
 
