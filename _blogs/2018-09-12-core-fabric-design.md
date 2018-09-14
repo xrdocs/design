@@ -880,16 +880,41 @@ An example of the returned data is shown below.
 
 ## YANG Models for SR Mapping Server Operational Data<a name="oper-yang-srms"></a>
 
-Component	Validation	Model
-•	Subtree
-Mapping Server	Non-SR prefixes have assigned SIDs	Cisco-IOS-XR-segment-routing-ms-oper
-•	srms/mapping/mapping-ipv4
-IGP	IGP Is Advertising SR MS Labels	Cisco-IOS-XR-clns-isis-oper.yang
-•	isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid
-RIB	SR Labels Are Programmed in RIB	Cisco-IOS-XR-ip-rib-ipv4-oper.yang
-•	rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes/route
-FIB	SR Labels Are Programmed in FIB	Cisco-IOS-XR-fib-common-oper.yang
-•	mpls-forwarding/nodes/node/label-fib/forwarding-details/forwarding-detail
+<table>
+<thead>
+<tr class="header">
+<th><strong>Component</strong></th>
+<th><strong>Validation</strong></th>
+<th><strong>Model <p>Substring</p></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p><strong>Mapping Server</strong></p></td>
+<td><p><strong>Non-SR prefixes have assigned SIDs</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-segment-routing-ms-oper.yang</strong></p>
+  <p>srms/mapping/mapping-ipv4</p></td>
+</tr>
+<tr class="even">
+<td><p><strong>IGP</strong></p></td>
+<td><p><strong>IGP Is Advertising SR Labels</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-clns-isis-oper.yang</strong></p>
+  <p>isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid</p></td>
+</tr>
+<tr class="odd">
+<td><p><strong>RIB</strong></p></td>
+<td><p><strong>SR Labels Are Programmed in RIB</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-ip-rib-ipv4-oper.yang</strong></p>
+  <p>rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes/route</p></td>
+</tr>
+<tr class="even">
+<td><p><strong>FIB</strong></p></td>
+<td><p><strong>SR Labels Are Programmed in FIB</strong></p></td>
+<td><p><strong>Cisco-IOS-XR-fib-common-oper.yang</strong></p>
+  <p>mpls-forwarding/nodes/node/label-fib/forwarding-details/forwarding-detail</p></td>
+</tr>
+</tbody>
+</table>
 
 Example Usage (Mapping Server Verification)
 
