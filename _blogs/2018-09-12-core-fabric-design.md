@@ -434,8 +434,6 @@ subscription Interface
 <td><strong>Cisco-IOS-XR-ip-rib-ipv4-oper</strong></td>
 <td><strong>Platform Independent FIB State </strong></td>
 </tr>
-
-</tr>
 </tbody>
 </table>
 
