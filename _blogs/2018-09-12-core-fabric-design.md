@@ -296,8 +296,8 @@ The configuration tasks required for the migration use cases are encapsulated in
 <tbody>
 <tr class="odd">
 <td><p><strong>id-pool</strong></p></td>
-<td><p>Resource-pool for ensuring common global block of SR labels across the network. Can be configured to exclude addresses in a range.Used by sr-infrastructure. </p></td>
 <td><p>resource-pools id-pool SRGB-POOL1 range start 17000 end 19000</p></td>
+<td><p>Resource-pool for ensuring common global block of SR labels across the network. Can be configured to exclude addresses in a range.Used by sr-infrastructure. </p></td>
 </tr>
 <tr class="even"> 
 <td><p><strong>sr-infrastructure </strong></p></td>
