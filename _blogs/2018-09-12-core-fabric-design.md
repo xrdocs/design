@@ -56,7 +56,7 @@ Having more, smaller routers increases the amount of connectivity for the metro 
 
 The reference topology for the Core design supports the standard 1+1 deployment, the collapsed P/PE deployment for small deployments, and a simple scale-out.
 
-![Core Fabric Topology]({{site.baseurl}}/images/corefabric-topology.png)
+![Core Fabric Topology]({{site.baseurl}}/images/corefabric-topology.png){: .align-right}
 
 
 ## Platforms 
@@ -93,7 +93,7 @@ NETCONF and YANG using OpenConfig and native IOS-XR data models are used to help
 
 The control, management, and forwarding planes in this design have undergone validation testing to ensure individual design features work as intended and the peering fabric as a whole performs without fault. Validation is done exceeding real-world scaling requirements to ensure the design fulfills its rule in existing networks with room for future growth.  
 
-![Validation Topology]({{site.baseurl}}/images/corevalidation.png)
+![Validation Topology| , 50%]({{site.baseurl}}/images/corevalidation.png)
 
 
 # Use Cases
