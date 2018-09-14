@@ -86,7 +86,7 @@ Other telemetry mechanisms such as Netflow and BMP have limited applicability in
 ## Automation 
 
 NETCONF and YANG using OpenConfig and native IOS-XR data models are used to help automate configuration and validation. Cisco has developed Network Service Orchestrator (NSO) services to help automate common Segment Routing migration tasks using NETCONF NEDs.
-Validated Design
+
 
 ## Validated Design 
 
@@ -102,6 +102,9 @@ The control, management, and forwarding planes in this design have undergone val
 Many customers run LDP in the core today.  To simplify and scale, one of the most important steps is to migrate from LDP to Segment Routing (SR).  The benefits of SR are clear: protocol simplification, simplified resiliency, and multi-domain programmability.  What is less clear is how to accomplish the migration.  Greenfield networks are rare and pockets of LDP will continue to exist in most networks for a long time to come.  Cisco SP Validated Core approaches SR migration in a series of steps that are intended to maintain existing functionality while gradually enabling SR and transitioning traffic to SR LSPs.  Each migration step has an NSO service profile associated with it to ensure a consistent, best-practice implementation.
 
 While end-to-end SR is the goal, it may not always be possible at a given point in time.  Customers may be looking to refresh the P routers and not the PE routers.  Legacy PE routers may not support SR even if new PEs do.  Therefore, it is important to find value at each step of the migration and maintain support for non-SR PEs through the process.
+
+![LDP to SR Core Journey]({{site.baseurl}}/images/LDP-to-SR.png)
+
  
 ### Starting Point
 
@@ -113,14 +116,18 @@ This migration use case assumes that the Core is already configured as a functio
 - Working L2/L3 VPN services from PE to PE using BGP
 
 The goal of the migration is to preserve existing services while migrating the core in an incremental, validated, step-by-step fashion.
+
+![PreserveService.png]({{site.baseurl}}/images/PreserveService.png)
+
  
 ### Step 1: Enable SR
 In the first step of migration, SR is enabled on the P routers using CLI or (preferably) NETCONF/YANG.  The latter can be orchestrated using the NSO "sr" service, ensuring that:
 
 - Every router uses the same ISIS instance, loopback interface and global block of labels.
 - Every router is assigned a unique prefix-SID from the global block of labels.
+- The SR service can be rolled out across multiple devices in a transactional fashion and seamlessly rolled back if needed.
 
-Deploying SR by itself in this way will not impact the forward plane in any way: the P routers will continue to use LDP labels to forward traffic until 1) the PE routers use SR or 2) LDP is disabled in the core.  Nevertheless, it is possible to deeply validate the operation of SR even while still using LDP forwarding.  The following validations can be performed via CLI or (preferably) a model-based query method such as NETCONF/YANG, YDK, or NSO's live-status capability:
+Deploying SR by itself in this way will not impact the forwarding plane in any way: the P routers will continue to use LDP labels to forward traffic until 1) the PE routers use SR or 2) LDP is disabled in the core.  Nevertheless, it is possible to deeply validate the operation of SR even while still using LDP forwarding.  The following validations can be performed via CLI or (preferably) a model-based query method such as NETCONF/YANG, YDK, or NSO's live-status capability:
 
 - Each router successfully assigns the desired block from the label database.
 - The IGP is advertising SR labels for every SR-enabled router's loopback.
@@ -138,40 +145,48 @@ In this step, TI-LFA is configured for link protection.  The NSO “ti-lfa” se
 
 As soon as it is enabled, TI-LFA protects IP, LDP and SR traffic.  This means that all traffic in the Core now has the benefit of sub-50 millisecond convergence times without complicated RSVP-TE tunnels.  Network availability is improved even before the primary forwarding plane is switched to SR.
 
-As before, the operation of TI-LFA should be validated to ensure that all paths are protected.  
+The operation of TI-LFA should be validated to ensure that all paths are protected.  YANG models can be used to retrieve or stream the relevant operational data.   
 
 In the example below, model driven telemetry is streaming Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/frr-summary, making it easy to see that the number of protected paths increases when TI-LFA is configured.
+
+![TI-LFAwithMDT.png]({{site.baseurl}}/images/TI-LFAwithMDT.png)
  
 
 ### Step 3: Enable Mapping Servers
 
-In this step, mapping servers are configured to provide SR labels for LDP endpoints, specifically the loopback addresses of non-SR PEs.  Mapping servers can be configured anywhere in the network.  At least two mapping servers should be configured for redundancy.
+In this step, mapping servers are configured to provide SR labels for LDP-only endpoints, specifically the loopback addresses of non-SR PEs.  Mapping servers can be configured anywhere in the network.  At least two mapping servers should be configured for redundancy.  
 
-At the end of this step, the P routers will have SR labels for all P and PE routers.  However, the VPN services will still use the LDP LSPs from end-to-end since the PE routers initiate with an LDP label.  There should be no service disruption.  The NSO “sr-ms” service leverages the same infrastructure as the “sr” services to simplify and ensure consistency in the configuration process. 
+This step can be achieved through CLI or NETCONF/YANG.  To automate the process, use the NSO “sr-ms” service which leverages the same infrastructure as the “sr” services to simplify and ensure consistency in the configuration process. 
 
-To validate the Mapping Server configuration, check that the non-SR endpoint addresses are represented by labels in the IGP, RIB and FIB as in Step 1.  In addition, specific prefixes can be queried on the mapping server.  CLI is given below for readability.  Operational YANG models are provided in the Appendix.
+At the end of this step, the P routers will have SR labels for all P and PE routers.  However, the VPN services will still use the LDP LSPs from end-to-end since the non-SR PE routers still initiate the service with an LDP label. 
 
-Component	Validation	Common CLI
-Mapping Server	Non-SR Endpoints Have Mapping Entries	show segment-routing mapping-server prefix-sid-map ipv4 <address>/<prefix>
-
-In the example below, model driven telemetry is streaming Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route to a time series database which is counting the number of prefixes with nodal SIDs. 
+To validate the Mapping Server configuration, check that the non-SR endpoint addresses are represented by labels in the IGP, RIB and FIB as in Step 1.  In addition, specific prefixes can be queried on the mapping server.   
 
 ### Step 4: Protocol Simplification
 
-Once the P routers are fully configured for SR, LDP can be disabled on a link-by-link basis for every link pair that has SR enabled on each end.  When this step is accomplished, the P routers will use the SR label for the path across the core.  The benefit of this step is fewer protocols to maintain and troubleshoot in the core.  There should be no impact to the VPN services when the transition is made. 
+Once the P routers are fully configured for SR, LDP can optionally be disabled on a link-by-link basis for every link pair that has SR enabled on each end.  When this step is accomplished, the P routers will use the SR label for the path across the core.  The benefit of this step is fewer protocols to maintain and troubleshoot in the core.  There should be no impact to the VPN services when the transition is made. 
 
-The “disable-ldp” service can be used in NSO to do this on a link-by-link basis.  Telemetry can be used to track the impact of disabling LDP on core-facing interfaces using the Cisco-IOS-XR-mpls-ldp-oper:mpls-ldp/global/active/default-vrf/summary path as shown below.
- 
+The “disable-ldp” service can be used in NSO to orchestrate this step on a link-by-link basis.  Telemetry can be used to track the impact of disabling LDP on core-facing interfaces using the Cisco-IOS-XR-mpls-ldp-oper:mpls-ldp/global/active/default-vrf/summary path as shown below.
+
+![LDPMonitoring.png]({{site.baseurl}}/images/LDPMonitoring.png)
+
+Some customers may choose not to disable LDP in the core until all PE routers have been migrated to SR as well, creating an [end-to-end SR](#E2E) deployment.  In that case, LDP provides the primary forwarding path while SR provides TI-LFA until the rest of the network is ready to switch to SR.
 
 ## LDP over RSVP-TE to SR Migration
+
 Customers with LDP cores who need fast-recovery in the event of a failure often deploy RSVP-TE for fast reroute (FRR).  A common design pattern is to create a mesh of TE tunnels among P routers and tunnel LDP over it.  A P router mesh does not provide an end-to-end solution for fast-recovery but it is more scalable than a PE router mesh.   But even a P router mesh can require a substantial amount of configuration as the number of tunnels scales as the square of the number of P routers.  Optimizations such as auto-tunnel mesh groups can be used to simplify the configuration.  Even so, the amount of RSVP state that the network is required to maintain even for a P router mesh is substantial.  
  
-Migrating from LDP over RSVP to Segment Routing in the Core provides an exceptionally good value proposition.  Because TI-LFA provides fast-route for all traffic, customers can remove their RSVP-TE FRR configuration and all the associated complexity and state while maintaining sub 50-milisecond convergence.  Moreover, SR with TI-LFA enables 100% coverage and micro-loop avoidance.  
+Migrating from LDP over RSVP to Segment Routing in the Core provides an exceptionally good value proposition.  Because TI-LFA provides fast-route for all traffic, customers can remove their RSVP-TE FRR configuration and all the associated complexity and state while maintaining sub 50-milisecond convergence.  Moreover, SR with TI-LFA enables 100% coverage and micro-loop avoidance. 
 
-## LDP to SR End-to-End Migration
+To achieve this use case, follow the same steps as above, disabling RSVP-TE in the core when all the core routers have been enabled for SR.
+
+## LDP to SR End-to-End Migration<a name="E2E"></a>
 In the case where the PE devices are SR-capable, the previous use cases can be extended to run SR end-to-end.  This can be done incrementally on a PE by PE basis until all PEs are migrated.  The benefits of this additional step include end-to-end TI-LFA and further reduction in LDP maintenance. In addition, once end-to-end SR transport has been implemented, the Core is ready to integrate with other SR designs in the Metro and Peering. 
 
 The goal of this use case is the same as before: enable full or partial migration of the PE devices without service disruption.
+
+![E2EMigration.png]({{site.baseurl}}/images/E2EMigration.png)
+
  
 ### Step 1: Enable SR on the PEs 
 
@@ -187,20 +202,21 @@ Finally, the PEs will be configured for “sr-prefer” one by one, slowly trans
 
 The Core validation topology included three types of core sites: a standard 2 P x 2 PE design, a collapsed 2xP/PE and a scale out design with 4xP routers.
    
-Figure 1 Cisco Core Fabric Topology
+![ValidationTopo.png]({{site.baseurl}}/images/ValidationTopo.png)
+
 
 ## Hardware Detail 
 The NCS5500 family of routers provide high density, ideal buffer sizes, and environmental efficiency for core routing  use cases. All of the following platforms can be used in the Core designs above.  Further detailed information on each platform can be found at https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html. 
 
-NCS-55A1-36H 
+[NCS-55A1-36H](https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/datasheet-c78-739905.html)
  
-The 55A1-36H is a second generation 1RU NCS5500 fixed platform with 36 100GE QSFP28 ports operating at line rate.  It also contains a powerful multi-core route processor with 64GB of RAM and an on-board 64GB SSD. Its high density, efficiency, and buffering capability make it ideal in 10GE or 100GE deployments.  
+The 55A1-36H is a second generation 1RU NCS5500 fixed platform with 36 100GE QSFP28 ports operating at line rate.  All the ports can support 100GE and 40GE optics as well as 25G to 10GE breakout. It also contains a powerful multi-core route processor with 64GB of RAM and an on-board 64GB SSD. Its high density, efficiency, and buffering capability make it ideal in 10GE or 100GE deployments.  
 
-NCS-55A1-24H
+[NCS-55A1-24H(https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/datasheet-c78-739905.html)
  
 The NCS-55A1-24H is a second generation 1RU NCS5500 fixed platform with 24 100GE QSFP28 ports. It uses two 900GB NPUs, with 12X100GE ports connected to each NPU. 
 
-NCS 5504 and 5508 Modular Chassis and NC55-36X100G-A line card
+[NCS 5504 and 5508 Modular Chassis and NC55-36X100G line card](https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/datasheet-c78-736270.html)
  
 Large deployments or those needing interface flexibility such as IPoDWDM connectivity can use the modular NCS5500 series chassis.   
 
@@ -210,10 +226,11 @@ The Core uses a single instance of ISIS that encompasses all PE and P devices wi
 
 ## Configuration
 
-The following configuration guidelines will step through the major components of the device and protocol configuration specific to SR migration in the Core.  Only the net-new configuration for SR is included.  It is assumed that an ISIS instance is fully configured and operational across all nodes, as well as LDP and/or RSVP-TE. 
-CLI examples are given here for readability.  The equivalent NETCONF/YANG examples (preferred for automation) are in the appendix.  Ideally, these configurations would be deployed via NETCONF/YANG using NSO service packs as described in the next section.  
+The following configuration guidelines will step through the major components of the device and protocol configuration specific to SR migration in the Core.  Only the net-new configuration for SR is included.  It is assumed that an ISIS instance is fully configured and operational across all nodes, as well as LDP. 
 
-Full configurations used in the validation testing are available in github [insert link here]
+CLI examples are given here for readability.  The [equivalent NETCONF/YANG](#XML-examples) examples (preferred for automation) are in the appendix.  Ideally, these configurations would be deployed via NETCONF/YANG using NSO service packs as described in the next section.  
+
+Full configurations used in the validation testing are available in [github](insert link)
 
 ### Enable Segment Routing in ISIS
 
@@ -256,6 +273,7 @@ segment-routing
 ```
 
 ### Disable LDP
+
 ```
 mpls ldp
  no interface g0/0/0/2
@@ -263,37 +281,16 @@ mpls ldp
 
 ## Automation
 
-The configuration tasks required for the migration use cases are encapsulated in NSO resource-pools and service packages as summarized below.  To download services templates, visit the Devnet NSO Developer Forum [insert link].  For examples of how to configure these services using the NSO Northbound RESTConf API, see the Appendix.
+The configuration tasks required for the migration use cases are encapsulated in NSO resource-pools and service packages as summarized below.  To download services templates, visit the [Devnet NSO Developer Forum](insert link).  For examples of how to configure these services using the [NSO Northbound RESTCONF API](#RESTCONF-examples), see the Appendix.
 
-Name	Purpose	Example (ncs_cli)
-id-pool	Resource-pool for ensuring common global block of SR labels across the network.  Can be configured to exclude addresses in a range.  Used by sr-infrastructure.	resource-pools id-pool SRGB-POOL1 range start 17000 end 19000
- 
-sr-infrastructure	Associates an IGP Instance, a Loopback and a global block of labels to be re-used across the network	sr-infrastructure 
-  instance-name ISIS-CORE 
-  loopback 0 
-  sr-global-block-pools SRGB-POOL1 
-
-sr	Defines an sr service.  Can leverage sr-infrastructure to ensure consistent IGP, loopback and global block.  Can auto-assign prefix SIDs to nodes to ensure uniqueness	services sr DENVER
-  router P3 
-    instance-preference use-sr-infrastructure 
-    prefix-preference auto-assign-prefix-sid
-ti-lfa	Defines a TI-LFA services.  Can leverage sr-infrastructure for consistency and ensure that configuration is applied to all interfaces in a given IGP instance.	services ti-lfa DENVER-LFA
-   address-family ipv4
-   router P3
-    instance-name-preference use-sr-infrastructure 
-    interface-preference all-interfaces
-sr-ms	Defines an service for creating SR Mapping Servers	services sr-ms MAP-SERV-1
- router P3
-  instance-name-preference use-sr-infrastructure
-  address-family           ipv4
-  ipv4-address     192.168.0.1
-  prefix-length            32
-  first-sid-value          25
-  number-of-allocated-sids 100
-disable-ldp	Defines a service for disabling LDP on a link-by-link basis.	services disable-ldp 102
- router P3
-  interface-type HundredGigE
-  interface-id   0/0/0/4
+| Name              | Purpose                                                                                                                                                              | Example (ncs_cli)                                                                                                                                                                                |
+|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| id-pool           | Resource-pool for ensuring common global block of SR labels across the network.,Can be configured to exclude addresses in a range.,Used by sr-infrastructure.        |```resource-pools id-pool SRGB-POOL1 range start 17000 end 19000        ```                                                                                                                            |
+| sr-infrastructure | Associates an IGP Instance, a Loopback and a global block of labels to be re-used across the network                                                                 |```sr-infrastructure,instance-name ISIS-CORE,loopback 0,sr-global-block-pools SRGB-POOL1 ```                                                                                                           |
+| sr                | Defines an sr service.,Can leverage sr-infrastructure to ensure consistent IGP, loopback and global block.,Can auto-assign prefix SIDs to nodes to ensure uniqueness |```services sr DENVER,router P3,instance-preference use-sr-infrastructure,prefix-preference auto-assign-prefix-sid        ```                                                                          |
+| ti-lfa            | Defines a TI-LFA services.,Can leverage sr-infrastructure for consistency and ensure that configuration is applied to all interfaces in a given IGP instance.        |```services ti-lfa DENVER-LFA,address-family ipv4,router P3,instance-name-preference use-sr-infrastructure,interface-preference all-interfaces  ```                                                    |
+| sr-ms             | Defines an service for creating SR Mapping Servers                                                                                                                   |```services sr-ms MAP-SERV-1,router P3,instance-name-preference use-sr-infrastructure,address-family,ipv4,ipv4-address,192.168.0.1,prefix-length,32,first-sid-value,25,number-of-allocated-sids 100``` |
+| disable-ldp       | Defines a service for disabling LDP on a link-by-link basis.                                                                                                         |```services disable-ldp 102,router P3,interface-type HundredGigE,interface-id,0/0/0/4```                                                                                                               |
 
 ## Validation
 
@@ -384,7 +381,8 @@ Cisco-IOS-XR-clns-isis-oper	IS-IS config and state
 Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper	NCS 5500 HW resources 
 Cisco-IOS-XR-ip-rib-ipv4-oper	RIB state
 
-## XML Configuration Examples
+## XML Configuration Examples<a name="XML-examples"></a>
+
 ### Enable Segment Routing
 
 ```
@@ -524,7 +522,7 @@ Cisco-IOS-XR-ip-rib-ipv4-oper	RIB state
  </mpls-ldp>
 ```
 
-## NSO SR Service Creation via Northbound RESTCONF API Examples
+## NSO SR Service Creation via Northbound RESTCONF API Examples<a name="RESTCONF-examples"></a>
 
 The following examples show how to configure the SR services and resources using the northbound RESTCONF API on NSO.
 
@@ -828,4 +826,3 @@ An example of the returned data is shown below.  Note that the SID value (“sid
    </mapping>
   </srms>
 ```
-
