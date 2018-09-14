@@ -93,7 +93,7 @@ NETCONF and YANG using OpenConfig and native IOS-XR data models are used to help
 
 The control, management, and forwarding planes in this design have undergone validation testing to ensure individual design features work as intended and the peering fabric as a whole performs without fault. Validation is done exceeding real-world scaling requirements to ensure the design fulfills its rule in existing networks with room for future growth.  
 
-![Validation Topology]({{site.baseurl}}/images/corevalidation.png){:height="750%" width="75%"}
+![Validation Topology]({{site.baseurl}}/images/corevalidation.png){:height="750%" width="75%"}{: .align-center}
 
 
 # Use Cases
@@ -138,7 +138,7 @@ Deploying SR by itself in this way will not impact the forwarding plane in any w
 
 YANG-modeled operational data can also be streamed using model-driven telemetry.  In the example below, model driven telemetry is streaming Cisco-IOS-XR-mpls-lsd-oper:mpls-lsd/label-summary data, making it easy to see that the number of labels assigned to ISIS jumps to 2000 when the SR global block of labels is configured.
 
-![Model-driven telemetry for SR label block allocation]({{site.baseurl}}/images/SRGB-MDT.png)
+![Model-driven telemetry for SR label block allocation]({{site.baseurl}}/images/SRGB-MDT.png){:height="50%" width="50%"}{: .align-right}
 
  
 ### Step 2: Enable TI-LFA
