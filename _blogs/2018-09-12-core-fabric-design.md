@@ -308,7 +308,7 @@ The following table shows a series of validation steps.  Operational commands ar
 | IGP            | IGP Advertises Labels for Every SR Router's Loopback | ```show isis segment-routing label table```                                  |
 | RIB            | SR Labels are Programmed in RIB                      | ```show route <address/prefix> detail```                                     |
 | FIB            | SR Labels are Programmed in FIB                      | ```show mols forward labels <label>```                                       |
-| Forwarding     | Traffic is Forwarded Using LDP Labels                | ```traceroute <address> trace route sr-mapls <address/prefix>```             |
+| Forwarding     | Traffic is Forwarded Using LDP Labels                | ```traceroute <address>```<br/>``` traceroute sr-mapls <address/prefix>```             |
   
 ### TI-LFA Validation
 
