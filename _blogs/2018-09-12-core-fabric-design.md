@@ -142,7 +142,7 @@ YANG-modeled operational data can also be streamed using model-driven telemetry.
  
 ### Step 2: Enable TI-LFA
 
-In this step, TI-LFA is configured for link protection.  The NSO (ti-lfa)(https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/ti-lfa) service leverages the same resource pools as the “sr” service and greatly simplifies the configuration process by enabling TI-LFA under every non-loopback interface in the given ISIS instance.  
+In this step, TI-LFA is configured for link protection.  The NSO [ti-lfa](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/ti-lfa) service leverages the same resource pools as the “sr” service and greatly simplifies the configuration process by enabling TI-LFA under every non-loopback interface in the given ISIS instance.  
 
 As soon as it is enabled, TI-LFA protects IP, LDP and SR traffic.  This means that all traffic in the Core now has the benefit of sub-50 millisecond convergence times without complicated RSVP-TE tunnels.  Network availability is improved even before the primary forwarding plane is switched to SR.
 
