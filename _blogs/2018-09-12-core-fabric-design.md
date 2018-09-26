@@ -312,7 +312,7 @@ The following table shows a series of validation steps.  Operational commands ar
   
 ### TI-LFA Validation
 
-CLI is given below for readability.  Operational YANG models are provided in the [Appendix](yang- models-for-tilfa-operational-data).
+CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#yang- models-for-tilfa-operational-data).
 
 | Component | Validation                     | Common CLI                           |
 |-----------|--------------------------------|--------------------------------------|
