@@ -654,7 +654,7 @@ curl -X POST \
      </sr>'
 ```
 
-## YANG Models for SR Operational Data <a name="oper-yang-sr"></a>
+## YANG Models for SR Operational Data
 
 The following models show the relevant YANG data models for retrieving operational data about the SR deployment.
 
