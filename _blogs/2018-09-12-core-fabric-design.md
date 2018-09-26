@@ -300,7 +300,7 @@ The configuration tasks required for the migration use cases are encapsulated in
 
 ### SR Validation
 
-The following table shows a series of validation steps.  Operational commands are provided in CLI for readability.  Operational YANG models are provided in the [Appendix](#yang-models-for-sr-operational-dataoper-yang-sr).
+The following table shows a series of validation steps.  Operational commands are provided in CLI for readability.  Operational YANG models are provided in the [Appendix](#yang-models-for-sr-operational-data).
 
 | Component      | Validation                                           | Common CLI                                                                   |
 |----------------|------------------------------------------------------|------------------------------------------------------------------------------|
@@ -312,7 +312,7 @@ The following table shows a series of validation steps.  Operational commands ar
   
 ### TI-LFA Validation
 
-CLI is given below for readability.  Operational YANG models are provided in the [Appendix](yang- models-for-ti-lfa-operational-data).
+CLI is given below for readability.  Operational YANG models are provided in the [Appendix](yang- models-for-tilfa-operational-data).
 
 | Component | Validation                     | Common CLI                           |
 |-----------|--------------------------------|--------------------------------------|
@@ -321,7 +321,7 @@ CLI is given below for readability.  Operational YANG models are provided in the
 
 ### Mapping Server Validation
 
-CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#yang-models-for-sr-ms-operational-data). 
+CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#yang-models-for-sroperational-data). 
 
 | Component | Validation                            | Common CLI                                                                     |
 |-----------|---------------------------------------|--------------------------------------------------------------------------------|
@@ -790,7 +790,7 @@ curl -X GET \
   -H 'Content-Type: application/yang-data+xml' \
 ```
 
-## <a name="oper-yang-tilfa">YANG Models for TI-LFA Operational Data</a>
+## YANG Models for TILFA Operational Data
 
 <table>
 <thead>
@@ -880,7 +880,7 @@ An example of the returned data is shown below.
  </data>
 ```
 
-## YANG Models for SR Mapping Server Operational Data<a name="oper-yang-srms"></a>
+## YANG Models for SR Mapping Server Operational Data
 
 <table>
 <thead>
