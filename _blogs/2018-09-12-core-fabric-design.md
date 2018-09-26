@@ -284,7 +284,7 @@ mpls ldp
 
 ## Automation
 
-The configuration tasks required for the migration use cases are encapsulated in NSO resource-pools and service packages as summarized below.  To download services templates, visit the [Devnet NSO Developer Forum](https://github.com/NSO-developer/nso-xr-segmentrouting).  For examples of how to configure these services using the [NSO Northbound RESTCONF API](#RESTCONF-examples), see the Appendix.
+The configuration tasks required for the migration use cases are encapsulated in NSO resource-pools and service packages as summarized below.  To download services templates, visit the [Devnet NSO Developer Forum](https://github.com/NSO-developer/nso-xr-segmentrouting).  For examples of how to configure these services using the [NSO Northbound RESTCONF API](#nso-sr-service-creation-via-northbound-restconf-api-examples), see the Appendix.
 
 
 | Name              | Purpose                           | Example (ncs_cli)              |
@@ -576,7 +576,7 @@ subscription Interface
  </mpls-ldp>
 ```
 
-## NSO SR Service Creation via Northbound RESTCONF API Examples<a name="RESTCONF-examples"></a>
+## NSO SR Service Creation via Northbound RESTCONF API Examples
 
 The following examples show how to configure the SR services and resources using the northbound RESTCONF API on NSO.
 
