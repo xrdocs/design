@@ -231,7 +231,7 @@ The Core uses a single instance of ISIS that encompasses all PE and P devices wi
 
 The following configuration guidelines will step through the major components of the device and protocol configuration specific to SR migration in the Core.  Only the net-new configuration for SR is included.  It is assumed that an ISIS instance is fully configured and operational across all nodes, as well as LDP. 
 
-CLI examples are given here for readability.  The [equivalent NETCONF/YANG](#XML-examples) examples (preferred for automation) are in the appendix.  Ideally, these configurations would be deployed via NETCONF/YANG using NSO service packs as described in the next section.  
+CLI examples are given here for readability.  The [equivalent NETCONF/YANG](#XML-Configuration-Examples) examples (preferred for automation) are in the appendix.  Ideally, these configurations would be deployed via NETCONF/YANG using NSO service packs as described in the next section.  
 
 Full configurations used in the validation testing are available in github.
 
@@ -440,7 +440,7 @@ subscription Interface
 </tbody>
 </table>
 
-## [XML Configuration Examples](#XML-examples) 
+## XML Configuration Examples
 ### Enable Segment Routing (XML)
 ```
 <isis xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-clns-isis-cfg">
