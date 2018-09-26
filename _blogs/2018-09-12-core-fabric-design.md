@@ -157,7 +157,7 @@ In the example below, model driven telemetry is streaming Cisco-IOS-XR-clns-isis
 
 In this step, mapping servers are configured to provide SR labels for LDP-only endpoints, specifically the loopback addresses of non-SR PEs.  Mapping servers can be configured anywhere in the network.  At least two mapping servers should be configured for redundancy.  
 
-This step can be achieved through CLI or NETCONF/YANG.  To automate the process, use the NSO (sr-ms)(https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/sr-ms) service which leverages the same infrastructure as the “sr” services to simplify and ensure consistency in the configuration process. 
+This step can be achieved through CLI or NETCONF/YANG.  To automate the process, use the NSO [sr-ms](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/sr-ms) service which leverages the same infrastructure as the “sr” services to simplify and ensure consistency in the configuration process. 
 
 At the end of this step, the P routers will have SR labels for all P and PE routers.  However, the VPN services will still use the LDP LSPs from end-to-end since the non-SR PE routers still initiate the service with an LDP label. 
 
@@ -171,7 +171,7 @@ The [disable-ldp](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/de
 
 ![LDPMonitoring.png]({{site.baseurl}}/images/LDPMonitoring.png){:height="50%" width="50%"}{: .align-center}
 
-Some customers may choose not to disable LDP in the core until all PE routers have been migrated to SR as well, creating an [end-to-end SR](#E2E) deployment.  In that case, LDP provides the primary forwarding path while SR provides TI-LFA until the rest of the network is ready to switch to SR.
+Some customers may choose not to disable LDP in the core until all PE routers have been migrated to SR as well, creating an end-to-end S deployment.  In that case, LDP provides the primary forwarding path while SR provides TI-LFA until the rest of the network is ready to switch to SR.
 
 ## LDP over RSVP-TE to SR Migration
 
