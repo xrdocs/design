@@ -321,7 +321,7 @@ CLI is given below for readability.  Operational YANG models are provided in the
 
 ### Mapping Server Validation
 
-CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#yang-models-for-sroperational-data). 
+CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#yang-models-for-sr-mapping-server-operational-data). 
 
 | Component | Validation                            | Common CLI                                                                     |
 |-----------|---------------------------------------|--------------------------------------------------------------------------------|
