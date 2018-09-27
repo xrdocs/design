@@ -637,212 +637,18 @@ _Figure 13: PCE Path Computation_
 8.  SR-PCE updates WAE with newer LSP
 
 
-# Transport – Segment Routing IPv6 Data Plane (SRv6)
+# Device Automation 
 
-The Compass Metro Fabric design will use Segment Routing IPv6 Data Plane
-(SRv6) in later phases.
+### Zero Touch Provisioning
 
-SRv6 brings another level of simplification with IPv6 data plane and
-with network programming concept.
+In addition to model-driven configuration and operation, Metro Fabric 1.5 
+supports ZTP operation for automated device provisioning. ZTP is useful both in 
+production as well as staging environments to automate initial device software 
+installation, deploy an initial bootstrap configuration, as well as advanced functionality 
+triggered by ZTP scripts. ZTP is supported on both out of band management interfaces as 
+well as in-band data interfaces.  
 
-Network programming concept is the capability to encode a network
-program in the header of the packet. The program is expressed as a list
-of segments included in the SRv6 extension header, also called SRH. Each
-segment is a 128-bit entity where the first bits identify a router in
-the network, we call them the locator part of the segment, and the
-remaining bits identify a function to be executed at that router.
-
-The SRv6 network programming IETF draft
-(**draft-filsfils-spring-srv6-network-programming**) provides the
-pseudo-code for various functions that allow the implementation of
-network services such as TILFA FRR, TE for latency or disjointness, VPN,
-NFV and many other applications.
-
-The following diagram: “SRv6 Network Topology” shows customer’s IPv6
-traffic with destination IPv6 address 6001::1 (same can be done for IPv4
-traffic) encapsulated in SRv6 on router 1, then forwarded via SRv6 core
-to router 4 via router 2 or via router 3. Router 4 decapsulates SRv6 and
-performs IPv6 destination address lookup in customer VRF. In our use
-case, VRF 100.
-
-All the links in the topology except the link between routers 3 and 4
-are equal. the Link between 3 and 4 is high cost, but has low
-latency
-
-![]({{site.baseurl}}/images/cmf-hld/image15.png)
-
-_Figure 14: SRv6 Network Topology_
-
-## Best-Effort Path
-
-The following diagram: “SRv6 Best-Effort Path” shows best-effort path.
-Router 1 encapsulates the received IPv6 packets from the customer site
-of Entreprise100 in an outer IPv6 header. Router 1 sets the destination
-address of the outer header to the segment of Router 4 which implements
-the egress PE function related to the VPN of Entreprise100 at Router 4.
-In this example, this segment is 2001::4:E100. The bits “2001::4” locate
-the router where the function will be executed.
-
-In this example, we assume that Router 4 would advertise 2001::4/112 in
-the IGP (no new IETF extension is required for this). The bits “E100”
-identify a specific function to be executed at the router identified by
-the locator bits, in our example, Router 4.
-
-We assume here that Router 4 has instantiated the local function “E100”
-for the behavior “decap the packet, lookup the inner destination address
-in the VRF of Entreprise 100 and forward accordingly”.
-
-We also assume that Router 4 has signaled the availability of that
-function to Router 1 either via BGP or via an SDN
-controller.
-
-![]({{site.baseurl}}/images/cmf-hld/image16.png)
-
-_Figure 15: SRv6 Best-Effort Path_
-
-Router 1 receives packets from Entreprise100, then encapsulates these
-packets in an outer header with DA leading to Router 4 where the
-function “decap and lookup in VRF 100” is executed.
-
-By the process above, we have eliminated any encapsulation protocol such
-as LISP, VXLAN, L2TPv3, GRE etc. This is an important simplification.
-
-We have not used an SRH in this case because the network program can be
-encoded with one single segment and hence we just need the outer IPv6
-header.
-
-The example above shows IPv6 VPN over IPv6. The same is applicable for
-IPv4 overlay (IPv4 VPN) and L2VPN construct. More details can be found
-in **draft-filsfils-spring-srv6-network-programming.**
-
-## Low-Latency Path
-
-The following diagram: “SRv6 Low-Latency Path” shows low-latency path.
-Router 1 encapsulates the customer traffic in an outer IPv6 header with
-an SRH. In this example, the network program needs two SID’s. The first
-SID is placed in the DA and implements the low-latency underlay service.
-The second SID is programmed in the SRH and implements the overlay
-service.
-
-The first SID is 2001::3:C34.
-
-2001::3 is the locator part and leads the packet to Router 3. Once
-Router 3 gets this packet, it executes the function C34. The function
-C34 means “update the DA with the next-segment and cross-connect the
-resulting packet to the neighboring Router 4.”
-
-We assume here that Router 3 has instantiated the local function “C34”
-for the behavior “update DA, cross-connect to neighbor 4”.
-
-We also assume that Router 4 has signaled the availability of that
-function to Router 1 via the IGP.
-
-With one single SID, the ingress PE encodes in the packet header the
-underlay SLA service for low-latency. The packets will use the north
-path despite that it is not the preferred one from an IGP viewpoint.
-This is achieved by using the explicit routing capability of SR.
-
-State is created in the fabric to create this underlay SLA.
-
-The second SID implements the overlay service: this is 2001::4:E100 like
-we saw
-previously.
-
-![]({{site.baseurl}}/images/cmf-hld/image17.png)
-
-_Figure 16: SRv6 Low-Latency Path_
-
-The following diagram: ”SRv6 Cross-Connect Function” shows the
-cross-connect function 2001::3:C34 instantiated by Router 3 as this
-explicit routing function provides a nice and easy way to enforce
-requested SRTE Policy without any stateful information as the network
-program is in the packet
-header.
-
-![]({{site.baseurl}}/images/cmf-hld/image18.png)
-
-_Figure 17: SRv6 Cross-Connect Function_
-
-“Cross-connect” means the function 2001::3:C34 is bound specifically to
-the red link between Routers 3 and 4, but before Router 3 can
-cross-connect the packets, the IPv6 header needs to be updated.
-
-SRH can carry multiple segments stored in the segment list, so there is
-also index represented by segment left value in SRH, which points to the
-right segment in the segment list. In our example, we have just one
-segment in SRH which is the segment of Router 4.
-
-First, Router 3 decreases segment left value by one.
-
-In the next step, Router 3 will use segment left value as index in the
-segment list to read the next segment. Router 3 sets the new destination
-address of outer header to this segment which is the segment of Router
-4.
-
-This is completely the same segment of Router 4 like in the first use
-case which implements the egress PE function related to VPN of
-Enterprise 100 at Router 4.
-
-In our example, SRH doesn’t carry other segments, therefor Router 3 can
-pop this SRH header. We call this operation Penultimate Segment Pop.
-
-Finally, Router 3 cross-connects the packet to Router 4 via the red
-link.
-
-Router 4 decapsulates the packet, lookups the inner destination address
-in the VRF Enterprise 100 and forwards accordingly.
-
-The following diagram: ”SRv6 Low-Latency Detail” shows end-to-end
-low-latency traffic data-path described in the previous
-paragraph.
-
-![]({{site.baseurl}}/images/cmf-hld/image19.png)
-
-_Figure 18: SRv6 Low-Latency Detail_
-
-## SRv6 – Inter-Domain Forwarding
-
-Next network diagram: “SRv6 Inter-Domain Forwarding” shows how SRv6
-benefits can be used in Service Provider network for Inter-Domain
-forwarding. End-To-End forwarding reachability can be easily provided by
-summary or default route in the Access IGP Domain pointing to AG ABRs.
-Similarly, the Aggregation IGP Domain has summary or default route
-pointing to PE ABRs. The Core IGP domain also has summary routes of the
-Aggregation/Access IGP Domains pointing to particular PE
-ABRs.
-
-![]({{site.baseurl}}/images/cmf-hld/image20.png)
-
-_Figure 19: SRv6 Inter-Domain Forwarding_
-
-Next network diagram: “SRv6 Inter-Domain Forwarding with SRH” shows how
-SRH can also be used to get Inter-Domain with Traffic Engineering
-(Low-Latency
-Path).
-
-![]({{site.baseurl}}/images/cmf-hld/image21.png)
-
-_Figure 20: SRv6 Inter-Domain Forwarding with SRH_
-
-Note that there is SDN controller to fulfill SLAs required by
-provisioned services and SRTE Policy is programmed to network based on
-the SLAs.
-
-Segment Routing basic elements are the same for MPLS as well as for
-IPv6(SRv6) data plane.
-
-## SRv6 Conclusion
-
-SRv6 brings the following benefits to an SP network
-
-  - Simplicity
-
-  - Removal of any encapsulation protocol such as GRE, L2TPv3, LISP.
-
-  - Stateless and Scalable
-
-  - The network program is in the packet header not as a state in the
-    fabric
+![](http://xrdocs.io/design/images/cmf-hld/ztp-metro-fabric.png)
 
 # Services – Design
     
@@ -1077,14 +883,14 @@ _Figure 30: Hierarchical – Services (H-EVPN and PWHE)_
 
 Refer also to the section: “Transport and Services Integration”.
 
-## Services – Router-Reflector (S-RR)
+## Services – Route-Reflector (S-RR)
 
 Figure 31 shows the design of Services Router-Reflectors
 (S-RRs).
 
 ![]({{site.baseurl}}/images/cmf-hld/image32.png)
 
-_Figure 31: Services – Router-Reflectors_
+_Figure 31: Services – Route-Reflectors_
 
 The Compass Metro Fabric Design focuses mainly on BGP-based services,
 therefore it is important to provide a robust and scalable Services
@@ -1156,6 +962,9 @@ service logic into final device configuration through CLI NED. The NSO
 can also directly use the device YANG models using NETCONF for device
 configuration. These service templates enable NSO to operate in a
 multi-vendor environment.
+
+### Metro Fabric Supported Service Models
+
 
 # Transport and Services Integration
 
@@ -1311,7 +1120,7 @@ _Figure 41: Hierarchical Services table_
 _Figure 42: Hierarchical Services_
 
 The Compass Metro Fabric uses the hierarchical Services Route-Reflectors
-(S-RRs) design described in Section: "Services - Router-Reflector (S-RR)". Figure 43 shows in detail the S-RRs design used for Phase 1.
+(S-RRs) design described in Section: "Services - Route-Reflector (S-RR)". Figure 43 shows in detail the S-RRs design used for Phase 1.
 
 ![]({{site.baseurl}}/images/cmf-hld/image44.png)
 
