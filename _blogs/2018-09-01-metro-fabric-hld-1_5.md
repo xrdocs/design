@@ -15,6 +15,14 @@ position: hidden
 ---
 {% include toc %}
 
+# Revision History
+
+| Version          |Date                    |Comments| 
+| ---------------- | ---------------------- |-----|
+| 1.0       | 05/08/2018 |Initial Metro Fabric publication| 
+| 1.5          | 09/24/2018 |NCS540 Access, ZTP, NSO Services|
+|                  |                        |     |
+
 # Value Proposition
 
 Service Providers are facing the challenge to provide next generation
