@@ -102,7 +102,7 @@ compass designs:
 
 # Technical Overview
 
-![]({{site.baseurl}}/images/cmf-hld/image2.png)
+![]({{site.baseurl}}/images/cmf-hld/cmf-hld-hw.png)
 
 The Compass Metro Fabric design evolves from the successful Cisco
 Evolved Programmable Network (EPN) 5.0 architecture framework, to bring
