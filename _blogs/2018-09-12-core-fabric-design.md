@@ -122,7 +122,7 @@ The goal of the migration is to preserve existing services while migrating the c
  
 ### Step 1: Enable SR
 
-In the first step of migration, SR is enabled on the P routers using CLI or (preferably) NETCONF/YANG.  The latter can be orchestrated using the NSO "sr" service, ensuring that:
+In the first step of migration, SR is enabled on the P routers using CLI or (preferably) NETCONF/YANG.  The latter can be orchestrated using the NSO [sr](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/sr) service, ensuring that:
 
 - Every router uses the same ISIS instance, loopback interface and global block of labels.
 - Every router is assigned a unique prefix-SID from the global block of labels.
@@ -142,7 +142,7 @@ YANG-modeled operational data can also be streamed using model-driven telemetry.
  
 ### Step 2: Enable TI-LFA
 
-In this step, TI-LFA is configured for link protection.  The NSO “ti-lfa” service leverages the same resource pools as the “sr” service and greatly simplifies the configuration process by enabling TI-LFA under every non-loopback interface in the given ISIS instance.  
+In this step, TI-LFA is configured for link protection.  The NSO [ti-lfa](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/ti-lfa) service leverages the same resource pools as the “sr” service and greatly simplifies the configuration process by enabling TI-LFA under every non-loopback interface in the given ISIS instance.  
 
 As soon as it is enabled, TI-LFA protects IP, LDP and SR traffic.  This means that all traffic in the Core now has the benefit of sub-50 millisecond convergence times without complicated RSVP-TE tunnels.  Network availability is improved even before the primary forwarding plane is switched to SR.
 
@@ -157,7 +157,7 @@ In the example below, model driven telemetry is streaming Cisco-IOS-XR-clns-isis
 
 In this step, mapping servers are configured to provide SR labels for LDP-only endpoints, specifically the loopback addresses of non-SR PEs.  Mapping servers can be configured anywhere in the network.  At least two mapping servers should be configured for redundancy.  
 
-This step can be achieved through CLI or NETCONF/YANG.  To automate the process, use the NSO “sr-ms” service which leverages the same infrastructure as the “sr” services to simplify and ensure consistency in the configuration process. 
+This step can be achieved through CLI or NETCONF/YANG.  To automate the process, use the NSO [sr-ms](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/sr-ms) service which leverages the same infrastructure as the “sr” services to simplify and ensure consistency in the configuration process. 
 
 At the end of this step, the P routers will have SR labels for all P and PE routers.  However, the VPN services will still use the LDP LSPs from end-to-end since the non-SR PE routers still initiate the service with an LDP label. 
 
@@ -167,11 +167,11 @@ To validate the Mapping Server configuration, check that the non-SR endpoint add
 
 Once the P routers are fully configured for SR, LDP can optionally be disabled on a link-by-link basis for every link pair that has SR enabled on each end.  When this step is accomplished, the P routers will use the SR label for the path across the core.  The benefit of this step is fewer protocols to maintain and troubleshoot in the core.  There should be no impact to the VPN services when the transition is made. 
 
-The “disable-ldp” service can be used in NSO to orchestrate this step on a link-by-link basis.  Telemetry can be used to track the impact of disabling LDP on core-facing interfaces using the Cisco-IOS-XR-mpls-ldp-oper:mpls-ldp/global/active/default-vrf/summary path as shown below.
+The [disable-ldp](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/sr) service can be used in NSO to orchestrate this step on a link-by-link basis.  Telemetry can be used to track the impact of disabling LDP on core-facing interfaces using the Cisco-IOS-XR-mpls-ldp-oper:mpls-ldp/global/active/default-vrf/summary path as shown below.
 
 ![LDPMonitoring.png]({{site.baseurl}}/images/LDPMonitoring.png){:height="50%" width="50%"}{: .align-center}
 
-Some customers may choose not to disable LDP in the core until all PE routers have been migrated to SR as well, creating an [end-to-end SR](#E2E) deployment.  In that case, LDP provides the primary forwarding path while SR provides TI-LFA until the rest of the network is ready to switch to SR.
+Some customers may choose not to disable LDP in the core until all PE routers have been migrated to SR as well, creating an end-to-end S deployment.  In that case, LDP provides the primary forwarding path while SR provides TI-LFA until the rest of the network is ready to switch to SR.
 
 ## LDP over RSVP-TE to SR Migration
 
@@ -231,9 +231,9 @@ The Core uses a single instance of ISIS that encompasses all PE and P devices wi
 
 The following configuration guidelines will step through the major components of the device and protocol configuration specific to SR migration in the Core.  Only the net-new configuration for SR is included.  It is assumed that an ISIS instance is fully configured and operational across all nodes, as well as LDP. 
 
-CLI examples are given here for readability.  The [equivalent NETCONF/YANG](#XML-examples) examples (preferred for automation) are in the appendix.  Ideally, these configurations would be deployed via NETCONF/YANG using NSO service packs as described in the next section.  
+CLI examples are given here for readability.  The [equivalent NETCONF/YANG](#xml-configuration-examples) examples (preferred for automation) are in the appendix.  Ideally, these configurations would be deployed via NETCONF/YANG using NSO service packs as described in the next section.  
 
-Full configurations used in the validation testing are available in [github](insert link)
+Full configurations used in the validation testing are available in github.
 
 ### Enable Segment Routing in ISIS
 
@@ -284,7 +284,7 @@ mpls ldp
 
 ## Automation
 
-The configuration tasks required for the migration use cases are encapsulated in NSO resource-pools and service packages as summarized below.  To download services templates, visit the [Devnet NSO Developer Forum](insert link).  For examples of how to configure these services using the [NSO Northbound RESTCONF API](#RESTCONF-examples), see the Appendix.
+The configuration tasks required for the migration use cases are encapsulated in NSO resource-pools and service packages as summarized below.  To download services templates, visit the [Devnet NSO Developer Forum](https://github.com/NSO-developer/nso-xr-segmentrouting).  For examples of how to configure these services using the [NSO Northbound RESTCONF API](#nso-sr-service-creation-via-northbound-restconf-api-examples), see the Appendix.
 
 
 | Name              | Purpose                           | Example (ncs_cli)              |
@@ -300,7 +300,7 @@ The configuration tasks required for the migration use cases are encapsulated in
 
 ### SR Validation
 
-The following table shows a series of validation steps.  Operational commands are provided in CLI for readability.  Operational YANG models are provided in the [Appendix](#oper-yang-sr).
+The following table shows a series of validation steps.  Operational commands are provided in CLI for readability.  Operational YANG models are provided in the [Appendix](#yang-models-for-sr-operational-data).
 
 | Component      | Validation                                           | Common CLI                                                                   |
 |----------------|------------------------------------------------------|------------------------------------------------------------------------------|
@@ -312,7 +312,7 @@ The following table shows a series of validation steps.  Operational commands ar
   
 ### TI-LFA Validation
 
-CLI is given below for readability.  Operational YANG models are provided in the [Appendix](oper-yang-tilfa).
+CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#yang-models-for-tilfa-operational-data).
 
 | Component | Validation                     | Common CLI                           |
 |-----------|--------------------------------|--------------------------------------|
@@ -321,7 +321,7 @@ CLI is given below for readability.  Operational YANG models are provided in the
 
 ### Mapping Server Validation
 
-CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#oper-yang-srms). 
+CLI is given below for readability.  Operational YANG models are provided in the [Appendix](#yang-models-for-sr-mapping-server-operational-data). 
 
 | Component | Validation                            | Common CLI                                                                     |
 |-----------|---------------------------------------|--------------------------------------------------------------------------------|
@@ -440,7 +440,7 @@ subscription Interface
 </tbody>
 </table>
 
-## XML Configuration Examples <a name="XML-examples"></a>
+## XML Configuration Examples
 ### Enable Segment Routing (XML)
 ```
 <isis xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-clns-isis-cfg">
@@ -576,7 +576,7 @@ subscription Interface
  </mpls-ldp>
 ```
 
-## NSO SR Service Creation via Northbound RESTCONF API Examples<a name="RESTCONF-examples"></a>
+## NSO SR Service Creation via Northbound RESTCONF API Examples
 
 The following examples show how to configure the SR services and resources using the northbound RESTCONF API on NSO.
 
@@ -654,7 +654,7 @@ curl -X POST \
      </sr>'
 ```
 
-## YANG Models for SR Operational Data <a name="oper-yang-sr"></a>
+## YANG Models for SR Operational Data
 
 The following models show the relevant YANG data models for retrieving operational data about the SR deployment.
 
@@ -790,7 +790,7 @@ curl -X GET \
   -H 'Content-Type: application/yang-data+xml' \
 ```
 
-## <a name="oper-yang-tilfa">YANG Models for TI-LFA Operational Data</a>
+## YANG Models for TILFA Operational Data
 
 <table>
 <thead>
@@ -880,7 +880,7 @@ An example of the returned data is shown below.
  </data>
 ```
 
-## YANG Models for SR Mapping Server Operational Data<a name="oper-yang-srms"></a>
+## YANG Models for SR Mapping Server Operational Data
 
 <table>
 <thead>
