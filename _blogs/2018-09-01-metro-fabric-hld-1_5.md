@@ -646,7 +646,10 @@ supports ZTP operation for automated device provisioning. ZTP is useful both in
 production as well as staging environments to automate initial device software 
 installation, deploy an initial bootstrap configuration, as well as advanced functionality 
 triggered by ZTP scripts. ZTP is supported on both out of band management interfaces as 
-well as in-band data interfaces.  
+well as in-band data interfaces. When a device first boots, the IOS-XR ZTP process
+beging on the management interface of the device and if no response is received, or the 
+the interface is not active, the ZTP process will begin the process on data ports. IOS-XR
+can be part of an ecosystem of automated device and service provisioning via Cisco NSO.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/ztp-metro-fabric.png)
 
