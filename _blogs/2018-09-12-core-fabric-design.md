@@ -233,7 +233,7 @@ The following configuration guidelines will step through the major components of
 
 CLI examples are given here for readability.  The [equivalent NETCONF/YANG](#xml-configuration-examples) examples (preferred for automation) are in the appendix.  Ideally, these configurations would be deployed via NETCONF/YANG using NSO service packs as described in the next section.  
 
-Full configurations used in the validation testing are available in github.
+Full configurations used in the validation testing are available [in github](https://github.com/ios-xr/design/tree/master/Core).
 
 ### Enable Segment Routing in ISIS
 
