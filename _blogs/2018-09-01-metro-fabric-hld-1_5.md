@@ -50,7 +50,7 @@ Business, 5G Mobile Backhauling, Video, IoT) on the premise of
 simplicity, full programmability, and cloud integration, with guaranteed
 service level agreements (SLAs).
 
-![]({{site.baseurl}}/images/cmf-hld/image1.png)
+![]({{site.baseurl}}/images/cmf-hld/end-to-end.png)
 
 The Compass Metro Fabric design brings tremendous value to the Service
 Providers:
@@ -78,7 +78,7 @@ customers who:**
 
   - Need a simple, scalable design that can support future growth
 
-  - Want an industry–leading or future proof technology and architecture
+  - Want a future proof architecture built ousing industry-leading technology
 
 ## Summary
 
@@ -795,7 +795,7 @@ Refer also to Section: "Transport and Services Integration".
 Hierarchical Services Use Cases are summarized in the table of Figure 26
 and shown in the network diagram of Figure 27.
 
-![]({{site.baseurl}}/images/cmf-hld/image27.png)
+![]({{site.baseurl}}/images/cmf-hld/services-hierarchical.png)
 
 _Figure 26: Hierarchical – Services table_
 
@@ -968,6 +968,17 @@ multi-vendor environment.
 
 ### Metro Fabric Supported Service Models
 
+Metro Fabric 1.5 supports the following NSO service models for provisioning both 
+hierarchical and flat services across the fabric. All NSO service modules in 1.5 
+utilize the IOS-XR and IOS-XE CLI NEDs for configuration. 
+
+![]({{site.baseurl}}/images/cmf-hld/automation-flat-1_5.png)
+
+_Figure 33: Automation – Flat Service Models_
+
+![]({{site.baseurl}}/images/cmf-hld/automation-hierarchy-1_5.png)
+
+_Figure 34: Automation – Hierarchical Service Models_
 
 # Transport and Services Integration
 
@@ -976,14 +987,14 @@ Any-To-Any Highly-Available transport together with Fast Re-Route. A
 converged BGP Control Plane provides a scalable and flexible solution
 also at the services layer.
 
-Figure 33 shows a consolidated view of the Compass Metro Fabric network
+Figure 35 shows a consolidated view of the Compass Metro Fabric network
 from a Control-Plane standpoint. Note that while network operators could
 use both PCEP and BGR-SRTE at the same time, it is not
 typical.
 
 ![]({{site.baseurl}}/images/cmf-hld/image34.png)
 
-_Figure 33: Compass Metro Fabric – Control-Plane_
+_Figure 35: Compass Metro Fabric – Control-Plane_
 
 As mentioned, service provisioning is independent of the transport
 layer. However, transport is responsible for providing the path based on
@@ -999,13 +1010,13 @@ The Compass Metro Fabric design also use MPLS Performance Management to
 monitor link delay/jitter/drop (RFC6374) to be able to create a Low
 Latency topology dynamically.
 
-Figure 34 shows a consolidated view of Compass Metro Fabric network from
+Figure 36 shows a consolidated view of Compass Metro Fabric network from
 a Data Plane
 standpoint.
 
 ![]({{site.baseurl}}/images/cmf-hld/image35.png)
 
-_Figure 34: Compass Metro Fabric – Data-Plane_
+_Figure 36: Compass Metro Fabric – Data-Plane_
 
 # The Compass Metro Fabric Design – Phase 1
     
@@ -1029,7 +1040,7 @@ interoperability.
 
 ![]({{site.baseurl}}/images/cmf-hld/image36.png)
 
-_Figure 35: Access Domain Extension – End-To-End Transport_
+_Figure 37: Access Domain Extension – End-To-End Transport_
 
 For the End-To-End LSP shown in Figure 35, the Access Router imposes 3
 transport labels (SID-list) An additional label, the TI-LFA label, can
@@ -1040,9 +1051,9 @@ Prefix-SID. Refer also to Section: "Transport Programmability - Phase 1".
 
 ![]({{site.baseurl}}/images/cmf-hld/image37.png)
 
-_Figure 36: Access Domain Extension – Hierarchical Transport_
+_Figure 38: Access Domain Extension – Hierarchical Transport_
 
-Figure 36 shows how the Access Router imposes a single transport label
+Figure 38 shows how the Access Router imposes a single transport label
 to reach local PE ABRs, where the hierarchical service is terminated.
 Similarly, in the Core and in the remote Access IGP domain, the
 transport LSP is contained within the same IGP domain (Intra-Domain
@@ -1057,11 +1068,11 @@ or Prefix-SID is used for the transport LSP.
 
 The Compass Metro Fabric employs a distributed and highly available SR-PCE
 design as described in Section: "Transport Programmability". Transport programmability is based
-on PCEP. Figure 37 shows the design when SR-PCE uses PCEP.
+on PCEP. Figure 39 shows the design when SR-PCE uses PCEP.
 
 ![]({{site.baseurl}}/images/cmf-hld/image38.png)
 
-_Figure 37: SR-PCE – PCEP_
+_Figure 39: SR-PCE – PCEP_
 
 SR-PCE in the Access domain is responsible for Inter-Domain LSPs and
 provides the SID-list. PE ABRs are represented by Prefix-SID.
@@ -1076,7 +1087,7 @@ in Figure
 
 ![]({{site.baseurl}}/images/cmf-hld/image39.png)
 
-_Figure 38: PCE Path Computation – Phase 1_
+_Figure 40: PCE Path Computation – Phase 1_
 
 **Delegated Computation to SR-PCE**
 
@@ -1095,23 +1106,23 @@ _Figure 38: PCE Path Computation – Phase 1_
 This section describes the Services used in the Compass Metro Fabric
 Phase 1.
 
-The table in Figure 39 describes the End-To-End services, while the
+The table in Figure 41 describes the End-To-End services, while the
 network diagram in Figure 40 shows how services are deployed in the
 network. Refer also to Section: "Services - Design" of this document.
 
 ![]({{site.baseurl}}/images/cmf-hld/image40.png)
 
-_Figure 39: End-To-End Services table_
+_Figure 41: End-To-End Services table_
 
 ![]({{site.baseurl}}/images/cmf-hld/image41.png)
 
-_Figure 40: End-To-End Services_
+_Figure 42: End-To-End Services_
 
-The table in Figure 41 describes the hierarchical services, while the
-network diagram in Figure 42 shows how services are deployed in the
+The table in Figure 42 describes the hierarchical services, while the
+network diagram in Figure 43 shows how services are deployed in the
 network. Refer also to Section: "Services - Design" of this document.
 
-In addition, the table in Figure 41 shows where PE ABRs Anycast-SID is
+In addition, the table in Figure 44 shows where PE ABRs Anycast-SID is
 required and where ODN in the Core IGP domain is used.
 
 ![]({{site.baseurl}}/images/cmf-hld/image42.png)
