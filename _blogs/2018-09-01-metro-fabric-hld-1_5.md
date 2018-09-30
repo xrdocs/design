@@ -478,7 +478,7 @@ programmability_
 Note that the design of the Central Office is not covered by this
 document.
 
-###Traffic Engineering (Tactical Steering) – SRTE Policy
+### Traffic Engineering (Tactical Steering) – SRTE Policy
 
 Operators want to fully monetize their network infrastructure by
 offering differentiated services. Traffic engineering is used to provide
