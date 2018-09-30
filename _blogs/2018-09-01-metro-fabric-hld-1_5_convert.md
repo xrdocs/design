@@ -1,20 +1,3 @@
----
-published: true
-date: '2018-04-30 11:00-0400'
-title: Metro Fabric High Level Design
-excerpt: >-
-  Cisco Metro Fabric (CMF) design introduces an SDN-ready architecture which
-  evolves traditional Metro network  design towards an SDN enabled, programmable
-  network capable of delivering all services.
-author: Jiri Chaloupka
-tags:
-  - iosxr
-  - Metro
-  - Design
-position: hidden
----
-{% include toc %}
-
 # Revision History
 
 | Version          |Date                    |Comments| 
@@ -50,7 +33,7 @@ Business, 5G Mobile Backhauling, Video, IoT) on the premise of
 simplicity, full programmability, and cloud integration, with guaranteed
 service level agreements (SLAs).
 
-![]({{site.baseurl}}/images/cmf-hld/end-to-end.png)
+![](http://xrdocs.io/design/images/cmf-hld/end-to-end.png)
 
 The Compass Metro Fabric design brings tremendous value to the Service
 Providers:
@@ -102,7 +85,7 @@ compass designs:
 
 # Technical Overview
 
-![]({{site.baseurl}}/images/cmf-hld/cmf-hld-hw.png)
+![](http://xrdocs.io/design/images/cmf-hld/cmf-hld-hw.png)
 
 The Compass Metro Fabric design evolves from the successful Cisco
 Evolved Programmable Network (EPN) 5.0 architecture framework, to bring
@@ -159,7 +142,7 @@ To provide unlimited network scale, the Compass Metro Fabric is
 structured into multiple IGP Domains: Access, Aggregation, and Core.
 Refer to the network topology in Figure 1.
 
-![]({{site.baseurl}}/images/cmf-hld/image3.png)
+![](http://xrdocs.io/design/images/cmf-hld/image3.png)
 
 _Figure 1: Distributed Central Office_
 
@@ -169,7 +152,7 @@ the Core domain is extended over the Aggregation domain, thus increasing
 the number of nodes in the
 Core.
 
-![]({{site.baseurl}}/images/cmf-hld/image4.png)
+![](http://xrdocs.io/design/images/cmf-hld/image4.png)
 _Figure 2: Distributed Central Office with Core domain extension_
 
 A similar approach is shown in Figure 3. In this scenario the Core
@@ -177,7 +160,7 @@ domain remains unaltered and the Access domain is extended over the
 Aggregation domain, thus increasing the number of nodes in the Access
 domain.
 
-![]({{site.baseurl}}/images/cmf-hld/image5.png)
+![](http://xrdocs.io/design/images/cmf-hld/image5.png)
 
 _Figure 3: Distributed Central Office with Access domain extension_
 
@@ -260,7 +243,7 @@ Figure 4 shows two sets of ABRs:
 
   - Provider Edge ABRs – PE
 
-![]({{site.baseurl}}/images/cmf-hld/image6.png)
+![](http://xrdocs.io/design/images/cmf-hld/image6.png)
 
 _Figure 4: IGP Domains - ABRs Anycast-SID_
 
@@ -268,7 +251,7 @@ Figure 5 shows the End-To-End Stack of SIDs for packets traveling from
 left to right through the
 network.
 
-![]({{site.baseurl}}/images/cmf-hld/image7.png)
+![](http://xrdocs.io/design/images/cmf-hld/image7.png)
 
 _Figure 5: Inter-Domain LSP – SRTE Policy_
 
@@ -323,7 +306,7 @@ Section: "Inter-Domain Forwarding" described how SRTE Policy uses SID stacking (
 Figure 6 shows the optimization in
 detail.
 
-![]({{site.baseurl}}/images/cmf-hld/image8.png)
+![](http://xrdocs.io/design/images/cmf-hld/image8.png)
 
 _Figure 6: Label Stack Optimization_
 
@@ -376,7 +359,7 @@ or without Label Stack Optimization.
 AG/PE ABRs redundancy enables high availability for Inter-Domain
 Forwarding.
 
-![]({{site.baseurl}}/images/cmf-hld/image6.png)
+![](http://xrdocs.io/design/images/cmf-hld/image6.png)
 
 _Figure 7: IGP Domains - ABRs Anycast-SID_
 
@@ -387,7 +370,7 @@ independently by TI-LFA as described in Section: "Intra-Domain Forwarding - Fast
 Figure 8 shows how FRR is achieved for a Inter-Domain
 LSP.
 
-![]({{site.baseurl}}/images/cmf-hld/image9.png)
+![](http://xrdocs.io/design/images/cmf-hld/image9.png)
 
 _Figure 8: Inter-Domain - FRR_
 
@@ -417,7 +400,7 @@ Path Computation Element (SR-PCE) and WAN Automation Engines (WAE).
 High-Availability is achieved by device redundancy in the Aggregation
 and Core networks.
 
-![]({{site.baseurl}}/images/cmf-hld/image10.png)
+![](http://xrdocs.io/design/images/cmf-hld/image10.png)
 
 _Figure 9: Transport Programmability – PCEP_
 
@@ -458,7 +441,7 @@ was described in Figure 5.
 The WAN Automation Engine (WAE) provides bandwidth
 optimization.
 
-![]({{site.baseurl}}/images/cmf-hld/image11.png)
+![](http://xrdocs.io/design/images/cmf-hld/image11.png)
 
 _Figure 10: Transport Programmability – BGP-SRTE_
 
@@ -470,7 +453,7 @@ Figure 11 shows the Compass Metro Fabric physical topology with examples
 of product
 placement.
 
-![]({{site.baseurl}}/images/cmf-hld/image12.png)
+![](http://xrdocs.io/design/images/cmf-hld/image12.png)
 
 _Figure 11: Compass Metro Fabric – Physical Topology with transport
 programmability_
@@ -531,7 +514,7 @@ The SR-PCE provides a path based on constraints such as:
   
   - Disjoint path. 
 
-![]({{site.baseurl}}/images/cmf-hld/image13.png)
+![](http://xrdocs.io/design/images/cmf-hld/image13.png)
 
 _Figure 12: XR Transport Controller – Components_
 
@@ -586,7 +569,7 @@ There are three models available to program transport LSPs:
 All models assume SR-PCE has acquired full network topology through
 BGP-LS.
 
-![]({{site.baseurl}}/images/cmf-hld/image14.png)
+![](http://xrdocs.io/design/images/cmf-hld/image14.png)
 
 _Figure 13: PCE Path Computation_
 
@@ -696,7 +679,7 @@ Figure 21 demonstrates the greatest limitation of traditional L2
 Multipoint solutions like
 VPLS.
 
-![]({{site.baseurl}}/images/cmf-hld/image22.png)
+![](http://xrdocs.io/design/images/cmf-hld/image22.png)
 
 _Figure 21: EVPN All-Active Access_
 
@@ -726,7 +709,7 @@ H-EVPN access.
 Figure 22 shows another issue related to BUM traffic addressed by
 EVPN.
 
-![]({{site.baseurl}}/images/cmf-hld/image23.png)
+![](http://xrdocs.io/design/images/cmf-hld/image23.png)
 
 _Figure 22: EVPN BUM Duplication_
 
@@ -743,7 +726,7 @@ allows just one PE to send BUM traffic to an All-Active EVPN access.
 Figure 23 describes the last important EVPN
 enhancement.
 
-![]({{site.baseurl}}/images/cmf-hld/image24.png)
+![](http://xrdocs.io/design/images/cmf-hld/image24.png)
 
 _Figure 23: EVPN MAC Flip-Flopping_
 
@@ -778,11 +761,11 @@ Plane.
 The End-To-End Services use cases are summarized in the table in Figure
 24 and shown in the network diagram in Figure 25.
 
-![]({{site.baseurl}}/images/cmf-hld/image25.png)
+![](http://xrdocs.io/design/images/cmf-hld/image25.png)
 
 _Figure 24: End-To-End – Services table_
 
-![]({{site.baseurl}}/images/cmf-hld/image26.png)
+![](http://xrdocs.io/design/images/cmf-hld/image26.png)
 
 _Figure 25: End-To-End – Services_
 
@@ -795,11 +778,11 @@ Refer also to Section: "Transport and Services Integration".
 Hierarchical Services Use Cases are summarized in the table of Figure 26
 and shown in the network diagram of Figure 27.
 
-![]({{site.baseurl}}/images/cmf-hld/services-hierarchical.png)
+![](http://xrdocs.io/design/images/cmf-hld/services-hierarchical.png)
 
 _Figure 26: Hierarchical – Services table_
 
-![]({{site.baseurl}}/images/cmf-hld/image28.png)
+![](http://xrdocs.io/design/images/cmf-hld/image28.png)
 
 _Figure 27: Hierarchical - Services_
 
@@ -835,7 +818,7 @@ Hierarchical L2 Multipoint Multi-Homed/All-Active (Single-Homed Ethernet
 access) service with traditional access router
 integration.
 
-![]({{site.baseurl}}/images/cmf-hld/image29.png)
+![](http://xrdocs.io/design/images/cmf-hld/image29.png)
 
 _Figure 28: Hierarchical – Services (Anycast-PW)_
 
@@ -861,7 +844,7 @@ Hierarchical L2 Multi/Single-Home, All/Single-Active modes are available
 at each layer of the service
 hierarchy.
 
-![]({{site.baseurl}}/images/cmf-hld/image30.png)
+![](http://xrdocs.io/design/images/cmf-hld/image30.png)
 
 _Figure 29: Hierarchical – Services (H-EVPN)_
 
@@ -880,7 +863,7 @@ It completely replaces traditional H-VPLS based solutions. This use case
 provides Hierarchical L2 Multi/Single-Home, All/Single-Active
 service.
 
-![]({{site.baseurl}}/images/cmf-hld/image31.png)
+![](http://xrdocs.io/design/images/cmf-hld/image31.png)
 
 _Figure 30: Hierarchical – Services (H-EVPN and PWHE)_
 
@@ -891,7 +874,7 @@ Refer also to the section: “Transport and Services Integration”.
 Figure 31 shows the design of Services Router-Reflectors
 (S-RRs).
 
-![]({{site.baseurl}}/images/cmf-hld/image32.png)
+![](http://xrdocs.io/design/images/cmf-hld/image32.png)
 
 _Figure 31: Services – Route-Reflectors_
 
@@ -938,7 +921,7 @@ Management, Service Provisioning, and Service Orchestration.
   - Service model with mapping logic and service
 templates
 
-![]({{site.baseurl}}/images/cmf-hld/image33.png)
+![](http://xrdocs.io/design/images/cmf-hld/image33.png)
 
 _Figure 32: NSO – Components_
 
@@ -972,11 +955,11 @@ Metro Fabric 1.5 supports the following NSO service models for provisioning both
 hierarchical and flat services across the fabric. All NSO service modules in 1.5 
 utilize the IOS-XR and IOS-XE CLI NEDs for configuration. 
 
-![]({{site.baseurl}}/images/cmf-hld/automation-flat-1_5.png)
+![](http://xrdocs.io/design/images/cmf-hld/automation-flat-1_5.png)
 
 _Figure 33: Automation – Flat Service Models_
 
-![]({{site.baseurl}}/images/cmf-hld/automation-hierarchy-1_5.png)
+![](http://xrdocs.io/design/images/cmf-hld/automation-hierarchy-1_5.png)
 
 _Figure 34: Automation – Hierarchical Service Models_
 
@@ -992,7 +975,7 @@ from a Control-Plane standpoint. Note that while network operators could
 use both PCEP and BGR-SRTE at the same time, it is not
 typical.
 
-![]({{site.baseurl}}/images/cmf-hld/image34.png)
+![](http://xrdocs.io/design/images/cmf-hld/image34.png)
 
 _Figure 35: Compass Metro Fabric – Control-Plane_
 
@@ -1014,7 +997,7 @@ Figure 36 shows a consolidated view of Compass Metro Fabric network from
 a Data Plane
 standpoint.
 
-![]({{site.baseurl}}/images/cmf-hld/image35.png)
+![](http://xrdocs.io/design/images/cmf-hld/image35.png)
 
 _Figure 36: Compass Metro Fabric – Data-Plane_
 
@@ -1038,7 +1021,7 @@ Validation will be done on two types of access platforms, IOS-XR and
 IOS-XE, to prove
 interoperability.
 
-![]({{site.baseurl}}/images/cmf-hld/image36.png)
+![](http://xrdocs.io/design/images/cmf-hld/image36.png)
 
 _Figure 37: Access Domain Extension – End-To-End Transport_
 
@@ -1049,7 +1032,7 @@ remote Access IGP Domain, 2 additional TI-LFA labels can be used for FRR
 (node and link protection). In Phase 1 PE ABRs are represented by
 Prefix-SID. Refer also to Section: "Transport Programmability - Phase 1".
 
-![]({{site.baseurl}}/images/cmf-hld/image37.png)
+![](http://xrdocs.io/design/images/cmf-hld/image37.png)
 
 _Figure 38: Access Domain Extension – Hierarchical Transport_
 
@@ -1070,7 +1053,7 @@ The Compass Metro Fabric employs a distributed and highly available SR-PCE
 design as described in Section: "Transport Programmability". Transport programmability is based
 on PCEP. Figure 39 shows the design when SR-PCE uses PCEP.
 
-![]({{site.baseurl}}/images/cmf-hld/image38.png)
+![](http://xrdocs.io/design/images/cmf-hld/image38.png)
 
 _Figure 39: SR-PCE – PCEP_
 
@@ -1085,7 +1068,7 @@ Computation to SR-PCE” mode described in Section: "Path Computation Engine - W
 in Figure
 38.
 
-![]({{site.baseurl}}/images/cmf-hld/image39.png)
+![](http://xrdocs.io/design/images/cmf-hld/image39.png)
 
 _Figure 40: PCE Path Computation – Phase 1_
 
@@ -1110,11 +1093,11 @@ The table in Figure 41 describes the End-To-End services, while the
 network diagram in Figure 40 shows how services are deployed in the
 network. Refer also to Section: "Services - Design" of this document.
 
-![]({{site.baseurl}}/images/cmf-hld/image40.png)
+![](http://xrdocs.io/design/images/cmf-hld/image40.png)
 
 _Figure 41: End-To-End Services table_
 
-![]({{site.baseurl}}/images/cmf-hld/image41.png)
+![](http://xrdocs.io/design/images/cmf-hld/image41.png)
 
 _Figure 42: End-To-End Services_
 
@@ -1125,18 +1108,18 @@ network. Refer also to Section: "Services - Design" of this document.
 In addition, the table in Figure 44 shows where PE ABRs Anycast-SID is
 required and where ODN in the Core IGP domain is used.
 
-![]({{site.baseurl}}/images/cmf-hld/image42.png)
+![](http://xrdocs.io/design/images/cmf-hld/image42.png)
 
 _Figure 41: Hierarchical Services table_
 
-![]({{site.baseurl}}/images/cmf-hld/image43.png)
+![](http://xrdocs.io/design/images/cmf-hld/image43.png)
 
 _Figure 42: Hierarchical Services_
 
 The Compass Metro Fabric uses the hierarchical Services Route-Reflectors
 (S-RRs) design described in Section: "Services - Route-Reflector (S-RR)". Figure 43 shows in detail the S-RRs design used for Phase 1.
 
-![]({{site.baseurl}}/images/cmf-hld/image44.png)
+![](http://xrdocs.io/design/images/cmf-hld/image44.png)
 
 _Figure 43: Services Route-Reflectors (S-RRs)_
 
@@ -1148,21 +1131,21 @@ Refer to Section: "Network Services Orchestrator (NSO)".
 Transport and Services integration is described in Section: "Transport and Services Integration" of this document. Figure 44 shows an example of End-To-End LSP and services
 integration in Phase 1.
 
-![]({{site.baseurl}}/images/cmf-hld/image45.png)
+![](http://xrdocs.io/design/images/cmf-hld/image45.png)
 
 _Figure 44: Transport and Services Data-Plane_
 
 Figure 45 shows a consolidated view of the Transport and Services
 Control-Plane.
 
-![]({{site.baseurl}}/images/cmf-hld/image46.png)
+![](http://xrdocs.io/design/images/cmf-hld/image46.png)
 
 _Figure 45: Transport and Services Control-Plane_
 
 Figure 46 shows the physical topology of the testbed used for Phase 1
 validation.
 
-![]({{site.baseurl}}/images/cmf-hld/image47.png)
+![](http://xrdocs.io/design/images/cmf-hld/image47.png)
 
 _Figure 46: Testbed – Phase 1_
 
@@ -1182,7 +1165,7 @@ Metro Fabric provides another huge leap forward in simplification and
 programmability adding Services Control Plane unification and
 centralized path computation.
 
-![]({{site.baseurl}}/images/cmf-hld/image48.png)
+![](http://xrdocs.io/design/images/cmf-hld/image48.png)
 
 _Figure 47: Compass Metro Fabric – Evolution_
 
