@@ -11,6 +11,32 @@ date: null
 {% include base_path %}
 
 
+<div class="feature__wrapper">    
+<div class="feature__item--left">
+      <div class="archive__item" style="margin-left: 2em;">
+          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
+           margin-left: auto; margin-right: auto;">
+            <img src="{{ base_path }}/images/design_lp/core-fabric.png" alt="" />
+          </div>
+        <div class="archive__item-body">
+            <h2 class="archive__item-title">Core Fabric Design 🆕</h2>
+            <div class="archive__item-excerpt" style="font-size: 0.65em;">
+            <p> Read about the goals of the Core Fabric Design and familiarize yourself with all its components:
+             the platforms, the software, the technologies and use cases 
+            </p>
+            </div>
+            <p><a href="{{ base_path }}/blogs/2018-09-12-core-fabric-design//" 
+                  class="btn ">High Level Design </a>
+                                    
+                  </p>
+        </div>
+      </div>
+</div>
+</div>
+
+
+
+
 <div class="feature__wrapper">
     <div class="feature__item--right">
       <div class="archive__item">
@@ -19,7 +45,8 @@ date: null
             <img src="{{ base_path }}/images/design_lp/metro-design.png" alt="" />
           </div>
         <div class="archive__item-body">
-            <h2 class="archive__item-title">Metro Fabric Design</h2>
+            <h2 class="archive__item-title">Metro Fabric Design &nbsp; 
+            <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
               <p>Read about the goals of the Metro Fabric Design and familiarize 
               yourself with all its components: the platforms, the software,
@@ -47,7 +74,9 @@ date: null
             <img src="{{ base_path }}/images/design_lp/traffic_cloud.png" alt="" />
           </div>
         <div class="archive__item-body">
-            <h2 class="archive__item-title">Peering Fabric Design</h2>
+            <h2 class="archive__item-title">Peering Fabric Design
+            &nbsp; <img src="{{ base_path }}/images/design_lp/updated.png" alt="" />
+             </h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
             <p> Read about the goals of the Peering Fabric Design and
              familiarize yourself with all the components: the platforms, the software, the technologies and use cases
