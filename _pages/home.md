@@ -21,14 +21,11 @@ date: null
         <div class="archive__item-body">
             <h2 class="archive__item-title">Core Fabric Design 🆕</h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
-            <p> Read about the goals of the Core Fabric Design and familiarize yourself with all its components: the platforms, the software, the technologies, the use cases, and the NSO Services Packages for automation 
+            <p> Read about the goals of the Core Fabric Design and familiarize yourself with all its components: the platforms, the software, the technologies, the use cases, and the <a href="https://github.com/NSO-developer/nso-xr-segmentrouting">NSO Services Packages</a> for automation 
             </p>
             </div>
             <p><a href="{{ base_path }}/blogs/2018-09-12-core-fabric-design/" 
                   class="btn ">High Level Design </a>
-                <a href="https://github.com/NSO-developer/nso-xr-segmentrouting" 
-                  class="btn ">NSO Services Packages</a>
-                                          
                   </p>
         </div>
       </div>
