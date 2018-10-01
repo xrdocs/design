@@ -1,12 +1,12 @@
 ---
 published: true
-date: '2018-04-30 11:00-0400'
+date: '2018-10-01 11:00-0400'
 title: Metro Fabric High Level Design
 excerpt: >-
   Cisco Metro Fabric (CMF) design introduces an SDN-ready architecture which
   evolves traditional Metro network  design towards an SDN enabled, programmable
-  network capable of delivering all services.
-author: Jiri Chaloupka
+  network capable of delivering all services. 1.5 Update
+author: Phil Bedard 
 tags:
   - iosxr
   - Metro
