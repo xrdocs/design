@@ -8,7 +8,7 @@ tags:
   - iosxr
   - Design
   - Core
-position: hidden
+position: top
 ---
 {% include toc %}
 
