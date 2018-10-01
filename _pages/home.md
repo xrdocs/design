@@ -54,7 +54,7 @@ date: null
               </p>
             </div>
             <p>
-            <a href="{{ base_path }}/blogs/2018-04-30-metro-fabric-hld/" 
+            <a href="{{ base_path }}/blogs/2018-10-01-metro-fabric-hld/" 
                   class="btn ">High Level Design</a>
             <a href="{{ base_path }}/blogs/2018-05-09-metro-design-implementation-guide/" 
                   class="btn ">Implementation Guide</a>
@@ -82,7 +82,7 @@ date: null
              familiarize yourself with all the components: the platforms, the software, the technologies and use cases
             </p>
             </div>
-            <p><a href="{{ base_path }}/blogs/2018-05-08-peering-fabric-hld/" 
+            <p><a href="{{ base_path }}/blogs/2018-10-01-peering-fabric-hld/" 
                   class="btn ">Explore 📖</a></p>
         </div>
       </div>
