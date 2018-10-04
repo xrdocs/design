@@ -7,6 +7,7 @@ excerpt: >-
   evolves traditional Metro network  design towards an SDN enabled, programmable
   network capable of delivering all services. 1.5 Update
 author: Phil Bedard 
+permalink: /blogs/latest-metro-fabric-hld
 tags:
   - iosxr
   - Metro

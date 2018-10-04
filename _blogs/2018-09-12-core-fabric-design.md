@@ -3,6 +3,7 @@ published: true
 date: '2018-09-12 15:22 -0600'
 title: Core Fabric Design
 author: Shelly Cadora
+permalink: /blogs/latest-core-fabric-hld
 excerpt: Core Fabric Design
 tags:
   - iosxr
