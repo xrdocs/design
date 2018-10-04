@@ -25,7 +25,7 @@ date: null
             </p>
             </div>
             <p><a href="{{ base_path }}/blogs/latest-core-fabric-hld" 
-                  class="btn ">High Level Design </a>
+                  class="btn ">High Level Design 📖</a>
                   </p>
         </div>
       </div>
@@ -53,7 +53,7 @@ date: null
             </div>
             <p>
             <a href="{{ base_path }}/blogs/latest-metro-fabric-hld" 
-                  class="btn ">High Level Design</a>
+                  class="btn ">High Level Design 📖</a>
             <a href="{{ base_path }}/blogs/2018-05-09-metro-design-implementation-guide/" 
                   class="btn ">Implementation Guide</a>
                   </p>
@@ -81,7 +81,7 @@ date: null
             </p>
             </div>
             <p><a href="{{ base_path }}/blogs/latest-peering-fabric-hld" 
-                  class="btn ">Explore 📖</a></p>
+                  class="btn ">High Level Design 📖</a></p>
         </div>
       </div>
 </div>
