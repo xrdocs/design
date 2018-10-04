@@ -24,7 +24,7 @@ date: null
             <p> Read about the goals of the Core Fabric Design and familiarize yourself with all its components: the platforms, the software, the technologies, the use cases, and the <a href="https://github.com/NSO-developer/nso-xr-segmentrouting" target="_blank">NSO Services Packages</a> for automation 
             </p>
             </div>
-            <p><a href="{{ base_path }}/blogs/2018-09-12-core-fabric-design/" 
+            <p><a href="{{ base_path }}/blogs/latest-core-fabric-hld" 
                   class="btn ">High Level Design </a>
                   </p>
         </div>
@@ -52,7 +52,7 @@ date: null
               </p>
             </div>
             <p>
-            <a href="{{ base_path }}/blogs/2018-10-01-metro-fabric-hld/" 
+            <a href="{{ base_path }}/blogs/latest-metro-fabric-hld" 
                   class="btn ">High Level Design</a>
             <a href="{{ base_path }}/blogs/2018-05-09-metro-design-implementation-guide/" 
                   class="btn ">Implementation Guide</a>
@@ -80,7 +80,7 @@ date: null
              familiarize yourself with all the components: the platforms, the software, the technologies and use cases
             </p>
             </div>
-            <p><a href="{{ base_path }}/blogs/2018-10-01-peering-fabric-hld/" 
+            <p><a href="{{ base_path }}/blogs/latest-peering-fabric-hld" 
                   class="btn ">Explore 📖</a></p>
         </div>
       </div>
