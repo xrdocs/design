@@ -99,14 +99,7 @@ Yes, I did say CLI was dead to me...just not NSO CLI!  Seriously though, I put t
 
 ```xml
 <config xmlns="http://tail-f.com/ns/config/1.0">
-  <sr-infrastructure xmlns="http://cisco.com/ns/tailf/cf-infra">
-    <sr-global-block-pools>
-      <name>SRGB-POOL1</name>
-    </sr-global-block-pools>
-    <instance-name>ISIS-CORE</instance-name>
-    <loopback>0</loopback>
-  </sr-infrastructure>
-  <resource-pools xmlns="http://tail-f.com/pkg/resource-allocator">
+ <resource-pools xmlns="http://tail-f.com/pkg/resource-allocator">
   <id-pool xmlns="http://tail-f.com/pkg/id-allocator">
     <name>SRGB-POOL1</name>
     <range>
@@ -115,6 +108,13 @@ Yes, I did say CLI was dead to me...just not NSO CLI!  Seriously though, I put t
     </range>
   </id-pool>
   </resource-pools>
+  <sr-infrastructure xmlns="http://cisco.com/ns/tailf/cf-infra">
+    <sr-global-block-pools>
+      <name>SRGB-POOL1</name>
+    </sr-global-block-pools>
+    <instance-name>ISIS-CORE</instance-name>
+    <loopback>0</loopback>
+  </sr-infrastructure>
 </config>
 ```
 
