@@ -153,7 +153,6 @@ I also discovered NSO's northbound API which enabled me to build RESTCONF calls 
 
 ```
 POST /restconf/data/services HTTP/1.1
-Host: 10.30.111.12:8080
 Content-Type: application/yang-data+xml
 
 <sr xmlns="http://cisco.com/tailf/sr">
@@ -172,16 +171,20 @@ Content-Type: application/yang-data+xml
 
 Every resource and service can be configured this way.  Throw it all in a tool like a Postman Runner, and boom, all the services are deployed and the whole LDP to SR migration use case is set up with a click.  Delete the services with a few more RESTCONF calls and boom, a few seconds later, the network is back to its original state.  Now I had an API-driven Ctrl-Z for my network!
 
-I know I only scratched the surface of NSO with the simple services we created for the SP Validated Core Design use cases.  This is a truly powerful platform.  Once you get started, the ideas just keep flowing.   Encode your best practices in service models.  Cover your back with Ctrl-Z for the whole network.  Tie it all into your OSS system with the northbound APIs.  Do all this knowing you have the robustness of data models and NETCONF to keep you out of trouble.  One thing I know for sure is that I’m not going to be doing any design validation without NSO at my side.  
+I know I only scratched the surface of NSO with the simple services we created for the [Core Fabric Design](https://xrdocs.io/design/blogs/latest-core-fabric-hld) use cases.  This is a truly powerful platform.  Once you get started, the ideas just keep flowing.   Encode your best practices in service models.  Cover your back with Ctrl-Z for the whole network.  Tie it all into your OSS system with the northbound APIs.  Do all this knowing you have the robustness of data models and NETCONF to keep you out of trouble.  One thing I know for sure is that I’m not going to be doing any design validation without NSO at my side.  
 
 Check out what NSO and IOS XR data models can do for you:
 ### IOS-XR 
 [Data-Model Overview](https://xrdocs.io/programmability/tutorials/2016-09-15-xr-data-model-overview/)
+
 [Model-Driven Programmability](https://xrdocs.io/programmability/blogs/2016-09-12-model-driven-programmability/)
+
 [YANG Models by Release](https://github.com/YangModels/yang/tree/master/vendor/cisco/xr)
+
 
 ### NSO
 [NSO on DevNet](https://developer.cisco.com/site/nso/)
+
 [NSO Example Services for Segment Routing](https://github.com/NSO-developer/nso-xr-segmentrouting)
 
 
