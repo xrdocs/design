@@ -10,7 +10,7 @@ tags:
 position: hidden
 ---
 ## How I Learned to Love NSO
-When I started working on the [SP Validated Core Design](https://xrdocs.io/design/blogs/latest-core-fabric-hld) (a simple, highly available, scalable reference design for the core), I had one overriding goal: whatever features and use cases we covered, the whole thing had to be be model-driven.  CLI is dead to me.  If I can’t do something with a model, I won't do it at all.  I’m happy to say that I (mostly) succeeded.  I also learned some cool tricks along the way and came to appreciate the power of the Network Services Orchestrator ([NSO](https://www.cisco.com/c/en/us/solutions/service-provider/solutions-cloud-providers/network-services-orchestrator-solutions.html)).  
+When I started working on the [Core Fabric Design](https://xrdocs.io/design/blogs/latest-core-fabric-hld) (a simple, highly available, scalable reference design for the core), I had one overriding goal: whatever features and use cases we covered, the whole thing had to be be model-driven.  CLI is dead to me.  If I can’t do something with a model, I won't do it at all.  I’m happy to say that I (mostly) succeeded.  I also learned some cool tricks along the way and came to appreciate the power of the Network Services Orchestrator ([NSO](https://www.cisco.com/c/en/us/solutions/service-provider/solutions-cloud-providers/network-services-orchestrator-solutions.html)).  
 
 ## Yes, I Drank the Model Koolaid.
 Eons ago, as a fresh, young engineer at Cisco, I cut my coding teeth on test automation, all of which was done via CLI and screen-scraping.  I learned to love Tcl, expect, and regular expressions of all kinds, and it was a lot of fun to write the test scripts.  What I didn’t like was maintaining them across platforms and releases.  CLI was just too fragile for robust automation.  And I don’t even want to tell you the number of script runs that failed because my script accidentally shut the interface I was connected to (blush).  So when I started working with IOS XR and discovered the power of [YANG](https://tools.ietf.org/html/rfc6020) data models, I was hooked.
@@ -71,7 +71,7 @@ Yes, I did say CLI was dead to me...just not NSO CLI!  Seriously though, I put t
 </config>
 ```
 
-The ```sr-infrastructure``` resource by itself is an internal NSO construct.  Nothing is pushed to the router when I commit that config to NSO.  I still need to create a service that references this resource.  
+The ```sr-infrastructure``` resource by itself is an internal NSO construct.  Nothing is pushed to the router when I commit that to NSO.  I still need to create a service that references this resource.  
 
 Once I realized I could enforce the same SRGB everywhere by using ```sr-infrastructure```, I started thinking about other problems I could prevent.  For example, if you unintentionally assign the same SID to different devices or assign a SID that is out of the SRGB range, unpleasant things will happen (trust me, I’ve done it).  But if my NSO service could auto-assign a unique and valid SID from the defined SRGB range, then I could avoid both of those problems.   
 
@@ -116,7 +116,7 @@ Which you can configure like this:
 
 As you can see, both routers in the ```sr``` service named ```Denver```  will use the same IGP instance name, the same loopback and the same SRGB because the service calls the ```sr-infrastructure``` (“use-sr-infrastructure”).  In addition, the prefix SID will be auto-assigned for both routers (“auto-assign-prefix-sid”). Once committed, this service will roll out SR in a consistent way across the routers in the Denver region.
 
-Another optimization occurred to me while configuring Transport Independent-Loop Free Alternative (TI-LFA).  In ISIS, TI-LFA has to be configured on individual interfaces under the IGP.  Well, guess who forgot to enable it on a couple interfaces and spent an embarrassing amount of time troubleshooting the network?  Yep.  So I asked my NSO buddy if NSO could automatically apply the TI-LFA config to all the interfaces already configured under the IGP.  And while you’re at it, please use all the instance-name I defined in ```sr-infrastructure``` (because, surprise, “isis instance-name Core” is in fact completely distinct from “isis instance-name core” on a router).  That’s how we ended up with this [service for TI-LFA enablement](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/ti-lfa):
+Another optimization occurred to me while configuring Transport Independent-Loop Free Alternative (TI-LFA).  In ISIS, TI-LFA has to be configured on individual interfaces under the IGP.  Well, guess who forgot to enable it on a couple interfaces and spent an embarrassing amount of time troubleshooting the network?  Yep.  So I asked my NSO buddy if NSO could automatically apply the TI-LFA config to all the interfaces already configured under the IGP.  And while you’re at it, please usethe instance-name I defined in ```sr-infrastructure``` (because, surprise, “isis instance-name Core” is in fact completely distinct from “isis instance-name core” from a router's perspective).  That’s how we ended up with this [service for TI-LFA enablement](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/ti-lfa):
 
 ```
 services ti-lfa Denver-LFA
@@ -140,7 +140,7 @@ Pretty soon, I had a useful [set of simple services](https://github.com/NSO-deve
 admin@ncs# devices sync-from
 ```
 
-<Do Bad Stuff Everywhere Outside NSO>
+Do Bad Stuff Everywhere Outside NSO{: .notice--danger}
 
 ```
 admin@ncs# devices sync-to
