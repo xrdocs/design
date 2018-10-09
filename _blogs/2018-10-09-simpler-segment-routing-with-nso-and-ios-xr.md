@@ -23,7 +23,7 @@ Things get even better when you combine those data models with a standard protoc
 Initially, I started the Validated Core automation work with useful open source tools like [ncclient](https://github.com/ncclient/ncclient) and [ANX](https://github.com/cisco-ie/anx).  But it got tedious after a while, manipulating all that XML and talking to one device at a time, especially as my testbed grew.  Take the [LDP to Segment Routing (SR) Migration](https://xrdocs.io/design/blogs/latest-core-fabric-hld#ldp-to-sr-core-migration) use case.  The basic SR config consists of mostly static content with a handful of variables (IGP instance name, Loopback interface, SR Global Block (SRGB), and the device SID).  Here's what that looks like in XML using the [Cisco-IOS-XR-clns-isis-cfg.yang](https://github.com/YangModels/yang/blob/master/vendor/cisco/xr/651/Cisco-IOS-XR-clns-isis-cfg.yang) model:
 
 ```xml
- <isis xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-clns-isis-cfg">
+  <isis xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-clns-isis-cfg">
    <instances>
     <instance>
      <instance-name>ISIS-CORE</instance-name>
