@@ -37,9 +37,7 @@ Initially, I started the Validated Core automation work with useful open source 
        <af-name>ipv4</af-name>
        <saf-name>unicast</saf-name>
        <af-data>
-        <segment-routing>
-         <mpls>ldp</mpls>
-        </segment-routing>
+        <segment-routing/>
        </af-data>
       </af>
      </afs>
@@ -65,7 +63,7 @@ Initially, I started the Validated Core automation work with useful open source 
 
 Note this is not the full ISIS configuration, just the things you need to add to a working ISIS instance to enable SR.  
 
-What I needed was template that could take the variable data, combine it with the static content and apply the resulting config to many devices at the same time.   It turns out that this is one of the most basic things that NSO can do.  Knowing the ISIS YANG config data model, it didn’t take much time to whip up a basic NSO service using a [NETCONF NED for IOS XR](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/prouter-ned).  Another bonus: after I created the template, I never had to look at XML again.  Life got easier. 
+With all that XML flying around, you can see why I wanted a template that could take the variable data, combine it with the static content and apply the resulting config to many devices at the same time.   It turns out that this is one of the most basic things that NSO can do.  Knowing the ISIS YANG config data model, it didn’t take much time to whip up a basic NSO service using a [NETCONF NED for IOS XR](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/prouter-ned).  Another bonus: after I created the template, I never had to look at XML again.  Life got easier. 
 
 Templates are nice, but what I really needed was an _intelligent_ template, something that could embed best practices in the service itself. For example, it is a common (and best) practice to have the same IGP instance name, Loopback interface and SRGB on every SR device in a given domain.  But nothing in CLI or NETCONF prevents you from accidentally configuring a different SRGB on different routers, which can cause all sorts of problems.  If I could define the common variables once and reuse them whenever the service was deployed, NSO could prevent problems from happening in the first place.  That was the genesis of the “sr-infrastructure” resource in NSO:
 
@@ -93,7 +91,7 @@ sr-infrastructure
   sr-global-block-pools SRGB-POOL1
 ```
 
-Yes, I did say CLI was dead to me...just not NSO CLI!  Seriously though, I put the CLI just for readability.   If you can read XML, knock yourself out:
+Yes, I did say CLI was dead to me...just not NSO CLI!  Seriously though, I put the CLI just for readability.  Here's the XML for the same thing in NSO:
 
 ```xml
 <config xmlns="http://tail-f.com/ns/config/1.0">
