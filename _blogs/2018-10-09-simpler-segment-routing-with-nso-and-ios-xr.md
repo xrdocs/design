@@ -20,7 +20,58 @@ Data models provide a way for a device to announce what kind of configuration an
 Things get even better when you combine those data models with a standard protocol like [NETCONF](https://tools.ietf.org/html/rfc6241.html), which defines many useful operations.  For instance, if even one line of the config fails, NETCONF can “rollback-on-failure.”  If you request a “confirm-commit," the router will rollback the config changes if it doesn’t get a follow-up confirmation (e.g. because you mistakenly shut the interface that you’re talking to!).   All that makes automation easier and more robust.  No, data models aren’t perfect.  Yes, YANG can be abstract and NETCONF’s reliance on XML can be irritating.  Nevertheless, this clearly is a better way to automate. 
 
 ## Modeling Best Practices With NSO
-Initially, I started the Validated Core automation work with useful open source tools like [ncclient](https://github.com/ncclient/ncclient) and [ANX](https://github.com/cisco-ie/anx).  But it got tedious after a while, manipulating all that XML and talking to one device at a time, especially as my testbed grew.  Take the [LDP to Segment Routing (SR) Migration](https://xrdocs.io/design/blogs/latest-core-fabric-hld#ldp-to-sr-core-migration) use case.  The basic SR config consists of mostly static content with a handful of variables (IGP instance name, Loopback interface, SR Global Block (SRGB), and the device SID).  What I needed was template that could take the variable data, combine it with the static content and apply the resulting config to many devices at the same time.   It turns out that this is one of the most basic things that NSO can do.  Knowing the ISIS YANG config data model, it didn’t take much time to whip up a basic NSO service using a [NETCONF NED for IOS XR](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/prouter-ned).  Another bonus: after I created the template, I never had to look at XML again.  Life got easier. 
+Initially, I started the Validated Core automation work with useful open source tools like [ncclient](https://github.com/ncclient/ncclient) and [ANX](https://github.com/cisco-ie/anx).  But it got tedious after a while, manipulating all that XML and talking to one device at a time, especially as my testbed grew.  Take the [LDP to Segment Routing (SR) Migration](https://xrdocs.io/design/blogs/latest-core-fabric-hld#ldp-to-sr-core-migration) use case.  The basic SR config consists of mostly static content with a handful of variables (IGP instance name, Loopback interface, SR Global Block (SRGB), and the device SID).  Here's what that looks like in XML using the [Cisco-IOS-XR-clns-isis-cfg.yang](https://github.com/YangModels/yang/blob/master/vendor/cisco/xr/651/Cisco-IOS-XR-clns-isis-cfg.yang) model:
+
+```xml
+ <isis xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-clns-isis-cfg">
+   <instances>
+    <instance>
+     <instance-name>ISIS-CORE</instance-name>
+     <running/>
+     <nets>
+      <net>
+       <net-name>49.1000.0000.0007.00</net-name>
+      </net>
+     </nets>
+     <srgb>
+      <lower-bound>17000</lower-bound>
+      <upper-bound>19000</upper-bound>
+     </srgb>
+     <afs>
+      <af>
+       <af-name>ipv4</af-name>
+       <saf-name>unicast</saf-name>
+       <af-data>
+        <segment-routing>
+         <mpls>ldp</mpls>
+        </segment-routing>
+       </af-data>
+      </af>
+     </afs>
+     <interfaces>
+      <interface>
+       <interface-name>Loopback0</interface-name>
+       <running/>
+       <state>passive</state>
+       <circuit-type>level2</circuit-type>
+       <interface-afs>
+        <interface-af>
+         <af-name>ipv4</af-name>
+         <saf-name>unicast</saf-name>
+         <interface-af-data>
+          <running/>
+          <prefix-sid>
+           <type>absolute</type>
+           <value>17000</value>
+          </prefix-sid>
+         </interface-af-data>
+        </interface-af>
+       </interface-afs>
+      </interface>
+```
+
+
+What I needed was template that could take the variable data, combine it with the static content and apply the resulting config to many devices at the same time.   It turns out that this is one of the most basic things that NSO can do.  Knowing the ISIS YANG config data model, it didn’t take much time to whip up a basic NSO service using a [NETCONF NED for IOS XR](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/prouter-ned).  Another bonus: after I created the template, I never had to look at XML again.  Life got easier. 
 
 Templates are nice, but what I really needed was an _intelligent_ template, something that could embed best practices in the service itself. For example, it is a common (and best) practice to have the same IGP instance name, Loopback interface and SRGB on every SR device in a given domain.  But nothing in CLI or NETCONF prevents you from accidentally configuring a different SRGB on different routers, which can cause all sorts of problems.  If I could define the common variables once and reuse them whenever the service was deployed, NSO could prevent problems from happening in the first place.  That was the genesis of the “sr-infrastructure” resource in NSO:
 
