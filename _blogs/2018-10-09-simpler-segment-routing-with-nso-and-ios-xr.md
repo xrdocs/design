@@ -169,7 +169,7 @@ Content-Type: application/yang-data+xml
 </sr>
 ```
 
-Every resource and service can be configured this way.  Throw it all in a tool like a Postman Runner, and boom, all the services are deployed and the whole LDP to SR migration use case is set up with a click.  Delete the services with a few more RESTCONF calls and boom, a few seconds later, the network is back to its original state.  Now I had an API-driven Ctrl-Z for my network!
+Every resource and service can be configured this way.  Throw it all in a tool like a Postman Runner, and boom, all the services are deployed and the whole LDP to SR migration use case is set up with a click.  Delete the services with a few more RESTCONF calls and boom, a few seconds later, the network is back to its original state.  Now I had an _API-driven_ Ctrl-Z for my network!
 
 I know I only scratched the surface of NSO with the simple services we created for the [Core Fabric Design](https://xrdocs.io/design/blogs/latest-core-fabric-hld) use cases.  This is a truly powerful platform.  Once you get started, the ideas just keep flowing.   Encode your best practices in service models.  Cover your back with Ctrl-Z for the whole network.  Tie it all into your OSS system with the northbound APIs.  Do all this knowing you have the robustness of data models and NETCONF to keep you out of trouble.  One thing I know for sure is that I’m not going to be doing any design validation without NSO at my side.  
 
