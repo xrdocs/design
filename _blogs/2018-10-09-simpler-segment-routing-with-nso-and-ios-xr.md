@@ -140,8 +140,8 @@ Pretty soon, I had a useful [set of simple services](https://github.com/NSO-deve
 admin@ncs# devices sync-from
 ```
 
-Do Bad Stuff Everywhere Outside NSO
-{: .notice--danger}
+Do Bad Stuff Outside NSO
+{: .notice--danger}{: .text-center}
 
 ```
 admin@ncs# devices sync-to
