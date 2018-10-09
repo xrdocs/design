@@ -139,10 +139,8 @@ Pretty soon, I had a useful [set of simple services](https://github.com/NSO-deve
 ```
 admin@ncs# devices sync-from
 ```
-
 Do Bad Stuff Outside NSO
 {: .notice--danger}
-
 ```
 admin@ncs# devices sync-to
 ```
