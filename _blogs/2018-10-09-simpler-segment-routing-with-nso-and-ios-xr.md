@@ -28,11 +28,6 @@ Initially, I started the Validated Core automation work with useful open source 
     <instance>
      <instance-name>ISIS-CORE</instance-name>
      <running/>
-     <nets>
-      <net>
-       <net-name>49.1000.0000.0007.00</net-name>
-      </net>
-     </nets>
      <srgb>
       <lower-bound>17000</lower-bound>
       <upper-bound>19000</upper-bound>
@@ -51,9 +46,6 @@ Initially, I started the Validated Core automation work with useful open source 
      <interfaces>
       <interface>
        <interface-name>Loopback0</interface-name>
-       <running/>
-       <state>passive</state>
-       <circuit-type>level2</circuit-type>
        <interface-afs>
         <interface-af>
          <af-name>ipv4</af-name>
