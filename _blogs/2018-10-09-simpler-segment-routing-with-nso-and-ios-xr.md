@@ -231,5 +231,3 @@ Check out what NSO and IOS XR data models can do for you:
 [NSO on DevNet](https://developer.cisco.com/site/nso/)
 
 [NSO Example Services for Segment Routing](https://github.com/NSO-developer/nso-xr-segmentrouting)
-
-
