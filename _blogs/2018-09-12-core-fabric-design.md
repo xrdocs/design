@@ -955,3 +955,22 @@ An example of the returned data is shown below.  Note that the SID value (“sid
    </mapping>
   </srms>
 ```
+
+## For More Information
+### NSO
+[NSO on DevNet](https://developer.cisco.com/site/nso/)
+
+
+[NSO Example Services for Segment Routing](https://github.com/NSO-developer/nso-xr-segmentrouting)
+
+
+[Simpler Segment Routing with NSO -- The Inside Story](https://xrdocs.io/design/blogs/2018-10-09-simpler-segment-routing-with-nso-and-ios-xr/)
+
+### IOS-XR 
+[Validation Test Device Configurations](https://github.com/ios-xr/design/tree/master/Core)
+
+[Data-Model Overview](https://xrdocs.io/programmability/tutorials/2016-09-15-xr-data-model-overview/)
+
+[Model-Driven Programmability](https://xrdocs.io/programmability/blogs/2016-09-12-model-driven-programmability/)
+
+[YANG Models by Release](https://github.com/YangModels/yang/tree/master/vendor/cisco/xr)
