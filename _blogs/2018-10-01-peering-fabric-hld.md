@@ -1051,7 +1051,6 @@ address-family link-state link-state ;Enable BGP-LS AF
 session-group peer-session 
   ignore-connected-check :Allow loopback peering over ECMP w/o EBGP Multihop  
   egress-engineering :Allocate adj-peer-SID 
-  ttl-security :Enable gTTL security if neighbor supports it   
   bmp-activate server 1 :Optional send BMP data to receiver 1
 
 af-group v4-af-peer address-family ipv4 unicast 
@@ -1094,7 +1093,6 @@ neighbor 2001:dead:b33f:0:1:1:1:1
 ### PFL to PFS IBGP Configuration
 ```
 session-group pfs-session 
- ttl-security :Enable gTTL security if neighbor supports it   
  bmp-activate server 1 :Optional send BMP data to receiver 1
  update-source Loopback0 :Set BGP session source address to Loopback0 address
   

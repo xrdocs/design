@@ -1,0 +1,90 @@
+bgp router-id 100.16.1.1
+ bgp unsafe-ebgp-policy
+ bgp bestpath med always
+ bgp bestpath aigp ignore
+ bgp bestpath as-path multipath-relax
+ address-family ipv4 unicast
+  bgp attribute-download
+  maximum-paths ebgp 16
+  maximum-paths ibgp 16
+ !
+ address-family ipv6 unicast
+  bgp attribute-download
+  maximum-paths ebgp 16
+  maximum-paths ibgp 16
+
+ neighbor-group v4-peer
+  use session-group peer-session
+  dmz-link-bandwidth
+  address-family ipv4 unicast
+   use af-group v4-af-peer
+  !
+ !
+ af-group v4-af-peer address-family ipv4 unicast
+  multipath
+  maximum-prefix 10000000 85 warning-only
+  soft-reconfiguration inbound always
+ !
+
+ neighbor-group v6-peer
+  use session-group peer-session
+  dmz-link-bandwidth
+  address-family ipv6 unicast
+   use af-group v6-af-peer
+  !
+ !
+ af-group v6-af-peer address-family ipv6 unicast
+  multipath
+  maximum-prefix 100 80
+  soft-reconfiguration inbound always
+ !
+  session-group peer-session
+  egress-engineering
+  ignore-connected-check
+ !
+
+
+ neighbor 10.11.7.2
+  remote-as 65000
+  use neighbor-group v4-peer
+  description "PFL7 EBGP"
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+
+ neighbor 10.11.7.1
+  remote-as 65100
+  use neighbor-group v4-peer
+  description "PFL7 EBGP"
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+
+
+ neighbor 10.11.8.2
+  remote-as 65000
+  use neighbor-group v4-peer
+  description "PFL8 EBGP"
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ neighbor 10.11.9.2
+  remote-as 65000
+  use neighbor-group v4-peer
+  description "PFL9 EBGP"
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ neighbor 10.11.10.2
+  remote-as 65000
+  use neighbor-group v4-peer
+  description "PFL10 EBGP"
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+
