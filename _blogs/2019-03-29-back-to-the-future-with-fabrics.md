@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2019-03-29 18:47 -0600'
-title: Back to the Future with Fabrics
+title: The Future of Fabrics
 author: Shelly Cadora
 position: hidden
 excerpt: Discusses pros and cons of network fabric architectures.
@@ -18,19 +18,19 @@ As every network architect knows, there is no one "best" design for a network.  
 
 ## Scale: Up and Out
 
-When designing networks, scale is almost always top of mind.  There are two basic paradigms for scale:  scale out and scale up.  Networking has traditionally relied primarily on a scale up paradigm:  when you need to scale, buy a bigger box or more line cards or denser line cards.  Scale out, used almost exclusively in cloud-scale computing, takes the oppositive approach.  Instead of buying bigger boxes, buy lots of smaller smaller ones.
+When designing networks, scale is almost always top of mind.  There are two basic paradigms for scale:  scale out and scale up.  Networking has traditionally relied primarily on a scale up paradigm:  when you need to scale, buy a bigger box or more line cards or denser line cards.  Scale out, used almost exclusively in cloud-scale computing, takes the opposite approach.  Instead of buying bigger boxes, buy lots of smaller ones.
 
 ![Scale Up vs Scale Out.png]({{site.baseurl}}/images/Scale Up vs Scale Out.png)
 
-Scale out can scale very large.  The [Cisco NCS 5516](https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/models-comparison.html), a large 100GE routing platform, today provides 576 100GE ports. An external fabric built entirely of of 48-port NCS 5502s could support up to twice that many ports. If you put NCS 5508s in the spine, you could get up to 6912 user-facing ports.  That's truly massive scale.  
+Scale out can scale very large.  The [Cisco NCS 5516](https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/models-comparison.html), a large 100GE routing platform, today provides 576 100GE ports. An external fabric built entirely of 48-port NCS 5502s could support up to twice that many ports. If you put NCS 5508s in the spine, you could get up to 6912 user-facing ports.  That's truly massive scale.  
 
 ## Scale Impacts Availability Impacts Upgradability Impacts The Bottom Line
 
-How you scale has a direct impact on how you achieve high availability in a given design.  When you scale up, those ever-larger and denser devices create an ever-larger "blast radius."  If you could lose a big chunk of your network capacity when a single device goes down, you'll want to harden that device with lots of redundant hardware and complex software to keep it all running.  Unfortunately, complex, tightly coupled systems like this can be difficult to upgrade and troubleshoot.  If you can't upgrade quickly, you might delay critical bug fixes as well as new features that could enable profitable new services.
+How you scale has a direct impact on how you achieve high availability in a given design.  When you scale up, those ever-larger and denser devices create an ever-larger "blast radius."  If you could lose a big chunk of your network capacity when a single device goes down, you'll want to harden that device with lots of redundant hardware and complex software to keep it all running.  Unfortunately, complex, tightly coupled systems like this can be difficult to upgrade and troubleshoot.  If you can't upgrade quickly, you might delay critical bug fixes as well as new features that could enable profitable new services.  
 
 ![BlastRadius.png]({{site.baseurl}}/images/BlastRadius.png)
 
-When you scale out, the blast radius of an individual device is smaller.  The smaller the blast radius of a device, the easier it is to take it out of service for upgrade.  Without the complexities of large, redundant systems, networks made out of many small, simple devices can achieve very high availability.
+When you scale out, the blast radius of an individual device is smaller.  Without the complexities of large, redundant systems, networks made out of many small, simple devices can achieve very high availability. The smaller the blast radius of a device, the easier it is to take it out of service for upgrade.  Since upgradability has a direct impact on both quality and service agility, a scale out network should be able to deliver higher quality services, faster.
 
 Traditionally, networking has had a bias for scale up, but in truth scale out and scale up exist on a continuum.  Even in traditional designs, two routers are usually deployed in a given role for redundancy. Two is the smallest amount of "scale out" possible, but it's still "scale out."  Of course, the ultimate in "scale out" is the full spine and leaf fabric design of data center fame, but there are designs that balance "scale out" and "scale up" to achieve the right balance.
 
@@ -50,18 +50,18 @@ Having a clear understanding of the traffic pattern you need to support is cruci
 
 ## Good Fabrics Are Not Free
 
-Some people assume that fabrics will be less expensive than modular systems because fabrics are built from smaller, simpler, cheaper devices.  This overlooks a couple of important points.  First, it takes a lot of spines and leafs to achieve a statistically non-blocking architecture. For example, to build a non-blocking 96-port fabric out of 48-port devices, you need...wait for it...**six** 48-port devices (2 spines and 4 leaves).  Now we've gotten very good at building cost-effective NPUs for routers but you still need to connect all those spines and leaves.  The optics required for all that connectivity quickly comes to dominate the cost of an external fabric.  Using Active Optical Cables (AOCs) can help mitigate the optics cost but it remains non-neglible.  
+Some people assume that fabrics will be less expensive than modular systems because fabrics are built from smaller, simpler, cheaper devices.  This overlooks a couple of important points.  First, it takes a lot of spines and leaves to achieve a statistically non-blocking architecture. For example, to build a non-blocking 96-port fabric out of 48-port devices, you need...wait for it...**six** 48-port devices (2 spines and 4 leaves).  Now we've gotten very good at building cost-effective NPUs for routers, but you still need to connect all those spines and leaves.  The optics required for all that connectivity quickly comes to dominate the cost of an external fabric.  Using Active Optical Cables (AOCs) can help mitigate the optics cost but it remains non-negligible.  
 
 Speaking of connectivity, remember that connecting spines and leaves will take a lot of cables.  For our example of 96 user-facing ports, you'll need 96 cables between the spines and leaves for fabric connectivity.  That effectively doubles the number of cables your ops team has to manage.
 
-In terms of space, power and cooling, fabrics exact a cost as well.  We build large, modular systems for a reason: they are very efficient.  In apples-to-apples comparisons (e.g same ASIC family), a fabric of small devices always consumes more space and power for the equivalent number of ports in a large chassis.  
+In terms of space, power and cooling, fabrics exact a cost as well.  We build large, modular systems for a reason: they are very efficient.  In apples-to-apples comparisons (e.g. same ASIC family), a fabric of small devices always consumes more space and power for the equivalent number of ports in a large chassis.  
 
-Given the ratio of capex to opex (typically 4:1 for Service Providers), it's also important to take a good hard look at the impact fabrics can have on the ops team more generally.  In our 96-port example, ops has to manage six devices (six IGP instances, six management address, six ACL and QoS domains, etc) where before they might have had only one.  We know from massive data center designs that the only way to scale ops like that is to go all-in on automation.  From cable plans to config generation and deployment to upgrade to troubleshooting, every aspect of network operations will have to be automated.  
+Given the ratio of capex to opex (typically 4:1 for Service Providers), it's also important to take a good hard look at the impact fabrics can have on the ops team more generally.  In our 96-port example, ops has to manage six devices (six IGP instances, six management address, six ACL and QoS domains, etc.) where before they might have had only one.  We know from massive data center designs that the only way to scale ops like that is to go all-in on automation.  From cable plans to config generation and deployment to upgrade to troubleshooting, every aspect of network operations will have to be automated.  
 
 ## Conclusion: To Fabric or Not To Fabric?
 
-Thanks to the work done in data centers large and small, we know the costs and benefits of network fabrics. For sheer scale, network availability, upgradability, and east-west traffic patterns, it's hard to beat a fabric of small, simple devices.  But the large number of devices in external fabrics makes large-scale automation an absolute requirement.  And don't expect to optimize cost by deploying a fabric. Optics, cooling and power all favor a modular system over an equivalent fabric today.
+Thanks to the work done in data centers large and small, we know the costs and benefits of network fabrics. For sheer scale, network availability, upgradability, and east-west traffic patterns, it's hard to beat a fabric of small, simple devices.  But the large number of devices in external fabrics makes large-scale automation an absolute requirement.  And don't expect to optimize cost by deploying a fabric. Port for port, optics, cooling and power all favor a modular system over an equivalent fabric today by a significant margin.
 
-So are fabrics fated to stay inside NPUs, chassis and data centers forever?  Not necessarily.  At some point, the physics of NPUs will reach a point that we can no longer build highly efficient large modular systems.  Since so much of the cost of a fabric is in the optics, changes in optics will impact the feasibility of fabrics in other parts of the network.
+So are fabrics fated to stay inside NPUs, chassis and data centers forever?  Not necessarily.  At some point, the physics of NPUs will reach a point that we can no longer build highly efficient large modular routers. That point might be 10 years in the future, but it is coming. In that sense, fabrics are inevitable.  
 
-Finally, many network architects are starting to realize that you can realize some of the benefits of fabrics without going to a full-scale spine and leaf design.  For example, adding a _little_ more scale out (say 4 or 8 routers in a given role instead of the traditional 2) can enable a smaller blast radius and easier upgrades without the massive device scale of a full fabric.  This might stretch (sorry) the data center definition of fabrics, but it's a step in the right direction.
+Finally, many network architects are coming to see that you can realize some of the benefits of fabrics without going to a full-scale spine and leaf design.  For example, adding a _little_ more scale out (say 4 or 8 routers in an LSR or LER role instead of the traditional 2) can enable a smaller blast radius and easier upgrades without the massive device scale of a full fabric.  This might stretch (sorry) the data center definition of fabrics, but it's a step in the right direction.
