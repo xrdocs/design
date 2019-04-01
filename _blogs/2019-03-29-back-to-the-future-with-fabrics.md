@@ -10,7 +10,7 @@ excerpt: Discusses pros and cons of network fabric architectures.
 
 Until recently, the notion of a "fabric" in a network was confined to single device: the switching fabric inside an NPU or ASIC, the fabric module of a modular router, or the fabric chassis of a multi-chassis system.  All these internal fabrics fulfilled the same basic function: non-blocking connectivity between the input and output ports of the system.
 
-Largely driven by the needs of the massively scalable data center, a new network design has quite literally turned fabrics inside out.  Instead of building fabrics inside silicon, data center fabrics provide (statistically) non-blocking connectivity by connecting simple devices in a densely connected spine and leaf topology.  These designs can be relatively small (e.g. replacing a large modular devices with a fabric of small devices) or as massive as the data centers they enable (e.g. [Facebook's Data Center Fabric](https://code.fb.com/production-engineering/introducing-data-center-fabric-the-next-generation-facebook-data-center-network/).
+Largely driven by the needs of the massively scalable data center, a new network design has quite literally turned fabrics inside out.  Instead of building fabrics inside silicon, data center fabrics provide (statistically) non-blocking connectivity by connecting simple devices in a densely connected spine and leaf topology.  These designs can be relatively small (e.g. replacing a large modular device with a fabric of small devices) or as massive as the data centers they enable (e.g. [Facebook's Data Center Fabric](https://code.fb.com/production-engineering/introducing-data-center-fabric-the-next-generation-facebook-data-center-network/)).
 
 ![Fabric-Out-Of-Box.jpg]({{site.baseurl}}/images/Fabric-Out-Of-Box.jpg)
 
@@ -20,11 +20,15 @@ As every network architect knows, there is no one "best" design for a network.  
 
 When designing networks, scale is almost always top of mind.  There are two basic paradigms for scale:  scale out and scale up.  Networking has traditionally relied primarily on a scale up paradigm:  when you need to scale, buy a bigger box or more line cards or denser line cards.  Scale out, used almost exclusively in cloud-scale computing, takes the oppositive approach.  Instead of buying bigger boxes, buy lots of smaller smaller ones.
 
+![Scale Up vs Scale Out.png]({{site.baseurl}}/images/Scale Up vs Scale Out.png)
+
 Scale out can scale very large.  The [Cisco NCS 5516](https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/models-comparison.html), a large 100GE routing platform, today provides 576 100GE ports. An external fabric built entirely of of 48-port NCS 5502s could support up to twice that many ports. If you put NCS 5508s in the spine, you could get up to 6912 user-facing ports.  That's truly massive scale.  
 
 ## Scale Impacts Availability Impacts Upgradability Impacts The Bottom Line
 
 How you scale has a direct impact on how you achieve high availability in a given design.  When you scale up, those ever-larger and denser devices create an ever-larger "blast radius."  If you could lose a big chunk of your network capacity when a single device goes down, you'll want to harden that device with lots of redundant hardware and complex software to keep it all running.  Unfortunately, complex, tightly coupled systems like this can be difficult to upgrade and troubleshoot.  If you can't upgrade quickly, you might delay critical bug fixes as well as new features that could enable profitable new services.
+
+![BlastRadius.png]({{site.baseurl}}/images/BlastRadius.png)
 
 When you scale out, the blast radius of an individual device is smaller.  The smaller the blast radius of a device, the easier it is to take it out of service for upgrade.  Without the complexities of large, redundant systems, networks made out of many small, simple devices can achieve very high availability.
 
