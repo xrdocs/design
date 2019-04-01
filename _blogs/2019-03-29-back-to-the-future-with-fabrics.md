@@ -1,12 +1,14 @@
 ---
-published: false
+published: true
 date: '2019-03-29 18:47 -0600'
 title: Back to the Future with Fabrics
 author: Shelly Cadora
+position: hidden
+excerpt: Discusses pros and cons of network fabric architectures.
 ---
 ## Turning Fabrics Inside Out
 
-Until recently, the notion of a "fabric" in a network was confined to single device: the switching fabric inside an NPU or ASIC, the fabric module of a modular router, or the fabric chassis of a multi-chassis system.  All these internal fabrics fulfilled the same basic function: non-blocking connectivity between the input and output ports of the system. [some reference to Clos here, the basics of the design]
+Until recently, the notion of a "fabric" in a network was confined to single device: the switching fabric inside an NPU or ASIC, the fabric module of a modular router, or the fabric chassis of a multi-chassis system.  All these internal fabrics fulfilled the same basic function: non-blocking connectivity between the input and output ports of the system.
 
 Largely driven by the needs of the massively scalable data center, a new network design has quite literally turned fabrics inside out.  Instead of building fabrics inside silicon, data center fabrics provide (statistically) non-blocking connectivity by connecting simple devices in a densely connected spine and leaf topology.  These designs can be relatively small (e.g. replacing a large modular devices with a fabric of small devices) or as massive as the data centers they enable (e.g. [Facebook's Data Center Fabric](https://code.fb.com/production-engineering/introducing-data-center-fabric-the-next-generation-facebook-data-center-network/).
 
