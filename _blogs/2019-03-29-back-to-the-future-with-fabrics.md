@@ -47,7 +47,7 @@ Having a clear understanding of the traffic pattern you need to support is cruci
 
 ![CO-As-Fabric.png]({{site.baseurl}}/images/CO-As-Fabric.png)
 
-Having a spine allows you to attach diverse leaf devices, some "heavy" (richly featured, more expensive) and some "light" (basic features, less expensive).  When you want to introduce new features, simply plug a new-feature-capable-leaf into the spine and away you go.  If it doesn't work the way you want, unplug it.  There's no impact on other services, no downtime for upgrades.
+Having a spine allows you to attach diverse leaf devices, some "heavy" (richly featured, more expensive) and some "light" (basic features, less expensive).  You can also scale each leaf type independently.  If your peering traffic is growing faster than core-bound traffic, just add more peering leaves.  When you want to introduce new features, simply plug a new-feature-capable-leaf into the spine and away you go.  If it doesn't work the way you want, unplug it.  There's no impact on other services, no downtime for upgrades.
 
 ## Good Fabrics Are Not Free
 
