@@ -3,7 +3,7 @@ published: true
 date: '2019-03-29 18:47 -0600'
 title: The Future of Network Fabrics
 author: Shelly Cadora
-position: hidden
+position: null
 excerpt: Discusses pros and cons of network fabric architectures.
 ---
 ## Turning Fabrics Inside Out
