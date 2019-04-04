@@ -32,7 +32,7 @@ How you scale has a direct impact on how you achieve high availability in a give
 
 When you scale out, the blast radius of an individual device is smaller.  Without the complexities of large, redundant systems, networks made out of many small, simple devices can achieve very high availability. The smaller the blast radius of a device, the easier it is to take it out of service for upgrade.  Since upgradability has a direct impact on both quality and service agility, a scale out network should be able to deliver higher quality services, faster.
 
-Traditionally, networking has had a bias for scale up, but in truth scale out and scale up exist on a continuum.  Even in traditional designs, two routers are usually deployed in a given role for redundancy. Two is the smallest amount of "scale out" possible, but it's still "scale out."  Of course, the ultimate in "scale out" is the full spine and leaf fabric design of data center fame, but there are designs that balance "scale out" and "scale up" to achieve the right balance.
+Traditionally, networking has had a bias for scale up, but in truth scale out and scale up exist on a continuum.  Even in traditional designs, two routers are usually deployed in a given role for redundancy. Two is the smallest amount of "scale out" possible, but it's still "scale out."  Of course, the ultimate in "scale out" is the full spine and leaf fabric design of data center fame, but there are designs that balance "scale out" and "scale up" to achieve the right fit for purpose.
 
 ![Scale Spectrum.jpg]({{site.baseurl}}/images/Scale Spectrum.jpg)
 
