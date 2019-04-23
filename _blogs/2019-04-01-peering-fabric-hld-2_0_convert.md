@@ -247,7 +247,9 @@ The Peering Fabric design was validated using the Routinator RPKI validator.  Pl
 ## Next-Generation IX Fabric 
 Introduced in Peering Fabric 2.0 is a modern design for IXP fabrics. The design creates a simplified fault-tolerant L2VPN fabric with point to point and multi-point peer connectivity. Segment Routing brings a simplified MPLS underlay with resilience using TI-LFA and traffic engineering capabilities using Segment Routing - Traffic Engineering Policies. Today's IX Fabrics utilize either traditional L2 networks or emulated L2 using VPLS and LDP/RSVP-TE underlays. The Cisco NG IX Fabric uses EVPN for all L2VPN services, replacing complicated LDP signaled services with a scalable BGP control-plane. See the implementation section for more details on configuring the IX fabric underlay and EVPN services.   
 
-The IX fabric can also utilize the NSO automation created in the Metro Fabric design for deploying EVPN VPWS (point-to-point) and multi-point EVPN ELAN services. 
+The IX fabric can also utilize the NSO automation created in the Metro Fabric design for deploying EVPN VPWS (point-to-point) and multi-point EVPN ELAN services.
+
+![](http://xrdocs.io/design/images/cpf-hld/ixp-fabric)
 
 ## Validated Design
 
