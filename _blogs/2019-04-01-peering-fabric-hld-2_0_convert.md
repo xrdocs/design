@@ -1,3 +1,18 @@
+---
+published: true
+date: '2018-09-12 15:22 -0600'
+title: Core Fabric Design
+author: Shelly Cadora
+permalink: /blogs/latest-core-fabric-hld
+excerpt: Core Fabric Design
+tags:
+  - iosxr
+  - Design
+  - Core
+position: hidden 
+---
+{% include toc %}
+
 # Revision History
 
 | Version          |Date                    |Comments| 
@@ -249,7 +264,7 @@ Introduced in Peering Fabric 2.0 is a modern design for IXP fabrics. The design 
 
 The IX fabric can also utilize the NSO automation created in the Metro Fabric design for deploying EVPN VPWS (point-to-point) and multi-point EVPN ELAN services.
 
-![](http://xrdocs.io/design/images/cpf-hld/ixp-fabric)
+![](http://xrdocs.io/design/images/cpf-hld/ixp-fabric.png)
 
 ## Validated Design
 
