@@ -261,9 +261,6 @@ growth.
 ![](http://xrdocs.io/design/images/cpf-hld/peering-validation.png)
 
 
-
-
-
 # Peering Fabric Design Use Cases  
 
 ## Traditional IXP Peering Migration to Peering Fabric
