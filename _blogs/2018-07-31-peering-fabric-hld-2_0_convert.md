@@ -4,7 +4,7 @@
 | ---------------- | ---------------------- |-----|
 | 1.0       | 05/08/2018 | Initial Peering Fabric publication| 
 | 1.5          | 07/31/2018 |BGP-FS, QPPB, ZTP, Internet/Peering in a VRF, NSO Services|
-| 2.0       | 04/01/2019  |IXP Fabric, ODN based Peering |
+| 2.0       | 04/01/2019  |IXP Fabric, ODN based Peering, RPKI |
 
 # Key Drivers
 
@@ -80,7 +80,7 @@ devices have the flexibility to integrate other functions such as small edge PE 
 5G Mobile Edge Compute edge DC.  Scale limitations are not a consideration with the ability to support full routing tables
 in an environmentally optimized 1RU/2RU footprint.  
   
-# Topology and Peer Distribution
+## Topology and Peer Distribution
 
 The Cisco Peering Fabric introduces two options for fabric topology and
 peer termination. The first, similar to more traditional peering
@@ -243,6 +243,12 @@ The Peering Fabric design was validated using the Routinator RPKI validator.  Pl
 
 ![](http://xrdocs.io/design/images/cpf-hld/pf-rpki.png)
 
+
+## Next-Generation IX Fabric 
+Introduced in Peering Fabric 2.0 is a modern design for IXP fabrics. The design creates a simplified fault-tolerant L2VPN fabric with point to point and multi-point peer connectivity. Segment Routing brings a simplified MPLS underlay with resilience using TI-LFA and traffic engineering capabilities using Segment Routing - Traffic Engineering Policies. Today's IX Fabrics utilize either traditional L2 networks or emulated L2 using VPLS and LDP/RSVP-TE underlays. The Cisco NG IX Fabric uses EVPN for all L2VPN services, replacing complicated LDP signaled services with a scalable BGP control-plane. See the implementation section for more details on configuring the IX fabric underlay and EVPN services.   
+
+The IX fabric can also utilize the NSO automation created in the Metro Fabric design for deploying EVPN VPWS (point-to-point) and multi-point EVPN ELAN services. 
+
 ## Validated Design
 
 The Peering Fabric Design control, management, and forwarding planes have
@@ -255,9 +261,12 @@ growth.
 ![](http://xrdocs.io/design/images/cpf-hld/peering-validation.png)
 
 
-# Peering Fabric Use Cases
 
-## Traditional IXP Peering Migration to  Peering Fabric
+
+
+# Peering Fabric Design Use Cases  
+
+## Traditional IXP Peering Migration to Peering Fabric
 
 A traditional SP IXP design traditionally uses one or two large modular
 systems terminating all peering connections. In many cases, since
