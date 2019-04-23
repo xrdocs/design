@@ -43,6 +43,8 @@ per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/1
 100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
 configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
 
+![](http://xrdocs.io/design/images/cmf-hld/55a2.png)
+
 
 ## LDP to Metro Fabric Migration  
 Very few networks today are built as greenfield networks, most new designs are migrated 
