@@ -438,6 +438,19 @@ series chassis. Large deployments can utilize the second-generation
 36X100G-A-SE line card with external TCAM, supporting a minimum of 3M
 IPv4 routes.
 
+### NCS-55A2-MOD-SE-S 
+
+The NCS-55A2-MOD router is a 2RU router with 24x10G SFP+ interfaces, 16x25 SFP28 interfaces, 
+and two Modular Port Adapter (MPA) slots with 400Gbps of full-duplex bandwidth. A variety of MPAs 
+are available, adding additional 10GE, 100GE QSFP28, and 100G/200G CFP2 interfaces. The CFP2 interfaces 
+support CFP2-DCO Digital Coherent Optics, simplifying deployment for peering extensions connected over 
+dark fiber or DWDM multiplexers. 
+
+The 55A2-MOD-SE-S uses a next-generation external TCAM with a minimum route scale of 3M IPv4/512K IPv6. The 55A2-MOD-SE-S also 
+supports advanced security using BGP Flowspec and QPPB.  
+
+![](http://xrdocs.io/design/images/cpf-hld/55a2.jpg)
+
 ## Peer Termination Strategy
 
 Often overlooked when connecting to Internet peers is determining a
