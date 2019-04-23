@@ -37,11 +37,12 @@ address-family ipv4
 Multicast within a L2VPN EVPN has been supported since Metro Fabric 1.0. Multicast traffic within an EVPN is replicated to the endpoints interested in a specific group via EVPN signaling. EVPN utilizes ingress replication for all multicast traffic, meaning multicast is encapsulated and unicast to each PE router with interested listeners for each multicast group. Ingress replication may add additional traffic to the network, but simplifies the core and data plane by eliminating multicast state and hardware replication.  EVPN multicast is also not subject to domain boundary restrictions.
 
 ## Support for NCS-55A2-MOD Hardware 
-Metro Fabric now supports the NCS-55A2-MOD aggregation router. The 55A2-MOD is a modular 2RU 
-router with 24 1G/10G SFP+ and 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
+The Metro Fabric design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
+router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
 per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
-100G/200G CFP2 interfaces. The 55A2 is available in an extended temperature version and high scale 
-configuration.  
+100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
+configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
+
 
 ## LDP to Metro Fabric Migration  
 Very few networks today are built as greenfield networks, most new designs are migrated 
