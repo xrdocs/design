@@ -4,7 +4,7 @@
 | ---------------- | ---------------------- |-----|
 | 1.0       | 05/08/2018 | Initial Peering Fabric publication| 
 | 1.5          | 07/31/2018 |BGP-FS, QPPB, ZTP, Internet/Peering in a VRF, NSO Services|
-| 2.0       | 04/01/2019  |IXP Fabric, ODN based Peering |
+| 2.0       | 04/01/2019  |IXP Fabric, ODN based Peering, RPKI |
 
 # Key Drivers
 
@@ -571,6 +571,21 @@ for the anycast SIDs and traffic is simply forwarded as IP to the final
 destination across the fabric.
 
 ![](http://xrdocs.io/design/images/cpf-hld/epe-abstract.png)
+
+## SR-TE On-Demand Next-Hop for Peering 
+
+In the 2.0 release of Peering Fabric we introduce SR-TE On-Demand Next-Hop as 
+a method to dynamically create specific constraint-based tunnels across an SP 
+network to/from edge peering nodes. ODN utilizes Cisco's Segment Routing Path Computation Element 
+(SR-PCE) to compute paths on demand based on the BGP next-hop and associated "color" communities.  
+When a node receives a route with a specific community, it builds a SR-TE Policy to the BGP next-hop 
+based on policy.  
+
+One provider example is the case where I have DIA (Direct Internet Access) customers with different 
+levels of service. I can create a specific SLA for "Gold" customers so their traffic takes a lower 
+latency path across the network. In B2B peering arrangements, I can ensure voice or video traffic I am 
+ingesting from a partner network takes priority.  I can do this without creating a number of static tunnels 
+on the network. 
 
 # Peering Fabric Telemetry
 
