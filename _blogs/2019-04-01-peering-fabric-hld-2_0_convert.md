@@ -19,11 +19,7 @@ position: hidden
 | ---------------- | ---------------------- |-----|
 | 1.0       | 05/08/2018 | Initial Peering Fabric publication| 
 | 1.5          | 07/31/2018 |BGP-FS, QPPB, ZTP, Internet/Peering in a VRF, NSO Services|
-<<<<<<< HEAD:_blogs/2018-07-31-peering-fabric-hld-2_0_convert.md
-| 2.0       | 04/01/2019  |IXP Fabric, ODN based Peering, RPKI |
-=======
 | 2.0       | 04/01/2019  |IXP Fabric, ODN and SR-PCE for Peering, RPKI |
->>>>>>> 914c5904a997fe8fe56e06bd6bbede403d27c915:_blogs/2019-04-01-peering-fabric-hld-2_0_convert.md
 
 # Key Drivers
 
@@ -658,10 +654,9 @@ destination across the fabric.
 
 ![](http://xrdocs.io/design/images/cpf-hld/epe-abstract.png)
 
-<<<<<<< HEAD:_blogs/2018-07-31-peering-fabric-hld-2_0_convert.md
 ## SR-TE On-Demand Next-Hop for Peering 
 
-In the 2.0 release of Peering Fabric we introduce SR-TE On-Demand Next-Hop as 
+SR-TE On-Demand Next-Hop is 
 a method to dynamically create specific constraint-based tunnels across an SP 
 network to/from edge peering nodes. ODN utilizes Cisco's Segment Routing Path Computation Element 
 (SR-PCE) to compute paths on demand based on the BGP next-hop and associated "color" communities.  
@@ -673,7 +668,41 @@ levels of service. I can create a specific SLA for "Gold" customers so their tra
 latency path across the network. In B2B peering arrangements, I can ensure voice or video traffic I am 
 ingesting from a partner network takes priority.  I can do this without creating a number of static tunnels 
 on the network. 
-=======
+
+### ODN Configuration 
+
+ODN requires a few components be configured. In this example we tag routes coming from a specific provider with the color "BLUE" with a numerical value of 100. In IOS-XR we first define an extended community set defining our color with a unique string identifier of BLUE. This configuration should be found on both the ingress and egress nodes of the SR Policy.   
+
+```
+extcommunity-set opaque BLUE
+  100
+end-set
+```
+The next step is to define an inbound routing policy on the PFL nodes tagging all inbound routes from PEER1 with the BLUE extended community.  
+
+```
+route-policy PEER1-IN
+  set community (65000:100)
+  set local-preference 100
+  set extcommunity color BLUE
+  pass
+end-policy
+``
+
+In order for the head-end node to process the color community and create an SR Policy with constraints, the color must be configured under SR Traffic Engineering.  The following configuration defined a color value of 100, the same as our extended community BLUE, and instructs the router how to handle creating the SR-TE Policy to the BGP next-hop address of the prefix received with the community. In this instance it instructs the router to utilize an external PCE, SR-PCE, to compute the path and use the lower IGP metric path cost to reach the destination.  Other options available are TE metric, latency, hop count, and others covered in the SR Traffic Engineering documentation found on cisco.com.  
+
+```
+segment-routing
+ traffic-eng
+  on-demand color 100
+   dynamic
+    pcep
+    !
+    metric
+     type igp
+```
+
+The head-end router will only create a single SR-TE Policy to the next-hop address, other prefixes matching the original next-hop constraints will utilize the pre-existing tunnel.  The tunnels are ephemeral meaning they will not persist across router reboots.  
 
 # IXP Fabric Low Level Design 
 
@@ -681,7 +710,6 @@ on the network.
 The underlay network used in the IXP Fabric design is the same as utilized with the regular 
 Peering Fabric design. The validated IGP used for all iterations of the IXP Fabric is IS-IS, with 
 all elements of the fabric belonging to the same Level 2 IS-IS domain.  
->>>>>>> 914c5904a997fe8fe56e06bd6bbede403d27c915:_blogs/2019-04-01-peering-fabric-hld-2_0_convert.md
 
 # Peering Fabric Telemetry
 
