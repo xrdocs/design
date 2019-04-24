@@ -96,7 +96,6 @@ in an environmentally optimized 1RU/2RU footprint.
 
 ![](http://xrdocs.io/design/images/cpf-hld/cache-aggregation.png)
 
-
 ## Topology and Peer Distribution
 
 The Cisco Peering Fabric introduces two options for fabric topology and
