@@ -1792,7 +1792,8 @@ multiple ASNs under the same administrative control, one should configure the fo
 peers within the same administrative domain.  This way only the nodes connected to external peers have RTR sessions to the RPKI ROV validators and are 
 responsible for applying ROV policy, adding efficiency to the process and reducing load on the validator.   
 
-```address-family ipv4 unicast
+```
+address-family ipv4 unicast
   bgp origin-as validation signal ibgp 
 ```
 
