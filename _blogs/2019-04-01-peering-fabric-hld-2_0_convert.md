@@ -93,7 +93,10 @@ set of devices separate from functions such as PE edge functions.  Deeper in the
 devices have the flexibility to integrate other functions such as small edge PE and compute termination such as in a 
 5G Mobile Edge Compute edge DC.  Scale limitations are not a consideration with the ability to support full routing tables
 in an environmentally optimized 1RU/2RU footprint.  
-  
+
+![](http://xrdocs.io/design/images/cpf-hld/cache-aggregation.png)
+
+
 ## Topology and Peer Distribution
 
 The Cisco Peering Fabric introduces two options for fabric topology and
