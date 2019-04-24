@@ -1,3 +1,19 @@
+---
+published: true
+date: '2019-04-01 11:00-0400'
+title: Metro Fabric High Level Design
+excerpt: >-
+  Cisco Metro Fabric (CMF) design introduces an SDN-ready architecture which
+  evolves traditional Metro network  design towards an SDN enabled, programmable
+  network capable of delivering all services. 1.5 Update
+author: Phil Bedard 
+tags:
+  - iosxr
+  - Metro
+  - Design
+position: hidden 
+---
+
 # Revision History
 
 | Version          |Date                    |Comments| 
@@ -6,82 +22,6 @@
 | 1.5          | 09/24/2018 |NCS540 Access, ZTP, NSO Services|
 | 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55A2-MOD, IPv4/IPv6 Multicast, LDP to SR Migration |  
 |                  |                        |     |
-
-
-# Non-Inline Aggregation Fabric 
-The non-inline PE topology, shown in Figure XX, moves the services edge PE device from the forwarding path between the access/aggregation networks and the core.  There are several factors which can drive providers to this design vs. one with an in-line PE, some of which are outlined in the table below. The control-plane configuration of the Metro Fabric does not change, all existing ABR configuration remains the same, but the device no longer acts as a high-scale PE.    
-
-![](http://xrdocs.io/design/images/cmf-hld/non-inline-design.png)
-
-# L3 IP Multicast and mVPN  
-IP multicast continues to be an optimization method for delivering content traffic to many endpoints,
-especially traditional broadcast video. Unicast content dominates the traffic patterns of most networks today, but 
-multicast carries critical high value services, so proper design and implementation is required. In Metro Fabric 2.0 we introduce multicast validation for native IPv4/IPv6 multicast using PIM, global multicast using in-band mLDP (profile 7), and mVPN using mLDP with in-band signaling (profile 6).  L3 IP multicast is only supported within a single domain instance, and is not an inter-domain solution. In the case of the metro fabric design multicast has been tested with the source and receivers on both access and ABR PE devices.   
-
-## LDP Unicast FEC Filtering for SR Unicast with mLDP Multicast  
-The metro fabric design utilized Segment Routing with the MPLS dataplane for all unicast traffic. The first phase of multicast support in Metro Fabric 2.0 will use mLDP for use with existing mLDP based networks and new networks wishing to utilize label switcched multicast across the core. LDP is enabled on an interface for both unicast and multicast by default. Since SR is being used for unicast, one must filtering out all LDP unicast FECs to ensure they are not distributed across the network. SR is used for all unicast traffic in the presence of an LDP FEC for the same prefix, but filtering them reduces control-plane activity, may aid in re-convergence, and simplifies troubleshooting.  The following should be applied to all interfaces which have mLDP enabled.  
-
-ipv4 access-list no-unicast-ldp 
-10 deny ipv4 any any
-!
-RP/0/RSP0/CPU0:Node-6#show run mpls ldp
-mpls ldp
-log
-  neighbor
-address-family ipv4
-  label
-   local
-    allocate for no-unicast-ldp 
-
-## EVPN Multicast 
-Multicast within a L2VPN EVPN has been supported since Metro Fabric 1.0. Multicast traffic within an EVPN is replicated to the endpoints interested in a specific group via EVPN signaling. EVPN utilizes ingress replication for all multicast traffic, meaning multicast is encapsulated and unicast to each PE router with interested listeners for each multicast group. Ingress replication may add additional traffic to the network, but simplifies the core and data plane by eliminating multicast state and hardware replication.  EVPN multicast is also not subject to domain boundary restrictions.
-
-## Support for NCS-55A2-MOD Hardware 
-The Metro Fabric design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
-router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
-per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
-100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
-configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
-
-![](http://xrdocs.io/design/images/cmf-hld/55a2.png)
-
-
-## LDP to Metro Fabric Migration  
-Very few networks today are built as greenfield networks, most new designs are migrated 
-from existing ones and must support some level of interop during migration. In the Metro Fabric 
-design we tackle one of the most common migration scenarios, LDP to the Metro Fabric design. The following 
-sections explain the configuration and best practices for performing the migration. The design is 
-applicable to transport and services originating and terminating in the same LDP domain.     
-
-### Towards Metro Fabric Design  
-The Metro Fabric design utilizes isolated IGP domains in different parts of the network, with each domain 
-separated at a logical boundary by an ASBR router. SR-PCE is used to provide end to end paths across the 
-inter-domain network. LDP does not support inter-domain transport, only between LDP FECs in the 
-same IGP domain. It is recommended to plan logical boundaries if necessary when doing a flat LDP migration to 
-the Metro Fabric design, so that when migration is complete the future scale benefits can be realized.  
- 
-
-### Segment Routing Enablement 
-**One must define the global Segment Routing Block (SRGB) to be used across the network on every node 
-participating in SR. There is a default block enabled by default but it may not be large enough to support
-an entire network, so it's advised to right-size this value for your deployment. The current maximum SRGB size
-for SR-MPLS is 256K entries. 
-
-** Enabling SR in IS-IS requires only issuing the command "segment-routing mpls" under the IPv4 
-address-family and assigning a prefix-sid value to any loopback interfaces you require the node 
-be addressed towards as a service destination. Enabling TI-LFA is done on a per-interface basis 
-in the IS-IS configuration for each interface. 
-
-** Enabling SR-Prefer within IS-IS aids in migration by preferring a SR prefix-sid to a 
-prefix over an LDP prefix, allowing a seamless migration to SR without needing to enable 
-SR completely within a domain.  
- 
-### Segment Routing Mapping Server Design
-One component  
-introduced with Segment Routing is the SR Mapping Server (SRMS), a control-plane 
-element converting unicast LDP FECs to Segment Routing prefix-SIDs for advertisement 
-throughout the Segment Routing domain. Each separate IGP domain requires a pair of 
-SRMS nodes until full migratino to SR is complete.   
 
 
 
@@ -378,60 +318,6 @@ service. Please refer to Section: "Services - Design".
 
 Note that both options can be combined on the same network.
 
-### Inter-Domain Forwarding - Label Stack Optimization
-
-Section: "Inter-Domain Forwarding" described how SRTE Policy uses SID stacking (SID-List) to define the Inter-Domain End-To-End LSP. The SID-List has to be optimized to be able to support different HW capabilities on different service termination platforms, while retaining all the benefits of a clear, simple and robust design.
-
-Figure 6 shows the optimization in
-detail.
-
-![](http://xrdocs.io/design/images/cmf-hld/image8.png)
-
-_Figure 6: Label Stack Optimization_
-
-The Anycast-SIDs and the Anycast Loopback IP address of all PE ABRs in
-the network are redistributed into the Aggregation IGP Domain by the local PE ABRs. By doing this, all nodes in a Aggregation IGP Domain
-know, via IGP, the Anycast-SID of all PE ABRs in the network. Local AG
-ABRs then redistribute the Anycast-SIDs and Anycast Loopback IP address
-of all PE ABRs into the Access IGP Domain. By doing this, all nodes in a
-Access IGP Domain also know, via IGP, the Anycast-SID of all PE ABRs in
-the network.
-
-It is very important to note that this redistribution is asymmetric,
-thus it won’t cause any L3 routing loop in the network.
-
-Another important fact to consider is that there is only a limited
-amount of PEs in a Service Provider Network, therefore the
-redistribution does not affect scalability in the Access IGP Domain.
-
-After Label Stack Optimization, the **SRTE Policy on the Access router
-imposes:**
-
-  - Remote Provider Edge Area Border Routers Anycast-SID: Remote-PE
-    Anycast-SID
-
-  - Remote Aggregation Are Border Routers Anycast-SID: Remote-AG
-    Anycast-SID
-
-  - Remote/Destination Access Router: Destination-A Prefix-SID:
-    Destination-A Prefix-SID
-
-Because of the Label Stack Optimization, the total amount of SIDs
-required for the Inter-Domain LSP is reduced to 3 instead of the
-original 5.
-
-The Label Stack Optimization mechanism is very similar when an ABR is
-represented by a Prefix-SID instead of an Anycast-SID. The Prefix-SID
-and the unicast Loopback IP address are redistributed into the
-Aggregation IGP Domain by Local PE ABRs. By doing this, all nodes in the
-Aggregation IGP Domain know, via IGP, the Prefix-SID of all PE ABRs in
-the network. Local AG ABRs then redistribute the learned Prefix-SIDs and
-unicast Loopback IP address of all PE ABRs to the Access IGP Domain. By
-doing this, all nodes in a Access IGP Domain know, via IGP, the
-Prefix-SID of all PE ABRs in the network.
-
-Both Anycast-SID and Prefix-SID can be combined in the same network with
-or without Label Stack Optimization.
 
 ### Inter-Domain Forwarding - High Availability and Fast Re-Route
 
@@ -593,7 +479,7 @@ The SR-PCE provides a path based on constraints such as:
 
 _Figure 12: XR Transport Controller – Components_
 
-### PCE Controller Summary – SR-PCE & WAE
+### PCE Controller Summary – SR-PCE 
 
 **Segment Routing Path Computation Element (SR-PCE):**
 
@@ -635,9 +521,71 @@ _Figure 13: PCE Path Computation_
 
 5.  Access Router acknowledges
 
-6.  (Optional) When WAE is deployed for LSP visibility, SR-PCE updates WAE
-    with the newer LSP
+## Non-Inline Aggregation Fabric 
+The non-inline PE topology, shown in Figure XX, moves the services edge PE device from the forwarding path between the access/aggregation networks and the core.  There are several factors which can drive providers to this design vs. one with an in-line PE, some of which are outlined in the table below. The control-plane configuration of the Metro Fabric does not change, all existing ABR configuration remains the same, but the device no longer acts as a high-scale PE.    
+
+![](http://xrdocs.io/design/images/cmf-hld/non-inline-design.png)
+
+## L3 IP Multicast and mVPN  
+IP multicast continues to be an optimization method for delivering content traffic to many endpoints,
+especially traditional broadcast video. Unicast content dominates the traffic patterns of most networks today, but 
+multicast carries critical high value services, so proper design and implementation is required. In Metro Fabric 2.0 we introduce multicast validation for native IPv4/IPv6 multicast using PIM, global multicast using in-band mLDP (profile 7), and mVPN using mLDP with in-band signaling (profile 6).  L3 IP multicast is only supported within a single domain instance, and is not an inter-domain solution. In the case of the metro fabric design multicast has been tested with the source and receivers on both access and ABR PE devices.   
+
+### LDP Unicast FEC Filtering for SR Unicast with mLDP Multicast  
+The metro fabric design utilized Segment Routing with the MPLS dataplane for all unicast traffic. The first phase of multicast support in Metro Fabric 2.0 will use mLDP for use with existing mLDP based networks and new networks wishing to utilize label switcched multicast across the core. LDP is enabled on an interface for both unicast and multicast by default. Since SR is being used for unicast, one must filtering out all LDP unicast FECs to ensure they are not distributed across the network. SR is used for all unicast traffic in the presence of an LDP FEC for the same prefix, but filtering them reduces control-plane activity, may aid in re-convergence, and simplifies troubleshooting.  The following should be applied to all interfaces which have mLDP enabled.  
+
+ipv4 access-list no-unicast-ldp 
+10 deny ipv4 any any
+!
+RP/0/RSP0/CPU0:Node-6#show run mpls ldp
+mpls ldp
+log
+  neighbor
+address-family ipv4
+  label
+   local
+    allocate for no-unicast-ldp 
+
+## EVPN Multicast 
+Multicast within a L2VPN EVPN has been supported since Metro Fabric 1.0. Multicast traffic within an EVPN is replicated to the endpoints interested in a specific group via EVPN signaling. EVPN utilizes ingress replication for all multicast traffic, meaning multicast is encapsulated and unicast to each PE router with interested listeners for each multicast group. Ingress replication may add additional traffic to the network, but simplifies the core and data plane by eliminating multicast state and hardware replication.  EVPN multicast is also not subject to domain boundary restrictions.
     
+## LDP to Metro Fabric Migration  
+Very few networks today are built as greenfield networks, most new designs are migrated 
+from existing ones and must support some level of interop during migration. In the Metro Fabric 
+design we tackle one of the most common migration scenarios, LDP to the Metro Fabric design. The following 
+sections explain the configuration and best practices for performing the migration. The design is 
+applicable to transport and services originating and terminating in the same LDP domain.     
+
+### Towards Metro Fabric Design  
+The Metro Fabric design utilizes isolated IGP domains in different parts of the network, with each domain 
+separated at a logical boundary by an ASBR router. SR-PCE is used to provide end to end paths across the 
+inter-domain network. LDP does not support inter-domain transport, only between LDP FECs in the 
+same IGP domain. It is recommended to plan logical boundaries if necessary when doing a flat LDP migration to 
+the Metro Fabric design, so that when migration is complete the future scale benefits can be realized.  
+ 
+### Segment Routing Enablement 
+**One must define the global Segment Routing Block (SRGB) to be used across the network on every node 
+participating in SR. There is a default block enabled by default but it may not be large enough to support
+an entire network, so it's advised to right-size this value for your deployment. The current maximum SRGB size
+for SR-MPLS is 256K entries. 
+
+Enabling SR in IS-IS requires only issuing the command "segment-routing mpls" under the IPv4 
+address-family and assigning a prefix-sid value to any loopback interfaces you require the node 
+be addressed towards as a service destination. Enabling TI-LFA is done on a per-interface basis 
+in the IS-IS configuration for each interface. 
+
+Enabling SR-Prefer within IS-IS aids in migration by preferring a SR prefix-sid to a 
+prefix over an LDP prefix, allowing a seamless migration to SR without needing to enable 
+SR completely within a domain.  
+ 
+### Segment Routing Mapping Server Design
+One component  
+introduced with Segment Routing is the SR Mapping Server (SRMS), a control-plane 
+element converting unicast LDP FECs to Segment Routing prefix-SIDs for advertisement 
+throughout the Segment Routing domain. Each separate IGP domain requires a pair of 
+SRMS nodes until full migratino to SR is complete.   
+
+
 # Device Automation 
 
 ### Zero Touch Provisioning
@@ -979,7 +927,7 @@ _Figure 33: Automation – Flat Service Models_
 
 ![](http://xrdocs.io/design/images/cmf-hld/automation-hierarchy-1_5.png)
 
-_Figure 34: Automation – Hierarchical Service Models_
+_Figure 34: 
 
 # Transport and Services Integration
 
@@ -1201,3 +1149,29 @@ standards based solution.
 
 For all those reasons, the Cisco Metro Fabric design really brings an
 exciting evolution in Service Provider Networking.
+
+
+# Hardware Validation
+
+## NCS-55A2-MOD 
+The Metro Fabric design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
+router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
+per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
+100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
+configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
+
+![](http://xrdocs.io/design/images/cmf-hld/55a2.png)
+
+## NCS-5501, NCS-5501-SE, and N540-24Z8Q2C-M 
+The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Metro Fabric. The 5501 
+has 48x1G/10G SFP+ and 6x100G QSFP28 interfaces, the SE adds higher route scale via an external TCAM.  The N540-24Z8Q2C-M is a next-generation 
+access node with 24x10G SFP+, 8x25G SFP28, and 2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with a conformal 
+coating for deployment deep into access networks. 
+
+## ASR-920 
+The IOS-XE based ASR 920 is tested within the metro fabric as an access node. All services adn the Segment Routing dataplane are validated 
+on the ASR 920.   
+
+## ASR 9000 
+The ASR 9000 is the router of choice for high scale edge services.  The metro fabric utilizes the ASR 9000 in a PE function role, performing high scale 
+L2VPN, L3VPN, and Pseudowire headend termination. All testing up to 2.0 has been performed using Tomahawk series line cards on the ASR 9000.  
