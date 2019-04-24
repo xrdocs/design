@@ -1,10 +1,29 @@
+---
+published: true
+date: '2019-04-01 15:22 -0600'
+title: Peering Fabric Design 
+author: Phil Bedard 
+permalink: /blogs/latest-peering-fabric-hld
+excerpt: Peering Fabric Design 
+tags:
+  - iosxr
+  - Design
+  - Peering 
+position: hidden 
+---
+{% include toc %}
+
 # Revision History
 
 | Version          |Date                    |Comments| 
 | ---------------- | ---------------------- |-----|
 | 1.0       | 05/08/2018 | Initial Peering Fabric publication| 
 | 1.5          | 07/31/2018 |BGP-FS, QPPB, ZTP, Internet/Peering in a VRF, NSO Services|
+<<<<<<< HEAD:_blogs/2018-07-31-peering-fabric-hld-2_0_convert.md
 | 2.0       | 04/01/2019  |IXP Fabric, ODN based Peering, RPKI |
+=======
+| 2.0       | 04/01/2019  |IXP Fabric, ODN and SR-PCE for Peering, RPKI |
+>>>>>>> 914c5904a997fe8fe56e06bd6bbede403d27c915:_blogs/2019-04-01-peering-fabric-hld-2_0_convert.md
 
 # Key Drivers
 
@@ -80,7 +99,7 @@ devices have the flexibility to integrate other functions such as small edge PE 
 5G Mobile Edge Compute edge DC.  Scale limitations are not a consideration with the ability to support full routing tables
 in an environmentally optimized 1RU/2RU footprint.  
   
-# Topology and Peer Distribution
+## Topology and Peer Distribution
 
 The Cisco Peering Fabric introduces two options for fabric topology and
 peer termination. The first, similar to more traditional peering
@@ -243,6 +262,14 @@ The Peering Fabric design was validated using the Routinator RPKI validator.  Pl
 
 ![](http://xrdocs.io/design/images/cpf-hld/pf-rpki.png)
 
+
+## Next-Generation IXP Fabric 
+Introduced in Peering Fabric 2.0 is a modern design for IXP fabrics. The design creates a simplified fault-tolerant L2VPN fabric with point to point and multi-point peer connectivity. Segment Routing brings a simplified MPLS underlay with resilience using TI-LFA and traffic engineering capabilities using Segment Routing - Traffic Engineering Policies. Today's IX Fabrics utilize either traditional L2 networks or emulated L2 using VPLS and LDP/RSVP-TE underlays. The Cisco NG IX Fabric uses EVPN for all L2VPN services, replacing complicated LDP signaled services with a scalable BGP control-plane. See the implementation section for more details on configuring the IX fabric underlay and EVPN services.   
+
+The IX fabric can also utilize the NSO automation created in the Metro Fabric design for deploying EVPN VPWS (point-to-point) and multi-point EVPN ELAN services.
+
+![](http://xrdocs.io/design/images/cpf-hld/ixp-fabric.png)
+
 ## Validated Design
 
 The Peering Fabric Design control, management, and forwarding planes have
@@ -255,9 +282,9 @@ growth.
 ![](http://xrdocs.io/design/images/cpf-hld/peering-validation.png)
 
 
-# Peering Fabric Use Cases
+# Peering Fabric Design Use Cases  
 
-## Traditional IXP Peering Migration to  Peering Fabric
+## Traditional IXP Peering Migration to Peering Fabric
 
 A traditional SP IXP design traditionally uses one or two large modular
 systems terminating all peering connections. In many cases, since
@@ -351,6 +378,52 @@ In the Low-Level Design we explore common peer engineering use cases.
 Much more information on Segment Routing technology and its future
 evolution can be found at <http://segment-routing.net>
 
+### ODN (On-Demand Next-Hop) for Peering 
+
+The 2.0 release of Peering Fabric introduces ODN as a method for dynamically provisioning 
+SR-TE Policies to nodes based on specific "color" extended communities attached to advertised BGP routes. The color 
+represents a set of constraints used for the provisioned SR-TE Policy, applied to traffic automatically steered 
+into the Policy once the SR-TE Policy is instantiated.  
+
+An applicable example is the use case where I have several types of peers on the same device sending traffic to destinations 
+across my larger SP network. Some of this traffic may be Best Effort with no constraints, other traffic from cloud partners may be considered low-latency traffic, and traffic from a services partner may have additional constraints such as maintaining a disjoint path from the same peer on another router. Traffic in the reverse direction egressing a peer from a SP location can also utilize the same mechanisms to apply constraints to egress traffic. 
+
+#### ODN Configuration 
+
+ODN requires a few components be configured. In this example we tag routes coming from a specific provider with the color "BLUE" with a numerical value of 100. In IOS-XR we first define an extended community set defining our color with a unique string identifier of BLUE. This configuration should be found on both the ingress and egress nodes of the SR Policy.   
+
+```
+extcommunity-set opaque BLUE
+  100
+end-set
+```
+The next step is to define an inbound routing policy on the PFL nodes tagging all inbound routes from PEER1 with the BLUE extended community.  
+
+```
+route-policy PEER1-IN
+  set community (65000:100)
+  set local-preference 100
+  set extcommunity color BLUE
+  pass
+end-policy
+``
+
+In order for the head-end node to process the color community and create an SR Policy with constraints, the color must be configured under SR Traffic Engineering.  The following configuration defined a color value of 100, the same as our extended community BLUE, and instructs the router how to handle creating the SR-TE Policy to the BGP next-hop address of the prefix received with the community. In this instance it instructs the router to utilize an external PCE, SR-PCE, to compute the path and use the lower IGP metric path cost to reach the destination.  Other options available are TE metric, latency, hop count, and others covered in the SR Traffic Engineering documentation found on cisco.com.   
+
+```
+segment-routing
+ traffic-eng
+  on-demand color 100
+   dynamic
+    pcep
+    !
+    metric
+     type igp
+```
+
+The head-end router will only create a single SR-TE Policy to the next-hop address, other prefixes matching the original next-hop constraints will utilize the pre-existing tunnel.  The tunnels are ephemeral meaning they will not persist across router reboots.  
+
+
 # Low-Level Design
 
 ### Integrated Peering Fabric Reference Diagram
@@ -414,6 +487,19 @@ flexibility such as IPoDWDM connectivity can use the modular NCS5500
 series chassis. Large deployments can utilize the second-generation
 36X100G-A-SE line card with external TCAM, supporting a minimum of 3M
 IPv4 routes.
+
+### NCS-55A2-MOD-SE-S 
+
+The NCS-55A2-MOD router is a 2RU router with 24x10G SFP+ interfaces, 16x25 SFP28 interfaces, 
+and two Modular Port Adapter (MPA) slots with 400Gbps of full-duplex bandwidth. A variety of MPAs 
+are available, adding additional 10GE, 100GE QSFP28, and 100G/200G CFP2 interfaces. The CFP2 interfaces 
+support CFP2-DCO Digital Coherent Optics, simplifying deployment for peering extensions connected over 
+dark fiber or DWDM multiplexers. 
+
+The 55A2-MOD-SE-S uses a next-generation external TCAM with a minimum route scale of 3M IPv4/512K IPv6. The 55A2-MOD-SE-S also 
+supports advanced security using BGP Flowspec and QPPB.  
+
+![](http://xrdocs.io/design/images/cpf-hld/55a2.jpg)
 
 ## Peer Termination Strategy
 
@@ -572,6 +658,7 @@ destination across the fabric.
 
 ![](http://xrdocs.io/design/images/cpf-hld/epe-abstract.png)
 
+<<<<<<< HEAD:_blogs/2018-07-31-peering-fabric-hld-2_0_convert.md
 ## SR-TE On-Demand Next-Hop for Peering 
 
 In the 2.0 release of Peering Fabric we introduce SR-TE On-Demand Next-Hop as 
@@ -586,6 +673,15 @@ levels of service. I can create a specific SLA for "Gold" customers so their tra
 latency path across the network. In B2B peering arrangements, I can ensure voice or video traffic I am 
 ingesting from a partner network takes priority.  I can do this without creating a number of static tunnels 
 on the network. 
+=======
+
+# IXP Fabric Low Level Design 
+
+## Segment Routing Underlay 
+The underlay network used in the IXP Fabric design is the same as utilized with the regular 
+Peering Fabric design. The validated IGP used for all iterations of the IXP Fabric is IS-IS, with 
+all elements of the fabric belonging to the same Level 2 IS-IS domain.  
+>>>>>>> 914c5904a997fe8fe56e06bd6bbede403d27c915:_blogs/2019-04-01-peering-fabric-hld-2_0_convert.md
 
 # Peering Fabric Telemetry
 
