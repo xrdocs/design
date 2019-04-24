@@ -393,6 +393,7 @@ extcommunity-set opaque BLUE
   100
 end-set
 ```
+
 The next step is to define an inbound routing policy on the PFL nodes tagging all inbound routes from PEER1 with the BLUE extended community.  
 
 ```
@@ -402,7 +403,7 @@ route-policy PEER1-IN
   set extcommunity color BLUE
   pass
 end-policy
-``
+```
 
 In order for the head-end node to process the color community and create an SR Policy with constraints, the color must be configured under SR Traffic Engineering.  The following configuration defined a color value of 100, the same as our extended community BLUE, and instructs the router how to handle creating the SR-TE Policy to the BGP next-hop address of the prefix received with the community. In this instance it instructs the router to utilize an external PCE, SR-PCE, to compute the path and use the lower IGP metric path cost to reach the destination.  Other options available are TE metric, latency, hop count, and others covered in the SR Traffic Engineering documentation found on cisco.com.  
 
