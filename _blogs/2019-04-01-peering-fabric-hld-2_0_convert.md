@@ -254,7 +254,6 @@ Route Origin Validation (ROV). ROV verifies the origin ASN in the AS_PATH of the
 
 The Peering Fabric design was validated using the Routinator RPKI validator.  Please see the security section for configuration of RPKI ROV in IOS-XR.  
 
-
 ![](http://xrdocs.io/design/images/cpf-hld/pf-rpki.png)
 
 
@@ -382,42 +381,6 @@ into the Policy once the SR-TE Policy is instantiated.
 
 An applicable example is the use case where I have several types of peers on the same device sending traffic to destinations 
 across my larger SP network. Some of this traffic may be Best Effort with no constraints, other traffic from cloud partners may be considered low-latency traffic, and traffic from a services partner may have additional constraints such as maintaining a disjoint path from the same peer on another router. Traffic in the reverse direction egressing a peer from a SP location can also utilize the same mechanisms to apply constraints to egress traffic. 
-
-#### ODN Configuration 
-
-ODN requires a few components be configured. In this example we tag routes coming from a specific provider with the color "BLUE" with a numerical value of 100. In IOS-XR we first define an extended community set defining our color with a unique string identifier of BLUE. This configuration should be found on both the ingress and egress nodes of the SR Policy.   
-
-```
-extcommunity-set opaque BLUE
-  100
-end-set
-```
-
-The next step is to define an inbound routing policy on the PFL nodes tagging all inbound routes from PEER1 with the BLUE extended community.  
-
-```
-route-policy PEER1-IN
-  set community (65000:100)
-  set local-preference 100
-  set extcommunity color BLUE
-  pass
-end-policy
-```
-
-In order for the head-end node to process the color community and create an SR Policy with constraints, the color must be configured under SR Traffic Engineering.  The following configuration defined a color value of 100, the same as our extended community BLUE, and instructs the router how to handle creating the SR-TE Policy to the BGP next-hop address of the prefix received with the community. In this instance it instructs the router to utilize an external PCE, SR-PCE, to compute the path and use the lower IGP metric path cost to reach the destination.  Other options available are TE metric, latency, hop count, and others covered in the SR Traffic Engineering documentation found on cisco.com.  
-
-```
-segment-routing
- traffic-eng
-  on-demand color 100
-   dynamic
-    pcep
-    !
-    metric
-     type igp
-```
-
-The head-end router will only create a single SR-TE Policy to the next-hop address, other prefixes matching the original next-hop constraints will utilize the pre-existing tunnel.  The tunnels are ephemeral meaning they will not persist across router reboots.  
 
 
 # Low-Level Design
@@ -687,7 +650,7 @@ route-policy PEER1-IN
   set extcommunity color BLUE
   pass
 end-policy
-``
+```
 
 In order for the head-end node to process the color community and create an SR Policy with constraints, the color must be configured under SR Traffic Engineering.  The following configuration defined a color value of 100, the same as our extended community BLUE, and instructs the router how to handle creating the SR-TE Policy to the BGP next-hop address of the prefix received with the community. In this instance it instructs the router to utilize an external PCE, SR-PCE, to compute the path and use the lower IGP metric path cost to reach the destination.  Other options available are TE metric, latency, hop count, and others covered in the SR Traffic Engineering documentation found on cisco.com.  
 
@@ -709,7 +672,14 @@ The head-end router will only create a single SR-TE Policy to the next-hop addre
 ## Segment Routing Underlay 
 The underlay network used in the IXP Fabric design is the same as utilized with the regular 
 Peering Fabric design. The validated IGP used for all iterations of the IXP Fabric is IS-IS, with 
-all elements of the fabric belonging to the same Level 2 IS-IS domain.  
+all elements of the fabric belonging to the same Level 2 IS-IS domain. 
+
+## EVPN L2VPN Services 
+Comprehensive configuration for EVPN L2VPN services are outside the scope of this 
+document, please consult the Converged SDN Transport design guide or associated Cisco 
+documentation for low level details on configuring EVPN VPWS and EVPN ELAN services. 
+The Converged SDN Transport design guide can be found at the following URL: 
+https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld 
 
 # Peering Fabric Telemetry
 
@@ -1638,71 +1608,6 @@ interface gigabitethernet0/0/0/1
    ipv6 bgp policy propagation input qos-group destination  
 ```
 
-## BGP RPKI and ROV Confguration 
-
-The following section outlines an example configuration for RPKI and Route Origin Validation (ROV) within IOS-XR. 
-
-### Create ROV Routing Policies 
-In order to apply specific attributes to routes tagged with an ROV status, one must 
-use a routing policy. The "invalid", "valid", and "unconfigured" states can be matched upon 
-and then used to set specific BGP attributes as well as accept or drop the route.  In the following example a routes' 
-local-preference attribute is set based on ROV status.   
-
-```
-route-policy rpki 
-  if validation-state is invalid then 
-      set local-preference 50
-  endif  
-  if validation-state is not-found then 
-      set local-preference 75
-  endif
-  if validation-state is valid then 
-      set local-preference 100
-  endif  
-  else 
-      pass 
-end policy
-```
-
-### Configure RPKI Server and ROV Options  
-
-An RPKI server is defined using the "rpki server" section under the global BGP 
-hierarchy.  Also configurable is whether or not the ROV status is taken into account as 
-part of the BGP best path selection process. A route with a "valid" status is preferred over 
-a route with a "not-found" or "invalid" status. There is also a configuration option for whether 
-or not to allow invalid routes at all as part of the selection process. It is recommended to include 
-
-```
-router bgp 65536
-  bgp router id 192.168.0.1 
-  rpki server 172.16.0.254 
-    transport tcp port 32000
-    refresh-time 120 
-    bgp bestpath origin-as use validity
-    bgp bestpath origin-as allow invalid
-```
-
-### Enabling RPKI ROV on BGP Neighbors 
-ROV is done at the global BGP level, but the treatment of routes is done at the neighbor level. This requires 
-applying the pre-defined ROV route-policy to the neighbors you wish to apply policy to based on ROV status.  
-
-```
-neighbor 192.168.0.254 
-  remote-as 64555 
-    address-family ipv4 unicast 
-     route-policy rpki in  
-```
-
-### Communicating ROV Status via Well-Known BGP Community 
-
-RPKI ROV is typically only done on the edges of the network, and in IOS-XR is only done on EBGP sessions. In a network with 
-multiple ASNs under the same administrative control, one should configure the following to signal ROV validation status via a well-known community to 
-peers within the same administrative domain.  This way only the nodes connected to external peers have RTR sessions to the RPKI ROV validators and are 
-responsible for applying ROV policy, adding efficiency to the process and reducing load on the validator.   
-
-```address-family ipv4 unicast
-  bgp origin-as validation signal ibgp 
-```
 
 # Security
 
@@ -1824,6 +1729,72 @@ Internet became more integrated into our lives. This led to the creation
 of RPKI origin validation, a mechanism to validate a prefix was being
 originated by its rightful owner by checking the originating ASN vs. a
 secure database. IOS-XR fully supports RPKI for origin validation.
+
+### BGP RPKI and ROV Confguration 
+
+The following section outlines an example configuration for RPKI and Route Origin Validation (ROV) within IOS-XR. 
+
+### Create ROV Routing Policies 
+In order to apply specific attributes to routes tagged with an ROV status, one must 
+use a routing policy. The "invalid", "valid", and "unconfigured" states can be matched upon 
+and then used to set specific BGP attributes as well as accept or drop the route.  In the following example a routes' 
+local-preference attribute is set based on ROV status.   
+
+```
+route-policy rpki 
+  if validation-state is invalid then 
+      set local-preference 50
+  endif  
+  if validation-state is not-found then 
+      set local-preference 75
+  endif
+  if validation-state is valid then 
+      set local-preference 100
+  endif  
+  else 
+      pass 
+end policy
+```
+
+### Configure RPKI Server and ROV Options  
+
+An RPKI server is defined using the "rpki server" section under the global BGP 
+hierarchy.  Also configurable is whether or not the ROV status is taken into account as 
+part of the BGP best path selection process. A route with a "valid" status is preferred over 
+a route with a "not-found" or "invalid" status. There is also a configuration option for whether 
+or not to allow invalid routes at all as part of the selection process. It is recommended to include 
+
+```
+router bgp 65536
+  bgp router id 192.168.0.1 
+  rpki server 172.16.0.254 
+    transport tcp port 32000
+    refresh-time 120 
+    bgp bestpath origin-as use validity
+    bgp bestpath origin-as allow invalid
+```
+
+### Enabling RPKI ROV on BGP Neighbors 
+ROV is done at the global BGP level, but the treatment of routes is done at the neighbor level. This requires 
+applying the pre-defined ROV route-policy to the neighbors you wish to apply policy to based on ROV status.  
+
+```
+neighbor 192.168.0.254 
+  remote-as 64555 
+    address-family ipv4 unicast 
+     route-policy rpki in  
+```
+
+### Communicating ROV Status via Well-Known BGP Community 
+
+RPKI ROV is typically only done on the edges of the network, and in IOS-XR is only done on EBGP sessions. In a network with 
+multiple ASNs under the same administrative control, one should configure the following to signal ROV validation status via a well-known community to 
+peers within the same administrative domain.  This way only the nodes connected to external peers have RTR sessions to the RPKI ROV validators and are 
+responsible for applying ROV policy, adding efficiency to the process and reducing load on the validator.   
+
+```address-family ipv4 unicast
+  bgp origin-as validation signal ibgp 
+```
 
 ### BGPSEC (Reference Only)
 
