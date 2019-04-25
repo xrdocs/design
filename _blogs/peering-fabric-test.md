@@ -1,13 +1,16 @@
 ---
-title: Test
-author: Author Name
-header-includes: |
-    \usepackage{fancyhdr}
-    \pagestyle{fancy}
-    \fancyhead[CO,CE]{This is fancy}
-    \fancyfoot[CO,CE]{So is this}
-    \fancyfoot[LE,RO]{\thepage}
-abstract: This is a pandoc test . . . 
+fontsize: 12pt
+mainfont: "CiscoSansTT Thin" 
+geometry: margin=1cm
+output: pdf_document
+header-includes:
+    - \usepackage{hyperref}
+    - \usepackage{fancyhdr}
+    - \pagestyle{fancy}
+    - \rhead{right header text}
+    - \lhead{left header text}
+    - \fancyfoot[CO,CE]{Template Version \today}
+    - \fancyfoot[LE,RO]{\thepage} 
 ---
 
 # Revision History
@@ -56,7 +59,7 @@ extend networks must exist.
 
 # High-Level Design
 
-The  Peering design incorporates high-density environmentally
+The Peering design incorporates high-density environmentally
 efficient edge routers, a prescriptive topology and peer termination
 strategy, and features delivered through IOS-XR to solve the needs of
 service and content providers. Also included as part of the Peering
@@ -68,7 +71,7 @@ stability once implemented.
 
 ## Peering Strategy
 
- proposes a localized peering strategy to reduce network cost for
+The Cisco Peering Fabric proposes a localized peering strategy to reduce network cost for
 “eyeball” service providers by placing peering or content provider cache
 nodes closer to traffic consumers. This reduces not only reduces
 capacity on long-haul backbone networks carrying traffic from IXPs to
@@ -114,7 +117,7 @@ while keeping what seems like the operational footprint low. However,
 failures and operational issues occurring in these types of systems are
 typically difficult to troubleshoot and repair. They also require
 lengthy planning and timeframes for performing system upgrades. We
-introduce a horizontally scalable distributed peering fabric, the end
+introduce a horizontally scalable distributed Peering Fabric, the end
 result being more deterministic interface or node failures.
 
 Minimizing the loss of peering capacity is very important for both
@@ -151,7 +154,7 @@ and 32G of RAM.
 
 ## Control-Plane
 
-The peering fabric design introduces a simplified control-plane built
+The Peering Fabric design introduces a simplified control-plane built
 upon IPv4/IPv6 with Segment Routing. In the collapsed design, each
 peering node is connected to EBGP peers and upstream to the core via
 standard IS-IS, OSPF, and TE protocols, acting as a PE or LER in a
@@ -218,7 +221,7 @@ QPPB allows using BGP attributes as a match criteria in dataplane packet filters
 Matching packets based on attributes like BGP community and AS Path allows service
 providers to create simplified edge QoS policies by not having to manage more 
 cumbersome prefix lists or keep up to date when new prefixes are added. 
-QPPB is supported in the peering fabric for destination prefix BGP attribute matching and has 
+QPPB is supported in the Peering Fabric for destination prefix BGP attribute matching and has 
 a number of use cases when delivering traffic from external providers to specific 
 internal destinations.   
 
@@ -268,7 +271,7 @@ The IX fabric can also utilize the NSO automation created in the Metro Fabric de
 
 The Peering Fabric Design control, management, and forwarding planes have
 undergone validation testing to ensure individual design features work
-as intended and the peering fabric as a whole performs without fault.
+as intended and the Peering Fabric as a whole performs without fault.
 Validation is done exceeding real-world scaling requirements to ensure
 the design fulfills its rule in existing networks with room for future
 growth.
@@ -307,7 +310,7 @@ proximity which need to integrate into a single fabric. This may happen
 if there are multiple 3<sup>rd</sup> party facilities in a close
 geographic area, each with unique peers you want to connect to. There
 may also be multiple independent peering facilities within a small
-geographic area you do not wish to install a complete peering fabric
+geographic area you do not wish to install a complete Peering Fabric
 into. In those cases, connecting remote PFL nodes to a larger peering
 fabric can be done using optical transport or longer range gray optics.
 
@@ -321,7 +324,7 @@ and wireless service providers have heavy inbound traffic from content
 providers delivering OTT video. Providers may also be providing their
 own IP video services to on-net and off-net destinations via a SP CDN.
 Peering and internal CDN equipment can be placed within a localized peer
-or content delivery center, connected via a common peering fabric. In
+or content delivery center, connected via a common Peering Fabric. In
 these cases the PFS nodes connect directly to the metro core to enable
 delivery across the region or metro.
 
@@ -396,7 +399,7 @@ across my larger SP network. Some of this traffic may be Best Effort with no con
 
 The NCS5500 family of routers provide high density, high routing scale,
 idea buffer sizes, and environmental efficiency to help providers
-satisfy any peering fabric use case. Due to high FIB scale, large
+satisfy any Peering Fabric use case. Due to high FIB scale, large
 buffers, and broad XR feature set, all prescribed hardware can serve in
 either a collapsed or distributed fabric. Further detailed information
 on each platform can be found at
@@ -432,7 +435,7 @@ The NCS-55A1-24H is a second generation 1RU NCS5500 fixed platform with
 24 100GE QSFP28 ports. The device uses two 900GB NPUs, with 12X100GE
 ports connected to each NPU. The 55A1-24H uses a high scale NPU with a
 minimum of 1.3M IPv4/256K IPv6 routes. At just 675W it is ideal for 10GE
-peering fabric deployments with a migration path to 100GE connectivity.
+Peering Fabric deployments with a migration path to 100GE connectivity.
 The 55A1-24H also has a powerful multi-core processor and 32GB of RAM.
 
 ### NCS 5504 and 5508 Modular Chassis and NC55-36X100G-A-SE line card
@@ -441,7 +444,7 @@ The 55A1-24H also has a powerful multi-core processor and 32GB of RAM.
 
 ![](http://xrdocs.io/design/images/cpf-hld/ncs-5504.png) ![](http://xrdocs.io/design/images/cpf-hld/ncs-5508.png)
 
-Very large peering fabric deployments or those needing interface
+Very large Peering Fabric deployments or those needing interface
 flexibility such as IPoDWDM connectivity can use the modular NCS5500
 series chassis. Large deployments can utilize the second-generation
 36X100G-A-SE line card with external TCAM, supporting a minimum of 3M
@@ -469,7 +472,7 @@ when two nodes exist for ease of configuration and coordination with the
 peering or transit partner. However, with minimal additional
 configuration and administration assisted by automation, even single
 peers can be spread across multiple edge peering nodes. Ideally, within
-a peering fabric, a peer is connected to each leaf in the fabric. In
+a Peering Fabric, a peer is connected to each leaf in the fabric. In
 cases where this cannot be done, the provider should use capacity
 planning processes to balance peers and transit connections across
 multiple leafs in the fabric. The added resiliency leads to greater
@@ -507,7 +510,7 @@ routers.
 
 ## Capacity Scaling
 
-Capacity of the peering fabric is scaled horizontally. The uplink
+Capacity of the Peering Fabric is scaled horizontally. The uplink
 capacity from PFL to PFS will be determine by an appropriate
 oversubscription factor determined by the service provider’s capacity
 planning exercises. The leaf/spine architecture of the fabric connects
@@ -540,7 +543,7 @@ PFL to Peering Fabric Spine uses widely deployed standard routing
 protocols. IS-IS is the prescribed IGP protocol within the peering
 fabric. Each PFS is configured with the same IS-IS L1 area. In the case
 where OSPF is being used as an IGP, the PFL nodes will reside in an OSPF
-NSSA area. The peering fabric IGP is SR-enabled with the loopback of
+NSSA area. The Peering Fabric IGP is SR-enabled with the loopback of
 each PFL assigned a globally unique SR Node SID. Each PFL also has an
 IBGP session to each PFR to distribute its learned EBGP routes upstream
 and learn routes from elsewhere on the provider network. If a provider
@@ -566,15 +569,15 @@ programmed into the FIB.
 ### PFS to Core
 
 The PFS nodes will participate in the global Core control plane and act
-as the gateway between the peering fabric and the rest of the SP
+as the gateway between the Peering Fabric and the rest of the SP
 network. In order to create a more scalable and programmatic fabric, it
 is prescribed to use Segment Routing across the core infrastructure.
 IS-IS is the preferred protocol for transmitting SR SID information from
-the peering fabric to the rest of the core network and beyond. In
+the Peering Fabric to the rest of the core network and beyond. In
 deployments where it may be difficult to transition quickly to an all-SR
 infrastructure, the PFS nodes will also support OSPF and RSVP-TE for
 interconnection to the core. The PFS acts as an ABR or ASBR between the
-peering fabric and the larger metro or backbone core network.
+Peering Fabric and the larger metro or backbone core network.
 
 ## SR Peer Traffic Engineering
 
@@ -683,7 +686,7 @@ https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld
 
 # Peering Fabric Telemetry
 
-Once a peering fabric is deployed, it is extremely important to monitor
+Once a Peering Fabric is deployed, it is extremely important to monitor
 the health of the fabric as well as harness the wealth of data provided
 by the enhanced telemetry on the NCS5500 platform and IOS-XR. Through
 streaming data mechanisms such as Model-Driven Telemetry, BMP, and
@@ -701,7 +704,7 @@ telemetry applications include those storing temporary data for
 root-cause analysis if a node is isolated from the rest of the network
 or performance measurement applications.
 
-The peering fabric also fully supports traditional collections methods
+The Peering Fabric also fully supports traditional collections methods
 such as SNMP, and NETCONF using YANG models to integrate with legacy
 systems.
 
@@ -721,7 +724,7 @@ using OpenConfig or native IOS-XR YANG models. Pipeline is Cisco’s open
 source collector, which can take MDT data as an input and output it via
 a plugin architecture supporting scalable messages buses such as Kafka,
 or directly to a TSDB such as InfluxDB or Prometheus. The appendix
-contains information about MDT YANG paths relevant to the peering fabric
+contains information about MDT YANG paths relevant to the Peering Fabric
 and their applicability to PFS and PFL nodes.
 
 ## BGP Monitoring Protocol
@@ -833,7 +836,7 @@ a number of standard OpenConfig network models relevant to peering
 including the BGP protocol, BGP RIB, and Interfaces model.
 
 The appendix contains information about YANG paths relevant to
-configuring the peering fabric and their applicability to PFS and PFL
+configuring the Peering Fabric and their applicability to PFS and PFL
 nodes.
 
 
@@ -853,9 +856,9 @@ the network within a location.
 
 The XR service layer API is a gRPC based API to extract data from a
 device as well as provide a very fast programmatic path into the
-router’s runtime state. One use case of SL API in the peering fabric
+router’s runtime state. One use case of SL API in the Peering Fabric
 is to directly program FIB entries on a device, overriding the default
-path selection. Using telemetry extracted from a peering fabric, an
+path selection. Using telemetry extracted from a Peering Fabric, an
 external controller can use the data and additional external constraints
 to programmatically direct traffic across the fabric. SL API also
 supports transmission of event data via subscriptions.
@@ -866,7 +869,7 @@ supports transmission of event data via subscriptions.
 
 The following configuration guidelines will step through the major
 components of the device and protocol configuration specific to the
-peering fabric and highlight non-default configuration recommended for
+Peering Fabric and highlight non-default configuration recommended for
 each device role and the reasons behind those choices. Complete example
 configurations for each role can be found in the Appendix of this
 document. Configuration specific to telemetry is covered in section 4.
@@ -1346,13 +1349,13 @@ telemetry model-driven
 ## Abstract Peering Configuration
 
 Abstract peering uses qualities of Segment Routing anycast addresses to
-allow a provider to steer traffic to a specific peering fabric by simply
+allow a provider to steer traffic to a specific Peering Fabric by simply
 addressing a node SID assigned to all PFS members of the peering
 cluster. All of the qualities of SR such as midpoint ECMP and TI-LFA
 fast protection are preserved for the end to end BGP path, improving
-convergence across the network to the peering fabric. Additionally,
+convergence across the network to the Peering Fabric. Additionally,
 through the use of SR-TE Policy, source routed engineered paths can be
-configured to the peering fabric based on business logic and additional
+configured to the Peering Fabric based on business logic and additional
 path constraints.
 
 ### PFS Configuration
@@ -1406,7 +1409,7 @@ servers, but will never act as clients.
 Flowspec policies are 
 typically defined on an external controller to be advertised to the rest of the network.  The 
 XRv-9000 virtual router works well in these instances. If one is using an external element to 
-advertise Flowspec policies to the peering fabric, they should be advertised to the PFS nodes which 
+advertise Flowspec policies to the Peering Fabric, they should be advertised to the PFS nodes which 
 will reflect them to the PFL nodes. 
 In the absence of an external policy injector Flowspec policies can be 
 defined on the Peering Fabric PFS nodes for advertisement to all PFL nodes. 
@@ -1642,7 +1645,7 @@ In this method all Internet endpoints are configured in the same "Internet" VRF.
 benefit is removing dataplane connectivity between the global Internet and your underlying 
 infrastructure, which is using the default VRF for all internal connectivity. This method uses 
 the VPNv4/VPNv6 address families on all BGP peers and requires the Internet VRF be configured on 
-all peering fabric nodes as well as SP PEs participating in the global routing table. If there are 
+all Peering Fabric nodes as well as SP PEs participating in the global routing table. If there are 
 VPN customers or public-facing services in their own VRF needing Internet access, routes can be imported/exported 
 from the Internet VRF on the PE devices they attach to.   
 
