@@ -22,7 +22,6 @@ position: top
 | 1.0       | 05/08/2018 |Initial Converged SDN Transport publication| 
 | 1.5          | 09/24/2018 |NCS540 Access, ZTP, NSO Services|
 | 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55A2-MOD, IPv4/IPv6/mLDP Multicast, LDP to SR Migration |  
-|                  |                        |     |
 
 
 
