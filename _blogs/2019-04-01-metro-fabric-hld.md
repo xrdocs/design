@@ -15,9 +15,9 @@ tags:
 position: hidden 
 ---
 
-<meta http-equiv=“refresh” content=“0; url=https://xrdocs.io/desig/blogs/latest-converged-sdn-transport-hld“>
-<link rel=“canonical”
-href=“https://xrdocs.io/desig/blogs/latest-converged-sdn-transport-hld” />
+<meta http-equiv="refresh" content="0; url=https://xrdocs.io/desig/blogs/latest-converged-sdn-transport-hld">
+<link rel="canonical"
+href="https://xrdocs.io/desig/blogs/latest-converged-sdn-transport-hld" />
 
 # Starting in version 2.0 the Cisco Metro Fabric design has been renamed to the Cisco Converged SDN Transport design.  If you are not redirected to that page in the next 5 seconds, please click on the following URL: <https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld> 
 
