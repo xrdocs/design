@@ -521,6 +521,23 @@ _Figure 13: PCE Path Computation_
 
 5.  Access Router acknowledges
 
+## 4G Transport and Services Modernization 
+
+While talk about deploying 5G services has reached a fever pitch, many providers are continuing to build and evolve their 4G networks. New services require more agile and scalable networks, satisfied by Cisco's Converged SDN Transport. The services modernization found 
+in Converged SDN Transport 2.0 follows work done in EPN 4.0 located here:  https://www.cisco.com/c/dam/en/us/td/docs/solutions/Enterprise/Mobility/EPN/4_0/EPN_4_Transport_Infrastructure_DIG.pdf.  Transport modernization requires simplification and new abilities. We evolve the EPN 4.0 design based on LDP and hierarchical BGP-LU to one using Segment Routing with an MPLS data plane and the SR-PCE to add inter-domain path computation, scale, and programmability.  L3VPN based 4G services remain, but are modernized to utilize SR-TE On-Demand Next-Hop, reducing provisioning complexity, increasing scale, and adding advanced path computation constraints. 4G services utilizing L3VPN remain the same, but those utilizing L2VPN such as VPWS and VPLS transition to EVPN services. EVPN is the modern replacement for legacy LDP signalled L2VPN services, reducing complexity and adding advanced multi-homing functionality.   The following table highlights the legacy and new way of delivering services for 4G.  
+
+| Element | EPN 4.0 | Converged SDN Transport | 
+| ---------------- | ---------------------- |-----|
+| Intra-domain MPLS Transport | LDP | IS-IS w/Segment Routing |  
+| Inter-domain MPLS Transport | BGP Labeled Unicast| SR using SR-PCE for Computation |
+| MPLS L3VPN (LTE S1,X2) | MPLS L3VPN | MPLS L3VPN w/ODN | 
+| L2VPN VPWS | LDP Pseudowire | EVPN VPWS w/ODN | 
+| eMBMS Multicast   | Native / mLDP | Native / mLDP |
+
+
+The CST 2.0 4G Transport modernization covers only MPLS-based access and not L2 access scenarios.  
+
+
 ## Non-Inline Aggregation Fabric 
 The non-inline PE topology, shown in Figure XX, moves the services edge PE device from the forwarding path between the access/aggregation networks and the core.  There are several factors which can drive providers to this design vs. one with an in-line PE, some of which are outlined in the table below. The control-plane configuration of the Metro Fabric does not change, all existing ABR configuration remains the same, but the device no longer acts as a high-scale PE.    
 
@@ -529,7 +546,7 @@ The non-inline PE topology, shown in Figure XX, moves the services edge PE devic
 ## L3 IP Multicast and mVPN  
 IP multicast continues to be an optimization method for delivering content traffic to many endpoints,
 especially traditional broadcast video. Unicast content dominates the traffic patterns of most networks today, but 
-multicast carries critical high value services, so proper design and implementation is required. In Metro Fabric 2.0 we introduce multicast validation for native IPv4/IPv6 multicast using PIM, global multicast using in-band mLDP (profile 7), and mVPN using mLDP with in-band signaling (profile 6).  L3 IP multicast is only supported within a single domain instance, and is not an inter-domain solution. In the case of the metro fabric design multicast has been tested with the source and receivers on both access and ABR PE devices.   
+multicast carries critical high value services, so proper design and implementation is required. In Metro Fabric 2.0 we introduce multicast edge and core validation for native IPv4/IPv6 multicast using PIM, global multicast using in-band mLDP (profile 7), and mVPN using mLDP with in-band signaling (profile 6). L3 IP multicast is only supported within a single domain instance, and is not an inter-domain solution. In the case of the metro fabric design multicast has been tested with the source and receivers on both access and ABR PE devices.   
 
 ### LDP Unicast FEC Filtering for SR Unicast with mLDP Multicast  
 The metro fabric design utilized Segment Routing with the MPLS dataplane for all unicast traffic. The first phase of multicast support in Metro Fabric 2.0 will use mLDP for use with existing mLDP based networks and new networks wishing to utilize label switcched multicast across the core. LDP is enabled on an interface for both unicast and multicast by default. Since SR is being used for unicast, one must filtering out all LDP unicast FECs to ensure they are not distributed across the network. SR is used for all unicast traffic in the presence of an LDP FEC for the same prefix, but filtering them reduces control-plane activity, may aid in re-convergence, and simplifies troubleshooting.  The following should be applied to all interfaces which have mLDP enabled.  
@@ -547,7 +564,7 @@ address-family ipv4
     allocate for no-unicast-ldp 
 
 ## EVPN Multicast 
-Multicast within a L2VPN EVPN has been supported since Metro Fabric 1.0. Multicast traffic within an EVPN is replicated to the endpoints interested in a specific group via EVPN signaling. EVPN utilizes ingress replication for all multicast traffic, meaning multicast is encapsulated and unicast to each PE router with interested listeners for each multicast group. Ingress replication may add additional traffic to the network, but simplifies the core and data plane by eliminating multicast state and hardware replication.  EVPN multicast is also not subject to domain boundary restrictions.
+Multicast within a L2VPN EVPN has been supported since Metro Fabric 1.0. Multicast traffic within an EVPN is replicated to the endpoints interested in a specific group via EVPN signaling. EVPN utilizes ingress replication for all multicast traffic, meaning multicast is encapsulated with a specific EVPN label and unicast to each PE router with interested listeners for each multicast group. Ingress replication may add additional traffic to the network, but simplifies the core and data plane by eliminating multicast signaling, state, and hardware replication.  EVPN multicast is also not subject to domain boundary restrictions.
     
 ## LDP to Metro Fabric Migration  
 Very few networks today are built as greenfield networks, most new designs are migrated 
