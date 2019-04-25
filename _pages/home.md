@@ -23,10 +23,11 @@ date: null
             <img src="{{ base_path }}/images/design_lp/metro-design.png" alt="" />
           </div>
         <div class="archive__item-body">
-            <h2 class="archive__item-title">Metro Fabric Design &nbsp; 
+            <h2 class="archive__item-title">Converged SDN Transport &nbsp; 
             <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
-              <p>Read about the goals of the Metro Fabric Design and familiarize 
+              <p>Read about the goals of the Converged SDN Transport Design (formerly known as Metro Fabric)
+                and familiarize 
               yourself with all its components: the platforms, the software,
                the technologies and use cases
               </p>
