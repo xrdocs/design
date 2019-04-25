@@ -1,7 +1,7 @@
 ---
 published: true
-date: '2018-05-09 16:54 -0500'
-title: Metro Design Implementation Guide
+date: '2019-04-25 00:00:00 -0500'
+title: Converged SDN Transport Implementation Guide
 position: top
 author: Jiri Chaloupka
 tags:

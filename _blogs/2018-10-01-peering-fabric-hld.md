@@ -4,7 +4,6 @@ date: '2018-10-01 11:00-0400'
 title:  Peering Fabric High-Level Design 
 excerpt: Explore the high-level design of Cisco's Peering Fabric v1.5  
 author: Phil Bedard
-permalink: /blogs/latest-peering-fabric-hld
 tags:
   - iosxr
   - Peering
