@@ -9,7 +9,7 @@ tags:
   - iosxr
   - Design
   - Peering 
-position: hidden 
+position: top 
 ---
 {% include toc %}
 

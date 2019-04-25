@@ -33,9 +33,9 @@ date: null
               </p>
             </div>
             <p>
-            <a href="{{ base_path }}/blogs/latest-metro-fabric-hld" 
+            <a href="{{ base_path }}/blogs/latest-converged-sdn-transport-hld" 
                   class="btn ">High Level Design 📖</a>
-            <a href="{{ base_path }}/blogs/2018-05-09-metro-design-implementation-guide/" 
+            <a href="{{ base_path }}/blogs/2019-04-01-converged-sdn-transport-implementation-guide/" 
                   class="btn ">Implementation Guide</a>
                   </p>
         </div>

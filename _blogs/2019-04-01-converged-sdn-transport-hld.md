@@ -12,7 +12,7 @@ tags:
   - iosxr
   - Metro
   - Design
-position: hidden 
+position: top 
 ---
 
 # Revision History
