@@ -7,12 +7,21 @@ excerpt: >-
   evolves traditional Metro network  design towards an SDN enabled, programmable
   network capable of delivering all services. 1.5 Update
 author: Phil Bedard 
+permalink: /blogs/latest-metro-fabric-hld
 tags:
   - iosxr
   - Metro
   - Design
 position: hidden 
 ---
+
+
+<meta http-equiv=“refresh” content=“0;
+url=https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld“>
+
+# Starting in version 2.0 the Cisco Metro Fabric design has been renamed to the Cisco Converged SDN Transport design.  If you are not redirected to that page in the next 5 seconds, please click on the following URL: https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld
+
+
 
 # Revision History
 
