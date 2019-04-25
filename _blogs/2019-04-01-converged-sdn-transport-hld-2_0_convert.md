@@ -45,7 +45,7 @@ quite challenging to manage, especially on large-scale networks, because
 of the large number of distributed network protocols involved which
 increases operational complexity.
 
-Compass Converged SDN Transport (CMF) design introduces an SDN-ready architecture
+ Converged SDN Transport (CMF) design introduces an SDN-ready architecture
 which evolves traditional Metro network design towards an SDN enabled,
 programmable network capable of delivering all services (Residential,
 Business, 5G Mobile Backhauling, Video, IoT) on the premise of
@@ -54,7 +54,7 @@ service level agreements (SLAs).
 
 ![](http://xrdocs.io/design/images/cmf-hld/end-to-end.png)
 
-The Compass Converged SDN Transport design brings tremendous value to the Service
+The  Converged SDN Transport design brings tremendous value to the Service
 Providers:
 
   - **Fast service deployment** and **rapid time to market** through
@@ -71,7 +71,7 @@ Providers:
   - **Enhanced and optimized operations** using telemetry/analytics in
     conjunction with automation tools
 
-**The Compass Converged SDN Transport design is targeted at Service Provider
+**The  Converged SDN Transport design is targeted at Service Provider
 customers who:**
 
   - Want to evolve their existing Unified MPLS Network
@@ -84,7 +84,7 @@ customers who:**
 
 ## Summary
 
-The Compass Converged SDN Transport design meets the criteria identified for
+The  Converged SDN Transport design meets the criteria identified for
 compass designs:
 
   - **Simple:** based on Segment Routing as unified forwarding plane and
@@ -106,16 +106,16 @@ compass designs:
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-hld-hw.png)
 
-The Compass Converged SDN Transport design evolves from the successful Cisco
+The  Converged SDN Transport design evolves from the successful Cisco
 Evolved Programmable Network (EPN) 5.0 architecture framework, to bring
 greater programmability and automation.
 
-In the Compass Converged SDN Transport design, the transport and service are built
+In the  Converged SDN Transport design, the transport and service are built
 on-demand when the customer service is requested. The end-to-end
 inter-domain network path is programmed through controllers and selected
 based on the customer SLA, such as the need for a low latency path.
 
-**The Compass Converged SDN Transport is made of the following main building
+**The  Converged SDN Transport is made of the following main building
 blocks:**
 
   - **IOS-XR as a common Operating System** proved in Service Provider
@@ -142,7 +142,7 @@ blocks:**
     
       - Zero Touch Provisioning and Deployment (ZTP/ZTD)
 
-By leveraging analytics collected through model driven telemetry on IOS-XR platforms, in conjunction with automation tools, Compass Converged SDN Transport provides Service Providers with enhancements in network and services operations experience.
+By leveraging analytics collected through model driven telemetry on IOS-XR platforms, in conjunction with automation tools,  Converged SDN Transport provides Service Providers with enhancements in network and services operations experience.
 
 # Transport – Design
     
@@ -153,11 +153,11 @@ any to any connectivity requirements, without compromising in stability
 and availability. Moreover, transport programmability is essential to
 bring SLA awareness into the network,
 
-The goals of the Compass Converged SDN Transport is to provide a flexible network
+The goals of the  Converged SDN Transport is to provide a flexible network
 blueprint that can be easily customized to meet customer specific
 requirements.
 
-To provide unlimited network scale, the Compass Converged SDN Transport is
+To provide unlimited network scale, the  Converged SDN Transport is
 structured into multiple IGP Domains: Access, Aggregation, and Core.
 Refer to the network topology in Figure 1.
 
@@ -183,17 +183,17 @@ domain.
 
 _Figure 3: Distributed Central Office with Access domain extension_
 
-The Compass Converged SDN Transport transport design supports all three network
+The  Converged SDN Transport transport design supports all three network
 options, while remaining easily customizable.
 
-The first phase of the Compass Converged SDN Transport, discussed later in this
+The first phase of the  Converged SDN Transport, discussed later in this
 document, will cover in depth the scenario described in Figure 3.
 
 ## Intra-Domain
     
 ### Intra-Domain Routing and Forwarding
 
-The Compass Converged SDN Transport is based on a fully programmable transport that
+The  Converged SDN Transport is based on a fully programmable transport that
 satisfies the requirements described earlier. The foundation technology
 used in the transport design is Segment Routing (SR) with a MPLS based
 Data Plane in Phase 1 and a IPv6 based Data Plane (SRv6) in future.
@@ -220,7 +220,7 @@ and Adjacency-SID are represented by the MPLS label and both are
 advertised by the IGP protocol. This IGP extension eliminates the need
 to use LDP or RSVP protocol to exchange MPLS labels.
 
-The Compass Converged SDN Transport design uses ISIS as the IGP protocol.
+The  Converged SDN Transport design uses ISIS as the IGP protocol.
 
 ### Intra-Domain Forwarding - Fast Re-Route
 
@@ -244,7 +244,7 @@ Section: "Inter-Domain Forwarding - High Availability and Fast Re-Route" for add
     
 ### Inter-Domain Forwarding
 
-The Compass Converged SDN Transport achieves network scale by IGP domain
+The  Converged SDN Transport achieves network scale by IGP domain
 separation. Each IGP domain is represented by separate IGP process on
 the Area Border Routers (ABRs).
 
@@ -412,13 +412,13 @@ The proposed design is very scalable and can be easily extended to
 support even higher numbers of BGP-SRTE/PCEP sessions by adding
 additional RRs and SR-PCEs into the Access Domain.
 
-Figure 11 shows the Compass Converged SDN Transport physical topology with examples
+Figure 11 shows the  Converged SDN Transport physical topology with examples
 of product
 placement.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image12.png)
 
-_Figure 11: Compass Converged SDN Transport – Physical Topology with transport
+_Figure 11:  Converged SDN Transport – Physical Topology with transport
 programmability_
 
 
@@ -437,7 +437,7 @@ Segment Routing provides a simple and scalable way of defining an
 end-to-end application-aware traffic engineering path computed once
 again through SRTE Policy.
 
-In the Compass Converged SDN Transport design, the Service End Point uses PCEP or
+In the  Converged SDN Transport design, the Service End Point uses PCEP or
 BGP-SRTE (Phase 1 uses PCEP only) along with Segment Routing On-Demand
 Next-hop (SR-ODN) capability, to request from the controller a path that
 satisfies specific constraints (such as low latency). This is done by
@@ -446,7 +446,7 @@ request, the SR-PCE controller calculates the path based on the requested
 SLA, and uses PCEP or BGP-SRTE to dynamically program the ingress node
 with a specific SRTE Policy.
 
-The Compass Converged SDN Transport design also uses MPLS Performance Management to
+The  Converged SDN Transport design also uses MPLS Performance Management to
 monitor link delay/jitter/drop (RFC6374).
 
 ## Transport Controller Path Computation Engine (PCE)
@@ -546,10 +546,10 @@ The non-inline PE topology, shown in Figure XX, moves the services edge PE devic
 ## L3 IP Multicast and mVPN  
 IP multicast continues to be an optimization method for delivering content traffic to many endpoints,
 especially traditional broadcast video. Unicast content dominates the traffic patterns of most networks today, but 
-multicast carries critical high value services, so proper design and implementation is required. In Converged SDN Transport 2.0 we introduce multicast edge and core validation for native IPv4/IPv6 multicast using PIM, global multicast using in-band mLDP (profile 7), and mVPN using mLDP with in-band signaling (profile 6). L3 IP multicast is only supported within a single domain instance, and is not an inter-domain solution. In the case of the metro fabric design multicast has been tested with the source and receivers on both access and ABR PE devices.   
+multicast carries critical high value services, so proper design and implementation is required. In Converged SDN Transport 2.0 we introduce multicast edge and core validation for native IPv4/IPv6 multicast using PIM, global multicast using in-band mLDP (profile 7), and mVPN using mLDP with in-band signaling (profile 6). L3 IP multicast is only supported within a single domain instance, and is not an inter-domain solution. In the case of the Converged SDN Transport design multicast has been tested with the source and receivers on both access and ABR PE devices.   
 
 ### LDP Unicast FEC Filtering for SR Unicast with mLDP Multicast  
-The metro fabric design utilized Segment Routing with the MPLS dataplane for all unicast traffic. The first phase of multicast support in Converged SDN Transport 2.0 will use mLDP for use with existing mLDP based networks and new networks wishing to utilize label switcched multicast across the core. LDP is enabled on an interface for both unicast and multicast by default. Since SR is being used for unicast, one must filtering out all LDP unicast FECs to ensure they are not distributed across the network. SR is used for all unicast traffic in the presence of an LDP FEC for the same prefix, but filtering them reduces control-plane activity, may aid in re-convergence, and simplifies troubleshooting.  The following should be applied to all interfaces which have mLDP enabled.  
+The Converged SDN Transport design utilized Segment Routing with the MPLS dataplane for all unicast traffic. The first phase of multicast support in Converged SDN Transport 2.0 will use mLDP for use with existing mLDP based networks and new networks wishing to utilize label switcched multicast across the core. LDP is enabled on an interface for both unicast and multicast by default. Since SR is being used for unicast, one must filtering out all LDP unicast FECs to ensure they are not distributed across the network. SR is used for all unicast traffic in the presence of an LDP FEC for the same prefix, but filtering them reduces control-plane activity, may aid in re-convergence, and simplifies troubleshooting.  The following should be applied to all interfaces which have mLDP enabled.  
 
 ipv4 access-list no-unicast-ldp 
 10 deny ipv4 any any
@@ -623,8 +623,8 @@ can be part of an ecosystem of automated device and service provisioning via Cis
     
 ## Overview
 
-The Compass Converged SDN Transport Design aims to enable simplification across all
-layers of a Service Provider network. Thus, the Compass Converged SDN Transport
+The  Converged SDN Transport Design aims to enable simplification across all
+layers of a Service Provider network. Thus, the  Converged SDN Transport
 services layer focuses on a converged Control Plane based on BGP.
 
 BGP based Services include EVPNs and Traditional L3VPNs (VPNv4/VPNv6).
@@ -781,7 +781,7 @@ using well-established designs based on Data Central Interconnect (DCI).
 Figure 27 shows hierarchical services deployed on PE routers, but the
 same design applies when services are deployed on AG or DCI routers.
 
-The Compass Metro Design offers scalable hierarchical services with
+The Converged SDN Transport Design offers scalable hierarchical services with
 simplified provisioning. The three most important use cases are
 described in the following sections:
 
@@ -861,7 +861,7 @@ Figure 31 shows the design of Services Router-Reflectors
 
 _Figure 31: Services – Route-Reflectors_
 
-The Compass Converged SDN Transport Design focuses mainly on BGP-based services,
+The  Converged SDN Transport Design focuses mainly on BGP-based services,
 therefore it is important to provide a robust and scalable Services
 Route-Reflector (S-RR) design.
 
@@ -891,7 +891,7 @@ physical underlay network elements with the help of standard open APIs
 such as NETCONF/YANG or a vendor-specific CLI using Network Element
 Drivers (NED).
 
-In the Compass Converged SDN Transport design, the NSO is used for Services
+In the  Converged SDN Transport design, the NSO is used for Services
 Management, Service Provisioning, and Service Orchestration.
 
 **The NSO provides several options for service designing as shown in**
@@ -953,14 +953,14 @@ Any-To-Any Highly-Available transport together with Fast Re-Route. A
 converged BGP Control Plane provides a scalable and flexible solution
 also at the services layer.
 
-Figure 35 shows a consolidated view of the Compass Converged SDN Transport network
+Figure 35 shows a consolidated view of the  Converged SDN Transport network
 from a Control-Plane standpoint. Note that while network operators could
 use both PCEP and BGR-SRTE at the same time, it is not
 typical.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image34.png)
 
-_Figure 35: Compass Converged SDN Transport – Control-Plane_
+_Figure 35:  Converged SDN Transport – Control-Plane_
 
 As mentioned, service provisioning is independent of the transport
 layer. However, transport is responsible for providing the path based on
@@ -972,23 +972,23 @@ path request. Upon receiving the request, the SR-PCE controller calculates
 the path based on the requested SLA and use PCEP or BGP-SRTE to
 dynamically program the Service End Point with a specific SRTE Policy.
 
-The Compass Converged SDN Transport design also use MPLS Performance Management to
+The  Converged SDN Transport design also use MPLS Performance Management to
 monitor link delay/jitter/drop (RFC6374) to be able to create a Low
 Latency topology dynamically.
 
-Figure 36 shows a consolidated view of Compass Converged SDN Transport network from
+Figure 36 shows a consolidated view of  the Converged SDN Transport network from
 a Data Plane
 standpoint.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image35.png)
 
-_Figure 36: Compass Converged SDN Transport – Data-Plane_
+_Figure 36:  Converged SDN Transport – Data-Plane_
 
-# The Compass Converged SDN Transport Design – Phase 1
+# The Converged SDN Transport Design – Phase 1
     
 ## Transport - Phase 1
 
-This section describes in detail Phase 1 of the Compass Converged SDN Transport
+This section describes in detail Phase 1 of the  Converged SDN Transport
 design. This Phase focuses on transport programmability and BGP-based
 services adoption.
 
@@ -997,7 +997,7 @@ Plane details for Phase 1. Refer also to the Access domain extension use
 case in Section: "Use Cases".
 
 The network is split into Access and Core IGP domains. Each IGP domain
-is represented by separate IGP processes. The Compass Converged SDN Transport
+is represented by separate IGP processes. The  Converged SDN Transport
 design uses ISIS IGP protocol for validation.
 
 Validation will be done on two types of access platforms, IOS-XR and
@@ -1032,7 +1032,7 @@ or Prefix-SID is used for the transport LSP.
 
 ## Transport Programmability – Phase 1
 
-The Compass Converged SDN Transport employs a distributed and highly available SR-PCE
+The  Converged SDN Transport employs a distributed and highly available SR-PCE
 design as described in Section: "Transport Programmability". Transport programmability is based
 on PCEP. Figure 39 shows the design when SR-PCE uses PCEP.
 
@@ -1069,7 +1069,7 @@ _Figure 40: PCE Path Computation – Phase 1_
     
 ## Services – Phase 1
 
-This section describes the Services used in the Compass Converged SDN Transport
+This section describes the Services used in the  Converged SDN Transport
 Phase 1.
 
 The table in Figure 41 describes the End-To-End services, while the
@@ -1099,7 +1099,7 @@ _Figure 41: Hierarchical Services table_
 
 _Figure 42: Hierarchical Services_
 
-The Compass Converged SDN Transport uses the hierarchical Services Route-Reflectors
+The  Converged SDN Transport uses the hierarchical Services Route-Reflectors
 (S-RRs) design described in Section: "Services - Route-Reflector (S-RR)". Figure 43 shows in detail the S-RRs design used for Phase 1.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image44.png)
@@ -1132,9 +1132,9 @@ validation.
 
 _Figure 46: Testbed – Phase 1_
 
-# The Compass Metro Fabric Design - Summary
+# The Converged SDN Transport Design - Summary
 
-The Compass Metro Fabric brings huge simplification at the Transport as
+The Converged SDN Transport brings huge simplification at the Transport as
 well as at the Services layers of a Service Provider network.
 Simplification is a key factor for real Software Defined Networking
 (SDN). Cisco continuously improves Service Provider network designs to
@@ -1144,13 +1144,13 @@ From a very well established and robust Unified MPLS design, Cisco has
 embarked on a journey toward transport simplification and
 programmability, which started with the Transport Control Plane
 unification in Evolved Programmable Network 5.0 (EPN5.0). The Cisco
-Metro Fabric provides another huge leap forward in simplification and
+Converged SDN Transport provides another huge leap forward in simplification and
 programmability adding Services Control Plane unification and
 centralized path computation.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image48.png)
 
-_Figure 47: Compass Metro Fabric – Evolution_
+_Figure 47: Converged SDN Transport – Evolution_
 
 The transport layer requires only IGP protocols with Segment Routing
 extensions for Intra and Inter Domain forwarding. Fast recovery for node
@@ -1164,14 +1164,14 @@ protocols like BGP-LS, PCEP, BGP-SRTE, etc., for path computation and
 NETCONF/YANG for service provisioning, thus providing a on open
 standards based solution.
 
-For all those reasons, the Cisco Metro Fabric design really brings an
+For all those reasons, the Cisco Converged SDN Transport design really brings an
 exciting evolution in Service Provider Networking.
 
 
 # Hardware Validation
 
 ## NCS-55A2-MOD 
-The Metro Fabric design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
+The Converged SDN Transport design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
 router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
 per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
 100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
@@ -1180,15 +1180,15 @@ configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.
 ![](http://xrdocs.io/design/images/cmf-hld/55a2.png)
 
 ## NCS-5501, NCS-5501-SE, and N540-24Z8Q2C-M 
-The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Metro Fabric. The 5501 
+The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Converged SDN Transport. The 5501 
 has 48x1G/10G SFP+ and 6x100G QSFP28 interfaces, the SE adds higher route scale via an external TCAM.  The N540-24Z8Q2C-M is a next-generation 
 access node with 24x10G SFP+, 8x25G SFP28, and 2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with a conformal 
 coating for deployment deep into access networks. 
 
 ## ASR-920 
-The IOS-XE based ASR 920 is tested within the metro fabric as an access node. All services adn the Segment Routing dataplane are validated 
+The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. All services adn the Segment Routing dataplane are validated 
 on the ASR 920.   
 
 ## ASR 9000 
-The ASR 9000 is the router of choice for high scale edge services.  The metro fabric utilizes the ASR 9000 in a PE function role, performing high scale 
+The ASR 9000 is the router of choice for high scale edge services.  The Converged SDN Transport utilizes the ASR 9000 in a PE function role, performing high scale 
 L2VPN, L3VPN, and Pseudowire headend termination. All testing up to 2.0 has been performed using Tomahawk series line cards on the ASR 9000.  
