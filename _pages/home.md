@@ -11,26 +11,6 @@ date: null
 {% include base_path %}
 
 
-<div class="feature__wrapper">    
-<div class="feature__item--left">
-      <div class="archive__item" style="margin-left: 2em;">
-          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
-           margin-left: auto; margin-right: auto;">
-            <img src="{{ base_path }}/images/design_lp/core-fabric.png" alt="" />
-          </div>
-        <div class="archive__item-body">
-            <h2 class="archive__item-title">Core Fabric Design 🆕</h2>
-            <div class="archive__item-excerpt" style="font-size: 0.65em;">
-            <p> Read about the goals of the Core Fabric Design and familiarize yourself with all its components: the platforms, the software, the technologies, the use cases, and the <a href="https://github.com/NSO-developer/nso-xr-segmentrouting" target="_blank">NSO Services Packages</a> for automation 
-            </p>
-            </div>
-            <p><a href="{{ base_path }}/blogs/latest-core-fabric-hld" 
-                  class="btn ">High Level Design 📖</a>
-                  </p>
-        </div>
-      </div>
-</div>
-</div>
 
 
 
@@ -132,6 +112,27 @@ date: null
             </div>
             <p><a href="https://xrdocs.github.io/design/blogs/2017-08-01-internet-edge-peering-current-practice/" 
                   class="btn ">Read more 📚</a></p>
+        </div>
+      </div>
+</div>
+</div>
+
+<div class="feature__wrapper">    
+<div class="feature__item--left">
+      <div class="archive__item" style="margin-left: 2em;">
+          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
+           margin-left: auto; margin-right: auto;">
+            <img src="{{ base_path }}/images/design_lp/core-fabric.png" alt="" />
+          </div>
+        <div class="archive__item-body">
+            <h2 class="archive__item-title">Core Fabric Design</h2>
+            <div class="archive__item-excerpt" style="font-size: 0.65em;">
+            <p> Read about the goals of the Core Fabric Design and familiarize yourself with all its components: the platforms, the software, the technologies, the use cases, and the <a href="https://github.com/NSO-developer/nso-xr-segmentrouting" target="_blank">NSO Services Packages</a> for automation 
+            </p>
+            </div>
+            <p><a href="{{ base_path }}/blogs/latest-core-fabric-hld" 
+                  class="btn ">High Level Design 📖</a>
+                  </p>
         </div>
       </div>
 </div>
