@@ -45,7 +45,7 @@ quite challenging to manage, especially on large-scale networks, because
 of the large number of distributed network protocols involved which
 increases operational complexity.
 
- Converged SDN Transport (CMF) design introduces an SDN-ready architecture
+ Converged SDN Transport design introduces an SDN-ready architecture
 which evolves traditional Metro network design towards an SDN enabled,
 programmable network capable of delivering all services (Residential,
 Business, 5G Mobile Backhauling, Video, IoT) on the premise of
