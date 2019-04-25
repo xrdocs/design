@@ -2,12 +2,15 @@
 title: Test
 author: Author Name
 header-includes: |
-    \usepackage{fancyhdr}
-    \pagestyle{fancy}
-    \fancyhead[CO,CE]{This is fancy}
-    \fancyfoot[CO,CE]{So is this}
-    \fancyfoot[LE,RO]{\thepage}
-abstract: This is a pandoc test . . . 
+  \usepackage{fancyhdr}
+  \pagestyle{fancy}
+  \fancyhead[CO,CE]{This is fancy}
+  \fancyfoot[CO,CE]{So is this}
+  \fancyfoot[LE,RO]{\thepage}
+abstract: This is a pandoc test . . .
+published: true
+date: '2019-04-25 12:56 -0700'
+position: hidden
 ---
 
 # Revision History
