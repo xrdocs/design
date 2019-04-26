@@ -539,9 +539,11 @@ The CST 2.0 4G Transport modernization covers only MPLS-based access and not L2 
 
 
 ## Non-Inline Aggregation Fabric 
-The non-inline PE topology, shown in Figure XX, moves the services edge PE device from the forwarding path between the access/aggregation networks and the core.  There are several factors which can drive providers to this design vs. one with an in-line PE, some of which are outlined in the table below. The control-plane configuration of the Converged SDN Transport does not change, all existing ABR configuration remains the same, but the device no longer acts as a high-scale PE.    
+The non-inline PE topology, shown in the figure below, moves the services edge PE device from the forwarding path between the access/aggregation networks and the core.  There are several factors which can drive providers to this design vs. one with an in-line PE, some of which are outlined in the table below. The control-plane configuration of the Converged SDN Transport does not change, all existing ABR configuration remains the same, but the device no longer acts as a high-scale PE.    
 
 ![](http://xrdocs.io/design/images/cmf-hld/non-inline-design.png)
+
+_Figure: Non-Inline Aggregation Topology_
 
 ## L3 IP Multicast and mVPN  
 IP multicast continues to be an optimization method for delivering content traffic to many endpoints,
