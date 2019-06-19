@@ -29,7 +29,7 @@ href="https://xrdocs.io/desig/blogs/latest-converged-sdn-transport-hld" />
 | ---------------- | ---------------------- |-----|
 | 1.0       | 05/08/2018 |Initial Metro Fabric publication| 
 | 1.5          | 09/24/2018 |NCS540 Access, ZTP, NSO Services|
-| 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55A2-MOD, IPv4/IPv6/mLDP Multicast, LDP to SR Migration |  
+| 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55a2-MOD, IPv4/IPv6/mLDP Multicast, LDP to SR Migration |  
 |                  |                        |     |
 
 
@@ -770,8 +770,6 @@ Refer also to Section: "Transport and Services Integration".
 Hierarchical Services Use Cases are summarized in the table of Figure 26
 and shown in the network diagram of Figure 27.
 
-![](http://xrdocs.io/design/images/cmf-hld/services-hierarchical.png)
-
 _Figure 26: Hierarchical – Services table_
 
 ![](http://xrdocs.io/design/images/cmf-hld/image28.png)
@@ -1185,8 +1183,6 @@ router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modu
 per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
 100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
 configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
-
-![](http://xrdocs.io/design/images/cmf-hld/55a2.png)
 
 ## NCS-5501, NCS-5501-SE, and N540-24Z8Q2C-M 
 The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Metro Fabric. The 5501 

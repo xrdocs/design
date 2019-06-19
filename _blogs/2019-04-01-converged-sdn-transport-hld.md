@@ -763,8 +763,6 @@ Refer also to Section: "Transport and Services Integration".
 Hierarchical Services Use Cases are summarized in the table of Figure 26
 and shown in the network diagram of Figure 27.
 
-![](http://xrdocs.io/design/images/cmf-hld/services-hierarchical.png)
-
 _Figure 26: Hierarchical – Services table_
 
 ![](http://xrdocs.io/design/images/cmf-hld/image28.png)
@@ -1179,7 +1177,6 @@ per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/1
 100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
 configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
 
-![](http://xrdocs.io/design/images/cmf-hld/55a2.png)
 
 ## NCS-5501, NCS-5501-SE, and N540-24Z8Q2C-M 
 The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Converged SDN Transport. The 5501 
