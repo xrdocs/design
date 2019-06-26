@@ -9,6 +9,7 @@ tags:
   - cisco
   - Metro
   - Design
+excerpt: '  '
 ---
 
 {% include toc %}
