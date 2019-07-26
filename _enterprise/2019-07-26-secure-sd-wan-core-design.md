@@ -133,7 +133,7 @@ Scale-up systems are suitable for many applications and offer tangible benefits 
 
 Scale out can be as simple as adding more standalone boxes in parallel (e.g. 4 or 8 smaller routers instead of the traditional 2). 
 
-![wancore-topology.png]({{site.baseurl}}/images/wancore-topology.png){:height="50%" width="50%"}{: .align-right} 
+![wancore-topology.png]({{site.baseurl}}/images/wancore-topology.png){:height="40%" width="40%"}{: .align-right} 
 
 Having more, smaller routers increases the amount of connectivity while reducing the blast radius of a single failure.  A single router can fail (or be taken out of service for upgrade) with a much smaller impact on the network.  While scale out results in more boxes to manage, automation can be used to reduce complexity and ensure consistency across the network. 
 
@@ -225,7 +225,7 @@ Deploying SR by itself in this way will not impact the forwarding plane in any w
 - The IGP is advertising SR labels for every SR-enabled router's loopback. 
 - Each router is programming the SR labels in the RIB and FIB. 
 - Traffic is forwarded using LDP labels. 
-![Model-driven telemetry for SR label block allocation]({{site.baseurl}}/images/SRGB-MDT.png){:height="25%" width="25%"}{: .align-right} 
+![Model-driven telemetry for SR label block allocation]({{site.baseurl}}/images/SRGB-MDT.png){:height="35%" width="35%"}{: .align-right} 
 
 YANG-modeled operational data can also be streamed using model-driven telemetry.  In this example, model driven telemetry is streaming Cisco-IOS-XR-mpls-lsd-oper:mpls-lsd/label-summary data, making it easy to see that the number of labels assigned to ISIS jumps to 2000 when the SR global block of labels is configured. 
 
@@ -241,7 +241,7 @@ To validate the Mapping Server configuration, check that the non-SR endpoint add
 
 ### Step 3: Protocol Elimination 
 
-![LDPMonitoring.png]({{site.baseurl}}/images/LDPMonitoring.png){:height="20%" width="20%"}{: .align-right} 
+![LDPMonitoring.png]({{site.baseurl}}/images/LDPMonitoring.png){:height="30%" width="30%"}{: .align-right} 
 Once the P routers are fully configured for SR, LDP can optionally be disabled on a link-by-link basis for every link pair that has SR enabled on each end.  When this step is accomplished, the P routers will use the SR label for the path across the core.  The benefit of this step is fewer protocols to maintain and troubleshoot in the core.  There should be no impact to the VPN services when the transition is made.  
 
 The example [disable-ldp](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/sr) service can be used in NSO to orchestrate this step on a link-by-link basis.  Telemetry can be used to track the impact of disabling LDP on core-facing interfaces using the Cisco-IOS-XR-mpls-ldp-oper:mpls-ldp/global/active/default-vrf/summary path. 
@@ -281,7 +281,7 @@ The simple, fast and complete protection of TI-LFA has application in many indus
 - **TI-LFA for Healthcare:** Hospitals and healthcare providers need continuous uptime and 24/7 operations.  TI-LFA can help high-priority clinical systems (like life-support and telemedicine systems) that need uninterrupted network access.
 
 ### Enabling TI-LFA
-![TI-LFAMDT-caption.png]({{site.baseurl}}/images/TI-LFAMDT-caption.png){:height="20%" width="20%"}{: .align-right}
+![TI-LFAMDT-caption.png]({{site.baseurl}}/images/TI-LFAMDT-caption.png){:height="30%" width="30%"}{: .align-right}
 Configuring TI-LFA is simple.  The example NSO [ti-lfa](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/ti-lfa) service simplifies the configuration process even further by automatically enabling TI-LFA under every non-loopback interface in the given ISIS instance.   
  
 As soon as it is enabled, TI-LFA protects IP, LDP and SR traffic.  This means that all traffic in the Core now has the benefit of sub-50 millisecond convergence times without complicated RSVP-TE tunnels.  Network availability is improved even before the primary forwarding plane is switched to SR. 
@@ -297,7 +297,7 @@ In the following picture, the green nodes have been configured with Algo 128 and
 
 ![Flex-Algo-multi-plane.png]({{site.baseurl}}/images/Flex-Algo-multi-plane.png){:height="50%" width="50%"}{: .align-center}
 
-Traffic steered into Algo 128 will only ever traverse the green nodes.  Traffic steered into Algo 129 will only ever traverse the red nodes.  Traffic that is not steered into a particular Algo will go into the default Algo 0 which will use ECMP paths across green and red nodes.  
+Traffic steered into Algo 128 will never traverse the red nodes.  Traffic steered into Algo 129 will never traverse the green nodes.  Traffic that is not steered into a particular Algo will go into the default Algo 0 which will use ECMP paths across green and red nodes.  
 
 Failures are isolated to an Algo.  Because each Algo defines its own topology, failures in one Algo will not cause recalculation in nodes that that don't participate in that Algo.  All the usual features of Segment Routing work the same: traffic steering can be automated with On-Demand Next-Hop (ODN), which uses BGP route colors to steer traffic into the chosen Flex-Algo. TI-LFA operates per-Algo as well.  
 
@@ -320,7 +320,7 @@ Segment Routing offers an abundance of other Traffic Engineering (TE) features t
 Instead of (or in addition) to directing traffic onto a particular plane, you might want to direct certain traffic on the lowest latency path.  This might be real-time traffic like voice or video or latency-sensitive applications (like market data or transactions).  Latency can either be statically configured on a link or dynamically collected using Segment Routing Performance Monitoring (SR-PM).  SR-PM uses a query and response mechanism (RFC 6374) to measure one-way and two-way link delay which is then advertised in the IGP.  SR-TE uses the advertised minimum delay to calculate the lowest latency path.  As usual, ODN can automatically steer traffic into the low-latency path. 
 
 ### Link Affinity with Encrypted Path
-![SecureLink.png]({{site.baseurl}}/images/SecureLink.png){:height="25%" width="25%"}{: .align-right}
+![SecureLink.png]({{site.baseurl}}/images/SecureLink.png){:height="30%" width="30%"}{: .align-right}
 SR-TE can include or exclude links based on their configured affinity.  One use case for this is a network that has some links that are secured by MACSec and some that are not.  Business policy may dictate that some traffic must only traverse encrypted links.  By assigning a "secure" affinity to links with MACSec enabled and building an SR-TE policy that only includes "secure" links, you can guarantee that traffic matching that policy will always be encrypted.
 
 ### Bandwidth Optimization 
