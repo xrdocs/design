@@ -26,7 +26,7 @@ The Enterprise and Public Sector WAN is rapidly evolving in response to numerous
 - **100 Gigabit Ethernet**: The rise of high-density, low-power fixed and modular 100 Gigabit Ethernet platforms like Cisco's NCS 5500 series routers has reduced the barriers to 100G adoption and expanded the design choices for Enterprise WAN Core.  
 
 ## Who Needs Secure SD-WAN Core  
-The Secure SD-WAN Core Design is a Cisco IOS-XR-based architecture for large enterprises, government agencies, public utilities, military and defense agencies, large commerical organizations and anyone else whose business requirements [cannot be met by the Secure SD-WAN design alone](https://xrfield.cisco.com/design/enterprise/2019-07-08-sd-wan-mpls-and-the-future-of-enterprise-wan/).  This includes customers who need: 
+The Secure SD-WAN Core Design is a Cisco IOS-XR-based architecture for large enterprises, government agencies, public utilities, military and defense agencies, large commerical organizations and anyone else whose business requirements cannot be met by the [SD-WAN](https://www.cisco.com/c/en/us/solutions/enterprise-networks/sd-wan/index.html) design alone.  This includes customers who need: 
 
 - Full control of the end-to-end network
 - Cost-optimized transport
@@ -131,7 +131,7 @@ Scale-up systems are suitable for many applications and offer tangible benefits 
 
 Scale out can be as simple as adding more standalone boxes in parallel (e.g. 4 or 8 smaller routers instead of the traditional 2). 
 
-![Core Fabric Topology]({{site.baseurl}}/images/corefabric-topology.png){: .align-right} 
+![wancore-topology.png]({{site.baseurl}}/images/wancore-topology.png){: .align-right} 
 
 Having more, smaller routers increases the amount of connectivity while reducing the blast radius of a single failure.  A single router can fail (or be taken out of service for upgrade) with a much smaller impact on the network.  While scale out results in more boxes to manage, automation can be used to reduce complexity and ensure consistency across the network. 
 
@@ -141,7 +141,7 @@ The reference topology for the SD-WAN Core design supports the standard 1+1 depl
 
 Organizations seeking very highly available networks and/or physical isolation of traffic have long been intrigued with the idea of multi-planar networks.  In a multi-planar network, two or more networks are built in parallel, sometimes with diverse hardware and software in each plane to guard against parallel faults.  The classic "dual-core" and  "unified multi-planar" designs are  proven designs with high 9s availability. However, the complexity of traffic steering, convergence time issues and the sheer cost of redundant networks have remained a barrier to widespread deployment. 
 
-![ClassicMultiPlane.png]({{site.baseurl}}/images/ClassicMultiPlane.png){:height="70%" width="70%"}{: .align-center}
+![MultiPlanarTopologies.png]({{site.baseurl}}/images/MultiPlanarTopologies.png){:height="70%" width="70%"}{: .align-center}
 
 Two recent innovations have brought multi-planar architectures back into the spotlight.  First, [Segment Routing Flexible Algorithm](http://www.segment-routing.net/tutorials/2018-03-06-segment-routing-igp-flex-algo/) ("Flex-Algo") has made it simple to define multiple distinct topologies under the control of a single IGP.  Flex-Algo allows the operator to define strict disjoint paths for some traffic while leveraging the ECMP and resiliency of both planes for other traffic, all without complicated affinities or traffic steering configurations.  
 
@@ -151,13 +151,13 @@ The second innovation is the high-density NCS 5500 series router which leverages
 ## Platforms  
 ![ASR9000.png]({{site.baseurl}}/images/ASR9000.png){:height="30%" width="30%"}{: .align-right}
 
-Hardened by years of production deployments inside the most demanding Service Provider networks, the ASR9000 series router is the flagship platform for SD-WAN Core.  The ASR9000 is a high-density platform with a modular design capable of delivering up to 3.2 Tbps per slot.  The ASR9000 offers industry-leading Segment Routing capabilities, richly featured custom silicon for network analytics, support for advanced features like multicast and Segment-Routing Traffic Matrix (SR-TM), and the highest possible route scale.  The ASR9000 series is an excellent choice for multiple roles, from PE (LER) to converged P/PE (LER and LSR) to P (LSR).
+Hardened by years of production deployments inside the most demanding Service Provider networks, the [ASR9000 series router](https://www.cisco.com/c/en/us/products/routers/asr-9000-series-aggregation-services-routers/index.html) is the flagship platform for SD-WAN Core.  The ASR9000 is a high-density platform with a modular design capable of delivering up to 3.2 Tbps per slot.  The ASR9000 offers industry-leading Segment Routing capabilities, richly featured custom silicon for network analytics, support for advanced features like multicast and Segment-Routing Traffic Matrix (SR-TM), and the highest possible route scale.  The ASR9000 series is an excellent choice for multiple roles, from PE (LER) to converged P/PE (LER and LSR) to P (LSR).
 
 A minimal ASR9000-based core can leverage the ASR9901 for 16x1 GE, 24x 1/10 GE, and 2x100 GE in 456 Gbps of nonblocking, full-duplex fabric capacity in 2RUs.  Deployments needing more capacity can leverage the ASR9904 (2 RSPs, 2 Line Cards), ASR9906 (2 RSPs, 4 Line Cards), ASR9910 (2 RSPs, 8 Line Cards), ASR9912(2 RSPs, 10 Line Cards), or ASR9922(2 RSPs, 20 Line Cards) for up to 160 Tbps capacity.
   
-When space, power and cost are of primary concern, the Cisco NCS5500 platform can also be deployed in the SD-WAN Core.  The NCS5000 series offers large RIB and FIB scale, buffer capacity, and the highest bandwidth scale.  The NCS5500 is space and power efficient with 36x100GE in a 1RU fixed form factor or single modular line card. The NCS5500 is a good choice for the P (LSR) router and simple PE (LER) roles. Its low cost-per-port can make multi-planar and/or scale-out topologies possible where they weren't before.
+When space, power and cost are of primary concern, the [Cisco NCS5500 platform](https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html) can also be deployed in the SD-WAN Core.  The NCS5500 series offers large RIB and FIB scale, buffer capacity, and the highest bandwidth scale.  The NCS5500 is space and power efficient with 36x100GE in a 1RU fixed form factor or single modular line card. The NCS5500 is a good choice for the P (LSR) router and simple PE (LER) roles. Its low cost-per-port can make multi-planar and/or scale-out topologies possible where they weren't before.
 
-A minimal NCS5500-based core can provide 36x100GE, 144x10GE, or a mix of non-blocking connections with full resiliency in 4RU.  Fixed chassis are ideal for incrementally building a scale-out fabric: the NCS NC55-36X100GE-A-S and NC55A1-24H are efficient high density building blocks which can be rapidly deployed as needed without installing a large footprint of devices day one.  Deployments needing more capacity or interface flexibility can utilize the NCS5504 4-slot, NCS5508 8-slot or NCS5516 16-slot modular chassis.  Further detailed information on each platform [is available](https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html).
+A minimal NCS5500-based core can provide 36x100GE, 144x10GE, or a mix of non-blocking connections with full resiliency in 4RU.  Fixed chassis are ideal for incrementally building a scale-out fabric: the NCS NC55-36X100GE-A-S and NC55A1-24H are efficient high density building blocks which can be rapidly deployed as needed without installing a large footprint of devices day one.  Deployments needing more capacity or interface flexibility can utilize the NCS5504 4-slot, NCS5508 8-slot or NCS5516 16-slot modular chassis.  
 
 All ASR9000 and NCS5500 routers contain powerful Route Processors to unlock multi-dimensional, model-based programmability and high-speed telemetry.
 
