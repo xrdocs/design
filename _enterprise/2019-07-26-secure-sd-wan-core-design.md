@@ -276,7 +276,7 @@ The simple, fast and complete protection of TI-LFA has application in many indus
 
 - **TI-LFA for Healthcare:** Hospitals and healthcare providers need continuous uptime and 24/7 operations.  TI-LFA can help high-priority clinical systems (like life-support and telemedicine systems) that need uninterrupted network access.
 
-### Enabling TI-LFA 
+### Enabling TI-LFA
 ![TI-LFAMDT-caption.png]({{site.baseurl}}/images/TI-LFAMDT-caption.png){:height="20%" width="20%"}{: .align-right}
 Configuring TI-LFA is simple.  The example NSO [ti-lfa](https://github.com/NSO-developer/nso-xr-segmentrouting/tree/develop/packages/ti-lfa) service simplifies the configuration process even further by automatically enabling TI-LFA under every non-loopback interface in the given ISIS instance.   
  
