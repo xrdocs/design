@@ -365,7 +365,7 @@ The Secure SD-WAN Core based on Segment Routing is a proven design with producti
 
 [YANG Models by Release](https://github.com/YangModels/yang/tree/master/vendor/cisco/xr)
 
-[Segment-Routing]((http://www.segment-routing.net)
+[Segment-Routing](http://www.segment-routing.net)
 
 [Validation Test Device Configurations](https://github.com/ios-xr/design/tree/master/Core) 
 
