@@ -2,7 +2,7 @@
 published: true
 date: '2019-07-26 16:25 -0600'
 title: Secure SD-WAN Core Design
-author: scadora
+author: Shelly Cadora
 excerpt: Design guide for private MPLS SD-WAN Core for Enterprise and Public Sector
 tags:
   - Segment Routing
@@ -10,7 +10,7 @@ tags:
   - WAN Core
 position: hidden
 ---
-![Enterprise WAN.jpg]({{site.baseurl}}/images/Enterprise WAN.jpg){:height="40%" width="40%"}{: .align-right}
+![Enterprise-WAN.jpg]({{site.baseurl}}/images/Enterprise-WAN.jpg){:height="40%" width="40%"}{: .align-right}
 
 # Introduction
 Today’s Enterprise and Public Sector networks are highly distributed, spanning branch and campus, data center, multiple public clouds and the Internet.  The WAN is the heart of the network, connecting users and applications in a secure and automated network that spans the globe. 
@@ -132,7 +132,7 @@ Scale-up systems are suitable for many applications and offer tangible benefits 
 
 Scale out can be as simple as adding more standalone boxes in parallel (e.g. 4 or 8 smaller routers instead of the traditional 2). 
 
-![wancore-topology.png]({{site.baseurl}}/images/wancore-topology.png){: .align-right} 
+![wancore-topology.png]({{site.baseurl}}/images/wancore-topology.png){:height="50%" width="50%"}{: .align-right} 
 
 Having more, smaller routers increases the amount of connectivity while reducing the blast radius of a single failure.  A single router can fail (or be taken out of service for upgrade) with a much smaller impact on the network.  While scale out results in more boxes to manage, automation can be used to reduce complexity and ensure consistency across the network. 
 
