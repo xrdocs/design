@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 date: '2019-07-26 16:25 -0600'
 title: Secure SD-WAN Core Design
 author: scadora
@@ -8,6 +8,7 @@ tags:
   - Segment Routing
   - Enterprise
   - WAN Core
+position: hidden
 ---
 ![Enterprise WAN.jpg]({{site.baseurl}}/images/Enterprise WAN.jpg){:height="40%" width="40%"}{: .align-right}
 
