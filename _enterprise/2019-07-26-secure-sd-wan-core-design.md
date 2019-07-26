@@ -194,7 +194,9 @@ In this design, NETCONF and YANG (using OpenConfig and native IOS-XR data models
 ## Simplification: LDP to SR Migration 
 
 Many customers with existing MPLS backbones run LDP in the core today.  To simplify and scale, one of the most important steps is to migrate from LDP to Segment Routing (SR).  The benefits of SR are clear: protocol simplification, simplified resiliency, and multi-domain programmability.  What is less clear is how to accomplish the migration.  Greenfield networks are rare and pockets of LDP will continue to exist in most networks for a long time to come.  The SD-WAN Core design approaches simplification through SR migration in a series of steps that are intended to maintain existing functionality while gradually enabling SR and transitioning traffic to SR LSPs.  Each migration step has an example NSO service profile associated with it to ensure a consistent, best-practice implementation. 
+
 ![LDP to SR Core Journey]({{site.baseurl}}/images/LDP-to-SR.png){:height="70%" width="70%"}{: .align-center}
+
 While end-to-end SR is the goal, it may not always be possible at a given point in time.  Customers may be looking to refresh the P routers and not the PE routers.  Legacy PE routers may not support SR even if new PEs do.  Therefore, it is important to find value at each step of the migration and maintain support for non-SR PEs through the process. 
 
 ### Starting Point 
@@ -207,7 +209,7 @@ The migration use case assumes that the existing WAN Core is already configured 
 - Working L2/L3 VPN services from PE to PE using BGP 
 
 The goal of the migration is to preserve existing services while migrating the core in an incremental, validated, step-by-step fashion. 
-![PreserveService.png]({{site.baseurl}}/images/PreserveService.png){:height="50%" width="50%"}{: .align-center}
+![PreserveService.png]({{site.baseurl}}/images/PreserveService.png){:height="65%" width="65%"}{: .align-center}
 
 ### Step 1: Enable SR 
 
@@ -251,7 +253,7 @@ Some customers may choose not to disable LDP in the core until all PE routers ha
 In the case where the PE devices are SR-capable, the previous use cases can be extended to run SR end-to-end.  This can be done incrementally on a PE by PE basis until all PEs are migrated.  The benefits of this additional step include end-to-end [TI-LFA](#TILFA) and further reduction in LDP maintenance.  
 
 The goal of this use case is the same as before: enable full or partial migration of the PE devices without service disruption. 
-![E2EMigration.png]({{site.baseurl}}/images/E2EMigration.png){:height="50%" width="50%"}{: .align-center}
+![E2EMigration.png]({{site.baseurl}}/images/E2EMigration.png){:height="65%" width="65%"}{: .align-center}
 
 
 ### Step 1: Enable SR on the PEs  
