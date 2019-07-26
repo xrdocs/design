@@ -312,7 +312,7 @@ There are many applications of multi-planar architectures:
 Segment Routing offers an abundance of other Traffic Engineering (TE) features that can be used with or without Flex-Algo.  SR-TE calculate low-latency paths, paths that include or exclude certain affinities or SRLGs, and paths that use an arbitrary metric.
 
 ### Low Latency Path for Real-time Traffic
-![LowLatency.png]({{site.baseurl}}/images/LowLatency.png){:height="25%" width="25%"}{: .align-right}
+![LowLatencyPath.png]({{site.baseurl}}/images/LowLatencyPath.png){:height="25%" width="25%"}{: .align-right}
 Instead of (or in addition) to directing traffic onto a particular plane, you might want to direct certain traffic on the lowest latency path.  This might be real-time traffic like voice or video or latency-sensitive applications (like market data or transactions).  Latency can either be statically configured on a link or dynamically collected using Segment Routing Performance Monitoring (SR-PM).  SR-PM uses a query and response mechanism (RFC 6374) to measure one-way and two-way link delay which is then advertised in the IGP.  SR-TE uses the advertised minimum delay to calculate the lowest latency path.  As usual, ODN can automatically steer traffic into the low-latency path. 
 
 ### Link Affinity with Encrypted Path
@@ -328,7 +328,7 @@ Therefore, the routers in the network must send link utilization data to a bandw
 
 ### Egress Peering Engineering
 [![InterfaceEPE.png]({{site.baseurl}}/images/InterfaceEPE.png){:height="40%" width="40%"}{: .align-right}](https://xrdocs.io/design/blogs/latest-peering-fabric-hld#sr-peer-traffic-engineering)
-SD-WAN Core networks can use [Peering](https://xrdocs.io/design/blogs/2017-08-01-internet-edge-peering-current-practice/) to directly connect to content and service providers on the Internet.  You can use SR-TE policies to engineer how traffic crosses your network to reach egress peers (hence the name [Egress Peering Engineering](https://xrdocs.io/design/blogs/latest-peering-fabric-hld#sr-peer-traffic-engineering)).   SR-TE makes it possible to direct traffic from deep in your network to specific egress nodes, egress interfaces, egress peers or set of peers.  For example, you may want to create a low-latency path to a particular egress peer for a latency-sensitive SaaS application.  Or you may want best-effort traffic to egress through a link to a less expensive peering arrangement.  
+SD-WAN Core networks can use [Peering](https://xrdocs.io/design/blogs/2017-08-01-internet-edge-peering-current-practice/) to directly connect to content and service providers on the Internet.  You can use SR-TE policies to engineer how traffic crosses your network to reach egress peers (hence the name [Egress Peering Engineering](https://xrdocs.io/design/blogs/latest-peering-fabric-hld#sr-peer-traffic-engineering)).  SR-TE makes it possible to direct traffic from deep in your network to specific egress nodes, egress interfaces, egress peers or set of peers.  For example, you may want to create a low-latency path to a particular egress peer for a latency-sensitive SaaS application.  Or you may want best-effort traffic to egress through a link to a less expensive peering arrangement.  
 
 Through the use of Anycast SIDs, traffic can be load balanced between several peer nodes as well, simplifying the process of balancing egress traffic.
 
@@ -345,12 +345,6 @@ The Secure SD-WAN Core based on Segment Routing is a proven design with producti
 
 ## For More Information 
 
-### Sales Playbooks
-
-[Global Public Sector Secure SD-WAN and SD-WAN CORE](https://salesplaybook.cisco.com/gps-secure-sd-wan/sales-play-2/overview-2/)
-
-[Global Enterprise Secure SD-WAN and SD-WAN CORE](https://salesplaybook.cisco.com/ges-secure-sd-wan/)
-
 ### NSO 
 
 [NSO on DevNet](https://developer.cisco.com/site/nso/) 
@@ -361,11 +355,13 @@ The Secure SD-WAN Core based on Segment Routing is a proven design with producti
 
 ### IOS-XR  
 
-[Validation Test Device Configurations](https://github.com/ios-xr/design/tree/master/Core) 
-
 [Data-Model Overview](https://xrdocs.io/programmability/tutorials/2016-09-15-xr-data-model-overview/) 
 
 [Model-Driven Programmability](https://xrdocs.io/programmability/blogs/2016-09-12-model-driven-programmability/) 
 
 [YANG Models by Release](https://github.com/YangModels/yang/tree/master/vendor/cisco/xr)
+
+[Segment-Routing]((http://www.segment-routing.net)
+
+[Validation Test Device Configurations](https://github.com/ios-xr/design/tree/master/Core) 
 
