@@ -160,6 +160,9 @@ collections:
   tutorials:
     output: true
     permalink: /:collection/:path/
+  enterprise:
+    output: true
+    permalink: /:collection/:path/
 
 
 # Defaults
@@ -179,6 +182,18 @@ defaults:
   - scope:
       path: ""
       type: blogs
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: true
+      share: true
+      related: true
+      position: "top"
+# _enterprise
+  - scope:
+      path: ""
+      type: enterprise
     values:
       layout: single
       author_profile: true
@@ -368,7 +383,46 @@ prose:
             element: "text"
             label: "Date"
             value: "CURRENT_DATETIME"
-
+    _enterprise:
+      - name: "title"
+        field:
+          element: "text"
+          label: "Title"
+          value: ""
+      - name: "author"
+        field:
+          element: "text"
+          label: "Author"
+      - name: "excerpt"
+        field:
+          element: "text"
+          help: "Brief description of the blog"
+          label: "Excerpt"
+      - name: "tags"
+        field:
+          element: "multiselect"
+          label: "Add Tags"
+          placeholder: "Choose Tags"
+          alterable: true
+          options:
+            - name: "Vagrant"
+              value: "vagrant"
+            - name: "IOS-XR"
+              value: "iosxr"
+            - name: "Cisco"
+              value: "cisco"
+            - name: "Linux"
+              value: "linux"
+      - name: "published"
+        field:
+          label: "Published"
+          element: "checkbox"
+          value: false
+      - name: "date"
+        field:
+          element: "text"
+          label: "Date"
+          value: "CURRENT_DATETIME"
     _techdocs:
       - name: "permalink"
         field:

@@ -160,6 +160,9 @@ collections:
   tutorials:
     output: true
     permalink: /:collection/:path/
+  enterprise:
+    output: true
+    permalink: /:collection/:path/
 
 
 # Defaults
@@ -174,7 +177,18 @@ defaults:
       author_profile: false
       share: false
       comments: false
-
+# _enterprise
+  - scope:
+      path: ""
+      type: enterprise
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: true
+      share: true
+      related: true
+      position: "top"
 # _blogs
   - scope:
       path: ""
