@@ -217,6 +217,10 @@ In the following section we will explore the deployment using IOS-XR devices and
 ## Segment Routing Underlay Deployment 
 In the simplest deployment example, Segment Routing is deployed by configuring either OSPF or IS-IS with SR MPLS extensions enabled. The configuration example below utilizes IS-IS as the SR underlay IGP protocol.   
 
+### Topology Diagram for Fabric 
+
+![ixp-sr-topology.png](http://xrdocs.io/design/images/ixp-design/ixp-sr-topology.png)
+
 ### SRGB and SRLB Definition 
 It's recommended to first configure the Segment Routing Global Block (SRGB) across all nodes needing connectivity between each other. In most instances a single SRGB will be used across the entire network. In a SR MPLS deployment the SRGB and SRLB correspond to the label blocks allocated to SR. IOS-XR has a maximum configurable SRGB limit of 512,000 labels, however please consult platform-specific documentation for maximum values. The SRLB corresponds to the labels allocated for SIDs local to the node, such as Adjacency-SIDs. It is recommended to configure the same SRLB block across all nodes. The SRLB must not overlap with the SRGB.  The SRGB and SRLB are configured in IOS-XR with the following configuration:   
 
@@ -229,11 +233,11 @@ segment-routing
 
 ### IGP / Segment Routing Configuration 
 
-The following configuration example shows an example ISIS deployment with SR-MPLS extensions enabled for the IPv4 address family. The SR-enabling configuration lines are bolded, showing how Segment Routing and TI-LFA (FRR) can be deployed with very little configuration.   
+The following configuration example shows an example IS-IS deployment with SR-MPLS extensions enabled for the IPv4 address family. The SR-enabling configuration lines are bolded, showing how Segment Routing and TI-LFA (FRR) can be deployed with very little configuration. SR must be deployed on all interconnected nodes to provide end to end reachability.  
 
 <pre>router isis example 
  set-overload-bit on-startup wait-for-bgp
- is-type level-1
+ is-type level-2-only
  net 49.0002.1921.6801.4003.00
  distribute link-state
  log adjacency changes
@@ -242,8 +246,9 @@ The following configuration example shows an example ISIS deployment with SR-MPL
  max-lsp-lifetime 65535
  lsp-password hmac-md5 encrypted 03276828295E731F70
  address-family ipv4 unicast
+  maximum-paths 16
   metric-style wide
-  mpls traffic-eng level-1-2
+  mpls traffic-eng level-2-only 
   mpls traffic-eng router-id Loopback0
   maximum-paths 32
   <b>segment-routing mpls</b>
@@ -252,22 +257,31 @@ The following configuration example shows an example ISIS deployment with SR-MPL
   passive
   address-family ipv4 unicast
    metric 10
-   <b>prefix-sid absolute 16431</b>
+   <b>prefix-sid absolute 16341</b>
    !
   !
  !
  interface GigabitEthernet0/0/0/1
+  circuit-type level-2-only
+  point-to-point
+  address-family ipv4 unicast
+  fast-reroute per-prefix ti-lfa
+  metric 10
+</pre>
+
+The two key elements to enable Segment Routing are `segment-routing mpls` under the ipv4 unicast address family and the node `prefix-sid absolute 16341` definition under the Loopback0 interface.  The prefix-sid can be defined as either an indexed value or absolute. The index value is added to the SRGB start (16000 in our case) to derive the SID value. Using absolute SIDs is recommended where possible, but in a multi-vendor network where one vendor may not be able to use the same SRGB as the other, using an indexed value is necessary.   
+
+### Enabling TI-LFA 
+Topology-Independent Loop-Free Alternates is not enabled by default. The above configuration enables TI-LFA on the Gigabit0/0/0/1 interface for IPv4 prefixes. TI-LFA can be enabled for all interfaces by using this command under the address-family ipv4 unicast in the IS-IS instance configuration. It is recommended to enable it at the interface level to control other TI-LFA attributes such as node protection and SRLG support.  
+
+<pre> 
+interface GigabitEthernet0/0/0/1
   circuit-type level-1
   point-to-point
   address-family ipv4 unicast
    <b>fast-reroute per-prefix ti-lfa</b> 
   metric 10
-</pre>
-
-The two key elements to enable Segment Routing are `segment-routing mpls` under the ipv4 unicast address family and the node `prefix-sid absolute 16341` definition under the Loopback0 interface.  The prefix-sid can be defined as either an indexed value or absolute.  The index value is added to the SRGB start (16000 in our case) to derive the SID value. Using absolute SIDs is recommended where possible, but in a multi-vendor network where one vendor may not be able to use the same SRGB as the other, using an indexed value is necessary.   
-
-### Enabling TI-LFA 
-Topology-Independent Loop-Free Alternates is not enabled by default. The above configuration enables TI-LFA on the Gigabit0/0/0/1 interface for IPv4 prefixes. TI-LFA can be enabled for all interfaces by using this command under the address-family ipv4 unicast in the instance configuration. It's recommended to enable it at the interface to control other TI-LFA attributes such as node protection and SRLG support.   
+</pre>>
 
 This is all that is needed to enable Segment Routing, and you can already see the simplicity in its deployment vs additional label distribution protocols like LDP and RSVP-TE. 
 
@@ -312,7 +326,7 @@ This value is used only with EVPN VPWS point to point services. It defines a loc
 
 
 ### Topology Diagram for Example Services 
-The following is a topology diagram to follow along with the service endpoints in the below service configuration examples.  
+The following is a topology diagram to follow along with the service endpoints in the below service configuration examples. Each CE node represents a peering fabric participant.   
 
 ![ixp-base-topology.png](http://xrdocs.io/design/images/ixp-design/ixp-base-topology.png)
 
@@ -361,7 +375,7 @@ CE2 continues to be configured as single-homed. In this configuration traffic wi
 across all active links in the bundle across all PEs. PE3 will receive two routes for the VPWS service and utilize both 
 to balance traffic towards PE1 and PE2. Another option is to use `single-active` load-balancing mode, which will only forward traffic towards 
 the ethernet-segment from the DF (default forwarder). Single-active is commonly used to enforce customer bandwidth rates, while still providing 
-redundancy. In the case where there are multiple EVPN services on the same bundle interface, they will be balanced across the interfaces.   
+redundancy. In the case where there are multiple EVPN services on the same bundle interface, they will be balanced across the interfaces using the DF election algorithm.     
 
 <b>Note the LACP system MAC and ethernet-segment (ESI) on both PE nodes must be configured with the same values</b> 
  
@@ -443,7 +457,6 @@ An EVPN ELAN service is analgous to the function of VPLS, but modernized to elim
 
 #### EVPN ELAN with Single-homed Endpoints 
 In this configuration example the CE devices are connected to each PE using a single attachment interface. The EVI is set to a value of 100. It is considered a best practice to manually configure the ESI value on each participating interface although not required in the case of a single-active service.  The core-isolation-group configuration is used to shutdown CE access interfaces when a tracked core upstream interface goes down. This way a CE will not send traffic into a PE node isolated from the rest of the network.   
-
 <b>PE1</b> 
 <pre>
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
