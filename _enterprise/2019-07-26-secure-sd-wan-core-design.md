@@ -8,7 +8,8 @@ tags:
   - Segment Routing
   - Enterprise
   - WAN Core
-position: hidden
+  - Private MPLS
+position: top
 ---
 {% include toc icon="table" title="SD-WAN Core Design Guide" %}
 ![Enterprise-WAN.jpg]({{site.baseurl}}/images/Enterprise-WAN.jpg){:height="40%" width="40%"}{: .align-right}
