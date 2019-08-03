@@ -315,7 +315,7 @@ This value is used only with EVPN VPWS point to point services. It defines a loc
 ### Topology Diagram for Example Services 
 The following is a topology diagram to follow along with the service endpoints in the below service configuration examples.  
 
-<insert picture here>  
+![ixp-base-topology.png]({{site.baseurl}}/images/ixp/ixp-base-topology.jpg)
 
 ### P2P Peer Interconnect using EVPN-VPWS  
 The following highlights a simple P2P transparent L2 interconnect using EVPN-VPWS. It is assumed the EVPN BGP address family has been configured.  
