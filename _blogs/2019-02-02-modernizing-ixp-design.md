@@ -45,7 +45,6 @@ In the mid 1990s as the Internet became more of a privatized public network, the
 The United States was not the only location in the world seeing the formation of Internet exchanges. The Amsterdam Internet Exchange, AMS-IX was formed in 1994 and is still the largest Internet Exchange in Europe.  
 
 
-
 ## IX Design Evolution 
 -------------------
 As the Internet has evolved so has IX design, driven by bandwidth growth and the need for more flexible interconnection as the scope of traffic and who connects to the Internet evolves.  
@@ -315,7 +314,7 @@ This value is used only with EVPN VPWS point to point services. It defines a loc
 ### Topology Diagram for Example Services 
 The following is a topology diagram to follow along with the service endpoints in the below service configuration examples.  
 
-![ixp-base-topology.png](http://xrdocs.io/design/images/ixp-design/ixp-base-topology.jpg)
+![ixp-base-topology.png](http://xrdocs.io/design/images/ixp-design/ixp-base-topology.png)
 
 ### P2P Peer Interconnect using EVPN-VPWS  
 The following highlights a simple P2P transparent L2 interconnect using EVPN-VPWS. It is assumed the EVPN BGP address family has been configured.  
