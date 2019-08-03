@@ -40,7 +40,7 @@ In the mid 1990s as the Internet became more of a privatized public network, the
 | *MAE-WEST         | San Jose, CA      | MCI| 
 | PAIX             | Palo Alto, CA          | PacBell | 
 
-**MAE-WEST was not one of the original four NAPs awarded by NFSNET but was already established as a west coast IX prior to 1993 when those NAPs were awarded.  
+<i>MAE-WEST was not one of the original four NAPs awarded by NFSNET but was already established as a west coast IX prior to 1993 when those NAPs were awarded.</i> 
 
 The United States was not the only location in the world seeing the formation of Internet exchanges. The Amsterdam Internet Exchange, AMS-IX was formed in 1994 and is still the largest Internet Exchange in Europe.  
 
@@ -63,14 +63,13 @@ As IX fabrics began to grow, there arose a need for better control of traffic pa
 
 #### VPLS and P2P PW over MPLS 
 MPLS (Multi-Protocol Label Switching) has been a popular data plane shim layer for providing virtual private networks over a common fabric for more than a decade now. Distribution of labels is done using LDP or RSVP-TE. RSVP-TE offer resilience through the use of fast-reroute and the ability to engineer traffic paths based on constraints. In the design section we will examine the benefits of Segment Routing over both LDP and RSVP-TE.   
-
-MPLS itself is not enough to interconnect IX participants, it requires using services to do so. VPLS (Virtual Private Lan Service) is the service most widely deployed today, emulating the data plane of a L2 switch, but carrying the traffic as MPLS-encapsulated frames. Point to point services are commonly provisioned using point to point pseudowires signaled using either a BGP or LDP control-plane. Please see (RFC XXX and RFC XXX).    
+MPLS itself is not enough to interconnect IX participants, it requires using overlay VPN services. VPLS (Virtual Private Lan Service) is the service most widely deployed today, emulating the data plane of a L2 switch, but carrying the traffic as MPLS-encapsulated frames. Point to point services are commonly provisioned using point to point pseudowires signaled using either a BGP or LDP control-plane. Please see RFC 4761 and RFC 6624.    
 
 #### EVPN over VXLAN 
-We will speak more about EVPN in the design section, but it has become the modern way to deliver L2VPN services, using a control-plane similar to L3VPN. EVPN is a control-plane protocol that can utilize different underlying transport methods. VXLAN is one method which encapsulates Layer2 frames into a VXLAN packet carried over IP/UDP. VXLAN is considered an overlay and since it is carried in IP has no inherent ability to provide resiliency or traffic engineering capabilities. Gaining that functionality requires layering VXLAN on top of MPLS transport, adding complexity to the overall network. Using simple IP/UDP encapsulation, VXLAN is well suited for overlays traversing foreign networks, but IXP networks do not generally need this requirement with the infrastructure being managed by a single entity.  
+We will speak more about EVPN in the design section, but it has become the modern way to deliver L2VPN services, using a control-plane similar to L3VPN. EVPN extends MP-BGP with signaling extensions for L2 and L3  services that can utilize different underlying transport methods. VXLAN is one method which encapsulates Layer2 frames into a VXLAN packet carried over IP/UDP. VXLAN is considered "overlay transport" since it is carried in IP over any underlying path. VXLAN has no inherent ability to provide resiliency or traffic engineering capabilities. Gaining that functionality requires layering VXLAN on top of MPLS transport, adding complexity to the overall network. Using simple IP/UDP encapsulation, VXLAN is well suited for overlays traversing 3rd party opaque L3 networks, but IXP networks do not generally have this requirement.   
 
 #### TRILL, PBB, and other L2 Fabric Technology 
-At a point in the early 2010s there was industry momentum towards creating a more advanced network without introducing the complexity of L3 routing into the network. Two protocols with more widespread support were TRILL and PBB (Provider Backbone Bridging) and its TE addition PBB-TE. Proprietary fabrics were also proposed like Cisco FabricPath and Juniper QFabric. Ultimately with the cost reduction of full L3 routing devices, these technologies faded and did not see widespread industry adoption. 
+At a point in the early 2010s there was industry momentum towards creating a more advanced network without introducing L3 routing into the network, considered complex by those in favor of L2. Two protocols with support were TRILL (Transparent Interconnection of Lots of Links), 802.1ah PBB (Provider Backbone Bridging), and its TE addition PBB-TE. Proprietary fabrics were also proposed like Cisco FabricPath and Juniper QFabric. Ultimately these technologies faded and did not see widespread industry adoption. 
 
 Modern IX Fabric Requirements 
 -------------------------
@@ -129,14 +128,15 @@ The table below lists the more common L2 security features required by an IX net
 
 | Feature | Description | 
 | ---------------- | ---------------------- |
-|    | Ability to create filters based on L2 frame criteria (SRC/DST MAC, Ethertype, control BPDUs, etc)  |
+| L3 ACL   | Ability filter on L3 criteria, useful for filtering attacks towards fabric subnets and participants |
 | ARP/ND/RA policing | Police ARP/ND/RA requests |  
 | MAC scale limits  | Limit MAC scale for specific Bridge Domain|
 | Static ARP | Override dynamic ARP with static ARP entries |
 
-
-
 ## Additional IX Components 
+### Fabric and Peer Service Automation  
+Ideally the management of the underlying network fabric, participant interfaces, and participant services are automated. Using a tool like Cisco NSO as a single source of truth for the network eliminates configuration errors, eases deployment, and eases the removal of configuration when it is no longer needed. NSO also allows easy abstraction and deployment of point to point and multi-point services through the use of defined service models and templates. Deployed services should be well-defined to reduce support complexity.     
+
 ### Route Servers
 A redundant set of route servers is used in many IX deployments to eliminate each peer having to configure a BGP session to every other peer. The route server is similar to a BGP route reflector with the main difference being a route server operates with EBGP peers and not IBGP peers. The route server also acts as a point of route security since the filters governing advertisements between participants is typically performed on the route server. Route server definition can be found in RFC 7947 and route server operations in RFC 7948.    
 
@@ -315,7 +315,7 @@ This value is used only with EVPN VPWS point to point services. It defines a loc
 ### Topology Diagram for Example Services 
 The following is a topology diagram to follow along with the service endpoints in the below service configuration examples.  
 
-![ixp-base-topology.png]({{site.baseurl}}/images/ixp/ixp-base-topology.jpg)
+![ixp-base-topology.png](http://xrdocs.io/design/images/ixp-design/ixp-base-topology.jpg)
 
 ### P2P Peer Interconnect using EVPN-VPWS  
 The following highlights a simple P2P transparent L2 interconnect using EVPN-VPWS. It is assumed the EVPN BGP address family has been configured.  
