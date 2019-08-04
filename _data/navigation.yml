@@ -1,0 +1,12 @@
+main:
+  - title: "Blogs"
+    url: /blogs/
+
+  - title: "Enterprise"
+    url: /enterprise/
+
+  - title: "Search"
+    url: /search
+
+  - title: "Tags"
+    url: /tags/
