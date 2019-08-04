@@ -234,7 +234,7 @@ segment-routing
 
 The following configuration example shows an example IS-IS deployment with SR-MPLS extensions enabled for the IPv4 address family. The SR-enabling configuration lines are bolded, showing how Segment Routing and TI-LFA (FRR) can be deployed with very little configuration. SR must be deployed on all interconnected nodes to provide end to end reachability.  
 
-<code>router isis example 
+```router isis example 
  set-overload-bit on-startup wait-for-bgp
  is-type level-2-only
  net 49.0002.1921.6801.4003.00
@@ -266,7 +266,7 @@ The following configuration example shows an example IS-IS deployment with SR-MP
   address-family ipv4 unicast
   fast-reroute per-prefix ti-lfa
   metric 10
-</code>
+```
 
 The two key elements to enable Segment Routing are `segment-routing mpls` under the ipv4 unicast address family and the node `prefix-sid absolute 16341` definition under the Loopback0 interface.  The prefix-sid can be defined as either an indexed value or absolute. The index value is added to the SRGB start (16000 in our case) to derive the SID value. Using absolute SIDs is recommended where possible, but in a multi-vendor network where one vendor may not be able to use the same SRGB as the other, using an indexed value is necessary.   
 
