@@ -230,7 +230,7 @@ segment-routing
  local-block 17000 17999
 </pre>
 
-### IGP / Segment Routing Configuration 
+### Base IGP / Segment Routing Configuration 
 
 The following configuration example shows an example IS-IS deployment with SR-MPLS extensions enabled for the IPv4 address family. The SR-enabling configuration lines are bolded, showing how Segment Routing and TI-LFA (FRR) can be deployed with very little configuration. SR must be deployed on all interconnected nodes to provide end to end reachability.  
 
@@ -337,6 +337,9 @@ The simplest P2P interconnect is single-homed on both ends. The single-active se
 to identify a specific service.  This service originates on PE1 and terminates on PE3. The service data plane path utilizes ECMP across the 
 core network, one of the benefits of using an SR underlay. 
 
+<b>Diagram</b>
+![ixp-sh-vpws.png](http://xrdocs.io/design/images/ixp-design/ixp-sh-vpws.png)
+
 <b>PE1</b> 
 <pre>
 interface TenGigabitEthernet0/0/0/1.100 encapsulation l2transport 
@@ -375,6 +378,10 @@ across all active links in the bundle across all PEs. PE3 will receive two route
 to balance traffic towards PE1 and PE2. Another option is to use `single-active` load-balancing mode, which will only forward traffic towards 
 the ethernet-segment from the DF (default forwarder). Single-active is commonly used to enforce customer bandwidth rates, while still providing 
 redundancy. In the case where there are multiple EVPN services on the same bundle interface, they will be balanced across the interfaces using the DF election algorithm.     
+
+<b>Diagram</b>
+![ixp-mh-vpws.png](http://xrdocs.io/design/images/ixp-design/ixp-mh-vpws.png)
+
 
 <b>Note the LACP system MAC and ethernet-segment (ESI) on both PE nodes must be configured with the same values</b> 
  
