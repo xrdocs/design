@@ -19,7 +19,6 @@ Modern IX Fabric Design
 ============================
 
 ## Internet Exchange History 
--------------------------
 ### Initial Exchanges 
 The Internet was founded on a loosely coupled open interconnectivity model. The ability for two networks to use a simple protocol to exchange IP routing data was essential in the growth of the initial research-focused Internet as well as what it has become today. As the Internet grew it made sense to create locations where multiple networks could connect to each other over a common multi-access network.  The initial exchanges connected to NFSNet in the 1980s were located in San Francisco, New York, and Chicago, with an additional European exchange in Stockholm, Sweden. During these days the connectivity was between universities and other government research institutions, but that would soon change as commercial interest in the Internet grew.   
 
@@ -152,16 +151,16 @@ Modern IXP Fabric Network Design
 ------------------------------------------
 ## Topology Considerations 
 ### Scale Out Design 
-We can learn from modern datacenter design in how we build a modern IX fabric, at least the network located within a single facility or group of locations in close proximity. The use of smaller functional building blocks increases operational efficiency and resiliency within the fabric. Connecting devices in a Clos (leaf/spine or fat-tree are other names) fabric seen in Figure XX versus a large modular chassis approach has a number of benefits. 
+We can learn from modern datacenter design in how we build a modern IX fabric, at least the network located within a single facility or group of locations in close proximity. The use of smaller functional building blocks increases operational efficiency and resiliency within the fabric. Connecting devices in a Clos (leaf/spine or fat-tree are other names) fabric seen in Figure XX versus a large modular chassis approach has a number of benefits.
+
+![ixp-scale-out.png](http://xrdocs.io/design/images/ixp-design/ixp-scale-out.png)
 
 #### Fabric Design Benefits 
 * Scale the fabric by simply adding devices and interconnects 
 * Optimal connectivity between fabric endpoints 
 * Increased resiliency by utilizing ECMP across the fabric 
 * Ability to easily takes nodes in and out of service without affecting many services 
-
-
-In the case of interconnecting remote datacenters using a more fabric based approach increases overall scale and resiliency. 
+* In the case of interconnecting remote datacenters using a more fabric based approach increases overall scale and resiliency. 
 
 ## Segment Routing Underlay 
 ### Segment Routing and Segment Routing Traffic Engineering
