@@ -213,10 +213,11 @@ Modern IXP Deployment
 -----------------------------
 ## Background 
 In the following section we will explore the deployment using IOS-XR devices and CLI. We will start with the most basic deployment and add additional components to enable features such as multi-plane design and L3 services.  
-## Segment Routing Underlay Deployment 
-In the simplest deployment example, Segment Routing is deployed by configuring either OSPF or IS-IS with SR MPLS extensions enabled. The configuration example below utilizes IS-IS as the SR underlay IGP protocol.   
 
-### Topology Diagram for Fabric 
+## Single-plane Segment Routing Underlay Deployment 
+In the simplest deployment example, Segment Routing is deployed by configuring either OSPF or IS-IS with SR MPLS extensions enabled. The configuration example below utilizes IS-IS as the SR underlay IGP protocol. The underlay is deployed as a single IS-IS L2 domain using Segment Routing MPLS.    
+
+### Topology Diagram for Single-plane Fabric 
 
 ![ixp-sr-topology.png](http://xrdocs.io/design/images/ixp-design/ixp-sr-topology.png)
 
@@ -257,7 +258,7 @@ router isis example
   passive
   address-family ipv4 unicast
    metric 10
-   <b>prefix-sid absolute 16341</b>
+   <b>prefix-sid absolute 16041</b>
    !
   !
  !
@@ -269,7 +270,7 @@ router isis example
   metric 10
 </pre> 
 
-The two key elements to enable Segment Routing are `segment-routing mpls` under the ipv4 unicast address family and the node `prefix-sid absolute 16341` definition under the Loopback0 interface.  The prefix-sid can be defined as either an indexed value or absolute. The index value is added to the SRGB start (16000 in our case) to derive the SID value. Using absolute SIDs is recommended where possible, but in a multi-vendor network where one vendor may not be able to use the same SRGB as the other, using an indexed value is necessary.   
+The two key elements to enable Segment Routing are `segment-routing mpls` under the ipv4 unicast address family and the node `prefix-sid absolute 16041` definition under the Loopback0 interface.  The prefix-sid can be defined as either an indexed value or absolute. The index value is added to the SRGB start (16000 in our case) to derive the SID value. Using absolute SIDs is recommended where possible, but in a multi-vendor network where one vendor may not be able to use the same SRGB as the other, using an indexed value is necessary.   
 
 ### Enabling TI-LFA 
 Topology-Independent Loop-Free Alternates is not enabled by default. The above configuration enables TI-LFA on the Gigabit0/0/0/1 interface for IPv4 prefixes. TI-LFA can be enabled for all interfaces by using this command under the address-family ipv4 unicast in the IS-IS instance configuration. It is recommended to enable it at the interface level to control other TI-LFA attributes such as node protection and SRLG support.  
@@ -283,7 +284,39 @@ interface GigabitEthernet0/0/0/1
   metric 10
 </pre>>
 
-This is all that is needed to enable Segment Routing, and you can already see the simplicity in its deployment vs additional label distribution protocols like LDP and RSVP-TE. 
+<b>This is all that is needed to enable Segment Routing, and you can already see the simplicity in its deployment vs additional label distribution protocols like LDP and RSVP-TE.</b>  
+
+## Dual-Plane Fabric using SR Flexible Algorithms 
+The dual plane design extends the base configuration by defining a topology based on SR flexible algorithms. Defining two independent topologies allows us to easily support disjoint services across the IX fabric. IX operators can offer diverse services without the fear of convergence on common links. This can be done with a minimal amount of configuration. Flex-algo also supports LFA and will ensure LFA paths are also constrainted to a specific topology. 
+
+### Flex-Algo Background 
+SR Flex-Algo is a simple extension to SR and its compatible IGP protocols to advertise membership in a logical network topology by configuring a specific "algorithm" attached to a node prefix-sid. All nodes with the same algorithm defined participate in the topology and can use the definition to define the behavior of a path.  In the below example when a head-end computes a path to node 9's node-SID assigned to algorithm 129 it will only use nodes participating in the minimal delay topology. This means a constraint can be met using a single node SID in the SID list instead of multiple explicit SIDs. Flex-algo is defined in IETF draft: draft-ietf-lsr-flex-algo and more details on Flex-Algo can be found on http://www.segment-routing.net  
+
+![ixp-flex-algo.png](http://xrdocs.io/design/images/ixp-design/ixp-flex-algo.png)
+* Algo 0 = IGP Metric 
+* Algo 128 = Green = Minimize TE Metric 
+* Algo 129 = Red = Minimize Delay 
+
+### Diagram 
+![ixp-dual-plane.png](http://xrdocs.io/design/images/ixp-design/ixp-dual-plane.png)
+
+### Dual-plane Flex-Algo Configuration 
+We will not re-introduce all of the configuration but the subset necessary to define both planes. To enable flexible algorithms you must first define the algorithms globally in IS-IS. The second step is to define a node prefix-sid on a Loopback interface and attach an algorithm to the SID. By default all nodes participate in algorithm 0, which is to simply compute a path based on minimal IGP metric.  
+
+* IS-IS Configuration 
+<pre>
+router isis 1
+ flex-algo 100  
+  advertise-definition  
+!
+flex-algo 200 
+  advertise-definition 
+!
+interface Loopback0
+ address-family ipv4 unicast
+  prefix-sid algorithm 100 absolute 16141 
+  prefix-sid algorithm 101 absolute 16241
+</pre>
 
 
 ## Simple L2VPN Services using EVPN  
@@ -507,14 +540,6 @@ Traditional IXPs are designed using a L2 fabric, native or emulated. Traditional
 ### First-hop Redundancy Protocol (FHRP)using EVPN multi-homing and Anycast IRB  
 One simple use case for EVPN is to provide simplified L3 multi-homing by eliminating the scale and L2 switching requirements of VRRP or HSRP. We utilize the concept of Anycast Integrated Routing and Bridging to allow a redundant L3 interface be created within an EVPN instance. This IRB can be located within a L3VPN or in the global routing table. In a simple L3 IXP connectivity example the intra-subnet and inter-subnet routing is done using EVPN's built-in route types.  It is recommended to carry all L3 services within a VPN so the base infrastructure does not share the same routing and forwarding plane as services. This enhances security of the infrastructure layer.    
 
-## Traffic Engineered Services  
-In the simple examples, the ingress PE will simply use any available SR-MPLS forwarding path to the egress PE, the BGP next-hop of the EVPN or L3VPN service prefix. SR-TE gives us the ability to create engineered paths across the network to the egress PE, using a number of potential constraints. There are also different ways  
-### Low-Latency P2P L2 interconnect 
-In this example we will configure the P2P EVPN-VPWS service to use a specific low latency SR-TE policy across the network.   
-<b>Methods to configure low latency path</b> 
-#### Static defined SR Policy on head-end node 
-#### On-demand next-hop to dynamically create SR Policy on demand 
-### Diverse L2 P2P services using SR Flex-Algo 
 
 
 
