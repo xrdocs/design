@@ -493,7 +493,7 @@ l2vpn
 </pre>
 
 ### EVPN ELAN Service 
-An EVPN ELAN service is analgous to the function of VPLS, but modernized to eliminate the deficiencies with VPLS highlighted in earlier sections. 
+An EVPN ELAN service is analgous to the function of VPLS, but modernized to eliminate the deficiencies with VPLS highlighted in earlier sections. MAC addresses are learned 
 
 #### EVPN ELAN with Single-homed Endpoints 
 In this configuration example the CE devices are connected to each PE using a single attachment interface. The EVI is set to a value of 100. It is considered a best practice to manually configure the ESI value on each participating interface although not required in the case of a single-active service.  The core-isolation-group configuration is used to shutdown CE access interfaces when a tracked core upstream interface goes down. This way a CE will not send traffic into a PE node isolated from the rest of the network.   
@@ -540,6 +540,32 @@ Traditional IXPs are designed using a L2 fabric, native or emulated. Traditional
 ### First-hop Redundancy Protocol (FHRP)using EVPN multi-homing and Anycast IRB  
 One simple use case for EVPN is to provide simplified L3 multi-homing by eliminating the scale and L2 switching requirements of VRRP or HSRP. We utilize the concept of Anycast Integrated Routing and Bridging to allow a redundant L3 interface be created within an EVPN instance. This IRB can be located within a L3VPN or in the global routing table. In a simple L3 IXP connectivity example the intra-subnet and inter-subnet routing is done using EVPN's built-in route types.  It is recommended to carry all L3 services within a VPN so the base infrastructure does not share the same routing and forwarding plane as services. This enhances security of the infrastructure layer.    
 
+# Appendix 
+
+## Model Driven Telemetry 
+### Device Health 
+
+| | | 
+| ---------| -------------- |
+| Uptime | Cisco-IOS-XR-shellutil-oper:system-time/uptime | 
+| CPU | Cisco-IOS-XR-wdsysmon-fd-oper:system-monitoring/cpu-utilization | 
+| Memory| Cisco-IOS-XR-nto-misc-oper:memory-summary/nodes/node/summary | 
+### Infrastructure Monitoring
+| | |
+|--------|----------------|  
+|Interface Summary|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-summary|
+|Interface Stats|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters| |IS-IS Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/statistics-global| 
+|IS-IS Interfaces and Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces|
+|IS-IS Adjacencies|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/level/adjacencies/adjacency| 
+|IS-IS Route Info|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/protocol/isis/as/information| 
+|BGP Route Entries |Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/rt-entries/rt-entry| 
+|MPLS Label Allocation|Cisco-IOS-XR-mpls-lsd-oper:mpls-lsd/label-summary| 
+|IPv4 Node Prefix-SIDs|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid| 
+
+### Service Monitoring
+Add EVPN MDT 
+Add L3VPN MDT 
+ 
 
 
 
