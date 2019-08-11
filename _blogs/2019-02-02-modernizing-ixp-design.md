@@ -542,7 +542,7 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 
 # Appendix 
 
-## Model Driven Telemetry 
+## Periodic Model Driven Telemetry 
 ### Device Health 
 
 | | | 
@@ -565,8 +565,15 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 ### Service Monitoring
 Add EVPN MDT 
 Add L3VPN MDT 
- 
 
+## Event Driven Telemetry 
+These telemetry paths send data only when an event is triggered like an interface state change. 
+
+| | | 
+| ---------| -------------- |
+| Interface State| | 
+| CPU | Cisco-IOS-XR-wdsysmon-fd-oper:system-monitoring/cpu-utilization | 
+| Memory| Cisco-IOS-XR-nto-misc-oper:memory-summary/nodes/node/summary | 
 
 
 
