@@ -368,5 +368,6 @@ The Secure SD-WAN Core based on Segment Routing is a proven design with producti
 
 [Segment-Routing](http://www.segment-routing.net)
 
-[Validation Test Device Configurations](https://github.com/ios-xr/design/tree/master/Core) 
+[Validation Test Device Configurations](https://github.com/ios-xr/design/tree/master/Core)
 
+[The Multi-Planar Backbone](https://www.cisco.com/c/dam/m/digital/elq-cmcglobal/OCA/Assets/Federal/The_Multiplanar_Backbone_MPBB.pdf)
