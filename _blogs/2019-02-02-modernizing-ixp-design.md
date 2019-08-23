@@ -578,6 +578,7 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 | ASR9K Power| Cisco-IOS-XR-asr9k-sc-envmon-oper:environmental-monitoring/racks/rack/slots/slot/modules/module/power/power-bag |
 | NCS 5500 Environmentals | Cisco-IOS-XR-sysadmin-fretta-envmon-ui:environment/oper |  
 |NCS 5500 FIB Resources|Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper:dpa/stats/nodes/node/hw-resources-datas/hw-resources-data| 
+
 ### Infrastructure Monitoring
 | | |
 |--------|----------------|  
@@ -636,10 +637,10 @@ One configures a supported sensor-path as Event Driven by setting the sample-int
 
 | | | 
 | ---------| -------------- |
-|Interface Admin State| |Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/state|  
-|Interface Oper State| |Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/line-state|
-|IPv4 Route Attributes|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes| 
-|IPv4 Route Attributes|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes|
-|Optics Admin State|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
-|Optics State|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/controller-state|   
+|Interface Admin State| Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/state|  
+|Interface Oper State| Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/line-state|
+|IPv4 Route Attributes| Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes| 
+|IPv4 Route Attributes| Cisco-IOS-XR-ip-rib-ipv6-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes|
+|Optics Admin State| Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
+|Optics State| Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/controller-state|   
 
