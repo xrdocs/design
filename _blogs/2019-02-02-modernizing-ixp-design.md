@@ -285,7 +285,7 @@ interface GigabitEthernet0/0/0/1
   address-family ipv4 unicast
    <b>fast-reroute per-prefix ti-lfa</b> 
   metric 10
-</pre>>
+</pre>
 
 This is all that is needed to enable Segment Routing, and you can already see the simplicity in its deployment vs additional label distribution protocols like LDP and RSVP-TE
 {: .notice--info}
