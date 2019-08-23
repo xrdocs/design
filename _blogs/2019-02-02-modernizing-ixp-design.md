@@ -583,51 +583,51 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 
 | Function | Sensor Path |
 |--------|----------------|  
-|Interface Summary|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-summary|
-|Interface Counters|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters|
-|Interface Data/PPS Rates (show int)|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/cache/data-rate|  
-|IS-IS Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/statistics-global| 
-|Optics Information|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info|
-|Aggregate Bundle Stats|Cisco-IOS-XR-bundlemgr-oper:bundles| 
-|LLDP Neighbor Information|Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/neighbors| 
-|QoS Input Stats|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input| 
-|QoS Output Stats|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/output|
-|QoS VOQ Information|Cisco-IOS-XR-qos-ma-oper:qos/qos-global/vo-q/vo-q-statistics/vo-qinterfaces/vo-qinterface|
-|LPTS (Control Plane) Flow Information|Cisco-IOS-XR-lpts-pre-ifib-oper:lpts-pifib/nodes/node/dynamic-flows-stats/flow|   
-|IPv4 ACL Resources|Cisco-IOS-XR-ipv4-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details|  
-|IPv6 ACL Resources|Cisco-IOS-XR-ipv6-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details|  
+|Interface Summary | Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-summary|
+|Interface Counters | Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters|
+|Interface Data/PPS Rates (show int) | Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/cache/data-rate|  
+|IS-IS Stats | Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/statistics-global| 
+|Optics Information | Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info|
+|Aggregate Bundle Stats | Cisco-IOS-XR-bundlemgr-oper:bundles| 
+|LLDP Neighbor Information | Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/neighbors| 
+|QoS Input Stats | Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input| 
+|QoS Output Stats | Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/output|
+|QoS VOQ Information | Cisco-IOS-XR-qos-ma-oper:qos/qos-global/vo-q/vo-q-statistics/vo-qinterfaces/vo-qinterface|
+|LPTS (Control Plane) Flow Information | Cisco-IOS-XR-lpts-pre-ifib-oper:lpts-pifib/nodes/node/dynamic-flows-stats/flow|   
+|IPv4 ACL Resources | Cisco-IOS-XR-ipv4-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details|  
+|IPv6 ACL Resources | Cisco-IOS-XR-ipv6-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details|  
 
 ### Routing Protocols  
 
 | Function | Sensor Path |
 |--------|----------------|  
-|IS-IS Protocol Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/statistics-global|
-|IS-IS Interfaces and Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces|
-|IS-IS Adjacencies|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/level/adjacencies/adjacency| 
-|IS-IS Route Info|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/protocol/isis/as/information|
-|BFD Statistics|Cisco-IOS-XR-ip-bfd-oper:bfd/summary|
-|BFD Session Details|Cisco-IOS-XR-ip-bfd-oper:bfd/session-details|  
-|IPv4 BGP GRT Process Info|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info| 
-|IPv6 BGP GRT Process Info|Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info| 
-|IPv4 BGP GRT Neighbor Stats|Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors| 
-|IPv6 BGP GRT Neighbor Stats|Cisco-IOS-XR-ipv6-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors| 
-|BGP Route Target Entries |Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/rt-entries/rt-entry|
-|RPKI Summary Stats|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/rpki-summary| 
-|BGP Flowspec Stats|Cisco-IOS-XR-flowspec-oper:flow-spec/vrfs/vrf/afs/af/flows|  
-|MPLS Label Allocation|Cisco-IOS-XR-mpls-lsd-oper:mpls-lsd/label-summary| 
-|SR Node Prefix-SIDs|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid|
+|IS-IS Protocol Stats | Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/statistics-global|
+|IS-IS Interfaces and Stats | Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces|
+|IS-IS Adjacencies | Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/level/adjacencies/adjacency| 
+|IS-IS Route Info | Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/protocol/isis/as/information|
+|BFD Statistics | Cisco-IOS-XR-ip-bfd-oper:bfd/summary|
+|BFD Session Details | Cisco-IOS-XR-ip-bfd-oper:bfd/session-details|  
+|IPv4 BGP GRT Process Info | Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info| 
+|IPv6 BGP GRT Process Info | Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info| 
+|IPv4 BGP GRT Neighbor Stats | Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors| 
+|IPv6 BGP GRT Neighbor Stats | Cisco-IOS-XR-ipv6-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors| 
+|BGP Route Target Entries | Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/rt-entries/rt-entry|
+|RPKI Summary Stats | Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/rpki-summary| 
+|BGP Flowspec Stats | Cisco-IOS-XR-flowspec-oper:flow-spec/vrfs/vrf/afs/af/flows|  
+|MPLS Label Allocation | Cisco-IOS-XR-mpls-lsd-oper:mpls-lsd/label-summary| 
+|SR Node Prefix-SIDs | Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid|
 
 ### Service Monitoring
 
 | Function | Sensor Path |
 |--------|----------------|  
-|L2VPN FIB Summary|Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary| 
-|L2VPN Bridge Domain Info|Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/bridge-domains/bridge-domain|
-|L2VPN BD MAC Details|Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fibmac-details| 
-|L2VPN BD Stats |Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-bridge-domains|
-|EVPN IPv4 Learned IP/MAC|Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip4macs|  
-|EVPN IPv6 Learned IP/MAC|Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip6macs|  
-|L2VPN Xconnect Info|Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnects| 
+|L2VPN FIB Summary | Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary| 
+|L2VPN Bridge Domain Info | Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/bridge-domains/bridge-domain|
+|L2VPN BD MAC Details | Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fibmac-details| 
+|L2VPN BD Stats | Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-bridge-domains|
+|EVPN IPv4 Learned IP/MAC | Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip4macs|  
+|EVPN IPv6 Learned IP/MAC | Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip6macs|  
+|L2VPN Xconnect Info | Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnects| 
 
 
 Add L3VPN MDT 
@@ -640,10 +640,10 @@ One configures a supported sensor-path as Event Driven by setting the sample-int
 
 | Function | Sensor Path |
 | ---------| -------------- |
-|Interface Admin State| Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/state|  
-|Interface Oper State| Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/line-state|
-|IPv4 Route Attributes| Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes| 
-|IPv4 Route Attributes| Cisco-IOS-XR-ip-rib-ipv6-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes|
-|Optics Admin State| Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
-|Optics State| Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/controller-state|   
+|Interface Admin State | Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/state|  
+|Interface Oper State | Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/line-state|
+|IPv4 Route Attributes | Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes| 
+|IPv4 Route Attributes | Cisco-IOS-XR-ip-rib-ipv6-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes|
+|Optics Admin Sfxtate | Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
+|Optics State | Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/controller-state|   
 
