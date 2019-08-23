@@ -237,7 +237,8 @@ segment-routing
 
 The following configuration example shows an example IS-IS deployment with SR-MPLS extensions enabled for the IPv4 address family. The SR-enabling configuration lines are bolded, showing how Segment Routing and TI-LFA (FRR) can be deployed with very little configuration. SR must be deployed on all interconnected nodes to provide end to end reachability.  
 
-<pre>
+<div class="highlighter-rouge">
+<pre class="highlight">
 router isis example 
  set-overload-bit on-startup wait-for-bgp
  is-type level-2-only
@@ -277,7 +278,7 @@ The two key elements to enable Segment Routing are `segment-routing mpls` under 
 ### Enabling TI-LFA 
 Topology-Independent Loop-Free Alternates is not enabled by default. The above configuration enables TI-LFA on the Gigabit0/0/0/1 interface for IPv4 prefixes. TI-LFA can be enabled for all interfaces by using this command under the address-family ipv4 unicast in the IS-IS instance configuration. It is recommended to enable it at the interface level to control other TI-LFA attributes such as node protection and SRLG support.  
 
-<pre> 
+<pre class="highlight">
 interface GigabitEthernet0/0/0/1
   circuit-type level-1
   point-to-point
@@ -286,7 +287,8 @@ interface GigabitEthernet0/0/0/1
   metric 10
 </pre>>
 
-<b>This is all that is needed to enable Segment Routing, and you can already see the simplicity in its deployment vs additional label distribution protocols like LDP and RSVP-TE.</b>  
+This is all that is needed to enable Segment Routing, and you can already see the simplicity in its deployment vs additional label distribution protocols like LDP and RSVP-TE
+{: .notice--info}
 
 ## Dual-Plane Fabric using SR Flexible Algorithms 
 The dual plane design extends the base configuration by defining a topology based on SR flexible algorithms. Defining two independent topologies allows us to easily support disjoint services across the IX fabric. IX operators can offer diverse services without the fear of convergence on common links. This can be done with a minimal amount of configuration. Flex-algo also supports LFA and will ensure LFA paths are also constrainted to a specific topology. 
@@ -306,7 +308,8 @@ SR Flex-Algo is a simple extension to SR and its compatible IGP protocols to adv
 We will not re-introduce all of the configuration but the subset necessary to define both planes. To enable flexible algorithms you must first define the algorithms globally in IS-IS. The second step is to define a node prefix-sid on a Loopback interface and attach an algorithm to the SID. By default all nodes participate in algorithm 0, which is to simply compute a path based on minimal IGP metric.  
 
 * IS-IS Configuration 
-<pre>
+<pre class="highlight">
+interface GigabitEthernet0/0/0/1
 router isis 1
  flex-algo 100  
   advertise-definition  
@@ -327,7 +330,7 @@ We will first look at EVPN configuration for deploying basic point to point and 
 ### BGP AFI/SAFI Configuration 
 EVPN uses additional BGP address families in order to carry EVPN information across the network. EVPN uses the BGP L2VPN AFI of 25 and a SAFI of 70. In order to carry EVPN information between two peers, this AFI/SAFI must be enabled on all peers. The following shows the minimum BGP configuration to enable this at a global and peer level.    
 
-<pre> 
+<pre class="highlight"> 
 router bgp 100
  bgp router-id 100.0.0.1
  <b>address-family l2vpn evpn</b>
@@ -377,7 +380,7 @@ core network, one of the benefits of using an SR underlay. As you can see in the
 ![ixp-sh-vpws.png](http://xrdocs.io/design/images/ixp-design/ixp-sh-vpws.png)
 
 <b>PE1</b> 
-<pre>
+<pre class="highlight">
 interface TenGigabitEthernet0/0/0/1.100 encapsulation l2transport 
  encapsulation dot1q 100
  rewrite ingress tag pop 100 symmetric
@@ -390,7 +393,7 @@ l2vpn
     neighbor evpn evi 10 target 100 source 101 
 </pre>
 <b>PE3</b> 
-<pre>
+<pre class="highlight">
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
  encapsulation dot1q 100
  rewrite ingress tag pop 100 symmetric
@@ -422,7 +425,7 @@ redundancy. In the case where there are multiple EVPN services on the same bundl
 <b>Note the LACP system MAC and ethernet-segment (ESI) on both PE nodes must be configured with the same values</b> 
  
 <b>PE1</b> 
-<pre>
+<pre class="highlight">
 lacp system mac 1001.1001.1001
 !
 interface TenGigabitEthernet0/0/0/1
@@ -452,7 +455,7 @@ l2vpn
     neighbor evpn evi 10 target 100 source 100 
 </pre>
 <b>PE2</b> 
-<pre>
+<pre class="highlight">
 lacp system mac 1001.1001.1001
 !
 interface TenGigabitEthernet0/0/0/1
@@ -481,7 +484,7 @@ l2vpn
     neighbor evpn evi 10 target 100 source 100i
 </pre>
 <b>PE3</b> 
-<pre>
+<pre class="highlight">
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
  encapsulation dot1q 100
  rewrite ingress tag pop 100 symmetric
@@ -500,7 +503,7 @@ An EVPN ELAN service is analgous to the function of VPLS, but modernized to elim
 #### EVPN ELAN with Single-homed Endpoints 
 In this configuration example the CE devices are connected to each PE using a single attachment interface. The EVI is set to a value of 100. It is considered a best practice to manually configure the ESI value on each participating interface although not required in the case of a single-active service.  The core-isolation-group configuration is used to shutdown CE access interfaces when a tracked core upstream interface goes down. This way a CE will not send traffic into a PE node isolated from the rest of the network.   
 <b>PE1</b> 
-<pre>
+<pre class="highlight">
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
  encapsulation dot1q 100
  rewrite ingress tag pop 100 symmetric
@@ -608,7 +611,7 @@ Add L3VPN MDT
 ## Event Driven Telemetry 
 These telemetry paths can be configured as EDT, only sending data when an event is triggered like an interface state change. 
 
-<pre>One configures a supported sensor-path as Event Driven by setting the sample-interval in the subscription to 0.</pre> 
+<pre class="highlight">One configures a supported sensor-path as Event Driven by setting the sample-interval in the subscription to 0.</pre> 
 
 | | | 
 | ---------| -------------- |
