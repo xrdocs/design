@@ -231,11 +231,13 @@ segment-routing
  global-block 16000 16999
  local-block 17000 17999
 </pre> 
+</div>
 
 ### Base IGP / Segment Routing Configuration 
 
 The following configuration example shows an example IS-IS deployment with SR-MPLS extensions enabled for the IPv4 address family. The SR-enabling configuration lines are bolded, showing how Segment Routing and TI-LFA (FRR) can be deployed with very little configuration. SR must be deployed on all interconnected nodes to provide end to end reachability.  
 
+<div class="highlighter-rouge">
 <pre class="highlight">
 router isis example 
  set-overload-bit on-startup wait-for-bgp
@@ -270,12 +272,14 @@ router isis example
   fast-reroute per-prefix ti-lfa
   metric 10
 </pre> 
+</div>
 
 The two key elements to enable Segment Routing are `segment-routing mpls` under the ipv4 unicast address family and the node `prefix-sid absolute 16041` definition under the Loopback0 interface.  The prefix-sid can be defined as either an indexed value or absolute. The index value is added to the SRGB start (16000 in our case) to derive the SID value. Using absolute SIDs is recommended where possible, but in a multi-vendor network where one vendor may not be able to use the same SRGB as the other, using an indexed value is necessary.   
 
 ### Enabling TI-LFA 
 Topology-Independent Loop-Free Alternates is not enabled by default. The above configuration enables TI-LFA on the Gigabit0/0/0/1 interface for IPv4 prefixes. TI-LFA can be enabled for all interfaces by using this command under the address-family ipv4 unicast in the IS-IS instance configuration. It is recommended to enable it at the interface level to control other TI-LFA attributes such as node protection and SRLG support.  
 
+<div class="highlighter-rouge">
 <pre class="highlight">
 interface GigabitEthernet0/0/0/1
   circuit-type level-1
@@ -284,6 +288,7 @@ interface GigabitEthernet0/0/0/1
    <b>fast-reroute per-prefix ti-lfa</b> 
   metric 10
 </pre>
+</div>
 
 This is all that is needed to enable Segment Routing, and you can already see the simplicity in its deployment vs additional label distribution protocols like LDP and RSVP-TE
 {: .notice--info}
@@ -306,6 +311,7 @@ SR Flex-Algo is a simple extension to SR and its compatible IGP protocols to adv
 We will not re-introduce all of the configuration but the subset necessary to define both planes. To enable flexible algorithms you must first define the algorithms globally in IS-IS. The second step is to define a node prefix-sid on a Loopback interface and attach an algorithm to the SID. By default all nodes participate in algorithm 0, which is to simply compute a path based on minimal IGP metric.  
 
 * IS-IS Configuration 
+<div class="highlighter-rouge">
 <pre class="highlight">
 interface GigabitEthernet0/0/0/1
 router isis 1
@@ -320,6 +326,7 @@ interface Loopback0
   prefix-sid algorithm 100 absolute 16141 
   prefix-sid algorithm 101 absolute 16241
 </pre>
+</div>
 
 
 ## Simple L2VPN Services using EVPN  
@@ -328,6 +335,7 @@ We will first look at EVPN configuration for deploying basic point to point and 
 ### BGP AFI/SAFI Configuration 
 EVPN uses additional BGP address families in order to carry EVPN information across the network. EVPN uses the BGP L2VPN AFI of 25 and a SAFI of 70. In order to carry EVPN information between two peers, this AFI/SAFI must be enabled on all peers. The following shows the minimum BGP configuration to enable this at a global and peer level.    
 
+<div class="highlighter-rouge">
 <pre class="highlight"> 
 router bgp 100
  bgp router-id 100.0.0.1
@@ -343,6 +351,7 @@ neighbor-group EVPN
 neighbor 100.0.0.2
  use neighbor-group EVPN 
 </pre> 
+</div>
 
 At this point the two neighbors will become established over the EVPN AFI/SAFI.  The command to view the relationship in IOS-XR is `show bgp l2vpn evpn summary`  
 
@@ -378,6 +387,7 @@ core network, one of the benefits of using an SR underlay. As you can see in the
 ![ixp-sh-vpws.png](http://xrdocs.io/design/images/ixp-design/ixp-sh-vpws.png)
 
 <b>PE1</b> 
+<div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigabitEthernet0/0/0/1.100 encapsulation l2transport 
  encapsulation dot1q 100
@@ -390,7 +400,10 @@ l2vpn
     interface TenGigabitEthernet0/0/0/1.100 
     neighbor evpn evi 10 target 100 source 101 
 </pre>
+</div>
 <b>PE3</b> 
+
+<div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
  encapsulation dot1q 100
@@ -403,6 +416,7 @@ l2vpn
     interface TenGigabitEthernet0/0/1/1.100 
     neighbor evpn evi 10 target 101 source 100 
 </pre>
+</div>
 
 #### Multi-homed Single-active/All-active EVPN-VPWS service
 A multi-homed service uses two attachment circuits from the CE to unique PE devices on the provider side. LACP is used between the PEs and CE 
@@ -423,6 +437,7 @@ redundancy. In the case where there are multiple EVPN services on the same bundl
 <b>Note the LACP system MAC and ethernet-segment (ESI) on both PE nodes must be configured with the same values</b> 
  
 <b>PE1</b> 
+<div class="highlighter-rouge">
 <pre class="highlight">
 lacp system mac 1001.1001.1001
 !
@@ -452,7 +467,9 @@ l2vpn
     lacp system mac 3637.3637.3637
     neighbor evpn evi 10 target 100 source 100 
 </pre>
+</div>
 <b>PE2</b> 
+<div class="highlighter-rouge">
 <pre class="highlight">
 lacp system mac 1001.1001.1001
 !
@@ -481,7 +498,9 @@ l2vpn
     interface Bundle-Ether1.100 
     neighbor evpn evi 10 target 100 source 100i
 </pre>
+</div>
 <b>PE3</b> 
+<div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
  encapsulation dot1q 100
@@ -494,6 +513,7 @@ l2vpn
     interface TenGigabitEthernet0/0/1/1.100 
     neighbor evpn evi 10 target 100 source 100 
 </pre>
+</div>
 
 ### EVPN ELAN Service 
 An EVPN ELAN service is analgous to the function of VPLS, but modernized to eliminate the deficiencies with VPLS highlighted in earlier sections. ELAN is a multipoint service interconnecting all participating hosts connected to an ESI participating in the same EVI.   
@@ -501,6 +521,7 @@ An EVPN ELAN service is analgous to the function of VPLS, but modernized to elim
 #### EVPN ELAN with Single-homed Endpoints 
 In this configuration example the CE devices are connected to each PE using a single attachment interface. The EVI is set to a value of 100. It is considered a best practice to manually configure the ESI value on each participating interface although not required in the case of a single-active service.  The core-isolation-group configuration is used to shutdown CE access interfaces when a tracked core upstream interface goes down. This way a CE will not send traffic into a PE node isolated from the rest of the network.   
 <b>PE1</b> 
+<div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
  encapsulation dot1q 100
@@ -534,6 +555,7 @@ evpn
  ! 
 ! 
 </pre>
+</div>
 
 ## L3 Services using EVPN and L3VPN
 
@@ -609,7 +631,8 @@ Add L3VPN MDT
 ## Event Driven Telemetry 
 These telemetry paths can be configured as EDT, only sending data when an event is triggered like an interface state change. 
 
-<pre class="highlight">One configures a supported sensor-path as Event Driven by setting the sample-interval in the subscription to 0.</pre> 
+One configures a supported sensor-path as Event Driven by setting the sample-interval in the subscription to 0
+{: .notice--info}
 
 | | | 
 | ---------| -------------- |
@@ -620,5 +643,3 @@ These telemetry paths can be configured as EDT, only sending data when an event 
 |Optics Admin State|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
 |Optics State|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/controller-state|   
 
-
-</div> 
