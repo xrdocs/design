@@ -231,7 +231,6 @@ segment-routing
  global-block 16000 16999
  local-block 17000 17999
 </pre> 
-</div>>
 
 ### Base IGP / Segment Routing Configuration 
 
@@ -622,3 +621,4 @@ These telemetry paths can be configured as EDT, only sending data when an event 
 |Optics State|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/controller-state|   
 
 
+</div> 
