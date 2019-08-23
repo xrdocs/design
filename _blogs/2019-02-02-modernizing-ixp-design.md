@@ -291,7 +291,7 @@ interface GigabitEthernet0/0/0/1
 </div>
 
 This is all that is needed to enable Segment Routing, and you can already see the simplicity in its deployment vs additional label distribution protocols like LDP and RSVP-TE
-{: .notice--info}
+{: .notice--success}
 
 ## Dual-Plane Fabric using SR Flexible Algorithms 
 The dual plane design extends the base configuration by defining a topology based on SR flexible algorithms. Defining two independent topologies allows us to easily support disjoint services across the IX fabric. IX operators can offer diverse services without the fear of convergence on common links. This can be done with a minimal amount of configuration. Flex-algo also supports LFA and will ensure LFA paths are also constrainted to a specific topology. 
@@ -570,7 +570,7 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 ## Periodic Model Driven Telemetry 
 ### Device Health 
 
-| | | 
+| Function | Sensor Path |
 | ---------| -------------- |
 | Uptime | Cisco-IOS-XR-shellutil-oper:system-time/uptime | 
 | CPU | Cisco-IOS-XR-wdsysmon-fd-oper:system-monitoring/cpu-utilization | 
@@ -580,7 +580,8 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 |NCS 5500 FIB Resources|Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper:dpa/stats/nodes/node/hw-resources-datas/hw-resources-data| 
 
 ### Infrastructure Monitoring
-| | |
+
+| Function | Sensor Path |
 |--------|----------------|  
 |Interface Summary|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-summary|
 |Interface Counters|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters|
@@ -597,7 +598,8 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 |IPv6 ACL Resources|Cisco-IOS-XR-ipv6-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details|  
 
 ### Routing Protocols  
-| | |
+
+| Function | Sensor Path |
 |--------|----------------|  
 |IS-IS Protocol Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/statistics-global|
 |IS-IS Interfaces and Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces|
@@ -616,7 +618,8 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 |SR Node Prefix-SIDs|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid|
 
 ### Service Monitoring
-| | |
+
+| Function | Sensor Path |
 |--------|----------------|  
 |L2VPN FIB Summary|Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary| 
 |L2VPN Bridge Domain Info|Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/bridge-domains/bridge-domain|
@@ -633,9 +636,9 @@ Add L3VPN MDT
 These telemetry paths can be configured as EDT, only sending data when an event is triggered like an interface state change. 
 
 One configures a supported sensor-path as Event Driven by setting the sample-interval in the subscription to 0
-{: .notice--info}
+{: .notice--success}
 
-| | | 
+| Function | Sensor Path |
 | ---------| -------------- |
 |Interface Admin State| Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/state|  
 |Interface Oper State| Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/line-state|
