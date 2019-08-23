@@ -224,12 +224,17 @@ In the simplest deployment example, Segment Routing is deployed by configuring e
 ### SRGB and SRLB Definition 
 It's recommended to first configure the Segment Routing Global Block (SRGB) across all nodes needing connectivity between each other. In most instances a single SRGB will be used across the entire network. In a SR MPLS deployment the SRGB and SRLB correspond to the label blocks allocated to SR. IOS-XR has a maximum configurable SRGB limit of 512,000 labels, however please consult platform-specific documentation for maximum values. The SRLB corresponds to the labels allocated for SIDs local to the node, such as Adjacency-SIDs. It is recommended to configure the same SRLB block across all nodes. The SRLB must not overlap with the SRGB.  The SRGB and SRLB are configured in IOS-XR with the following configuration:   
 
-<pre>
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code> 
 segment-routing 
 segment-routing
  global-block 16000 16999
  local-block 17000 17999
 </pre>
+</code>
+</div>>
 
 ### Base IGP / Segment Routing Configuration 
 
@@ -369,7 +374,7 @@ The following highlights a simple P2P transparent L2 interconnect using EVPN-VPW
 #### Single-homed EVPN-VPWS service   
 The simplest P2P interconnect is single-homed on both ends. The single-active service can use an entire physical interface or VLAN tags
 to identify a specific service.  This service originates on PE1 and terminates on PE3. The service data plane path utilizes ECMP across the 
-core network, one of the benefits of using an SR underlay. 
+core network, one of the benefits of using an SR underlay. As you can see in the config below, there is no static neighbor config, P2P VPWS connections are dynamically setup by matching the EVI, target, and source identifiers. The target and source identifiers must match on the two nodes participating in the service.    
 
 <b>Diagram</b>
 ![ixp-sh-vpws.png](http://xrdocs.io/design/images/ixp-design/ixp-sh-vpws.png)
@@ -385,7 +390,7 @@ l2vpn
  xconnect group evpn-vpws-example
   p2p pe1-to-pe2
     interface TenGigabitEthernet0/0/0/1.100 
-    neighbor evpn evi 10 target 100 source 100 
+    neighbor evpn evi 10 target 100 source 101 
 </pre>
 <b>PE3</b> 
 <pre>
@@ -398,7 +403,7 @@ l2vpn
  xconnect group evpn-vpws-example
   p2p pe1-to-pe2
     interface TenGigabitEthernet0/0/1/1.100 
-    neighbor evpn evi 10 target 100 source 100 
+    neighbor evpn evi 10 target 101 source 100 
 </pre>
 
 #### Multi-homed Single-active/All-active EVPN-VPWS service
@@ -493,7 +498,7 @@ l2vpn
 </pre>
 
 ### EVPN ELAN Service 
-An EVPN ELAN service is analgous to the function of VPLS, but modernized to eliminate the deficiencies with VPLS highlighted in earlier sections. MAC addresses are learned 
+An EVPN ELAN service is analgous to the function of VPLS, but modernized to eliminate the deficiencies with VPLS highlighted in earlier sections. ELAN is a multipoint service interconnecting all participating hosts connected to an ESI participating in the same EVI.   
 
 #### EVPN ELAN with Single-homed Endpoints 
 In this configuration example the CE devices are connected to each PE using a single attachment interface. The EVI is set to a value of 100. It is considered a best practice to manually configure the ESI value on each participating interface although not required in the case of a single-active service.  The core-isolation-group configuration is used to shutdown CE access interfaces when a tracked core upstream interface goes down. This way a CE will not send traffic into a PE node isolated from the rest of the network.   
@@ -535,7 +540,7 @@ evpn
 ## L3 Services using EVPN and L3VPN
 
 ### "L3 IXP" Design 
-Traditional IXPs are designed using a L2 fabric, native or emulated. Traditional L2 IXPs use either native or emulated L2 fabrics, exposing the fabric and participants to the unwanted characteristics associated with L2 networks. The bevy of security features required are due to these negative characteristics. We can build a L3 IXP today by using P2P interfaces to each participant and simply route between them. EVPN using IRB with proxy-arp I can build a fabric where I do not need to add default routes to the CE host, they can simply rely on the same ARP mechanism as previously done when all multi-point hosts are in the same subnet, but provides the isolation of a L3 interface.  
+Traditional IXPs are designed using a L2 fabric, native or emulated. Traditional L2 IXPs use either native or emulated L2 fabrics, exposing the fabric and participants to the unwanted characteristics associated with L2 networks. The bevy of security features required are due to these negative characteristics. We can build a L3 IXP today by using P2P interfaces to each participant and simply route between them. EVPN using IRB with proxy-arp provides a fabric where I do not need to add default routes to the CE host, they can simply rely on the same ARP mechanism as previously done when all multi-point hosts are in the same subnet, but provides the isolation of a L3 interface.  
 
 ### First-hop Redundancy Protocol (FHRP)using EVPN multi-homing and Anycast IRB  
 One simple use case for EVPN is to provide simplified L3 multi-homing by eliminating the scale and L2 switching requirements of VRRP or HSRP. We utilize the concept of Anycast Integrated Routing and Bridging to allow a redundant L3 interface be created within an EVPN instance. This IRB can be located within a L3VPN or in the global routing table. In a simple L3 IXP connectivity example the intra-subnet and inter-subnet routing is done using EVPN's built-in route types.  It is recommended to carry all L3 services within a VPN so the base infrastructure does not share the same routing and forwarding plane as services. This enhances security of the infrastructure layer.    
@@ -549,31 +554,72 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 | ---------| -------------- |
 | Uptime | Cisco-IOS-XR-shellutil-oper:system-time/uptime | 
 | CPU | Cisco-IOS-XR-wdsysmon-fd-oper:system-monitoring/cpu-utilization | 
-| Memory| Cisco-IOS-XR-nto-misc-oper:memory-summary/nodes/node/summary | 
+| Memory| Cisco-IOS-XR-nto-misc-oper:memory-summary/nodes/node/summary |
+| ASR9K Power| Cisco-IOS-XR-asr9k-sc-envmon-oper:environmental-monitoring/racks/rack/slots/slot/modules/module/power/power-bag |
+| NCS 5500 Environmentals | Cisco-IOS-XR-sysadmin-fretta-envmon-ui:environment/oper |  
+|NCS 5500 FIB Resources|Cisco-IOS-XR-fretta-bcm-dpa-hw-resources-oper:dpa/stats/nodes/node/hw-resources-datas/hw-resources-data| 
 ### Infrastructure Monitoring
 | | |
 |--------|----------------|  
 |Interface Summary|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-summary|
-|Interface Stats|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters| |IS-IS Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/statistics-global| 
+|Interface Counters|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters|
+|Interface Data/PPS Rates (show int)|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/cache/data-rate|  
+|IS-IS Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/statistics-global| 
+|Optics Information|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info|
+|Aggregate Bundle Stats|Cisco-IOS-XR-bundlemgr-oper:bundles| 
+|LLDP Neighbor Information|Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/neighbors| 
+|QoS Input Stats|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input| 
+|QoS Output Stats|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/output|
+|QoS VOQ Information|Cisco-IOS-XR-qos-ma-oper:qos/qos-global/vo-q/vo-q-statistics/vo-qinterfaces/vo-qinterface|
+|LPTS (Control Plane) Flow Information|Cisco-IOS-XR-lpts-pre-ifib-oper:lpts-pifib/nodes/node/dynamic-flows-stats/flow|   
+|IPv4 ACL Resources|Cisco-IOS-XR-ipv4-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details|  
+|IPv6 ACL Resources|Cisco-IOS-XR-ipv6-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details|  
+
+### Routing Protocols  
+| | |
+|--------|----------------|  
+|IS-IS Protocol Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/statistics-global|
 |IS-IS Interfaces and Stats|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces|
 |IS-IS Adjacencies|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/level/adjacencies/adjacency| 
-|IS-IS Route Info|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/protocol/isis/as/information| 
-|BGP Route Entries |Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/rt-entries/rt-entry| 
+|IS-IS Route Info|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/protocol/isis/as/information|
+|BFD Statistics|Cisco-IOS-XR-ip-bfd-oper:bfd/summary|
+|BFD Session Details|Cisco-IOS-XR-ip-bfd-oper:bfd/session-details|  
+|IPv4 BGP GRT Process Info|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info| 
+|IPv6 BGP GRT Process Info|Cisco-IOS-XR-ipv6-bgp-oper:bgp/instances/instance/instance-active/default-vrf/process-info| 
+|IPv4 BGP GRT Neighbor Stats|Cisco-IOS-XR-ipv4-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors| 
+|IPv6 BGP GRT Neighbor Stats|Cisco-IOS-XR-ipv6-bgp-oper/bgp/instances/instance/instance-active/default-vrf/neighbors| 
+|BGP Route Target Entries |Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/rt-entries/rt-entry|
+|RPKI Summary Stats|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/rpki-summary| 
+|BGP Flowspec Stats|Cisco-IOS-XR-flowspec-oper:flow-spec/vrfs/vrf/afs/af/flows|  
 |MPLS Label Allocation|Cisco-IOS-XR-mpls-lsd-oper:mpls-lsd/label-summary| 
-|IPv4 Node Prefix-SIDs|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid| 
+|SR Node Prefix-SIDs|Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/ipv4-routes/ipv4-route/native-status/native-details/primary/source/nodal-sid|
 
 ### Service Monitoring
-Add EVPN MDT 
+| | |
+|--------|----------------|  
+|L2VPN FIB Summary|Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary| 
+|L2VPN Bridge Domain Info|Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/bridge-domains/bridge-domain|
+|L2VPN BD MAC Details|Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fibmac-details| 
+|L2VPN BD Stats |Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-bridge-domains|
+|EVPN IPv4 Learned IP/MAC|Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip4macs|  
+|EVPN IPv6 Learned IP/MAC|Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip6macs|  
+|L2VPN Xconnect Info|Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnects| 
+
+
 Add L3VPN MDT 
 
 ## Event Driven Telemetry 
-These telemetry paths send data only when an event is triggered like an interface state change. 
+These telemetry paths can be configured as EDT, only sending data when an event is triggered like an interface state change. 
+
+<pre>One configures a supported sensor-path as Event Driven by setting the sample-interval in the subscription to 0.</pre> 
 
 | | | 
 | ---------| -------------- |
-| Interface State| | 
-| CPU | Cisco-IOS-XR-wdsysmon-fd-oper:system-monitoring/cpu-utilization | 
-| Memory| Cisco-IOS-XR-nto-misc-oper:memory-summary/nodes/node/summary | 
-
+|Interface Admin State| |Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/state|  
+|Interface Oper State| |Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interfaces/interface/line-state|
+|IPv4 Route Attributes|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes| 
+|IPv4 Route Attributes|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/vrfs/vrf/afs/af/safs/saf/ip-rib-route-table-names/ip-rib-route-table-name/routes|
+|Optics Admin State|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
+|Optics State|Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/controller-state|   
 
 
