@@ -237,7 +237,6 @@ segment-routing
 
 The following configuration example shows an example IS-IS deployment with SR-MPLS extensions enabled for the IPv4 address family. The SR-enabling configuration lines are bolded, showing how Segment Routing and TI-LFA (FRR) can be deployed with very little configuration. SR must be deployed on all interconnected nodes to provide end to end reachability.  
 
-<div class="highlighter-rouge">
 <pre class="highlight">
 router isis example 
  set-overload-bit on-startup wait-for-bgp
