@@ -308,23 +308,26 @@ SR Flex-Algo is a simple extension to SR and its compatible IGP protocols to adv
 ![ixp-dual-plane.png](http://xrdocs.io/design/images/ixp-design/ixp-dual-plane.png)
 
 ### Dual-plane Flex-Algo Configuration 
-We will not re-introduce all of the configuration but the subset necessary to define both planes. To enable flexible algorithms you must first define the algorithms globally in IS-IS. The second step is to define a node prefix-sid on a Loopback interface and attach an algorithm to the SID. By default all nodes participate in algorithm 0, which is to simply compute a path based on minimal IGP metric.  
+We will not re-introduce all of the configuration but the subset necessary to define both planes. To enable flexible algorithms you must first define the algorithms globally in IS-IS. The second step is to define a node prefix-sid on a Loopback interface and attach an algorithm to the SID. By default all nodes participate in algorithm 0, which is to simply compute a path based on minimal IGP metric. 
+
+The *advertise-definition* option advertises the definition through the IGP domain. Using this command the definition can be defined on a subset of nodes and the global configuration is unnecessary on all nodes. It's recommended to define the 
+flex-algo identifiers on all participating nodes and advertise them.   
 
 * IS-IS Configuration 
 <div class="highlighter-rouge">
 <pre class="highlight">
 interface GigabitEthernet0/0/0/1
 router isis 1
- flex-algo 100  
-  advertise-definition  
+ <b>flex-algo 100 
+  advertise-definition</b>  
 !
-flex-algo 200 
-  advertise-definition 
+<b>flex-algo 200 
+  advertise-definition</b>  
 !
 interface Loopback0
  address-family ipv4 unicast
-  prefix-sid algorithm 100 absolute 16141 
-  prefix-sid algorithm 101 absolute 16241
+  <b>prefix-sid algorithm 100 absolute 16141</b> 
+  <b>prefix-sid algorithm 101 absolute 16241</b> 
 </pre>
 </div>
 
@@ -633,7 +636,7 @@ One simple use case for EVPN is to provide simplified L3 multi-homing by elimina
 Add L3VPN MDT 
 
 ## Event Driven Telemetry 
-These telemetry paths can be configured as EDT, only sending data when an event is triggered like an interface state change. 
+These telemetry paths can be configured as EDT, only sending data when an event is triggered, for example an interface state change. 
 
 One configures a supported sensor-path as Event Driven by setting the sample-interval in the subscription to 0
 {: .notice--success}
