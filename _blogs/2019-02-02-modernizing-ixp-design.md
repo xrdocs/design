@@ -1,6 +1,6 @@
 ---
 published: false 
-date: '2019-07-27 11:00-0400'
+date: '2019-08-27 11:00-0400'
 title: Modernizing IX Fabric Design Using Segment Routing and EVPN 
 excerpt: IX fabrics began as very simple L2 switching designs but have evolved to worldwide interconnection networks 
 supporting Terabits of traffic. SR and EVPN transform simple IX networks into flexible and resilient fabrics support any service type at any location in the fabric.    
@@ -437,7 +437,8 @@ redundancy. In the case where there are multiple EVPN services on the same bundl
 ![ixp-mh-vpws.png](http://xrdocs.io/design/images/ixp-design/ixp-mh-vpws.png)
 
 
-<b>Note the LACP system MAC and ethernet-segment (ESI) on both PE nodes must be configured with the same values</b> 
+Note the LACP system MAC and ethernet-segment (ESI) on both PE nodes must be configured with the same values. 
+{: .notice--danger}
  
 <b>PE1</b> 
 <div class="highlighter-rouge">
@@ -518,12 +519,73 @@ l2vpn
 </pre>
 </div>
 
-### EVPN ELAN Service 
+
+### EVPN ELAN Services 
 An EVPN ELAN service is analgous to the function of VPLS, but modernized to eliminate the deficiencies with VPLS highlighted in earlier sections. ELAN is a multipoint service interconnecting all participating hosts connected to an ESI participating in the same EVI.   
 
 #### EVPN ELAN with Single-homed Endpoints 
-In this configuration example the CE devices are connected to each PE using a single attachment interface. The EVI is set to a value of 100. It is considered a best practice to manually configure the ESI value on each participating interface although not required in the case of a single-active service.  The core-isolation-group configuration is used to shutdown CE access interfaces when a tracked core upstream interface goes down. This way a CE will not send traffic into a PE node isolated from the rest of the network.   
+In this configuration example the CE devices are connected to each PE using a single attachment interface. The EVI is set to a value of 100. It is considered a best practice to manually configure the ESI value on each participating interface although not required in the case of a single-active service. The ESI must be unique for each Ethernet Segment attached to the EVPN EVI.   
+
+The core-isolation-group configuration is used to shutdown CE access interfaces when a tracked core upstream interface goes down. This way a CE will not send traffic into a PE node isolated from the rest of the network.  
+{: .notice--success}
+
+
+In the bridge configuration, L2 security for storm control is enabled for unknown-unicast and multicast traffic.  Additionally the MAC agging time is set to 30 minutes to decrease ARP traffic, and the MAC limit is set to 1 since all peers should be connected with a routed L3 interface to the IX fabric.  Under the physical interface configuration an input QoS policy is configured to remark all inbound traffic with a DSCP of 0 and a L2 access list is configured to only allow 802.1Q TPID traffic with a VLAN tag of 100 from a specific MAC address.  
+{: .notice--warning}
+
 <b>PE1</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+ethernet-services access-list restrict_mac 
+ 10 permit host 00aa.dc11.ba99 any 8100 vlan 100
+ 20 deny any any 
+! 
+policy-map remark-ingress
+ class class-default
+  set dscp 0
+ !
+ end-policy-map
+!
+interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
+ encapsulation dot1q 100
+ rewrite ingress tag pop 100 symmetric
+<b>service-policy input remark-ingress
+ ethernet-services access-group restrict-peer-mac ingress</b> 
+ conf t 
+ !
+!
+l2vpn 
+ bridge group evpn 
+  bridge-domain evpn-elan 
+   interface TenGigabitEthernet0/0/1/1.100
+   mac limit 1 maximum 1 
+   mac aging time 3600
+   storm-control unknown-unicast pps 100 
+   storm-control mulitcast pps 100 
+   ! 
+  evi 100 
+  !
+ ! 
+!  
+evpn 
+ evi 100 
+  advertise-mac 
+  !
+ !
+ group 1 
+  core interface TenGigabitEthernet0/0/1/24 
+ ! 
+ interface TenGigabitEthernet0/0/1/1.100 
+  ethernet-segment  
+   identifier type 0 11.11.11.11.11.11.11.11.11
+  ! 
+  core-isolation-group 1 
+ ! 
+! 
+</pre>
+</div>
+
+<b>PE2</b> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
@@ -552,7 +614,7 @@ evpn
  ! 
  interface TenGigabitEthernet0/0/1/1.100 
   ethernet-segment  
-   identifier type 0 11.11.11.11.11.11.11.11.11
+   identifier type 0 11.11.11.11.11.11.11.11.12
   ! 
   core-isolation-group 1 
  ! 
@@ -560,9 +622,121 @@ evpn
 </pre>
 </div>
 
-### In our next blog we will explore advanced Segment Routing TE with Flex-Algo and Layer 3 services using L3VPN and EVPN IRB 
+#### EVPN ELAN with Dual-homed Endpoint 
+In this configuration example the CE1 device is connected to both PE1 and PE2. The EVI is set to a value of 100. The ESI value of 11.11.11.11.11.11.11.11.11 is configured on both PE devices connected to CE1.  
+<b>PE1</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+lacp system mac 1001.1001.1001
+!
+interface TenGigabitEthernet0/0/0/1
+  description "To CE1" 
+  bundle id 1 mode on 
+  !
+interface Bundle-Ether1.100 l2transport  
+ encapsulation dot1q 100
+ rewrite ingress tag pop 100 symmetric
+ !
+!
+l2vpn 
+ bridge group evpn 
+  bridge-domain evpn-elan 
+   interface Bundle-Ether1.100
+   mac limit 1 maximum 1 
+   mac aging time 3600 
+   ! 
+  evi 100 
+  !
+ ! 
+!  
+evpn 
+ evi 100 
+  advertise-mac 
+  !
+ !
+ group 1 
+  core interface TenGigabitEthernet0/0/1/24 
+ ! 
+ interface TenGigabitEthernet0/0/1/1.100 
+  ethernet-segment  
+   identifier type 0 11.11.11.11.11.11.11.11.11
+   load-balancing-mode single-active <b>Optional command to only forward through DF</b> 
+  ! 
+  core-isolation-group 1 
+ ! 
+! 
+</pre>
+</div>
+
+
+<b>PE2</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+lacp system mac 1001.1001.1001
+!
+interface TenGigabitEthernet0/0/0/1
+  description "To CE1" 
+  bundle id 1 mode on 
+  !
+interface Bundle-Ether1.100 l2transport  
+ encapsulation dot1q 100
+ rewrite ingress tag pop 100 symmetric
+ !
+!
+l2vpn 
+ bridge group evpn 
+  bridge-domain evpn-elan 
+   interface Bundle-Ether1.100
+   mac limit 1 maximum 1 
+   mac aging time 3600 
+   ! 
+  evi 100 
+  !
+ ! 
+!  
+evpn 
+ evi 100 
+  advertise-mac 
+  !
+ !
+ group 1 
+  core interface TenGigabitEthernet0/0/1/24 
+ ! 
+ interface TenGigabitEthernet0/0/1/1.100 
+  ethernet-segment  
+   identifier type 0 11.11.11.11.11.11.11.11.11
+   load-balancing-mode single-active <b>Optional command to only forward through DF</b> 
+  ! 
+  core-isolation-group 1 
+ ! 
+! 
+</pre>
+</div>
 
 # Appendix 
+
+## Segment Routing and EVPN Troubleshooting Commands 
+| Show command | Function  |
+|--------|----------------| 
+|isis segment-routing label table|Display learned node SIDs|  
+|mpls forwarding detail|Show general MPLS forwarding table| 
+|mpls forwarding prefix [prefix] detail|Show detail forwarding information for exact prefix|  
+|cef|Show FIB hardware forwarding information|   
+|mpls forwarding labels [label] detail| Display forwarding info and stats for EVPN label| 
+|bgp l2vpn evpn|Display EVPN NLRI|  
+|bgp l2vpn evpn rd [rd]|Display EVPN NLRI belonging to specific RD| 
+|bgp l2vpn evpn route-type [type]|Display EVPN routes of a specific route type|  
+|evpn internal-label | Display labels allocated to EVPN instances|
+|evpn ethernet-segment esi [esi] carving detail|Display EVPN service details|
+|evpn evi [vpn-id] mac|Show MAC address tables and MPLS label info for all EVI| 
+|evpn evi vpn-id [vpn] detail|Show detail info for a specific local EVI|
+|evpn evi vpn-id [vpn] detail|Show detail info for a specific local EVI|
+|l2vpn forwarding location [location] |L2 forwarding database|  
+|l2vpn forwarding bridge-domain [bridge-group:bridge-domain] mac-address detail location [location]|l2 forwaridng info for local bridge domain|  
+|l2vpn forwarding evpn[bridge-group:bridge-domain] mac-address detail location [location]|l2 forwaridng info for local bridge domain| 
+|l2vpn forwarding bridge-domain evpn ipv4-mac detail location [location]|Show EVPN IPv4 MAC info|  
+|l2vpn forwarding bridge-domain evpn ipv6-mac detail location [location]|Show EVPN IPv6 MAC info|  
+|l2vpn xconnect detail|Display EVPN VPWS info and state| 
 
 ## Periodic Model Driven Telemetry 
 ### Device Health 
@@ -626,9 +800,6 @@ evpn
 |EVPN IPv6 Learned IP/MAC | Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip6macs|  
 |L2VPN Xconnect Info | Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnects| 
 
-
-Add L3VPN MDT 
-
 ## Event Driven Telemetry 
 These telemetry paths can be configured as EDT, only sending data when an event is triggered, for example an interface state change. 
 
@@ -644,3 +815,4 @@ One configures a supported sensor-path as Event Driven by setting the sample-int
 |Optics Admin Sfxtate | Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
 |Optics State | Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/controller-state|   
 
+## In our next blog we will explore advanced Segment Routing TE using ODN/Flex-Algo and Layer 3 services using L3VPN and EVPN IRB 
