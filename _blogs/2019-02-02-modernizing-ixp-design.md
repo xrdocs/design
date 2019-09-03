@@ -461,7 +461,7 @@ evpn
  ! 
  interface Bundle-Ether1.100 
   ethernet-segment type 0 11.11.11.11.11.11.11.11.11
-  <b>load-balancing-mode single-active</b>  <-- Optional 
+  <b>load-balancing-mode single-active</b>  <-- <b>Optional</b> 
   core-isolation-group 1  
 !
 ! 
@@ -493,14 +493,14 @@ evpn
  ! 
  interface Bundle-Ether1.100 
   ethernet-segment type 0 11.11.11.11.11.11.11.11.11 
-  <b>load-balancing-mode single-active</b>  <-- Optional
+  <b>load-balancing-mode single-active</b>  <-- <b>Optional</b> 
   core-isolation-group 1  
 !
 l2vpn
  xconnect group evpn-vpws-example
   p2p pe1-to-pe2
     interface Bundle-Ether1.100 
-    neighbor evpn evi 10 target 100 source 100i
+    neighbor evpn evi 10 target 100 source 100
 </pre>
 </div>
 <b>PE3</b> 
@@ -549,9 +549,8 @@ policy-map remark-ingress
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
  encapsulation dot1q 100
  rewrite ingress tag pop 100 symmetric
-<b>service-policy input remark-ingress
- ethernet-services access-group restrict-peer-mac ingress</b> 
- conf t 
+ service-policy input remark-ingress
+ ethernet-services access-group restrict-peer-mac ingress<
  !
 !
 l2vpn 
@@ -588,9 +587,21 @@ evpn
 <b>PE2</b> 
 <div class="highlighter-rouge">
 <pre class="highlight">
+ethernet-services access-list restrict_mac 
+ 10 permit host 00aa.dc11.ba99 any 8100 vlan 100
+ 20 deny any any 
+! 
+policy-map remark-ingress
+ class class-default
+  set dscp 0
+ !
+ end-policy-map
+!
 interface TenGigabitEthernet0/0/1/1.100 encapsulation l2transport 
  encapsulation dot1q 100
  rewrite ingress tag pop 100 symmetric
+ service-policy input remark-ingress
+ ethernet-services access-group restrict-peer-mac ingress<
  !
 !
 l2vpn 
@@ -627,6 +638,16 @@ In this configuration example the CE1 device is connected to both PE1 and PE2. T
 <b>PE1</b> 
 <div class="highlighter-rouge">
 <pre class="highlight">
+ethernet-services access-list restrict_mac 
+ 10 permit host 00aa.dc11.ba99 any 8100 vlan 100
+ 20 deny any any 
+! 
+policy-map remark-ingress
+ class class-default
+  set dscp 0
+ !
+ end-policy-map
+!
 lacp system mac 1001.1001.1001
 !
 interface TenGigabitEthernet0/0/0/1
@@ -636,6 +657,8 @@ interface TenGigabitEthernet0/0/0/1
 interface Bundle-Ether1.100 l2transport  
  encapsulation dot1q 100
  rewrite ingress tag pop 100 symmetric
+ service-policy input remark-ingress
+ ethernet-services access-group restrict-peer-mac ingress<
  !
 !
 l2vpn 
@@ -660,7 +683,7 @@ evpn
  interface TenGigabitEthernet0/0/1/1.100 
   ethernet-segment  
    identifier type 0 11.11.11.11.11.11.11.11.11
-   load-balancing-mode single-active <b>Optional command to only forward through DF</b> 
+   load-balancing-mode single-active <-- <b>Optional command to only forward through DF</b> 
   ! 
   core-isolation-group 1 
  ! 
@@ -672,6 +695,16 @@ evpn
 <b>PE2</b> 
 <div class="highlighter-rouge">
 <pre class="highlight">
+ethernet-services access-list restrict_mac 
+ 10 permit host 00aa.dc11.ba99 any 8100 vlan 100
+ 20 deny any any 
+! 
+policy-map remark-ingress
+ class class-default
+  set dscp 0
+ !
+ end-policy-map
+!
 lacp system mac 1001.1001.1001
 !
 interface TenGigabitEthernet0/0/0/1
@@ -681,6 +714,8 @@ interface TenGigabitEthernet0/0/0/1
 interface Bundle-Ether1.100 l2transport  
  encapsulation dot1q 100
  rewrite ingress tag pop 100 symmetric
+ service-policy input remark-ingress
+ ethernet-services access-group restrict-peer-mac ingress<
  !
 !
 l2vpn 
@@ -705,7 +740,7 @@ evpn
  interface TenGigabitEthernet0/0/1/1.100 
   ethernet-segment  
    identifier type 0 11.11.11.11.11.11.11.11.11
-   load-balancing-mode single-active <b>Optional command to only forward through DF</b> 
+   load-balancing-mode single-active <-- <b>Optional command to only forward through DF</b> 
   ! 
   core-isolation-group 1 
  ! 
