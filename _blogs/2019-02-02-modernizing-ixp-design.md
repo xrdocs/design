@@ -816,4 +816,4 @@ One configures a supported sensor-path as Event Driven by setting the sample-int
 |Optics Admin Sfxtate | Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
 |Optics State | Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/controller-state|   
 
-## In our next blog we will explore advanced Segment Routing TE using ODN/Flex-Algo and Layer 3 services using L3VPN and EVPN IRB 
+# In our next blog we will explore advanced Segment Routing TE using ODN/Flex-Algo and Layer 3 services using L3VPN and EVPN IRB 
