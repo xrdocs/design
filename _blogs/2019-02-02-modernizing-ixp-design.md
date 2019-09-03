@@ -716,27 +716,28 @@ evpn
 # Appendix 
 
 ## Segment Routing and EVPN Troubleshooting Commands 
+
 | Show command | Function  |
 |--------|----------------| 
-|isis segment-routing label table|Display learned node SIDs|  
-|mpls forwarding detail|Show general MPLS forwarding table| 
-|mpls forwarding prefix [prefix] detail|Show detail forwarding information for exact prefix|  
-|cef|Show FIB hardware forwarding information|   
-|mpls forwarding labels [label] detail| Display forwarding info and stats for EVPN label| 
-|bgp l2vpn evpn|Display EVPN NLRI|  
-|bgp l2vpn evpn rd [rd]|Display EVPN NLRI belonging to specific RD| 
-|bgp l2vpn evpn route-type [type]|Display EVPN routes of a specific route type|  
-|evpn internal-label | Display labels allocated to EVPN instances|
-|evpn ethernet-segment esi [esi] carving detail|Display EVPN service details|
-|evpn evi [vpn-id] mac|Show MAC address tables and MPLS label info for all EVI| 
-|evpn evi vpn-id [vpn] detail|Show detail info for a specific local EVI|
-|evpn evi vpn-id [vpn] detail|Show detail info for a specific local EVI|
-|l2vpn forwarding location [location] |L2 forwarding database|  
-|l2vpn forwarding bridge-domain [bridge-group:bridge-domain] mac-address detail location [location]|l2 forwaridng info for local bridge domain|  
-|l2vpn forwarding evpn[bridge-group:bridge-domain] mac-address detail location [location]|l2 forwaridng info for local bridge domain| 
-|l2vpn forwarding bridge-domain evpn ipv4-mac detail location [location]|Show EVPN IPv4 MAC info|  
-|l2vpn forwarding bridge-domain evpn ipv6-mac detail location [location]|Show EVPN IPv6 MAC info|  
-|l2vpn xconnect detail|Display EVPN VPWS info and state| 
+| isis segment-routing label table | Display learned node SIDs |   
+| mpls forwarding detail | Show general MPLS forwarding table | 
+| mpls forwarding prefix [prefix] detail | Show detail forwarding information for exact prefix |  
+| cef | Show FIB hardware forwarding information |   
+| mpls forwarding labels [label] detail | Display forwarding info and stats for EVPN label | 
+| bgp l2vpn evpn | Display EVPN NLRI |  
+| bgp l2vpn evpn rd [rd] | Display EVPN NLRI belonging to specific RD | 
+| bgp l2vpn evpn route-type [type] | Display EVPN routes of a specific route type |  
+| evpn internal-label | Display labels allocated to EVPN instances |
+| evpn ethernet-segment esi [esi] carving detail|Display EVPN service details |
+| evpn evi [vpn-id] mac|Show MAC address tables and MPLS label info for all EVI | 
+| evpn evi vpn-id [vpn] detail|Show detail info for a specific local EVI |
+| evpn evi vpn-id [vpn] detail|Show detail info for a specific local EVI |
+| l2vpn forwarding location [location] | L2 forwarding database |  
+| l2vpn forwarding bridge-domain [bridge-group:bridge-domain] mac-address detail location [location] | l2 forwaridng info for local bridge domain |  
+| l2vpn forwarding evpn[bridge-group:bridge-domain] mac-address detail location [location] | l2 forwaridng info for local bridge domain | 
+| l2vpn forwarding bridge-domain evpn ipv4-mac detail location [location] | Show EVPN IPv4 MAC info |  
+| l2vpn forwarding bridge-domain evpn ipv6-mac detail location [location] | Show EVPN IPv6 MAC info |  
+| l2vpn xconnect detail | Display EVPN VPWS info and state| 
 
 ## Periodic Model Driven Telemetry 
 ### Device Health 
