@@ -1,5 +1,5 @@
 ---
-published: false 
+published: true 
 date: '2019-09-06 11:00-0400'
 title: Modernizing IX Fabric Design Using Segment Routing and EVPN 
 excerpt: IX fabrics began as very simple L2 switching designs but have evolved to worldwide interconnection networks 
@@ -10,7 +10,7 @@ tags:
   - Peering
   - Design
   - Internet Exchange
-position: hidden 
+position: top 
 ---
 
 {% include toc %}
