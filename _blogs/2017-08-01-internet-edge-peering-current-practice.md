@@ -200,7 +200,8 @@ RPKI origin validation works to validate the source of a prefix, but does not va
 BGP Flowspec
 -------------
 
-BGP Flowspec was standardized in RFC 5575 and defines additional BGP NLRI to inject traffic manipulation policy information to be dynamically implemented by a receiving router. BGP acts as the control-plane for disseminating the policy information while it is up to the BGP Flowspec receiver to implement the dataplane rules specified in the NLRI. At the Internet peering edge, DDoS protection has become extremely important, and automating the remediation of an incoming DDoS attack has become very important. IOS-XR on the ASR9000 and ASR9900 implements most functionality defined in RFC 5575 and the RFCs and drafts extending BGP Flowspec’s capabilities. IOS-XR supports many of the options
+BGP Flowspec was standardized in RFC 5575 and defines additional BGP NLRI to inject traffic manipulation policy information to be dynamically implemented by a receiving router. BGP acts as the control-plane for disseminating the policy information while it is up to the BGP Flowspec receiver to implement the dataplane rules specified in the NLRI. At the Internet peering edge, DDoS protection has become extremely important, and automating the remediation of an incoming DDoS attack has become very important. IOS-XR on the NCS 5500, ASR9000, and ASR9900 implements most functionality defined in RFC 5575 and the RFCs and drafts extending BGP Flowspec’s capabilities. Full details of IOS-XR's Flowspec implementation and configuration examples can be found at: https://community.cisco.com/t5/service-providers-blogs/bgp-flowspec-implementation-on-ncs5500-platforms/ba-p/3387443
+ 
 
 Summary
 =======
