@@ -52,7 +52,7 @@ increases operational complexity.
  Converged SDN Transport design introduces an SDN-ready architecture
 which evolves traditional Metro network design towards an SDN enabled,
 programmable network capable of delivering all services (Residential,
-Business, 5G Mobile Backhauling, Video, IoT) on the premise of
+Business, 4G/5G Mobile Backhaul, Video, IoT) on the premise of
 simplicity, full programmability, and cloud integration, with guaranteed
 service level agreements (SLAs).
 
@@ -473,7 +473,6 @@ request, the SR-PCE controller calculates the path based on the requested
 SLA, and uses PCEP to dynamically program the ingress node
 with a specific SR-TE Policy.
 
-
 ## Transport Controller Path Computation Engine (PCE)
     
 ### Segment Routing Path Computation Element (SR-PCE)
@@ -559,6 +558,25 @@ requirements. This blueprint must adapt to carry any service type, for example
 cable access, mobile, and business services over the same converged network infrastructure.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-multi-service-network.png)
+
+# Cable Converged Interconnect Network (CIN)
+
+## Summary  
+The Converged SDN Transport Design enables a multi-service CIN network by adding the support for the features and functions required to deliver a next-generation Ethernet/IP cable network. Differentiated from simple switch or L3 aggregation designs is the ability to support NG cable transport over the same common infrastructure supporting other services like mobile backhaul and business VPN services.   
+
+## Distributed Access Architecture  
+The cable Converged Interconnect Network is part of a next-generation Distributed Access Architecture (DAA), an architecture unlocking higher subscriber bandwidth by moving traditional cable functions deeper into the network closer to end users. R-PHY or Remote PHY, places the analog to digital conversion much closer to users, reducing the cable distance and thus enabling denser and higher order modulation used to achieve Gbps speeds over existing cable infrastructure. This reference design will cover the CIN design to support Remote PHY deployments.  
+
+## Remote PHY Components and Requirements 
+This section will list some of the components of an R-PHY network and the network requirements driven by those components. It is not considered to be an exhaustive list of all R-PHY components, please see the CableLabs specification document, the latest which can be access via the following URL:  https://specification-search.cablelabs.com/CM-SP-R-PHY 
+
+### Remote PHY Device (RPD) 
+The RPD unlocks the benefits of DAA by integrating the physical analog to digital conversions in a device deployed either in the field or located in a shelf in a facility. The uplink side of the RPD or RPHY shelf is simply IP/Ethernet, allowing transport across widely deployed IP infrastructure. The RPD-enabled node puts the PHY function much closer to an end user, allowing higher end-user speeds. The shelf allows cable operators to terminate only the PHY function in a hub and place the CMTS/MAC function in a more centralized facility, driving efficiency in the hub and overall network. The following diagram shows various options for how RPDs or an RPD shelf can be deployed. Since the PHY function is split from the MAC it allows independent placement of those functions.  
+
+### UEPI and DEPI Tunnels 
+Remote PHY replaced traditional analog cable infrastructure down to the  
+
+## Cisco CIN Hardware 
 
 
 ## 4G Transport and Services Modernization 
@@ -657,6 +675,7 @@ introduced with Segment Routing is the SR Mapping Server (SRMS), a control-plane
 element converting unicast LDP FECs to Segment Routing prefix-SIDs for advertisement 
 throughout the Segment Routing domain. Each separate IGP domain requires a pair of 
 SRMS nodes until full migratino to SR is complete.   
+
 
 
 # Automation 
