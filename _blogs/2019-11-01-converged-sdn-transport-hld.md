@@ -562,7 +562,7 @@ cable access, mobile, and business services over the same converged network infr
 # Cable Converged Interconnect Network (CIN)
 
 ## Summary  
-The Converged SDN Transport Design enables a multi-service CIN network by adding the support for the features and functions required to deliver a next-generation Ethernet/IP cable network. Differentiated from simple switch or L3 aggregation designs is the ability to support NG cable transport over the same common infrastructure supporting other services like mobile backhaul and business VPN services.   
+The Converged SDN Transport Design enables a multi-service CIN by adding support for the features and functions required to build a scalable next-generation Ethernet/IP cable access network. Differentiated from simple switch or L3 aggregation designs is the ability to support NG cable transport over the same common infrastructure already supporting other services like mobile backhaul and business VPN services. Cable Remote PHY is simply another service overlayed onto the existing Converged SDN Transport network architecture. We will cover all aspects of connectivity between the Cisco cBR-8 and the RPD device.  
 
 ## Distributed Access Architecture  
 The cable Converged Interconnect Network is part of a next-generation Distributed Access Architecture (DAA), an architecture unlocking higher subscriber bandwidth by moving traditional cable functions deeper into the network closer to end users. R-PHY or Remote PHY, places the analog to digital conversion much closer to users, reducing the cable distance and thus enabling denser and higher order modulation used to achieve Gbps speeds over existing cable infrastructure. This reference design will cover the CIN design to support Remote PHY deployments.  
@@ -573,11 +573,54 @@ This section will list some of the components of an R-PHY network and the networ
 ### Remote PHY Device (RPD) 
 The RPD unlocks the benefits of DAA by integrating the physical analog to digital conversions in a device deployed either in the field or located in a shelf in a facility. The uplink side of the RPD or RPHY shelf is simply IP/Ethernet, allowing transport across widely deployed IP infrastructure. The RPD-enabled node puts the PHY function much closer to an end user, allowing higher end-user speeds. The shelf allows cable operators to terminate only the PHY function in a hub and place the CMTS/MAC function in a more centralized facility, driving efficiency in the hub and overall network. The following diagram shows various options for how RPDs or an RPD shelf can be deployed. Since the PHY function is split from the MAC it allows independent placement of those functions.  
 
-### UEPI and DEPI Tunnels 
-Remote PHY replaced traditional analog cable infrastructure down to the  
+Each RPD is typically deployed with a single 10GE uplink connection.  
+
+### Cisco cBR-8 and cnBR 
+The Cisco Converged Broadband Router performs many functions as part of a Remote PHY solution. The cBR-8 provisions RPDs, originates L2TPv3 tunnels to RPDs, provisions cable modems, performs cable subscriber aggregation functions, and acts as the uplink L3 router to the rest of the service provider network. In the Remote PHY architecture the cBR-8 acts as the DOCSIS core and can also serve as a video core. The cnBR, cloud native Broadband Router, provides DOCSIS core functionality in a server-based software platform deployable anywhere in the SP network. CST 3.0 has been validated using the cBR-8, the cnBR will be validated in an upcoming release.  
+
+### Deployment Topology Options 
+The Converged SDN Transport design is extremely flexible in how Remote PHY components are deployed. Depending on the size of the deployment, components can be deployed in a scalable leaf-spine fabric with dedicated routers for RPD and DOCSIS connections or collapsed into a single pair of routers for smaller deployments.   
+
+## Remote PHY Communication 
+
+### DHCP 
+The RPD is meant to provisioned using ZTP (Zero-Touch Provisioning). DHCPv4 and DHCPv6 are used along with CableLabs DHCP options in order to attach the RPD to the correct GCP server for provisioning.  
+
+### Remote PHY Standard Flows 
+The following diagram shows the different core functions of a Remote PHY solution and the communication between those elements. 
+![](http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png)
+
+### GCP 
+Generic Communications Protocol is used for the initial provisioning of the RPD. When the RPD boots and received its configuration via DHCP, one of the DHCP options will direct the RPD to a GCP server which can be the cBR-8 or Cisco Smart PHY. GCP runs over TCP typically on port 8190.    
+
+### UEPI and DEPI L2TPv3 Tunnels 
+The upstream output from an RPD is IP/Ethernet. In order to transport the signals from the RPD to the element terminating the DOCSIS MAC layer, tunnels are used from the RPD to that component, whether it be a hardware device like the Cisco cBR-8 or a virtual network function provided by the Cisco cnBR (cloud native Broadband Router).  
+
+DEPI (Downstream External PHY Interface) comes from the M-CMTS architecture, where a distributed architecture was used to scale CMTS functions. In the Remote PHY architecture DEPI represents a tunnel used to encapsulate and transport from the DOCSIS MAC function to the RPD. UEPI (Upstream External PHY Interface) is new to Remote PHY, and is used to encode and transport analog signals from the RPD to the MAC function.   
+
+In Remote PHY both DEPI and UEPI tunnels use L2TPv3, defined in RFC 3931, to transport frames over any IP infrastructure. Please see the following Cisco whitepaper for more information on how tunnels are created specific to upstream/downstream channels and how data is encoded in the specific tunnel sessions.  https://www.cisco.com/c/en/us/solutions/collateral/service-provider/converged-cable-access-platform-ccap-solution/white-paper-c11-732260.html. In general there will be one or two (standby configuration) UEPI and DEPI L2TPv3 tunnels to each RPD, with each tunnel having many L2TPv3 sessions for individual RF channels identified by a unique session ID in the L2TPv3 header. Since L2TPv3 is its own protocol, no port number is used between endpoints, the endpoint IP addresses are used to identify each tunnel. Unicast DOCSIS data traffic can utilize either or multicast L2TPv3 tunnels. Multicast tunnels are used with downstream virtual splitting configurations. Multicast video is encoded and delivered using DEPI tunnels as well, using a multipoint L2TPv3 tunnel to multiple RPDs to optimize video delivery.    
+
+### CIN Network Requirements 
+
+#### Network Timing 
+Frequency and phase synchronization is required between the cBR-8 and 
+
+#### QoS 
+#### DHCP 
+
 
 ## Cisco CIN Hardware 
 
+## CIN Network Design 
+
+### L2 vs. L3 Deployment 
+The Cisco validated design for cable CIN utilizes a L3 design with or without Segment Routing. Pure L2 networks are no longer used for most networks due to their inability to scale, troubleshooting difficulty, poor network efficiency, and poor resiliency. L2 bridging can be utilized on RPD aggregation routers to simplify RPD connectivity.   
+
+### Native IP or L3VPN Deployment 
+Two models are available and validated to carry Remote PHY traffic between the RPD and MAC function.  
+
+### CIN Load Balancing 
+Across the network traffic is load balanced based on L3 header criteria. In the downstream direction where a series of tunnels are created from a CMTS to the RPD, traffic is hashed based on the 
 
 ## 4G Transport and Services Modernization 
 
@@ -693,6 +736,7 @@ the interface is not active, the ZTP process will begin the process on data port
 can be part of an ecosystem of automated device and service provisioning via Cisco NSO.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/ztp-metro-fabric.png)
+
 
 # Services – Design
     
