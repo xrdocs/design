@@ -573,18 +573,28 @@ This section will list some of the components of an R-PHY network and the networ
 ### Remote PHY Device (RPD) 
 The RPD unlocks the benefits of DAA by integrating the physical analog to digital conversions in a device deployed either in the field or located in a shelf in a facility. The uplink side of the RPD or RPHY shelf is simply IP/Ethernet, allowing transport across widely deployed IP infrastructure. The RPD-enabled node puts the PHY function much closer to an end user, allowing higher end-user speeds. The shelf allows cable operators to terminate only the PHY function in a hub and place the CMTS/MAC function in a more centralized facility, driving efficiency in the hub and overall network. The following diagram shows various options for how RPDs or an RPD shelf can be deployed. Since the PHY function is split from the MAC it allows independent placement of those functions.  
 
-Each RPD is typically deployed with a single 10GE uplink connection.  
+#### RPD Network Connections  
+Each RPD is typically deployed with a single 10GE uplink connection. The compact RPD shelf uses a single 10GE uplink for each RPD.  
 
 ### Cisco cBR-8 and cnBR 
-The Cisco Converged Broadband Router performs many functions as part of a Remote PHY solution. The cBR-8 provisions RPDs, originates L2TPv3 tunnels to RPDs, provisions cable modems, performs cable subscriber aggregation functions, and acts as the uplink L3 router to the rest of the service provider network. In the Remote PHY architecture the cBR-8 acts as the DOCSIS core and can also serve as a video core. The cnBR, cloud native Broadband Router, provides DOCSIS core functionality in a server-based software platform deployable anywhere in the SP network. CST 3.0 has been validated using the cBR-8, the cnBR will be validated in an upcoming release.  
+The Cisco Converged Broadband Router performs many functions as part of a Remote PHY solution. The cBR-8 provisions RPDs, originates L2TPv3 tunnels to RPDs, provisions cable modems, performs cable subscriber aggregation functions, and acts as the uplink L3 router to the rest of the service provider network. In the Remote PHY architecture the cBR-8 acts as the DOCSIS core and can also serve as a GCP server and video core. The cBR-8 runs IOS-XE. The cnBR, cloud native Broadband Router, provides DOCSIS core functionality in a server-based software platform deployable anywhere in the SP network. CST 3.0 has been validated using the cBR-8, the cnBR will be validated in an upcoming release. 
 
-### Deployment Topology Options 
-The Converged SDN Transport design is extremely flexible in how Remote PHY components are deployed. Depending on the size of the deployment, components can be deployed in a scalable leaf-spine fabric with dedicated routers for RPD and DOCSIS connections or collapsed into a single pair of routers for smaller deployments.   
+#### cBR-8 Network Connections 
+The cBR-8 is best represented as having "upstream" and "downstream" connectivity. 
+
+The upstream connections are from the cBR8 Supervisor module to the SP network. Subscriber data traffic and video ingress these uplink connections for delivery to the cable access network. The cBR-8 SUP-160 has 8x10GE SFP+ physical connections, the SUP-250 has 2xQSFP28/QSFP+ interfaces for 40G/100G upstream connections.   
+
+In a remote PHY deployment the downstream connections to the CIN are via the Digital PIC (DPIC-8X10G) providing 40G of R-PHY throughput with 8 SFP+ network interfaces.  
+
+#### cBR-8 Redundancy 
+The cBR-8 supports both upstream and downstream redundancy. Supervisor redundancy uses active/standby connections to the SP network. Downstream redundancy can be configured at both the line card and port level. Line card redundancy uses an active/active mechanism where each RPD connects to the DOCSIS core function on both the active and hot standby Digital PIC line card. Port redundancy uses the concept of "port pairs" on each Digital PIC, with ports 0/1, 2/3, 4/6, and 6/7 using either an active/active (L2) or active/standby (L3) mechanism. In the CST design we utilize a L3 design with the active/standby mechanism. The mechanism uses the same IP address on both ports, with the standby port kept in a physical down state until switchover occurs.   
+
+
 
 ## Remote PHY Communication 
 
 ### DHCP 
-The RPD is meant to provisioned using ZTP (Zero-Touch Provisioning). DHCPv4 and DHCPv6 are used along with CableLabs DHCP options in order to attach the RPD to the correct GCP server for provisioning.  
+The RPD is provisioned using ZTP (Zero Touch Provisioning). DHCPv4 and DHCPv6 are used along with CableLabs DHCP options in order to attach the RPD to the correct GCP server for further provisioning.  
 
 ### Remote PHY Standard Flows 
 The following diagram shows the different core functions of a Remote PHY solution and the communication between those elements. 
@@ -594,33 +604,119 @@ The following diagram shows the different core functions of a Remote PHY solutio
 Generic Communications Protocol is used for the initial provisioning of the RPD. When the RPD boots and received its configuration via DHCP, one of the DHCP options will direct the RPD to a GCP server which can be the cBR-8 or Cisco Smart PHY. GCP runs over TCP typically on port 8190.    
 
 ### UEPI and DEPI L2TPv3 Tunnels 
-The upstream output from an RPD is IP/Ethernet. In order to transport the signals from the RPD to the element terminating the DOCSIS MAC layer, tunnels are used from the RPD to that component, whether it be a hardware device like the Cisco cBR-8 or a virtual network function provided by the Cisco cnBR (cloud native Broadband Router).  
+The upstream output from an RPD is IP/Ethernet, enabling the simplification of the cable access network. Tunnels are used between the RPD PHY functions and DOCSIS core components to transport signals from the RPD to the core elements, whether it be a hardware device like the Cisco cBR-8 or a virtual network function provided by the Cisco cnBR (cloud native Broadband Router).  
 
 DEPI (Downstream External PHY Interface) comes from the M-CMTS architecture, where a distributed architecture was used to scale CMTS functions. In the Remote PHY architecture DEPI represents a tunnel used to encapsulate and transport from the DOCSIS MAC function to the RPD. UEPI (Upstream External PHY Interface) is new to Remote PHY, and is used to encode and transport analog signals from the RPD to the MAC function.   
 
-In Remote PHY both DEPI and UEPI tunnels use L2TPv3, defined in RFC 3931, to transport frames over any IP infrastructure. Please see the following Cisco whitepaper for more information on how tunnels are created specific to upstream/downstream channels and how data is encoded in the specific tunnel sessions.  https://www.cisco.com/c/en/us/solutions/collateral/service-provider/converged-cable-access-platform-ccap-solution/white-paper-c11-732260.html. In general there will be one or two (standby configuration) UEPI and DEPI L2TPv3 tunnels to each RPD, with each tunnel having many L2TPv3 sessions for individual RF channels identified by a unique session ID in the L2TPv3 header. Since L2TPv3 is its own protocol, no port number is used between endpoints, the endpoint IP addresses are used to identify each tunnel. Unicast DOCSIS data traffic can utilize either or multicast L2TPv3 tunnels. Multicast tunnels are used with downstream virtual splitting configurations. Multicast video is encoded and delivered using DEPI tunnels as well, using a multipoint L2TPv3 tunnel to multiple RPDs to optimize video delivery.    
+In Remote PHY both DEPI and UEPI tunnels use L2TPv3, defined in RFC 3931, to transport frames over an IP infrastructure. Please see the following Cisco white paper for more information on how tunnels are created specific to upstream/downstream channels and how data is encoded in the specific tunnel sessions.  https://www.cisco.com/c/en/us/solutions/collateral/service-provider/converged-cable-access-platform-ccap-solution/white-paper-c11-732260.html. In general there will be one or two (standby configuration) UEPI and DEPI L2TPv3 tunnels to each RPD, with each tunnel having many L2TPv3 sessions for individual RF channels identified by a unique session ID in the L2TPv3 header. Since L2TPv3 is its own protocol, no port number is used between endpoints, the endpoint IP addresses are used to identify each tunnel. Unicast DOCSIS data traffic can utilize either or multicast L2TPv3 tunnels. Multicast tunnels are used with downstream virtual splitting configurations. Multicast video is encoded and delivered using DEPI tunnels as well, using a multipoint L2TPv3 tunnel to multiple RPDs to optimize video delivery.    
 
 ### CIN Network Requirements 
 
+#### IPv4/IPv6 Unicast and Multicast  
+Due to the large number of elements and generally greenfield network builds, the CIN network must support all functions using both IPv4 and IPv6. IPv6 may be carried natively across the network or within an IPv6 VPN across an IPv4 MPLS underlay network. Similarly the network must support multicast traffic delivery for both IPv4 and IPv6 delivered via the global routing table or Multicast VPN.    
+
 #### Network Timing 
-Frequency and phase synchronization is required between the cBR-8 and 
+Frequency and phase synchronization is required between the cBR-8 and RPD to properly handle upstream scheduling and downstream transmission. Remote PHY uses PTP (Precision Timing Protocol) for timing synchronization with the ITU-T G.8275.2 timing profile. This profile carries PTP traffic over IP/UDP and supports a network with partial timing support, meaning multi-hop sessions between Grandmaster, Boundary Clocks, and clients as shown in the diagram below. The cBR-8 and its client RPD require timing alignment to the same Primary Reference Clock (PRC). In order to scale, the network itself must support PTP G.8275.2 as a T-BC (Boundary Clock).  Synchronous Ethernet (SyncE) is also recommended across the CIN network to maintain stability when timing to the PRC. 
 
-#### QoS 
-#### DHCP 
+![](http://xrdocs.io/design/images/cmf-hld/cmf-g82752.png)
 
+#### QoS
+Control plane functions of Remote PHY are critical to achieving proper operation and subscriber traffic throughput. QoS is required on all RPD-facing ports, the cBR-8 DPIC ports, and all core interfaces in between. Additional QoS may be necessary between the cBR-8, RPD, and any PTP timing elements. See the design section for further details on QoS components.   
 
-## Cisco CIN Hardware 
+#### DHCPv4 and DHCPv6 Relay 
+As a critical component of the initial boot and provisioning of RPDs, the network must support DHCP relay functionality on all RPD-facing interfaces, for both IPv4 and IPv6.   
 
-## CIN Network Design 
+## Converged SDN Transport CIN Network Design 
 
-### L2 vs. L3 Deployment 
+## Deployment Topology Options 
+The Converged SDN Transport design is extremely flexible in how Remote PHY components are deployed. Depending on the size of the deployment, components can be deployed in a scalable leaf-spine fabric with dedicated routers for RPD and cBR-8 DPIC connections or collapsed into a single pair of routers for smaller deployments. If a smaller deployment needs to be expanded, the flexible L3 routed design makes it very easy to simply interconnect new devices and scale the design to a fabric supporting thousands of RPD and other access network connections.  
+
+### High Scale Design
+This option maximizes statistical multiplexing by aggregating Digital PIC downstream connections on a separate leaf device, allowing one to connect a number of cBR-8 connections to a fabric with minimal 100GE uplink capacity. The topology also supports the connectivity of remote shelves for hub consolidation.   
+
+![](http://xrdocs.io/design/images/cmf-hld/cmf-cmf-rphy-topology-full.png)
+_High scale topology_ 
+
+### Collapsed Digital PIC and SUP Uplink Connectivity  
+This design for smaller deployments connects both the downstream Digital PIC connections and uplinks on the same CIN core device. If there is enough physical port availability and future growth does not dictate capacity beyond these nodes this design can be used. This design still provides full redundancy and the ability to connect RPDs to any cBR-8. 
+
+![](http://xrdocs.io/design/images/cmf-hld/cmf-cmf-rphy-topology-small.png)
+_Collapsed cBR-8 uplink and Digital PIC connectivity_ 
+
+### Collapsed RPD and cBR-8 DPIC Connectivity 
+This design connects each cBR-8 Digital PIC connection to the RPD leaf connected to the RPDs it will serve. This design can also be considered a "pod" design where cBR-8 and RPD connectivity is pre-planned. Careful planning is needed since the number of ports on a single device may not scale efficiently with bandwidth in this configuration.   
+
+![](http://xrdocs.io/design/images/cmf-hld/cmf-cmf-rphy-topology-collapsed.png)
+_Collapsed or Pod cBR-8 Digital PIC and RPD connectivity_ 
+
+## Cisco Hardware 
+The following table highlights the Cisco hardware utilized within the Converged SDN Transport design for Remote PHY. This table is non-exhaustive. One highlight is all NCS platforms listed are built using the same NPU family and share most features across all platforms. See specific platforms for supported scale and feature support.   
+
+| Product | Role | 10GE SFP+ | 25G SFP28 | 100G QSFP28 | Timing | Comments |
+| ------- | -----| ---------| -----------| --------------------- | ------ | -------- |  
+| NCS-55A1-24Q6H-S | RPD leaf | 48  | 24 | 6 | Class B | |  
+| N540-24Z8Q2C  | RPD leaf | 24 | 8 | 2 | Class B | Smaller deployments | 
+| NCS-55A1-48Q6H-S | DPIC leaf | 48  | 48 | 6 | Class B | |  
+| NCS-55A2-MOD | Remote agg | 40  | 24 | upto 8 | Class B | CFP2-DCO support | 
+| NCS-55A1-36H-S | Spine | 144 (breakout)  | 0 | 36 | Class B | | 
+| NCS-5502 | Spine | 192 (breakout) | 0 | 48 | None | |
+| NCS-5504 | Multi | Upto 576 | x | Upto 144 | Class B | 4-slot modular platform |  
+
+### Scalable L3 Routed Design  
 The Cisco validated design for cable CIN utilizes a L3 design with or without Segment Routing. Pure L2 networks are no longer used for most networks due to their inability to scale, troubleshooting difficulty, poor network efficiency, and poor resiliency. L2 bridging can be utilized on RPD aggregation routers to simplify RPD connectivity.   
 
-### Native IP or L3VPN Deployment 
+### L3 IP Routing  
+Like the overall CST design, we utilize IS-IS for IPv4 and IPv6 underlay routing and BGP to carry endpoint information across the network. The following diagram illustrates routing between network elements using a reference deployment. The table below describes the routing between different functions and interfaces. See the implementation guide for specific configuration.  
+
+| Interface | Routing | Comments | 
+| ----------|---------|----------| 
+|cBR-8 Uplink | IS-IS | Used for BGP next-hop reachability to SP Core | 
+|cBR-8 Uplink | BGP | Advertise subscriber and cable-modem routes to SP Core | 
+|cBR-8 DPIC | Static default in VRF | Each DPIC interface should be in its own VRF on the cBR-8 so it has a single routing path to its connected RPDs | 
+|RPD Leaf Main| IS-IS | Used for BGP next-hop reachability | 
+|RPD Leaf Main| BGP | Advertise RPD L3 interfaces to CIN for cBR-8 to RPD connectivity | 
+|RPD Leaf Timing| BGP | Advertise RPD upstream timing interface IP to rest of network | 
+|DPIC Leaf | IS-IS | Used for BGP next-hop reachability |  
+|DPIC Leaf | BGP | Advertise cBR-8 DPIC L3 interfaces to CIN for cBR-8 to RPD connectivity | 
+|CIN Spine | IS-IS | Used for reachability between BGP endpoints, the CIN Spine does not participate in BGP in a SR-enabled network | 
+|CIN Spine RPD Timing | IS-IS | Used to advertise RPD timing interface BGP next-hop information and advertise default | 
+|CIN Spine | BGP (optional) | In a native IP design the spine must learn BGP routes for proper forwarding |  
+
+### P2P and BVI RPD Aggregation Interfaces  
+The Converged SDN Transport design supports both P2P L3 interfaces for RPD and DPIC aggregation as well as using Bridge Virtual Interfaces. A BVI is a logical L3 interface within a L2 bridge domain. In the BVI deployment the DPIC and RPD physical interfaces connected to a single leaf device share a common IP subnet with the gateway residing on the leaf router.  
+
+It is recommended to configure the RPD leaf using bridge-domains and BVI interfaces. This eases configuration on the leaf device as well as the DHCP configuration used for RPD provisioning. It is recommended to connect each cBR-8 DPIC interface using P2P L3 interfaces, using a /31 for IPv4 and /127 for IPv6 addresses.  The following shows the two potential deployment options.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-bvi-p2p.png)
+
+### Native IP or L3VPN/mVPN Deployment 
 Two models are available and validated to carry Remote PHY traffic between the RPD and MAC function.  
 
-### CIN Load Balancing 
-Across the network traffic is load balanced based on L3 header criteria. In the downstream direction where a series of tunnels are created from a CMTS to the RPD, traffic is hashed based on the 
+### Quality of Service (QoS)
+QoS is a requirement for delivering trouble-free Remote PHY. This design uses sample QoS configurations for concept illustration, but QoS should be tailored for specific network deployments. New CIN builds can utilize the configurations in the implementation guide verbatim if no other services are being carried across the network.   
+
+#### NCS 540 and 5500 QoS Primer 
+The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR platforms but based on their hardware architecture use different elements for implementing end to end QoS. On these platforms ingress traffic is: 
+1. Matched using flexible criteria via Class Maps
+2. Assigned to a specific <b>Traffic Class (TC)</b> and/or <b>QoS Group</b>for further egress treatment 
+3. Has its header marked with a specific IPP, DSCP, or MPLS EXP value
+
+<B>Traffic Classes</b> and <B>QoS Groups</b> are used internally for determining fabric priority and as the match criteria for egress queueing and remarking. Traffic Classes (TC) are used for all egress queuing and QoS Groups used for marking. Keep in mind most traffic marking on the NCS platforms is done on _ingress_, QoS Groups are not currently used in the CST design.  
+
+<b>Priority</b> used in egress queueing policy maps specifies matching traffic use strict priority queueing. The <code>priority-level</code> command in the policy map specifies the egress transmit priority of the traffic vs. other strict priority traffic. Priority levels can be configured as 1-7 with 1 being the highest priority.  Priority level 0 is reserved for best-effort traffic. 
+
+
+#### Remote-PHY Traffic Classification  
+<b>The following lists specific traffic types which should be treated with specific priority, default markings, and network classification points.</b>  
+
+| Traffic Type | Ingress Interface | Priority | Comments | 
+| ----------|---------|----------|---------------| 
+| PTP | All |  
+
+
+
+### CST and Remote-PHY Load Balancing 
+Across the network traffic is load balanced based on L3 header criteria. The devices used in the CST design are capable of load balancing traffic based on MPLS labels used in the SR underlay and IP headers underneath any MPLS labels. In the higher bandwidth downstream direction, where a series of L2TP3 tunnels are created from the cBR-8 to the RPD, traffic is hashed based on the source and destination IP addresses of those tunnels. Downstream L2TPv3 tunnels from a single Digital PIC interface to a set of RPDs will be distributed across the fabric based on RPD destination IP address.  
 
 ## 4G Transport and Services Modernization 
 
