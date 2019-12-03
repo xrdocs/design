@@ -703,17 +703,28 @@ The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR pla
 
 <B>Traffic Classes</b> and <B>QoS Groups</b> are used internally for determining fabric priority and as the match criteria for egress queueing and remarking. Traffic Classes (TC) are used for all egress queuing and QoS Groups used for marking. Keep in mind most traffic marking on the NCS platforms is done on _ingress_, QoS Groups are not currently used in the CST design.  
 
-<b>Priority</b> used in egress queueing policy maps specifies matching traffic use strict priority queueing. The <code>priority-level</code> command in the policy map specifies the egress transmit priority of the traffic vs. other strict priority traffic. Priority levels can be configured as 1-7 with 1 being the highest priority.  Priority level 0 is reserved for best-effort traffic. 
+The <code>priority-level</code> command in the policy map specifies the egress transmit priority of the traffic vs. other strict priority traffic. Priority levels can be configured as 1-7 with 1 being the highest priority.  Priority level 0 is reserved for best-effort traffic. 
 
+Please note, multicast traffic does not follow the same constructs as unicast traffic for prioritization. All multicast traffic assigned to Traffic Classes 1-4 are treated as Low Priority and traffic assigned to 5-6 treated as high priority.     
+{: .notice--warning}
 
-#### Remote-PHY Traffic Classification  
-<b>The following lists specific traffic types which should be treated with specific priority, default markings, and network classification points.</b>  
+Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/b-ncs5500-qos-cli-reference/b-ncs5500-qos-cli-reference_chapter_01.html
 
-| Traffic Type | Ingress Interface | Priority | Comments | 
-| ----------|---------|----------|---------------| 
-| PTP | All |  
+#### CST Network Traffic Classification  
+The following lists specific traffic types which should be treated with specific priority, default markings, and network classification points.
 
-
+| Traffic Type | Ingress Interface | Priority | Default Marking | Comments | 
+| ----------|---------|----------|---------------|-------------| 
+| BGP | Routers, cBR-8 | Highest | CS6 (DSCP 48) | None |  
+| IS-IS | Routers, cBR-8 | Highest | CS6 | IS-IS is single-hop and uses highest priority queue by default | 
+| BFD | Routers | Highest | CS6 | BFD is single-hop and uses highest priority queue by default | 
+| PTP | All | High | DSCP 46 | Default on all routers, cBR-8, and RPD | 
+| DOCSIS MAP/UCD | RPD, cBR-8 DPIC | High | DSCP 46 | | 
+| DOCSIS BWR | RPD, cBR-8 DPIC | High | DSCP 46 | | 
+| GCP | RPD, cBR-8 DPIC | Low | DSCP 0 | 
+| DOCSIS Data | RPD, cBR-8 DPIC | Low | DSCP 0 | 
+| Video | cBR-8 | Medium | DSCP 32 | Video within multicast L2TPv3 tunnel when cBR-8 is video core | 
+| MDD | RPD, cBR-8 | Medium | DSCP 40 |   
 
 ### CST and Remote-PHY Load Balancing 
 Across the network traffic is load balanced based on L3 header criteria. The devices used in the CST design are capable of load balancing traffic based on MPLS labels used in the SR underlay and IP headers underneath any MPLS labels. In the higher bandwidth downstream direction, where a series of L2TP3 tunnels are created from the cBR-8 to the RPD, traffic is hashed based on the source and destination IP addresses of those tunnels. Downstream L2TPv3 tunnels from a single Digital PIC interface to a set of RPDs will be distributed across the fabric based on RPD destination IP address.  
