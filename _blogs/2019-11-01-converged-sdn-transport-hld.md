@@ -598,8 +598,8 @@ The RPD is provisioned using ZTP (Zero Touch Provisioning). DHCPv4 and DHCPv6 ar
 ### Remote PHY Standard Flows 
 The following diagram shows the different core functions of a Remote PHY solution and the communication between those elements. 
 
+<img src="http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png" width="450"/>
 
-![](http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png =250x)
 
 ### GCP 
 Generic Communications Protocol is used for the initial provisioning of the RPD. When the RPD boots and received its configuration via DHCP, one of the DHCP options will direct the RPD to a GCP server which can be the cBR-8 or Cisco Smart PHY. GCP runs over TCP typically on port 8190.    
