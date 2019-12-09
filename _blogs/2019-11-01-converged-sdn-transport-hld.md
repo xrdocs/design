@@ -7,7 +7,6 @@ excerpt:
   evolves traditional Metro network  design towards an SDN enabled, programmable
   network capable of delivering all services. 3.0 Update
 author: Phil Bedard 
-permalink: /blogs/latest-converged-sdn-transport-hld
 tags:
   - iosxr
   - Metro
