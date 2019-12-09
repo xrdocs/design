@@ -600,7 +600,7 @@ The following diagram shows the different core functions of a Remote PHY solutio
 
 <img src="http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png" width="600"/>
 
-![](http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png)
+![](http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png =400x)
 
 ### GCP 
 Generic Communications Protocol is used for the initial provisioning of the RPD. When the RPD boots and received its configuration via DHCP, one of the DHCP options will direct the RPD to a GCP server which can be the cBR-8 or Cisco Smart PHY. GCP runs over TCP typically on port 8190.    
