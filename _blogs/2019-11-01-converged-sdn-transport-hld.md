@@ -598,7 +598,7 @@ The RPD is provisioned using ZTP (Zero Touch Provisioning). DHCPv4 and DHCPv6 ar
 ### Remote PHY Standard Flows 
 The following diagram shows the different core functions of a Remote PHY solution and the communication between those elements. 
 
-<img src="http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png" width=600></img> 
+<img src="http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png" width="600">
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png)
 
