@@ -598,10 +598,8 @@ The RPD is provisioned using ZTP (Zero Touch Provisioning). DHCPv4 and DHCPv6 ar
 ### Remote PHY Standard Flows 
 The following diagram shows the different core functions of a Remote PHY solution and the communication between those elements. 
 
-<img src="http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png" width="450"/>
+<img src="http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png" width="500"/>
 
-![](http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png)
-{: width="450px"}
 
 ### GCP 
 Generic Communications Protocol is used for the initial provisioning of the RPD. When the RPD boots and received its configuration via DHCP, one of the DHCP options will direct the RPD to a GCP server which can be the cBR-8 or Cisco Smart PHY. GCP runs over TCP typically on port 8190.    
@@ -703,7 +701,7 @@ QoS is a requirement for delivering trouble-free Remote PHY. This design uses sa
 #### NCS 540 and 5500 QoS Primer 
 The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR platforms but based on their hardware architecture use different elements for implementing end to end QoS. On these platforms ingress traffic is: 
 1. Matched using flexible criteria via Class Maps
-2. Assigned to a specific <b>Traffic Class (TC)</b> and/or <b>QoS Group</b>for further treatment on egress 
+2. Assigned to a specific <b>Traffic Class (TC)</b> and/or <b>QoS Group</b> for further treatment on egress 
 3. Has its header marked with a specific IPP, DSCP, or MPLS EXP value
 
 <B>Traffic Classes</b> are used internally for determining fabric priority and as the match condition for egress queuing.  <B>QoS Groups</b> are used internally as the match criteria for egress CoS header re-marking. IPP/DSCP marking and re-marking of ingress MPLS traffic is done using _ingress_ QoS policies.  MPLS EXP for imposed labels can be done on ingress or egress, but if you wish to rewrite both the IPP/DSCP and set an explicit EXP for imposed labels, the MPLS EXP must be set on egress.  
@@ -716,12 +714,13 @@ Please note, multicast traffic does not follow the same constructs as unicast tr
 Hierarchical QoS is not enabled by default on the NCS 540 and 5500 platforms. H-QoS is enabled using the <b>hw-module profile qos hqos-enable</b> command.  Once H-QoS is enabled, the number of priority levels which can be assigned is reduced from 1-7 to 1-4. Additinoally, any hierarchical QoS policy assigned to a L3 sub-interface using priority levels must include a "shape" command.  Hierarchical QoS is not used in the CST Remote PHY design.   
 {: .notice--warning}
 
-Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/66x/b-qos-cg-ncs5500-66x/b-qos-cg-ncs5500-66x_chapter_010.html
+Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: 
+<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/66x/b-qos-cg-ncs5500-66x/b-qos-cg-ncs5500-66x_chapter_010.html></a> 
 
 #### Example QoS Class and Policy Maps 
 These are presented for reference only, please see the implementation guide for the full QoS configuration used in the Remote PHY design.  
 
-<b>Class maps for ingress header matching</b> 
+##### Class maps for ingress header matching
 <div class="highlighter-rouge">
 <pre class="highlight">
 class-map match-any match-ef-exp5
@@ -754,7 +753,8 @@ policy-map ingress-classifier
  end-policy-map
 </pre>
 </div>
-<b>Class maps for egress queuing and marking policies</b> 
+
+##### Class maps for egress queuing and marking policies
 <div class="highlighter-rouge">
 <pre class="highlight">
 class-map match-any match-traffic-class-2
@@ -776,7 +776,8 @@ class-map match-any match-qos-group-3
  end-class-map
 </pre>
 </div>
-<b>Egress QoS queuing policy</b> 
+
+##### Egress QoS queuing policy 
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map egress-queuing
@@ -791,7 +792,8 @@ policy-map egress-queuing
  end-policy-map
 </pre>
 </div>
-<b>Egress QoS marking policy</b> 
+
+##### Egress QoS marking policy 
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map core-egress-exp-marking
