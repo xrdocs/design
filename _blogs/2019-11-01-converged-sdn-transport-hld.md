@@ -193,7 +193,7 @@ The non-inline PE topology, shown in the figure below, moves the services edge P
 
 In Converged SDN Transport 3.0 we add support for the use of pluggable CFP2-DCO transceivers to enable high speed aggregation and access network infrastructure. As endpoint bandwidth increases due to technology innovation such as 5G and Remote PHY, access and aggregation networks must grow from 1G and 10G to 100G and beyond. Coherent router optics simplify this evolution by allowing an upgrade path to increase ring bandwidth up to 400Gbps without deploying costly DWDM optical line systems.  
 
-MACSec is an industry standard protocol running at L2 to provide encryption across Ethernet links. In CST 3.0 MACSec 
+MACSec is an industry standard protocol running at L2 to provide encryption across Ethernet links. In CST 3.0 MACSec is enabled across CFP2-DCO access to aggregation links. MACSec support is hardware dependent, please consult individual hardware data sheets for MACSec support.   
 
 ### Ring deployment without multiplexers 
 In the simplest deployment access rings are deployed over dark fiber, enabling plug and play operation up to 80km without amplification.
@@ -613,7 +613,7 @@ In Remote PHY both DEPI and UEPI tunnels use L2TPv3, defined in RFC 3931, to tra
 ### CIN Network Requirements 
 
 #### IPv4/IPv6 Unicast and Multicast  
-Due to the large number of elements and generally greenfield network builds, the CIN network must support all functions using both IPv4 and IPv6. IPv6 may be carried natively across the network or within an IPv6 VPN across an IPv4 MPLS underlay network. Similarly the network must support multicast traffic delivery for both IPv4 and IPv6 delivered via the global routing table or Multicast VPN.    
+Due to the large number of elements and generally greenfield network builds, the CIN network must support all functions using both IPv4 and IPv6. IPv6 may be carried natively across the network or within an IPv6 VPN across an IPv4 MPLS underlay network. Similarly the network must support multicast traffic delivery for both IPv4 and IPv6 delivered via the global routing table or Multicast VPN.  Scalable dynamic multicast requires the use of PIMv4, PIMv6, IGMPv3, and MLDv2 so these protocols are validated as part of the overall network design. IGMPv2 and MLDv2 snooping are also required for designs using access bridge domains and BVI interfaces for aggregation.    
 
 #### Network Timing 
 Frequency and phase synchronization is required between the cBR-8 and RPD to properly handle upstream scheduling and downstream transmission. Remote PHY uses PTP (Precision Timing Protocol) for timing synchronization with the ITU-T G.8275.2 timing profile. This profile carries PTP traffic over IP/UDP and supports a network with partial timing support, meaning multi-hop sessions between Grandmaster, Boundary Clocks, and clients as shown in the diagram below. The cBR-8 and its client RPD require timing alignment to the same Primary Reference Clock (PRC). In order to scale, the network itself must support PTP G.8275.2 as a T-BC (Boundary Clock).  Synchronous Ethernet (SyncE) is also recommended across the CIN network to maintain stability when timing to the PRC. 
@@ -638,7 +638,7 @@ This option maximizes statistical multiplexing by aggregating Digital PIC downst
 _High scale topology_ 
 
 ### Collapsed Digital PIC and SUP Uplink Connectivity  
-This design for smaller deployments connects both the downstream Digital PIC connections and uplinks on the same CIN core device. If there is enough physical port availability and future growth does not dictate capacity beyond these nodes this design can be used. This design still provides full redundancy and the ability to connect RPDs to any cBR-8. 
+This design for smaller deployments connects both the downstream Digital PIC connections and uplinks on the same CIN core device. If there is enough physical port availability and future growth does not dictate capacity beyond these nodes this design can be used. This design still provides full redundancy and the ability to connect RPDs to any cBR-8.  Care should be taken to ensure traffic between the DPIC and RPD does not traverse the SUP uplink interfaces.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-cmf-rphy-topology-small.png)
 _Collapsed cBR-8 uplink and Digital PIC connectivity_ 
@@ -685,7 +685,9 @@ Like the overall CST design, we utilize IS-IS for IPv4 and IPv6 underlay routing
 ### P2P and BVI RPD Aggregation Interfaces  
 The Converged SDN Transport design supports both P2P L3 interfaces for RPD and DPIC aggregation as well as using Bridge Virtual Interfaces. A BVI is a logical L3 interface within a L2 bridge domain. In the BVI deployment the DPIC and RPD physical interfaces connected to a single leaf device share a common IP subnet with the gateway residing on the leaf router.  
 
-It is recommended to configure the RPD leaf using bridge-domains and BVI interfaces. This eases configuration on the leaf device as well as the DHCP configuration used for RPD provisioning. It is recommended to connect each cBR-8 DPIC interface using P2P L3 interfaces, using a /31 for IPv4 and /127 for IPv6 addresses.  The following shows the two potential deployment options.  
+It is recommended to configure the RPD leaf using bridge-domains and BVI interfaces. This eases configuration on the leaf device as well as the DHCP configuration used for RPD provisioning. 
+It is recommended to connect each cBR-8 DPIC interface using P2P L3 interfaces, using a /31 for IPv4 and /127 for IPv6 addresses.  The following shows the two potential deployment options.  
+{: .notice--success}
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-bvi-p2p.png)
 
@@ -698,17 +700,109 @@ QoS is a requirement for delivering trouble-free Remote PHY. This design uses sa
 #### NCS 540 and 5500 QoS Primer 
 The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR platforms but based on their hardware architecture use different elements for implementing end to end QoS. On these platforms ingress traffic is: 
 1. Matched using flexible criteria via Class Maps
-2. Assigned to a specific <b>Traffic Class (TC)</b> and/or <b>QoS Group</b>for further egress treatment 
+2. Assigned to a specific <b>Traffic Class (TC)</b> and/or <b>QoS Group</b>for further treatment on egress 
 3. Has its header marked with a specific IPP, DSCP, or MPLS EXP value
 
-<B>Traffic Classes</b> and <B>QoS Groups</b> are used internally for determining fabric priority and as the match criteria for egress queueing and remarking. Traffic Classes (TC) are used for all egress queuing and QoS Groups used for marking. Keep in mind most traffic marking on the NCS platforms is done on _ingress_, QoS Groups are not currently used in the CST design.  
+<B>Traffic Classes</b> are used internally for determining fabric priority and as the match condition for egress queuing.  <B>QoS Groups</b> are used internally as the match criteria for egress CoS header re-marking. IPP/DSCP marking and re-marking of ingress MPLS traffic is done using _ingress_ QoS policies.  MPLS EXP for imposed labels can be done on ingress or egress, but if you wish to rewrite both the IPP/DSCP and set an explicit EXP for imposed labels, the MPLS EXP must be set on egress.  
 
-The <code>priority-level</code> command in the policy map specifies the egress transmit priority of the traffic vs. other strict priority traffic. Priority levels can be configured as 1-7 with 1 being the highest priority.  Priority level 0 is reserved for best-effort traffic. 
+The <code>priority-level</code> command used in an egress QoS policy specifies the egress transmit priority of the traffic vs. other priority traffic. Priority levels can be configured as 1-7 with 1 being the highest priority.  Priority level 0 is reserved for best-effort traffic.  
 
 Please note, multicast traffic does not follow the same constructs as unicast traffic for prioritization. All multicast traffic assigned to Traffic Classes 1-4 are treated as Low Priority and traffic assigned to 5-6 treated as high priority.     
 {: .notice--warning}
 
-Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/b-ncs5500-qos-cli-reference/b-ncs5500-qos-cli-reference_chapter_01.html
+Hierarchical QoS is not enabled by default on the NCS 540 and 5500 platforms. H-QoS is enabled using the <b>hw-module profile qos hqos-enable</b> command.  Once H-QoS is enabled, the number of priority levels which can be assigned is reduced from 1-7 to 1-4. Additinoally, any hierarchical QoS policy assigned to a L3 sub-interface using priority levels must include a "shape" command.  Hierarchical QoS is not used in the CST Remote PHY design.   
+{: .notice--warning}
+
+Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/66x/b-qos-cg-ncs5500-66x/b-qos-cg-ncs5500-66x_chapter_010.html
+
+#### Example QoS Class and Policy Maps 
+These are presented for reference only, please see the implementation guide for the full QoS configuration used in the Remote PHY design.  
+
+<b>Class maps for ingress header matching</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+class-map match-any match-ef-exp5
+ description High priority, EF 
+ match dscp 46
+ end-class-map
+!
+class-map match-any match-cs5-exp4
+ description Second highest priority
+ match dscp 40
+ end-class-map
+</pre>
+</div>
+<b>Ingress QoS policy</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map ingress-classifier
+ class match-ef-exp5
+  set traffic-class 2
+  set qos-group 2
+ !
+ class match-cs5-exp4
+  set traffic-class 3
+  set qos-group 3
+ class class-default
+  set traffic-class 0
+  set dscp 0
+  set qos-group 0
+ !
+ end-policy-map
+</pre>
+</div>
+<b>Class maps for egress queuing and marking policies</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+class-map match-any match-traffic-class-2
+ description "Match highest priority traffic-class 2"
+ match traffic-class 2
+ end-class-map
+!
+class-map match-any match-traffic-class-3
+ description "Match high priority traffic-class 3"
+ match traffic-class 3
+ end-class-map
+!
+class-map match-any match-qos-group-2
+ match qos-group 2
+ end-class-map
+!
+class-map match-any match-qos-group-3
+ match qos-group 3
+ end-class-map
+</pre>
+</div>
+<b>Egress QoS queuing policy</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map egress-queuing
+ class match-traffic-class-2
+  priority level 2
+ !
+ class match-traffic-class-3
+  priority level 3
+ !
+ class class-default
+ !
+ end-policy-map
+</pre>
+</div>
+<b>Egress QoS marking policy</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map core-egress-exp-marking
+ class match-qos-group-2
+  set mpls experimental imposition 5
+ !
+ class match-qos-group-3
+  set mpls experimental imposition 4
+ class class-default
+  set mpls experimental imposition 0
+ !
+ end-policy-map
+</pre>
+</div>
 
 #### CST Network Traffic Classification  
 The following lists specific traffic types which should be treated with specific priority, default markings, and network classification points.
@@ -725,6 +819,9 @@ The following lists specific traffic types which should be treated with specific
 | DOCSIS Data | RPD, cBR-8 DPIC | Low | DSCP 0 | 
 | Video | cBR-8 | Medium | DSCP 32 | Video within multicast L2TPv3 tunnel when cBR-8 is video core | 
 | MDD | RPD, cBR-8 | Medium | DSCP 40 |   
+
+
+
 
 ### CST and Remote-PHY Load Balancing 
 Across the network traffic is load balanced based on L3 header criteria. The devices used in the CST design are capable of load balancing traffic based on MPLS labels used in the SR underlay and IP headers underneath any MPLS labels. In the higher bandwidth downstream direction, where a series of L2TP3 tunnels are created from the cBR-8 to the RPD, traffic is hashed based on the source and destination IP addresses of those tunnels. Downstream L2TPv3 tunnels from a single Digital PIC interface to a set of RPDs will be distributed across the fabric based on RPD destination IP address.  
