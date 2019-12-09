@@ -187,6 +187,7 @@ document, will cover in depth the scenario described in Figure 3.
 The non-inline PE topology, shown in the figure below, moves the services edge PE device from the forwarding path between the access/aggregation networks and the core.  There are several factors which can drive providers to this design vs. one with an in-line PE, some of which are outlined in the table below. The control-plane configuration of the Converged SDN Transport does not change, all existing ABR configuration remains the same, but the device no longer acts as a high-scale PE.    
 
 ![](http://xrdocs.io/design/images/cmf-hld/non-inline-design.png)
+_Figure: Non-Inline Aggregation Topology_
 
 ## Connectivity using 100G/200G coherent optics w/MACSec  
 
@@ -214,7 +215,6 @@ _Cisco 55A2 modular hardened router_
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-mod-linecard.png)
 _Cisco NCS 5500 chassis modular line card_ 
 
-_Figure: Non-Inline Aggregation Topology_
 
 ## Intra-Domain  
     
@@ -255,7 +255,7 @@ Segment-Routing embeds a simple Fast Re-Route (FRR) mechanism known as
 Topology Independent Loop Free Alternate (TI-LFA).
 
 TI-LFA provides sub 50ms convergence for link and node protection.
-TI-LFA is completely Stateless and does not require any additional
+TI-LFA is completely stateless and does not require any additional
 signaling mechanism as each node in the IGP Domain calculates a primary
 and a backup path automatically and independently based on the IGP
 topology. After the TI-LFA feature is enabled, no further care is
@@ -597,6 +597,8 @@ The RPD is provisioned using ZTP (Zero Touch Provisioning). DHCPv4 and DHCPv6 ar
 
 ### Remote PHY Standard Flows 
 The following diagram shows the different core functions of a Remote PHY solution and the communication between those elements. 
+<img src="http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png" width=600></img> 
+
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png)
 
 ### GCP 
