@@ -543,7 +543,124 @@ _Figure 13: PCE Path Computation_
 
 5.  Access Router acknowledges
 
-# Use Cases
+# Quality of Service and Assurance 
+
+## Overview 
+Quality of Service is of utmost importance in today's multi-service converged networks. The Converged SDN Transport design has the ability to enforce end to end traffic path SLAs using Segment Routing Traffic Engineering. In addition to satisfying those path constraints, traditional QoS is used to make sure the PHB (Per-Hop Behavior) of each packet is enforced at each node across the converged network.  
+
+## NCS 540, 560, and 5500 QoS Primer 
+
+The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR platforms but based on their hardware architecture use different elements for implementing end to end QoS. On these platforms ingress traffic is: 
+1. Matched using flexible criteria via Class Maps
+2. Assigned to a specific <b>Traffic Class (TC)</b> and/or <b>QoS Group</b> for further treatment on egress 
+3. Has its header marked with a specific IPP, DSCP, or MPLS EXP value
+
+<B>Traffic Classes</b> are used internally for determining fabric priority and as the match condition for egress queuing.  <B>QoS Groups</b> are used internally as the match criteria for egress CoS header re-marking. IPP/DSCP marking and re-marking of ingress MPLS traffic is done using _ingress_ QoS policies.  MPLS EXP for imposed labels can be done on ingress or egress, but if you wish to rewrite both the IPP/DSCP and set an explicit EXP for imposed labels, the MPLS EXP must be set on egress.  
+
+The <code>priority-level</code> command used in an egress QoS policy specifies the egress transmit priority of the traffic vs. other priority traffic. Priority levels can be configured as 1-7 with 1 being the highest priority.  Priority level 0 is reserved for best-effort traffic.  
+
+Please note, multicast traffic does not follow the same constructs as unicast traffic for prioritization. All multicast traffic assigned to Traffic Classes 1-4 are treated as Low Priority and traffic assigned to 5-6 treated as high priority.     
+{: .notice--warning}
+
+Hierarchical QoS is not enabled by default on the NCS 540 and 5500 platforms. H-QoS is enabled using the <b>hw-module profile qos hqos-enable</b> command.  Once H-QoS is enabled, the number of priority levels which can be assigned is reduced from 1-7 to 1-4. Additinoally, any hierarchical QoS policy assigned to a L3 sub-interface using priority levels must include a "shape" command.  Hierarchical QoS is not used in the CST Remote PHY design.   
+{: .notice--warning}
+
+Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: 
+<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/66x/b-qos-cg-ncs5500-66x/b-qos-cg-ncs5500-66x_chapter_010.html></a> 
+
+### Example QoS Class and Policy Maps 
+These are presented for reference only, please see the implementation guide for the full QoS configuration used in the Remote PHY design.  
+
+#### Class maps for ingress header matching
+<div class="highlighter-rouge">
+<pre class="highlight">
+class-map match-any match-ef-exp5
+ description High priority, EF 
+ match dscp 46
+ end-class-map
+!
+class-map match-any match-cs5-exp4
+ description Second highest priority
+ match dscp 40
+ end-class-map
+</pre>
+</div>
+<b>Ingress QoS policy</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map ingress-classifier
+ class match-ef-exp5
+  set traffic-class 2
+  set qos-group 2
+ !
+ class match-cs5-exp4
+  set traffic-class 3
+  set qos-group 3
+ class class-default
+  set traffic-class 0
+  set dscp 0
+  set qos-group 0
+ !
+ end-policy-map
+</pre>
+</div>
+
+#### Class maps for egress queuing and marking policies
+<div class="highlighter-rouge">
+<pre class="highlight">
+class-map match-any match-traffic-class-2
+ description "Match highest priority traffic-class 2"
+ match traffic-class 2
+ end-class-map
+!
+class-map match-any match-traffic-class-3
+ description "Match high priority traffic-class 3"
+ match traffic-class 3
+ end-class-map
+!
+class-map match-any match-qos-group-2
+ match qos-group 2
+ end-class-map
+!
+class-map match-any match-qos-group-3
+ match qos-group 3
+ end-class-map
+</pre>
+</div>
+
+#### Egress QoS queuing policy 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map egress-queuing
+ class match-traffic-class-2
+  priority level 2
+ !
+ class match-traffic-class-3
+  priority level 3
+ !
+ class class-default
+ !
+ end-policy-map
+</pre>
+</div>
+
+#### Egress QoS marking policy 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map core-egress-exp-marking
+ class match-qos-group-2
+  set mpls experimental imposition 5
+ !
+ class match-qos-group-3
+  set mpls experimental imposition 4
+ class class-default
+  set mpls experimental imposition 0
+ !
+ end-policy-map
+</pre>
+</div
+
+# Converged SDN Transport Use Cases
 
 Service Provider networks must adopt a very flexible design that satisfy
 any to any connectivity requirements, without compromising in stability
@@ -557,7 +674,7 @@ cable access, mobile, and business services over the same converged network infr
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-multi-service-network.png)
 
-# Cable Converged Interconnect Network (CIN)
+# Cable Converged Interconnect Network (CIN)  
 
 ## Summary  
 The Converged SDN Transport Design enables a multi-service CIN by adding support for the features and functions required to build a scalable next-generation Ethernet/IP cable access network. Differentiated from simple switch or L3 aggregation designs is the ability to support NG cable transport over the same common infrastructure already supporting other services like mobile backhaul and business VPN services. Cable Remote PHY is simply another service overlayed onto the existing Converged SDN Transport network architecture. We will cover all aspects of connectivity between the Cisco cBR-8 and the RPD device.  
@@ -693,7 +810,7 @@ Each DPIC interface should be configured in its own L3 VRF. This ensures traffic
 #### Router Interface Configuration  
 If no link redundancy is utilized each DPIC interface will connect to the router using a point to point L3 interface. 
 
-If using cBR-8 link redundancy failover can be made much faster by utilizing the same gateway MAC address on each router.  Link HA uses the same IP and MAC address on each port pair on the cBR-8, and retains routing and ARP information for the L3 gateway. If a different MAC address is used on each router, traffic will be dropped until an ARP occurs to populate the GW MAC address on the router after failover.  On the NCS platforms, a static MAC address cannot be set on a physical L3 interface.  The method used to set a static MAC address is to use a BVI (Bridged Virtual Interface), which allows one to set a static MAC address. In the case of DPIC interface connectivity, each DPIC interface should be placed into its own bridge domain with an associated BVI interface. Since each DPIC port is directly connected to the router interface, the same MAC address can be utilized on each BVI.  
+If using cBR-8 link HA, failover time is reduced by utilizing the same gateway MAC address on each router. Link HA uses the same IP and MAC address on each port pair on the cBR-8, and retains routing and ARP information for the L3 gateway. If a different MAC address is used on each router, traffic will be dropped until an ARP occurs to populate the GW MAC address on the router after failover.  On the NCS platforms, a static MAC address cannot be set on a physical L3 interface.  The method used to set a static MAC address is to use a BVI (Bridged Virtual Interface), which allows one to set a static MAC address. In the case of DPIC interface connectivity, each DPIC interface should be placed into its own bridge domain with an associated BVI interface. Since each DPIC port is directly connected to the router interface, the same MAC address can be utilized on each BVI.  
 
 If using IS-IS to distribute routes across the CIN, each DPIC physical interface or BVI should be configured as a passive IS-IS interface in the topology. If using BGP to distribute routing information the "redistribute connected" command should be used. The BGP configuration is the same whether using L3VPN or the global routing table.   
 
@@ -710,121 +827,17 @@ It is recommended to connect each cBR-8 DPIC interface using P2P L3 interfaces, 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-bvi-p2p.png)
 
 ### Native IP or L3VPN/mVPN Deployment 
-Two models are available and validated to carry Remote PHY traffic between the RPD and MAC function.  
+Two options are available and validated to carry Remote PHY traffic between the RPD and MAC function. 
 
-### Quality of Service (QoS)
-QoS is a requirement for delivering trouble-free Remote PHY. This design uses sample QoS configurations for concept illustration, but QoS should be tailored for specific network deployments. New CIN builds can utilize the configurations in the implementation guide verbatim if no other services are being carried across the network.   
+- Native IP means the end to end communication occurs as part of the global routing table. In a network with SR-MPLS deployed such as the CST design, unicast IP traffic is still carried across the network using an MPLS header. This allows for fast reconvergence in the network by using SR and enabled the network to carry other VPN services on the network even if they are not used to carry Remote PHY traffic. In then native IP deployment, multicast traffic uses either PIM signaling with IP multicast forwarding or mLDP in-band signaling for label-switched multicast. The multicast profile used is profile 7 (Global mLDP in-band signaling).  
 
-#### NCS 540 and 5500 QoS Primer 
-The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR platforms but based on their hardware architecture use different elements for implementing end to end QoS. On these platforms ingress traffic is: 
-1. Matched using flexible criteria via Class Maps
-2. Assigned to a specific <b>Traffic Class (TC)</b> and/or <b>QoS Group</b> for further treatment on egress 
-3. Has its header marked with a specific IPP, DSCP, or MPLS EXP value
+- L3VPN and mVPN can also be utilized to carry Remote PHY traffic within a VPN service end to end. This has the benefit of separating Remote PHY traffic from the network underlay, improving security and treating Remote PHY as another service on a converged access network. Multicast traffic in this use case uses mVPN profile 14. mLDP is used for label-switched multicast, and the NG-MVPN BGP control plane is used for all multicast discovery and signaling.  
 
-<B>Traffic Classes</b> are used internally for determining fabric priority and as the match condition for egress queuing.  <B>QoS Groups</b> are used internally as the match criteria for egress CoS header re-marking. IPP/DSCP marking and re-marking of ingress MPLS traffic is done using _ingress_ QoS policies.  MPLS EXP for imposed labels can be done on ingress or egress, but if you wish to rewrite both the IPP/DSCP and set an explicit EXP for imposed labels, the MPLS EXP must be set on egress.  
+#### SR-TE 
+Segment Routing Traffic Engineering may be utilized to carry traffic end to end across the CIN network. Using On-Demand Networking simplifies the deployment of SR-TE Policies from ingress to egress by using specific color BGP communities to instruct head-end nodes to create policies satisfying specific user constraints. As an example, if RPD aggregation prefixes are advertised using BGP to the DPIC aggregation device, SR-TE tunnels following a user constraint can be built dynamically between those endpoints.   
 
-The <code>priority-level</code> command used in an egress QoS policy specifies the egress transmit priority of the traffic vs. other priority traffic. Priority levels can be configured as 1-7 with 1 being the highest priority.  Priority level 0 is reserved for best-effort traffic.  
-
-Please note, multicast traffic does not follow the same constructs as unicast traffic for prioritization. All multicast traffic assigned to Traffic Classes 1-4 are treated as Low Priority and traffic assigned to 5-6 treated as high priority.     
-{: .notice--warning}
-
-Hierarchical QoS is not enabled by default on the NCS 540 and 5500 platforms. H-QoS is enabled using the <b>hw-module profile qos hqos-enable</b> command.  Once H-QoS is enabled, the number of priority levels which can be assigned is reduced from 1-7 to 1-4. Additinoally, any hierarchical QoS policy assigned to a L3 sub-interface using priority levels must include a "shape" command.  Hierarchical QoS is not used in the CST Remote PHY design.   
-{: .notice--warning}
-
-Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: 
-<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/66x/b-qos-cg-ncs5500-66x/b-qos-cg-ncs5500-66x_chapter_010.html></a> 
-
-#### Example QoS Class and Policy Maps 
-These are presented for reference only, please see the implementation guide for the full QoS configuration used in the Remote PHY design.  
-
-##### Class maps for ingress header matching
-<div class="highlighter-rouge">
-<pre class="highlight">
-class-map match-any match-ef-exp5
- description High priority, EF 
- match dscp 46
- end-class-map
-!
-class-map match-any match-cs5-exp4
- description Second highest priority
- match dscp 40
- end-class-map
-</pre>
-</div>
-<b>Ingress QoS policy</b> 
-<div class="highlighter-rouge">
-<pre class="highlight">
-policy-map ingress-classifier
- class match-ef-exp5
-  set traffic-class 2
-  set qos-group 2
- !
- class match-cs5-exp4
-  set traffic-class 3
-  set qos-group 3
- class class-default
-  set traffic-class 0
-  set dscp 0
-  set qos-group 0
- !
- end-policy-map
-</pre>
-</div>
-
-##### Class maps for egress queuing and marking policies
-<div class="highlighter-rouge">
-<pre class="highlight">
-class-map match-any match-traffic-class-2
- description "Match highest priority traffic-class 2"
- match traffic-class 2
- end-class-map
-!
-class-map match-any match-traffic-class-3
- description "Match high priority traffic-class 3"
- match traffic-class 3
- end-class-map
-!
-class-map match-any match-qos-group-2
- match qos-group 2
- end-class-map
-!
-class-map match-any match-qos-group-3
- match qos-group 3
- end-class-map
-</pre>
-</div>
-
-##### Egress QoS queuing policy 
-<div class="highlighter-rouge">
-<pre class="highlight">
-policy-map egress-queuing
- class match-traffic-class-2
-  priority level 2
- !
- class match-traffic-class-3
-  priority level 3
- !
- class class-default
- !
- end-policy-map
-</pre>
-</div>
-
-##### Egress QoS marking policy 
-<div class="highlighter-rouge">
-<pre class="highlight">
-policy-map core-egress-exp-marking
- class match-qos-group-2
-  set mpls experimental imposition 5
- !
- class match-qos-group-3
-  set mpls experimental imposition 4
- class class-default
-  set mpls experimental imposition 0
- !
- end-policy-map
-</pre>
-</div>
+### CIN Quality of Service (QoS)
+QoS is a requirement for delivering trouble-free Remote PHY. This design uses sample QoS configurations for concept illustration, but QoS should be tailored for specific network deployments. New CIN builds can utilize the configurations in the implementation guide verbatim if no other services are being carried across the network. Please see the section in this document on QoS for general QoS information.  
 
 #### CST Network Traffic Classification  
 The following lists specific traffic types which should be treated with specific priority, default markings, and network classification points.
@@ -834,6 +847,7 @@ The following lists specific traffic types which should be treated with specific
 | BGP | Routers, cBR-8 | Highest | CS6 (DSCP 48) | None |  
 | IS-IS | Routers, cBR-8 | Highest | CS6 | IS-IS is single-hop and uses highest priority queue by default | 
 | BFD | Routers | Highest | CS6 | BFD is single-hop and uses highest priority queue by default | 
+| DHCP | RPD | High | CS5 | DHCP COS is set explicitly | 
 | PTP | All | High | DSCP 46 | Default on all routers, cBR-8, and RPD | 
 | DOCSIS MAP/UCD | RPD, cBR-8 DPIC | High | DSCP 46 | | 
 | DOCSIS BWR | RPD, cBR-8 DPIC | High | DSCP 46 | | 
@@ -842,9 +856,12 @@ The following lists specific traffic types which should be treated with specific
 | Video | cBR-8 | Medium | DSCP 32 | Video within multicast L2TPv3 tunnel when cBR-8 is video core | 
 | MDD | RPD, cBR-8 | Medium | DSCP 40 |   
 
-
 ### CST and Remote-PHY Load Balancing 
-Across the network traffic is load balanced based on L3 header criteria. The devices used in the CST design are capable of load balancing traffic based on MPLS labels used in the SR underlay and IP headers underneath any MPLS labels. In the higher bandwidth downstream direction, where a series of L2TP3 tunnels are created from the cBR-8 to the RPD, traffic is hashed based on the source and destination IP addresses of those tunnels. Downstream L2TPv3 tunnels from a single Digital PIC interface to a set of RPDs will be distributed across the fabric based on RPD destination IP address.  
+ Unicast network traffic is load balanced based on MPLS labels and IP header criteria. The devices used in the CST design are capable of load balancing traffic based on MPLS labels used in the SR underlay and IP headers underneath any MPLS labels. In the higher bandwidth downstream direction, where a series of L2TP3 tunnels are created from the cBR-8 to the RPD, traffic is hashed based on the source and destination IP addresses of those tunnels. Downstream L2TPv3 tunnels from a single Digital PIC interface to a set of RPDs will be distributed across the fabric based on RPD destination IP address. The followUing illustrates unicast load balancing across the network. 
+
+![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-load-balancing.png)
+
+Multicast traffic is not load balanced across the network. Whether the network is utilizing PIMv4, PIMv6, or mVPN, a multicast flow with two equal cost downstream paths will utilize only a single path, and only a single member link will be utilized in a link bundle. If using multicast, ensure sufficient bandwidth is available on a single link between two adjacencies.  
 
 ## 4G Transport and Services Modernization 
 
