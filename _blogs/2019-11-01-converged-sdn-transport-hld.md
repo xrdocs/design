@@ -427,7 +427,7 @@ The Service End Points create a SR-TE Policy and use the SID list returned by SR
 path.   
 
 Service End Points can be located on the Access Routers for Flat
-Services or at both the Access and ABR routersfor Hierarchical Services. The SR-TE Policy Data
+Services or at both the Access and ABR routers for Hierarchical Services. The SR-TE Policy Data
 Plane in the case of Service End Point co-located with the Access router
 was described in Figure 5.
 
@@ -437,11 +437,10 @@ _Figure 10: Transport Programmability – BGP-SR-TE_
 
 The proposed design is very scalable and can be easily extended to
 support even higher numbers of BGP-SR-TE/PCEP sessions by adding
-additional RRs and SR-PCEs into the Access Domain.
+additional RRs and SR-PCE elements into the Access Domain.
 
 Figure 11 shows the  Converged SDN Transport physical topology with examples
-of product
-placement.
+of product placement.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image12.png)
 
@@ -477,13 +476,13 @@ with a specific SR-TE Policy.
 ### Segment Routing Path Computation Element (SR-PCE)
 
 Segment Routing Path Computation Element, or SR-PCE, is a Cisco Path Computation Engine
-(PCE) and it is implemented as a feature included as part of Cisco
+(PCE) and is implemented as a feature included as part of Cisco
 IOS-XR operating system. The function is typically deployed on a Cisco
 IOS-XR cloud appliance XRv-9000, as it involves control plane operations
 only. The SR-PCE gains network topology awareness from BGP-LS
 advertisements received from the underlying network. Such knowledge is
 leveraged by the embedded multi-domain computation engine to provide
-optimal path to Path Computation Element Clients (PCCs) using the Path
+optimal path information to Path Computation Element Clients (PCCs) using the Path
 Computation Element Protocol (PCEP).  
 
 The PCC is the device where the service originates (PE) and therefore it
@@ -588,8 +587,6 @@ In a remote PHY deployment the downstream connections to the CIN are via the Dig
 #### cBR-8 Redundancy 
 The cBR-8 supports both upstream and downstream redundancy. Supervisor redundancy uses active/standby connections to the SP network. Downstream redundancy can be configured at both the line card and port level. Line card redundancy uses an active/active mechanism where each RPD connects to the DOCSIS core function on both the active and hot standby Digital PIC line card. Port redundancy uses the concept of "port pairs" on each Digital PIC, with ports 0/1, 2/3, 4/6, and 6/7 using either an active/active (L2) or active/standby (L3) mechanism. In the CST design we utilize a L3 design with the active/standby mechanism. The mechanism uses the same IP address on both ports, with the standby port kept in a physical down state until switchover occurs.   
 
-
-
 ## Remote PHY Communication 
 
 ### DHCP 
@@ -603,7 +600,6 @@ The following diagram shows the different core functions of a Remote PHY solutio
 
 ### GCP 
 Generic Communications Protocol is used for the initial provisioning of the RPD. When the RPD boots and received its configuration via DHCP, one of the DHCP options will direct the RPD to a GCP server which can be the cBR-8 or Cisco Smart PHY. GCP runs over TCP typically on port 8190.    
-
 ### UEPI and DEPI L2TPv3 Tunnels 
 The upstream output from an RPD is IP/Ethernet, enabling the simplification of the cable access network. Tunnels are used between the RPD PHY functions and DOCSIS core components to transport signals from the RPD to the core elements, whether it be a hardware device like the Cisco cBR-8 or a virtual network function provided by the Cisco cnBR (cloud native Broadband Router).  
 
@@ -627,7 +623,7 @@ Control plane functions of Remote PHY are critical to achieving proper operation
 #### DHCPv4 and DHCPv6 Relay 
 As a critical component of the initial boot and provisioning of RPDs, the network must support DHCP relay functionality on all RPD-facing interfaces, for both IPv4 and IPv6.   
 
-## Converged SDN Transport CIN Network Design 
+## Converged SDN Transport CIN Design 
 
 ## Deployment Topology Options 
 The Converged SDN Transport design is extremely flexible in how Remote PHY components are deployed. Depending on the size of the deployment, components can be deployed in a scalable leaf-spine fabric with dedicated routers for RPD and cBR-8 DPIC connections or collapsed into a single pair of routers for smaller deployments. If a smaller deployment needs to be expanded, the flexible L3 routed design makes it very easy to simply interconnect new devices and scale the design to a fabric supporting thousands of RPD and other access network connections.  
@@ -663,7 +659,7 @@ The following table highlights the Cisco hardware utilized within the Converged 
 | NCS-5502 | Spine | 192 (breakout) | 0 | 48 | None | |
 | NCS-5504 | Multi | Upto 576 | x | Upto 144 | Class B | 4-slot modular platform |  
 
-### Scalable L3 Routed Design  
+## Scalable L3 Routed Design  
 The Cisco validated design for cable CIN utilizes a L3 design with or without Segment Routing. Pure L2 networks are no longer used for most networks due to their inability to scale, troubleshooting difficulty, poor network efficiency, and poor resiliency. L2 bridging can be utilized on RPD aggregation routers to simplify RPD connectivity.   
 
 ### L3 IP Routing  
@@ -683,7 +679,28 @@ Like the overall CST design, we utilize IS-IS for IPv4 and IPv6 underlay routing
 |CIN Spine RPD Timing | IS-IS | Used to advertise RPD timing interface BGP next-hop information and advertise default | 
 |CIN Spine | BGP (optional) | In a native IP design the spine must learn BGP routes for proper forwarding |  
 
-### P2P and BVI RPD Aggregation Interfaces  
+### CIN Router to Router Interconnection
+It is recommended to use multiple L3 links when interconnecting adjacent routers, as opposed to using LAG, if possible. Bundles increase the possibility for timing inaccuracy due to asymmetric timing traffic flow between slave and master. If bundle interfaces are utilized, care should be taken to ensure the difference in paths between two member links is kept to a minimum.  All router links will be configured according to the global CST design. Leaf devices will be considered CST access PE devices and utilize BGP for all services routing.   
+
+### cBR-8 DPIC to CIN Interconnection  
+The cBR-8 supports two mechanisms for DPIC high availability outlined in the overview section. DPIC line card and link redundancy is recommended but not a requirement. In the CST reference design, if link redundancy is being used each port pair on the active and standby line cards is connected to a different router and the default active ports (even port number) is connected to a different router. In the example figure, port 0 from active DPIC card 0 is connected to R1 and port 0 from standby DPIC card 1 is connected to R2.  DPIC link redundancy MUST be configured using the "cold" method since the design is using L3 to each DPIC interface and no intermediate L2 switching.  This is done with the _cable rphy link redundancy cold_ global command and will keep the standby link in a down/down state until switchover occurs. 
+
+![](http://xrdocs.io/design/images/cmf-rphy-dpic-redundancy.png)
+
+#### DPIC Interface Configuration 
+Each DPIC interface should be configured in its own L3 VRF. This ensures traffic from an RPD assigned to a specific DPIC interface takes the traffic path via the specific interface and does not traverse the SUP interface for either ingress or egress traffic. It's recommended to use a static default route within each DPIC VRF towards the CIN network. Dynamic routing protocols could be utilized, however it will slow convergence during redundancy switchover.   
+
+#### Router Interface Configuration  
+If no link redundancy is utilized each DPIC interface will connect to the router using a point to point L3 interface. 
+
+If using cBR-8 link redundancy failover can be made much faster by utilizing the same gateway MAC address on each router.  Link HA uses the same IP and MAC address on each port pair on the cBR-8, and retains routing and ARP information for the L3 gateway. If a different MAC address is used on each router, traffic will be dropped until an ARP occurs to populate the GW MAC address on the router after failover.  On the NCS platforms, a static MAC address cannot be set on a physical L3 interface.  The method used to set a static MAC address is to use a BVI (Bridged Virtual Interface), which allows one to set a static MAC address. In the case of DPIC interface connectivity, each DPIC interface should be placed into its own bridge domain with an associated BVI interface. Since each DPIC port is directly connected to the router interface, the same MAC address can be utilized on each BVI.  
+
+If using IS-IS to distribute routes across the CIN, each DPIC physical interface or BVI should be configured as a passive IS-IS interface in the topology. If using BGP to distribute routing information the "redistribute connected" command should be used. The BGP configuration is the same whether using L3VPN or the global routing table.   
+
+![](http://xrdocs.io/design/images/cmf-rphy-dpic-redundancy.png)
+_DPIC line card and link HA_ 
+
+### RPD to Router Interconnection  
 The Converged SDN Transport design supports both P2P L3 interfaces for RPD and DPIC aggregation as well as using Bridge Virtual Interfaces. A BVI is a logical L3 interface within a L2 bridge domain. In the BVI deployment the DPIC and RPD physical interfaces connected to a single leaf device share a common IP subnet with the gateway residing on the leaf router.  
 
 It is recommended to configure the RPD leaf using bridge-domains and BVI interfaces. This eases configuration on the leaf device as well as the DHCP configuration used for RPD provisioning. 
@@ -824,8 +841,6 @@ The following lists specific traffic types which should be treated with specific
 | DOCSIS Data | RPD, cBR-8 DPIC | Low | DSCP 0 | 
 | Video | cBR-8 | Medium | DSCP 32 | Video within multicast L2TPv3 tunnel when cBR-8 is video core | 
 | MDD | RPD, cBR-8 | Medium | DSCP 40 |   
-
-
 
 
 ### CST and Remote-PHY Load Balancing 
