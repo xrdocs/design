@@ -678,13 +678,13 @@ cable access, mobile, and business services over the same converged network infr
 # 5G Mobile Networks 
 
 ## Summary 
-The Converged SDN Transport design introduces initial support for 5G networks and 5G services. There are a variety of new service use cases being defined by 3GPP for use on 5G networks, illustrated by the figure below. Networks must now be built to support the stringent SLA requirements of Ultra-Reliable Low-Latency services while also being able to cope with the massive bandwidth introduced by Enhanced Mobile Broadband services. The initial support for 5G in the Converged SDN Transport design focuses on backhaul. The design introduces no new service types, the existing scalable L3VPN and EVPN based services using BGP are sufficient for carrying 5G control-plane and user-plane traffic.   
+The Converged SDN Transport design introduces initial support for 5G networks and 5G services. There are a variety of new service use cases being defined by 3GPP for use on 5G networks, illustrated by the figure below. Networks must now be built to support the stringent SLA requirements of Ultra-Reliable Low-Latency services while also being able to cope with the massive bandwidth introduced by Enhanced Mobile Broadband services. The initial support for 5G in the Converged SDN Transport design focuses on the backhaul and midhaul portions of the network utilizing an and to end IP/MPLS and Segment Routing solution. The design introduces no new service types, the existing scalable L3VPN and EVPN based services using BGP are sufficient for carrying 5G control-plane and user-plane traffic.   
 
 ## Key Validated Components 
 The following key features have been added to the CST validated design to support initial 5G deployments 
 
 ### Low latency SR-TE path computation
-In this release of the CST design, we introduce a new validated constraint type for SR-TE paths used for carrying services across the network. The "latency"  
+In this release of the CST design, we introduce a new validated constraint type for SR-TE paths used for carrying services across the network. The "latency" constraint 
 
 
 ### End to end network QoS with H-QoS on Access PE 
