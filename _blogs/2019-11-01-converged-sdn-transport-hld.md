@@ -548,7 +548,12 @@ _Figure 13: PCE Path Computation_
 ## Overview 
 Quality of Service is of utmost importance in today's multi-service converged networks. The Converged SDN Transport design has the ability to enforce end to end traffic path SLAs using Segment Routing Traffic Engineering. In addition to satisfying those path constraints, traditional QoS is used to make sure the PHB (Per-Hop Behavior) of each packet is enforced at each node across the converged network.  
 
+## Hierarchical Edge QoS 
+H-QoS enables a provider to set an overall traffic rate across all services, and then configure parameters per-service via a child QoS policy where the percentages of guaranteed bandwidth are derived from the parent rate. NCS platforms support 2-level and 3-level H-QoS. 3-level H-QoS applies a policer (ingress) or shaper (egress) to a physical interface, with each sub-interface having a 2-level H-QoS policy applied.  
+
 ## NCS 540, 560, and 5500 QoS Primer 
+Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: 
+<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/66x/b-qos-cg-ncs5500-66x/b-qos-cg-ncs5500-66x_chapter_010.html></a> 
 
 The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR platforms but based on their hardware architecture use different elements for implementing end to end QoS. On these platforms ingress traffic is: 
 1. Matched using flexible criteria via Class Maps
@@ -562,11 +567,22 @@ The <code>priority-level</code> command used in an egress QoS policy specifies t
 Please note, multicast traffic does not follow the same constructs as unicast traffic for prioritization. All multicast traffic assigned to Traffic Classes 1-4 are treated as Low Priority and traffic assigned to 5-6 treated as high priority.     
 {: .notice--warning}
 
-Hierarchical QoS is not enabled by default on the NCS 540 and 5500 platforms. H-QoS is enabled using the <b>hw-module profile qos hqos-enable</b> command.  Once H-QoS is enabled, the number of priority levels which can be assigned is reduced from 1-7 to 1-4. Additinoally, any hierarchical QoS policy assigned to a L3 sub-interface using priority levels must include a "shape" command.  Hierarchical QoS is not used in the CST Remote PHY design.   
-{: .notice--warning}
+### Hierarchical QoS 
+NCS platforms support 2-level and 3-level H-QoS. 3-level H-QoS applies a policer (ingress) or shaper (egress) to a physical interface, with each sub-interface having a 2-level H-QoS policy applied. Hierarchical QoS is not enabled by default on the NCS 540 and 5500 platforms. H-QoS is enabled using the <b>hw-module profile qos hqos-enable</b> command.  Once H-QoS is enabled, the number of priority levels which can be assigned is reduced from 1-7 to 1-4. Additionally, any hierarchical QoS policy assigned to a L3 sub-interface using priority levels must include a "shape" command.   
 
-Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: 
-<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/66x/b-qos-cg-ncs5500-66x/b-qos-cg-ncs5500-66x_chapter_010.html></a> 
+The ASR9000 supports multi-level H-QoS at high scale for edge aggregation function. In the case of hierarchical services, H-QoS can be applied to PWHE L3 interfaces.  
+
+
+## CST QoS mapping with 5 classes 
+QoS designs are typically tailored for each provider, but we introduce a 5-level QoS design which can fit most provider needs. The design covers transport of both unicast and multicast traffic.  
+
+| Traffic Type | Ingress Marking | Core Marking | Comments | 
+| ----------|---------|----------|---------------|-------------| 
+| Low latency | IPP 5  | EXP 5 | URLLC, consistent delay, small buffer|  
+| 5G Control Plane | IPP 4 | EXP 4 | Mobile control and billing |    
+| High Priority Service | IPP 3 (in contract), 1 (out of contract) | EXP 1,3 | Business service | 
+| Best Effort | IPP 0 | EXP 0 | General user traffic | 
+| Network Control | IPP 6 | EXP 6 | Underlay network control plane |  
 
 ### Example QoS Class and Policy Maps 
 These are presented for reference only, please see the implementation guide for the full QoS configuration used in the Remote PHY design.  
@@ -596,6 +612,7 @@ policy-map ingress-classifier
  class match-cs5-exp4
   set traffic-class 3
   set qos-group 3
+ ! 
  class class-default
   set traffic-class 0
   set dscp 0
@@ -693,12 +710,130 @@ Different metric types can be used in a single path computation, with the follow
 2. Statically defined TE metric 
 3. IGP metric 
 
+#### SR Policy latency constraint configuration on configured policy  
+<pre> 
+segment-routing
+  traffic-eng
+    policy LATENCY-POLICY 
+      color 20 end-point ipv4 1.1.1.3
+      candidate-paths
+        preference 100
+          dynamic mpls
+            metric
+              type latency
+</pre>
+
+#### SR Policy latency constraint configuration for ODN policies 
+<pre> 
+segment-routing
+ traffic-eng
+  on-demand color 100 
+   dynamic
+    pcep
+    !
+    metric
+     type latency
+</pre>
+
+#### Static defined link delay metric
+<pre>
+performance-measurement
+ interface TenGigE0/0/0/10
+  delay-measurement
+   advertise-delay 15000
+ interface TenGigE0/0/0/20
+  delay-measurement
+   advertise-delay 10000
+</pre>
+
+#### TE metric definition  
+<pre>
+segment-routing
+ traffic-eng
+  interface TenGigE0/0/0/10
+   metric 15
+  !
+  interface TenGigE0/0/0/20
+   metric 10
+</pre>
+
 The link-delay metrics are quantified in the unit of microseconds.  On most networks this can be quite large and may be out of range from normal IGP metrics, so care must be taken to ensure proper compatibility when mixing metric types. The largest possible IS-IS metric is 16777214 which is equivalent to 16.77 seconds.    
 {: .notice--warning}
 
-
-
 ### End to end network QoS with H-QoS on Access PE 
+QoS is of utmost importance for ensuring the mobile control plane and critical user plane traffic meets SLA requirements. Overall network QoS is covered in the QoS section in this document, this section will focus on basic Hierarchical QoS to support 5G services. 
+
+H-QoS enables a provider to set an overall traffic rate across all services, and then configure parameters per-service via a child QoS policy where the percentages of guaranteed bandwidth are derived from the parent rate. NCS platforms support 2-level and 3-level H-QoS. 3-level H-QoS applies a policer (ingress) or shaper (egress) to a physical interface, with each sub-interface having a 2-level H-QoS policy applied.  
+
+#### CST QoS mapping with 5 classes 
+
+| Traffic Type | Ingress Marking | Core Marking | Comments | 
+| ----------|---------|----------|---------------|-------------| 
+| Low latency | IPP 5  | EXP 5 | URLLC, consistent delay, small buffer|  
+| 5G Control Plane | IPP 4 | EXP 4 | Mobile control and billing |    
+| High Priority Service | IPP 3 (in contract), 1 (out of contract) | EXP 1,3 | Business service | 
+| Best Effort | IPP 0 | EXP 0 | General user traffic | 
+| Network Control | IPP 6 | EXP 6 | Underlay network control plane |  
+
+**** Implementation guide portion  
+Enabling H-QoS on the NCS platforms requires the following global command and requires a reload of the device. 
+<pre> 
+hw-module profile qos hqos-enable
+</pre>
+
+<pre>
+policy-map hqos-ingress-parent-5g
+ class class-default
+  service-policy hqos-ingress-child-policer
+  police rate 5 gbps
+  !
+ !
+ end-policy-map
+ </pre>   
+
+<pre> 
+
+<pre> 
+class-map match-any edge-hqos-2-in
+ match dscp 46
+ end-class-map
+!
+class-map match-any edge-hqos-3-in
+ match dscp 40
+ end-class-map
+!
+class-map match-any edge-hqos-6-in
+ match dscp 32
+ end-class-map
+</pre> 
+
+<pre>
+policy-map hqos-ingress-child-policer
+ class edge-hqos-2-in
+  set traffic-class 2
+  police rate percent 10
+  !
+ !
+ class edge-hqos-3-in
+  set traffic-class 3
+  police rate percent 30
+  !
+ !
+ class edge-hqos-6-in
+  set traffic-class 6
+  police rate percent 30
+  !
+ !
+ class class-default
+  set traffic-class 0
+  set dscp 0
+  police rate percent 100 
+  !
+ !
+ end-policy-map
+ </pre> 
+
+
 ### G.8275.1 end to end timing  
 
 
@@ -909,9 +1044,7 @@ in Converged SDN Transport 2.0 follows work done in EPN 4.0 located here:  https
 | L2VPN VPWS | LDP Pseudowire | EVPN VPWS w/ODN | 
 | eMBMS Multicast   | Native / mLDP | Native / mLDP |
 
-
 The CST 4G Transport modernization covers only MPLS-based access and not L2 access scenarios.  
-
 
 ## L3 IP Multicast and mVPN  
 IP multicast continues to be an optimization method for delivering content traffic to many endpoints,
@@ -925,20 +1058,33 @@ multicast carries critical high value services, so proper design and implementat
 | Profile 14 | Partitioned MDT using BGP-AD and BGP c-multicast signaling |  
 
 
+### LDP Auto-configuration 
+LDP can automatically be enabled on all IS-IS interfaces with the following configuration in the IS-IS configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS
+ address-family ipv4 unicast
+  mpls ldp auto-config
+</div>
+</pre> 
+
 ### LDP mLDP-only Session Capability (RFC 7473)  
 In Converged SDN Transport 3.0 we introduce the ability to only advertise mLDP state on each router adjacency, eliminating the need to filter LDP unicast FECs from advertisement into the network. This is done using the SAC (State Advertisement Control) TLV in the LDP initialization messages to advertise which LDP FEC classes to receive from an adjacent peer.  We can restrict the capabilities to mLDP only using the following configuration.  Please see the implementation guide and configurations for the full LDP configuration.   
 
-<pre> 
+<div class="highlighter-rouge">
+<pre class="highlight">
 mpls ldp
  capabilities sac mldp-only
-</pre>
+</div>
+</pre> 
 
 ### LDP Unicast FEC Filtering for SR Unicast with mLDP Multicast  
 The following is for historical context, please see the above section regarding disabling LDP unicast FECs using session capability advertisements. 
 
 The Converged SDN Transport design utilized Segment Routing with the MPLS dataplane for all unicast traffic. The first phase of multicast support in Converged SDN Transport 2.0 will use mLDP for use with existing mLDP based networks and new networks wishing to utilize label switcched multicast across the core. LDP is enabled on an interface for both unicast and multicast by default. Since SR is being used for unicast, one must filtering out all LDP unicast FECs to ensure they are not distributed across the network. SR is used for all unicast traffic in the presence of an LDP FEC for the same prefix, but filtering them reduces control-plane activity, may aid in re-convergence, and simplifies troubleshooting.  The following should be applied to all interfaces which have mLDP enabled:  
 
-<pre>
+<div class="highlighter-rouge">
+<pre class="highlight">
 ipv4 access-list no-unicast-ldp 
 10 deny ipv4 any any
 !
@@ -950,8 +1096,8 @@ address-family ipv4
   label
    local
     allocate for no-unicast-ldp
-</pre>
-
+</div>
+</pre> 
 
 
 ## EVPN Multicast 
@@ -1010,7 +1156,6 @@ the interface is not active, the ZTP process will begin the process on data port
 can be part of an ecosystem of automated device and service provisioning via Cisco NSO.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/ztp-metro-fabric.png)
-
 
 # Services – Design
     
@@ -1379,8 +1524,8 @@ _Figure 36:  Converged SDN Transport – Data-Plane_
     
 ## Transport 
 
-This section describes in detail Phase 1 of the  Converged SDN Transport
-design. This Phase focuses on transport programmability and BGP-based
+This section describes in detail the Converged SDN Transport
+design. This Converged SDN Transport design focuses on transport programmability using Segment Routing and BGP-based
 services adoption.
 
 Figure 35 and Figure 36 show the network topology and transport Data
@@ -1558,7 +1703,6 @@ standards based solution.
 For all those reasons, the Cisco Converged SDN Transport design really brings an
 exciting evolution in Service Provider Networking.
 
-
 # Hardware Validation
 
 ## NCS-55A2-MOD 
@@ -1567,7 +1711,6 @@ router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modu
 per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
 100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
 configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
-
 
 ## NCS-5501, NCS-5501-SE, and N540-24Z8Q2C-M 
 The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Converged SDN Transport. The 5501 
