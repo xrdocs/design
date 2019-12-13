@@ -672,7 +672,29 @@ blueprint that can be easily customized to meet customer specific
 requirements. This blueprint must adapt to carry any service type, for example  
 cable access, mobile, and business services over the same converged network infrastructure.  
 
-![](http://xrdocs.io/design/images/cmf-hld/cmf-multi-service-network.png)
+![](http://xrdocs.io/design/images/cmf-hld/cmf-5g-services.png)
+
+
+# 5G Mobile Networks 
+
+## Summary 
+The Converged SDN Transport design introduces initial support for 5G networks and 5G services. There are a variety of new service use cases being defined by 3GPP for use on 5G networks, illustrated by the figure below. Networks must now be built to support the stringent SLA requirements of Ultra-Reliable Low-Latency services while also being able to cope with the massive bandwidth introduced by Enhanced Mobile Broadband services. The initial support for 5G in the Converged SDN Transport design focuses on backhaul. The design introduces no new service types, the existing scalable L3VPN and EVPN based services using BGP are sufficient for carrying 5G control-plane and user-plane traffic.   
+
+## Key Validated Components 
+The following key features have been added to the CST validated design to support initial 5G deployments 
+
+### Low latency SR-TE path computation
+In this release of the CST design, we introduce a new validated constraint type for SR-TE paths used for carrying services across the network. The "latency"  
+
+
+### End to end network QoS with H-QoS on Access PE 
+### G.8275.1 end to end timing  
+
+
+
+
+
+
 
 # Cable Converged Interconnect Network (CIN)  
 

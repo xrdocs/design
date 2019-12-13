@@ -22,29 +22,39 @@ tags:
 
   - Hardware:
     
-      - ASR9000 as Provider Edge (PE) node
+      - ASR 9000 as centralized Provider Edge (C-PE) router  
     
-      - NCS5500 as Aggregation and P-Aggregation Node
+      - NCS 5500 and NCS 55A2 as Aggregation and Pre-Aggregation router  
+      
+      - NCS 5500 as P core router  
     
-      - ASR920 and NCS5500 (standing for the NCS540) as Access Router
+      - ASR 920, NCS 540, and NCS 5500 as Access Provider Edge (A-PE) 
+
+      - cBR-8 CMTS with 8x10GE DPIC for Remote PHY 
+
+      - Compact Remote PHY shelf with three 1x2 Remote PHY Devices (RPD)   
 
   - Software:
     
-      - IOS-XR 6.3.2 on ASR9000 and NCS5500
+      - IOS-XR 6.6.3 on ASR 9000, NCS 540, NCS 5500, and NCS 55A2 routers  
     
-      - IOS-XE 16.8.1 on ASR920
+      - IOS-XE 16.8.1 on ASR 920
+
+      - IOS-XE 16.10.1f on cBR-8 
 
   - Key technologies
     
       - Transport: End-To-End Segment-Routing
     
-      - Network Programmability: SRTE Inter-Domain LSPs with On-Demand
+      - Network Programmability: SR- TE Inter-Domain LSPs with On-Demand
         Next Hop
     
       - Network Availability: TI-LFA/Anycast-SID
     
       - Services: BGP-based L2 and L3 Virtual Private Network services
         (EVPN and L3VPN)
+
+      - Network Timing: G.8275.1 and G.8275.2 
 
 
 
