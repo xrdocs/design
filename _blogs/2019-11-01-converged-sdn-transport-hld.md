@@ -548,8 +548,7 @@ _Figure 13: PCE Path Computation_
 ## Overview 
 Quality of Service is of utmost importance in today's multi-service converged networks. The Converged SDN Transport design has the ability to enforce end to end traffic path SLAs using Segment Routing Traffic Engineering. In addition to satisfying those path constraints, traditional QoS is used to make sure the PHB (Per-Hop Behavior) of each packet is enforced at each node across the converged network.  
 
-## Hierarchical Edge QoS 
-H-QoS enables a provider to set an overall traffic rate across all services, and then configure parameters per-service via a child QoS policy where the percentages of guaranteed bandwidth are derived from the parent rate. NCS platforms support 2-level and 3-level H-QoS. 3-level H-QoS applies a policer (ingress) or shaper (egress) to a physical interface, with each sub-interface having a 2-level H-QoS policy applied.  
+##  
 
 ## NCS 540, 560, and 5500 QoS Primer 
 Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: 
@@ -567,25 +566,27 @@ The <code>priority-level</code> command used in an egress QoS policy specifies t
 Please note, multicast traffic does not follow the same constructs as unicast traffic for prioritization. All multicast traffic assigned to Traffic Classes 1-4 are treated as Low Priority and traffic assigned to 5-6 treated as high priority.     
 {: .notice--warning}
 
-### Hierarchical QoS 
+## Hierarchical Edge QoS 
+Hierarchical QoS enables a provider to set an overall traffic rate across all services, and then configure parameters per-service via a child QoS policy where the percentages of guaranteed bandwidth are derived from the parent rate
+
+### H-QoS platform support 
 NCS platforms support 2-level and 3-level H-QoS. 3-level H-QoS applies a policer (ingress) or shaper (egress) to a physical interface, with each sub-interface having a 2-level H-QoS policy applied. Hierarchical QoS is not enabled by default on the NCS 540 and 5500 platforms. H-QoS is enabled using the <b>hw-module profile qos hqos-enable</b> command.  Once H-QoS is enabled, the number of priority levels which can be assigned is reduced from 1-7 to 1-4. Additionally, any hierarchical QoS policy assigned to a L3 sub-interface using priority levels must include a "shape" command.   
 
 The ASR9000 supports multi-level H-QoS at high scale for edge aggregation function. In the case of hierarchical services, H-QoS can be applied to PWHE L3 interfaces.  
 
-
-## CST QoS mapping with 5 classes 
+## CST Core QoS mapping with five classes 
 QoS designs are typically tailored for each provider, but we introduce a 5-level QoS design which can fit most provider needs. The design covers transport of both unicast and multicast traffic.  
 
-| Traffic Type | Ingress Marking | Core Marking | Comments | 
+| Traffic Type |  Core Marking | Core Priority | Comments | 
 | ----------|---------|----------|---------------|-------------| 
-| Low latency | IPP 5  | EXP 5 | URLLC, consistent delay, small buffer|  
-| 5G Control Plane | IPP 4 | EXP 4 | Mobile control and billing |    
-| High Priority Service | IPP 3 (in contract), 1 (out of contract) | EXP 1,3 | Business service | 
-| Best Effort | IPP 0 | EXP 0 | General user traffic | 
-| Network Control | IPP 6 | EXP 6 | Underlay network control plane |  
+| Network Control |  EXP 6 | Highest | Underlay network control plane |  
+| Low latency |  | EXP 5 | Highest | Low latency service, consistent delay |  
+| High Priority 1 | EXP 3 | Medium-High | High priority service traffic |     
+| Medium Priority / Multicast | EXP 2  | Medium priority and multicast | 
+| Best Effort | EXP 0 | General user traffic | 
 
-### Example QoS Class and Policy Maps 
-These are presented for reference only, please see the implementation guide for the full QoS configuration used in the Remote PHY design.  
+### Example Core QoS Class and Policy Maps 
+These are presented for reference only, please see the implementation guide for the full QoS configuration 
 
 #### Class maps for ingress header matching
 <div class="highlighter-rouge">
