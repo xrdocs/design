@@ -140,6 +140,11 @@ domain (ISIS ACCESS or ISIS-CORE). PEs act as Area Border Routers (ABRs)
 and run two IGP processes (ISIS-ACCESS and ISIS-CORE). Please note that
 Loopback 0 is part of both IGP processes.
 
+All routers, except Area Border Routers (ABRs), are part of one IGP
+domain and L2 area (ISIS-ACCESS or ISIS-CORE). Area border routers  
+run two IGP IS-IS processes (ISIS-ACCESS and ISIS-CORE). Please note that
+Loopback 0 is part of both IGP processes.
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 router isis ISIS-ACCESS
@@ -159,7 +164,6 @@ router isis ISIS-ACCESS
   segment-routing mpls
   spf prefix-priority critical tag 5000
   spf prefix-priority high tag 1000
- !
 </div> 
 </pre> 
 

@@ -246,7 +246,7 @@ router isis example
  log pdu drops
  lsp-refresh-interval 65000
  max-lsp-lifetime 65535
- lsp-password hmac-md5 encrypted 03276828295E731F70
+ lsp-password keychain ISIS-KEY  
  address-family ipv4 unicast
   maximum-paths 16
   metric-style wide
