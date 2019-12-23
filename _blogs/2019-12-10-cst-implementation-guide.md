@@ -164,40 +164,57 @@ router isis ISIS-ACCESS
   segment-routing mpls
   spf prefix-priority critical tag 5000
   spf prefix-priority high tag 1000
+  maximum-redistributed-prefixes 100 level 2
+ ! 
+ address-family ipv6 unicast
+  metric-style wide
+  spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+  maximum-redistributed-prefixes 100 level 2
 </div> 
 </pre> 
 
 **PEs Loopback 0 on domain boundary is part of both IGP processes together with same
-“prefix-sid index” value.**
+“prefix-sid absolute” value**
+
+The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
+{: .notice--success}
 
 <div class="highlighter-rouge">
 <pre class="highlight">
  interface Loopback0
   ipv4 address 100.0.1.50 255.255.255.255
   address-family ipv4 unicast
-   prefix-sid index 150
+   <b>prefix-sid absolute 16150</b> 
 </div> 
 </pre> 
 
 
-**TI-LFA FRR configuration**
+** IS-IS interface configuration with TI-LFA ** 
 
-```
+It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible for backup path computation. In the case of having multiple adjacencies between the same two nodes, use the same adjacency-sid on each link. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
  interface TenGigE0/0/0/10
   point-to-point
   hello-password keychain ISIS-KEY
   address-family ipv4 unicast
    fast-reroute per-prefix
    fast-reroute per-prefix ti-lfa
+   adjacency-sid absolute 15002 protected
    metric 100
-  !
- ! 
-!
-```
+  ! 
+  address-family ipv6 unicast
+   fast-reroute per-prefix 
+   fast-reroute per-prefix ti-lfa 
+   metric 100 
+</div> 
+</pre> 
 
-**MPLS Interface configuration**
+**MPLS interface configuration with BFD**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface TenGigE0/0/0/10
  bfd mode ietf
  bfd address-family ipv4 timers start 180
@@ -208,29 +225,44 @@ interface TenGigE0/0/0/10
  mtu 9216
  ipv4 address 10.15.150.1 255.255.255.254
  ipv4 unreachables disable
- bundle minimum-active links 1
  load-interval 30
  dampening
-!
-```
+</div> 
+</pre> 
 
 ### MPLS Segment Routing Traffic Engineering (SRTE) configuration
+The following configuration is done at the global ISIS configuration level.  
 
-```
-ipv4 unnumbered mpls traffic-eng Loopback0
-
+<div class="highlighter-rouge">
+<pre class="highlight">
 router isis ACCESS
  address-family ipv4 unicast
   mpls traffic-eng level-2-only
   mpls traffic-eng router-id Loopback0
-```
+</div> 
+</pre> 
+
+#### MPLS Segment Routing Traffic Engineering (SRTE) TE metric configuration  
+
+The TE metric is used when computing SR Policy paths with the "te" or "latency" constraint type.  The TE metric is carried as a TLV within the TE opaque LSA distributed across the IGP area and to the PCE via BGP-LS.  
+The TE metric is used in the CST 5G Transport use case.  If no TE metric is defined the local CSPF or PCE will utilize the IGP metric.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  interface TenGigE0/0/0/6
+   metric 1000
+</div> 
+</pre> 
 
 
 ## Transport IOS-XE – All IOS-XE nodes
     
 ### Segment Routing MPLS configuration
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 mpls label range 6001 32767 static 16 6000
 
 segment-routing mpls
@@ -242,21 +274,25 @@ segment-routing mpls
  !
  global-block 16000 32000
  !
-```
+</div>
+</pre>
 
 **Prefix-SID assignment to loopback 0 configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
  connected-prefix-sid-map
   address-family ipv4
    100.0.1.51/32 index 151 range 1
   exit-address-family
  !
-```
+</div>
+</pre> 
 
 ### IGP-ISIS configuration
 
-```
+</div> 
+</pre>
 key chain ISIS-KEY
  key 1
   key-string cisco
@@ -280,11 +316,13 @@ router isis ACCESS
  log-adjacency-changes
  segment-routing mpls
  segment-routing prefix-sid-map advertise-local
-```
+</div>
+</pre> 
 
 **TI-LFA FRR configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
  fast-reroute per-prefix level-2 all
  fast-reroute ti-lfa level-2
  microloop avoidance protected
@@ -296,11 +334,15 @@ interface Loopback0
  ip router isis ACCESS
  isis circuit-type level-2-only
 end
-```
+</div>
+</pre> 
+</div>
+</pre> 
 
 **MPLS Interface configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface TenGigabitEthernet0/0/12
  mtu 9216
  ip address 10.117.151.1 255.255.255.254
@@ -310,18 +352,21 @@ interface TenGigabitEthernet0/0/12
  isis network point-to-point
  isis metric 100
 end
-```
+</div>
+</pre> 
 
 ### MPLS Segment Routing Traffic Engineering (SRTE)
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router isis ACCESS
  mpls traffic-eng router-id Loopback0
  mpls traffic-eng level-2
 
 interface TenGigabitEthernet0/0/12
  mpls traffic-eng tunnels
-```
+</div>
+</pre> 
 
 ### Area Border Routers (ABRs) IGP-ISIS Redistribution configuration
 
@@ -329,7 +374,8 @@ PEs have to provide IP reachability for RRs, SR-PCEs and NSO between both
 ISIS-ACCESS and ISIS-CORE IGP domains. This is done by specific IP
 prefixes redistribution.
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router static
 address-family ipv4 unicast
   100.0.0.0/24 Null0
@@ -346,11 +392,13 @@ prefix-set RR-LOOPBACKS
   100.0.0.0/24,
   100.1.0.0/24
 end-set
-```
+</div>
+</pre> 
 
 **redistribute Core SvRR and TvRR loopback into Access domain**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 route-policy CORE-TO-ACCESS1
   if destination in RR-LOOPBACKS then
     pass
@@ -362,11 +410,13 @@ end-policy
 router isis ACCESS                                                    
  address-family ipv4 unicast                                          
   redistribute static route-policy CORE-TO-ACCESS1    
-```
+</div>
+</pre> 
 
 **redistribute Access SR-PCE and SvRR loopbacks into Core domain**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 route-policy ACCESS1-TO-CORE                                     
   if destination in ACCESS-XTC_SvRR-LOOPBACKS then               
     pass                                                         
@@ -378,13 +428,15 @@ end-policy
 router isis CORE                      
 address-family ipv4 unicast                                          
   redistribute static route-policy CORE-TO-ACCESS1    
-```
+</div>
+</pre> 
 
 ## BGP – Access or Provider Edge Routers
     
 ### IOS-XR configuration
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router bgp 100
  nsr
  bgp router-id 100.0.1.50
@@ -409,11 +461,13 @@ router bgp 100
  neighbor 100.0.1.201
   use neighbor-group SvRR
  !
-```
+</div>
+</pre> 
 
 ### IOS-XE configuration
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router bgp 100
  bgp router-id 100.0.1.51
  bgp log-neighbor-changes
@@ -438,7 +492,8 @@ router bgp 100
   neighbor 100.0.1.201 activate
  exit-address-family
  !
-```
+</div>
+</pre> 
 
 ## Area Border Routers (ABRs) IGP Topology Distribution
 
@@ -451,7 +506,8 @@ topology to Segment Routing Path Computation Element (SR-PCEs)
 
 _Figure 5: BGP-LS Topology Distribution_
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router isis ACCESS
  distribute link-state instance-id 101
  net 49.0001.0101.0000.0001.00
@@ -478,11 +534,13 @@ router bgp 100
  neighbor 100.1.0.10
   use neighbor-group TvRR
  !
-```
+</div>
+</pre> 
 
 ## Transport Route Reflector (tRR)
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router static
  address-family ipv4 unicast
   0.0.0.0/1 Null0
@@ -528,11 +586,13 @@ router bgp 100
   use neighbor-group RRC
  !
 !
-```
+</div>
+</pre> 
 
 ## Services Route Reflector (sRR)
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router static
  address-family ipv4 unicast
   0.0.0.0/1 Null0
@@ -590,11 +650,13 @@ router bgp 100
   use neighbor-group SvRR-Client
  !
 !
-```
+</div>
+</pre> 
 
 ## Segment Routing Path Computation Element (SR-PCE)
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router static
  address-family ipv4 unicast
   0.0.0.0/1 Null0
@@ -622,7 +684,8 @@ router bgp 100
 pce
  address ipv4 100.0.0.100
 !
-```
+</div>
+</pre> 
 
 ## Segment Routing Traffic Engineering (SRTE) and Services Integration
 
@@ -631,7 +694,8 @@ Services. Particular usecase refers to next sub-section.
 
 ### On Demand Next-Hop (ODN) configuration – IOS-XR
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 segment-routing
  traffic-eng
   logging
@@ -667,11 +731,13 @@ router bgp 100
    route-policy ODN_EVPN out
   !
 !
-```
+</div>
+</pre> 
 
 ### On Demand Next-Hop (ODN) configuration – IOS-XE
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 mpls traffic-eng tunnels
 mpls traffic-eng pcc peer 100.0.1.101 source 100.0.1.51
 mpls traffic-eng pcc peer 100.0.1.111 source 100.0.1.51
@@ -702,11 +768,13 @@ router bgp 100
   neighbor SvRR send-community both
   neighbor SvRR route-map L3VPN-ODN-TE-INIT in
   neighbor SvRR route-map L3VPN-SR-ODN-Mark-Comm out
-```
+</div>
+</pre> 
 
 ### Preferred Path configuration – IOS-XR
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 segment-routing
  traffic-eng
   pcc
@@ -716,16 +784,19 @@ segment-routing
    pce address ipv4 100.1.1.101
    !
   !
-```
+</div>
+</pre> 
 
 ### Preferred Path configuration – IOS-XE
 
-```
+</div>
+</pre> 
 mpls traffic-eng tunnels
 mpls traffic-eng pcc peer 100.0.1.101 source 100.0.1.51
 mpls traffic-eng pcc peer 100.0.1.111 source 100.0.1.51
 mpls traffic-eng pcc report-all
-```
+</div>
+</pre> 
 
 # Services
     
@@ -763,41 +834,48 @@ initial ODN configuration.
 
 **VRF definition configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 vrf definition L3VPN-SRODN-1
  rd 100:100
  route-target export 100:100
  route-target import 100:100
  address-family ipv4
  exit-address-family
-```
+</div>
+</pre> 
 
 
 **VRF Interface configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface GigabitEthernet0/0/2
  mtu 9216
  vrf forwarding L3VPN-SRODN-1
  ip address 10.5.1.1 255.255.255.0
  negotiation auto
 end
-```
+</div>
+</pre> 
 
 **BGP VRF configuration Static & BGP neighbor **
 
 **Static routing configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router bgp 100
  address-family ipv4 vrf L3VPN-SRODN-1
   redistribute connected
  exit-address-family
-```
+</div>
+</pre> 
 
 **BGP neighbor configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router bgp 100
  neighbor Customer-1 peer-group
  neighbor Customer-1 remote-as 200
@@ -805,7 +883,8 @@ router bgp 100
  address-family ipv4 vrf L3VPN-SRODN-2
    neighbor 10.10.10.1 activate
  exit-address-family
-```
+</div>
+</pre> 
 
 ### L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop
 
@@ -835,7 +914,8 @@ initial ODN configuration.
 
 **PORT Based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn                                                                                                                                                            
  xconnect group evpn_vpws                                                                                                                                        
  p2p odn-1                                                                                                                                                      
@@ -844,11 +924,13 @@ l2vpn
 
 interface TenGigE0/0/0/5 
   l2transport
-```
+</div>
+</pre> 
 
 **VLAN Based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn                                                                                                                                                            
  xconnect group evpn_vpws                                                                                                                                        
  p2p odn-1                                                                                                                
@@ -859,7 +941,8 @@ interface TenGigE0/0/0/5.1 l2transport
  encapsulation dot1q 1
  rewrite ingress tag pop 1 symmetric
 !
-```
+</div>
+</pre> 
 
 ### L2VPN Static Pseudowire (PW) – Preferred Path (PCEP)
 
@@ -882,7 +965,8 @@ Plane_
     
 #### Access Router Service Provisioning (IOS-XR):
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 segment-routing                                                                                                                                                 
  traffic-eng                                                                                                                                                     
   policy GREEN-PE7
@@ -894,11 +978,13 @@ segment-routing
       !
       metric
        type igp
-```
+</div>
+</pre> 
 
 **Port Based Service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface TenGigE0/0/0/15 
   l2transport
 
@@ -912,12 +998,14 @@ l2vpn
   interface TenGigE0/0/0/15                                                                                                                        
    neighbor ipv4 100.0.2.52 pw-id 1000                      
     mpls static label local 1000 remote 1000 pw-class static-pw-class-PE7   
-```
+</div>
+</pre> 
 
 
 **VLAN Based Service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface TenGigE0/0/0/5.1001 l2transport
  encapsulation dot1q 1001
  rewrite ingress tag pop 1 symmetric
@@ -931,13 +1019,15 @@ l2vpn
    interface TenGigE0/0/0/5.1001
     neighbor ipv4 100.0.2.52 pw-id 1001                      
      mpls static label local 1001 remote 1001 pw-class static-pw-class-PE7 
-```
+</div>
+</pre> 
 
 #### Access Router Service Provisioning (IOS-XE):
 
 **Port Based service with Static OAM configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface GigabitEthernet0/0/1
  mtu 9216
  no ip address
@@ -960,11 +1050,13 @@ pseudowire-class mpls
  preferred-path interface Tunnel1                                         
  status protocol notification static static-oam                           
 !           
-```
+</div>
+</pre> 
 
 **VLAN Based Service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface GigabitEthernet0/0/1
  no ip address
  negotiation auto
@@ -981,7 +1073,8 @@ pseudowire-class mpls
  no control-word                                                          
  protocol none                                                            
  preferred-path interface Tunnel1  
-```
+</div>
+</pre> 
 
 ### End-To-End Services Data Plane
 
@@ -1024,7 +1117,8 @@ _Figure 12: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Hea
 
 **VLAN based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn
  xconnect group evpn-vpws-l3vpn-PE1
   p2p L3VPN-VRF1
@@ -1036,11 +1130,13 @@ l2vpn
 interface TenGigE0/0/0/5.501 l2transport
  encapsulation dot1q 501
  rewrite ingress tag pop 1 symmetric
-```
+</div>
+</pre> 
 
 **Port based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn                                                                                                                                                            
  xconnect group evpn-vpws-l3vpn-PE1                                                                                           
  p2p odn-1                                                                                                                                                      
@@ -1049,13 +1145,15 @@ l2vpn
 
 interface TenGigE0/0/0/5 
   l2transport
-```
+</div>
+</pre> 
 
 #### Access Router Service Provisioning (IOS-XE):
 
 **VLAN based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn evpn instance 14 point-to-point
  vpws context evpn-pe4-pe1
   service target 501 source 501
@@ -1066,11 +1164,13 @@ interface GigabitEthernet0/0/1
   encapsulation dot1q 501
   rewrite ingress tag pop 1 symmetric
  !
- ```
+ </div>
+</pre> 
 
 **Port based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn evpn instance 14 point-to-point
  vpws context evpn-pe4-pe1
   service target 501 source 501
@@ -1079,13 +1179,15 @@ l2vpn evpn instance 14 point-to-point
 interface GigabitEthernet0/0/1
  service instance 501 ethernet
   encapsulation default
-```
+</div>
+</pre> 
 
 #### Provider Edge Router Service Provisioning (IOS-XR):
 
 **VRF configuration**  
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 vrf L3VPN-ODNTE-VRF1                                                                                                                   
  address-family ipv4 unicast                                                                                                           
   import route-target                                                                                                                  
@@ -1103,11 +1205,13 @@ vrf L3VPN-ODNTE-VRF1
    100:501                                                                                                                             
   !
  !
-```
+</div>
+</pre> 
 
 **BGP configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router bgp 100                                                                                                                         
  vrf L3VPN-ODNTE-VRF1
   rd 100:501
@@ -1118,29 +1222,34 @@ router bgp 100
    redistribute connected
   !
  !
-```
+</div>
+</pre> 
 
 **PWHE configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface PW-Ether1
  vrf L3VPN-ODNTE-VRF1
  ipv4 address 10.13.1.1 255.255.255.0
  ipv6 address 1000:10:13::1/126
  attach generic-interface-list PWHE
 !
-```
+</div>
+</pre> 
 
 **EVPN VPWS configuration towards Access PE**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn
  xconnect group evpn-vpws-l3vpn-A-PE3
   p2p L3VPN-ODNTE-VRF1
    interface PW-Ether1
    neighbor evpn evi 13 target 501 source 501
    !
-```
+</div>
+</pre> 
 
 ![]({{site.baseurl}}/images/cmfi/image13.png)
 
@@ -1178,7 +1287,8 @@ routers in same location PE1/2 and PE3/4)**
 
 **VLAN based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn
  xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
   p2p L3VPN-VRF1
@@ -1198,11 +1308,13 @@ l2vpn
   encapsulation mpls
    control-word
   !
-```
+</div>
+</pre> 
 
 **Port based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn
  xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
   p2p L3VPN-VRF1
@@ -1221,13 +1333,15 @@ l2vpn
   encapsulation mpls
    control-word
   !
-```
+</div>
+</pre> 
 
 #### Access Router Service Provisioning (IOS-XE):
 
 **VLAN based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface GigabitEthernet0/0/5
  no ip address
  media-type auto-select
@@ -1239,11 +1353,13 @@ interface GigabitEthernet0/0/5
    mpls label 4001 4001
    mpls control-word
  !
-```
+</div>
+</pre> 
 
 **Port based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface GigabitEthernet0/0/5
  no ip address
  media-type auto-select
@@ -1254,17 +1370,21 @@ interface GigabitEthernet0/0/5
    mpls label 4001 4001
    mpls control-word
  !
-```
+</div>
+</pre> 
 
 #### Provider Edge Routers Service Provisioning (IOS-XR):
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 cef adjacency route override rib
-```
+</div>
+</pre> 
 
 **AnyCast Loopback configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface Loopback100
  description Anycast
  ipv4 address 100.100.100.12 255.255.255.255
@@ -1274,11 +1394,13 @@ router isis ACCESS
  interface Loopback100
  address-family ipv4 unicast
  prefix-sid index 1012
-```
+</div>
+</pre> 
 
 **L2VPN configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn                                                             
  bridge group Static-VPWS-H-L3VPN-IRB                             
   bridge-domain VRF1                                              
@@ -1296,11 +1418,13 @@ l2vpn
    evi 12001
    !
   !
-```
+</div>
+</pre> 
 
 **EVPN configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 evpn
  evi 12001
   !
@@ -1310,11 +1434,13 @@ evpn
  virtual neighbor 100.0.1.50 pw-id 5001
   ethernet-segment
    identifier type 0 12.00.00.00.00.00.50.00.01
-```
+</div>
+</pre> 
 
 **Anycast IRB configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface BVI1
  host-routing
  vrf L3VPN-AnyCast-ODNTE-VRF1
@@ -1322,11 +1448,13 @@ interface BVI1
  mac-address 12.0.1
  load-interval 30
 !
-```
+</div>
+</pre> 
 
 **VRF configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 vrf L3VPN-AnyCast-ODNTE-VRF1
  address-family ipv4 unicast
   import route-target
@@ -1337,11 +1465,13 @@ vrf L3VPN-AnyCast-ODNTE-VRF1
   !
  !
 !
-```
+</div>
+</pre> 
 
 **BGP configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router bgp 100
  vrf L3VPN-AnyCast-ODNTE-VRF1
   rd auto
@@ -1349,7 +1479,8 @@ router bgp 100
    redistribute connected
   !
  !
-```
+</div>
+</pre> 
 
 ![]({{site.baseurl}}/images/cmfi/image15.png)
 
@@ -1394,7 +1525,8 @@ VPNv4/6 in the core.**
 
 **VLAN based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn
  xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
   p2p L3VPN-VRF1
@@ -1414,11 +1546,13 @@ l2vpn
   encapsulation mpls
    control-word
   !
-```
+</div>
+</pre> 
 
 **Port based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn
  xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
   p2p L3VPN-VRF1
@@ -1438,13 +1572,15 @@ l2vpn
   encapsulation mpls
    control-word
   !
-```
+</div>
+</pre> 
 
 #### Access Router Service Provisioning (IOS-XE):
 
 **VLAN based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface GigabitEthernet0/0/5
  no ip address
  media-type auto-select
@@ -1456,11 +1592,13 @@ interface GigabitEthernet0/0/5
    mpls label 4001 4001
    mpls control-word
  !
-```
+</div>
+</pre> 
 
 **Port based service configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface GigabitEthernet0/0/5
  no ip address
  media-type auto-select
@@ -1471,17 +1609,21 @@ interface GigabitEthernet0/0/5
    mpls label 4001 4001
    mpls control-word
  !
-```
+</div>
+</pre> 
 
 #### Provider Edge Routers Service Provisioning (IOS-XR):
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 cef adjacency route override rib
-```
+</div>
+</pre> 
 
 **AnyCast Loopback configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface Loopback100
  description Anycast
  ipv4 address 100.100.100.12 255.255.255.255
@@ -1491,11 +1633,13 @@ router isis ACCESS
  interface Loopback100
  address-family ipv4 unicast
  prefix-sid index 1012
-```
+</div>
+</pre> 
 
 **L2VPN Configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 l2vpn                                                             
  bridge group Static-VPWS-H-L3VPN-IRB                             
   bridge-domain VRF1                                              
@@ -1513,11 +1657,13 @@ l2vpn
    evi 12001
    !
   !
-```
+</div>
+</pre> 
 
 **EVPN configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 evpn
  evi 12001
   !
@@ -1527,11 +1673,13 @@ evpn
  virtual neighbor 100.0.1.50 pw-id 5001
   ethernet-segment
    identifier type 0 12.00.00.00.00.00.50.00.01
-```
+</div>
+</pre> 
 
 **Anycast IRB configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface BVI1
  host-routing
  vrf L3VPN-AnyCast-ODNTE-VRF1
@@ -1539,11 +1687,13 @@ interface BVI1
  mac-address 12.0.1
  load-interval 30
 !
-```
+</div>
+</pre> 
 
 **VRF configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 vrf L3VPN-AnyCast-ODNTE-VRF1
  address-family ipv4 unicast
   import route-target
@@ -1554,11 +1704,13 @@ vrf L3VPN-AnyCast-ODNTE-VRF1
   !
  !
 !
-```
+</div>
+</pre> 
 
 **BGP configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router bgp 100
  vrf L3VPN-AnyCast-ODNTE-VRF1
   rd auto
@@ -1567,7 +1719,8 @@ router bgp 100
   !
  !
  
-```
+</div>
+</pre> 
 
 ![]({{site.baseurl}}/images/cmfi/image17.png)
 

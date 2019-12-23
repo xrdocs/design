@@ -233,7 +233,9 @@ segment-routing
 
 ### Base IGP / Segment Routing Configuration 
 
-The following configuration example shows an example IS-IS deployment with SR-MPLS extensions enabled for the IPv4 address family. The SR-enabling configuration lines are bolded, showing how Segment Routing and TI-LFA (FRR) can be deployed with very little configuration. SR must be deployed on all interconnected nodes to provide end to end reachability.  
+The following configuration example shows an example IS-IS deployment with SR-MPLS extensions enabled for the IPv4 address family. The SR-enabling configuration lines are bolded, showing how Segment Routing and TI-LFA (FRR) can be deployed with very little configuration. SR must be deployed on all interconnected nodes to provide end to end reachability.  This example shows defining an absolute prefix-sid as well as a manually defined adjacency SID.  
+
+It is recommended to use absolute SIDs and manual adjacency SIDs if possible. Interoperability with other vendors requires the use of relative prefix-SIDs.  A _protected_ SID is eligible for backup path computation. In the case of having multiple adjacencies between the same two nodes, use the same adjacency-sid on each link. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -267,9 +269,10 @@ router isis example
   circuit-type level-2-only
   point-to-point
   address-family ipv4 unicast
-  fast-reroute per-prefix 
-  fast-reroute per-prefix ti-lfa
-  metric 10
+   fast-reroute per-prefix 
+   fast-reroute per-prefix ti-lfa
+   metric 10
+   adjacency-sid absolute 15002 protected
 </pre> 
 </div>
 
@@ -284,6 +287,7 @@ interface GigabitEthernet0/0/0/1
   circuit-type level-1
   point-to-point
   address-family ipv4 unicast
+   <b>fast-reroute per-prefix</b> 
    <b>fast-reroute per-prefix ti-lfa</b> 
   metric 10
 </pre>
