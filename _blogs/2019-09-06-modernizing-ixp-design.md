@@ -267,6 +267,7 @@ router isis example
   circuit-type level-2-only
   point-to-point
   address-family ipv4 unicast
+  fast-reroute per-prefix 
   fast-reroute per-prefix ti-lfa
   metric 10
 </pre> 

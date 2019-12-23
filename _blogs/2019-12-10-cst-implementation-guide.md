@@ -22,53 +22,43 @@ tags:
 
   - Hardware:
     
-      - ASR 9000 as centralized Provider Edge (C-PE) router  
-    
+      - ASR 9000 as Centralized Provider Edge (C-PE) router  
       - NCS 5500 and NCS 55A2 as Aggregation and Pre-Aggregation router  
-      
       - NCS 5500 as P core router  
-    
       - ASR 920, NCS 540, and NCS 5500 as Access Provider Edge (A-PE) 
-
       - cBR-8 CMTS with 8x10GE DPIC for Remote PHY 
-
       - Compact Remote PHY shelf with three 1x2 Remote PHY Devices (RPD)   
 
   - Software:
     
       - IOS-XR 6.6.3 on ASR 9000, NCS 540, NCS 5500, and NCS 55A2 routers  
-    
       - IOS-XE 16.8.1 on ASR 920
-
       - IOS-XE 16.10.1f on cBR-8 
 
   - Key technologies
     
       - Transport: End-To-End Segment-Routing
-    
       - Network Programmability: SR- TE Inter-Domain LSPs with On-Demand
         Next Hop
-    
       - Network Availability: TI-LFA/Anycast-SID
-    
       - Services: BGP-based L2 and L3 Virtual Private Network services
-        (EVPN and L3VPN)
-
-      - Network Timing: G.8275.1 and G.8275.2 
+        (EVPN and L3VPN/mVPN)
+      - Network Timing: G.8275.1 and G.8275.2
+      - Network Assurance: 802.1ag  
 
 
 
 # Testbed Overview
 
-![]({{site.baseurl}}/images/cmfi/image1.png)
+![](http://xrdocs.io/design/images/cmf-rphy-dpic-redundancy.png)
 
 _Figure 1: Compass Metro Fabric High Level Topology_
 
-![]({{site.baseurl}}/images/cmfi/image2.png)
+![](http://xrdocs.io/design/images/cmf-rphy-dpic-redundancy.png)
 
 _Figure 2: Testbed Physical Topology_
 
-![]({{site.baseurl}}/images/cmfi/image3.png)
+![](http://xrdocs.io/design/images/cmf-rphy-dpic-redundancy.png)
 
 _Figure 3: Testbed Route-Reflector and SR-PCE physical connectivity_
 
@@ -81,6 +71,7 @@ _Figure 4: Testbed IGP Domains_
 **Access Routers**
 
   - Cisco NCS5501-SE (IOS-XR) – A-PE1, A-PE2, A-PE3, A-PE7
+  - Cisco NCS540 
 
   - Cisco ASR920 (IOS-XE) – A-PE4, A-PE5, A-PE6, A-PE9
 
@@ -98,30 +89,59 @@ _Figure 4: Testbed IGP Domains_
   - Cisco IOS XRv 9000 – SR-PCE1-A, SR-PCE1-B, SR-PCE2-A, SR-PCE2-B, SR-PCE3-A, SR-PCE3-B
 
 
+# Key Resources to Allocate  
+- IP Addressing 
+  - IPv4 address plan
+  - IPv6 address plan, recommend dual plane day 1
+    - Plan for SRv6 in the future
+- Color communities for ODN   
+- Segment Routing Blocks
+  - SRGB (segment-routing address block) 
+   - Keep in mind anycast SID for ABR node pairs 
+   - Allocate 3 SIDs for potential future Flex-algo use 
+  - SRLB (segment routing local block) 
+    - Local significance only
+    - Can be quite small and re-used on each node 
+
+
 # Role-Based Configuration
     
 ## Transport IOS-XR – All IOS-XR nodes
-        
+
+### SRGB and SRLB Definition 
+It's recommended to first configure the Segment Routing Global Block (SRGB) across all nodes needing connectivity between each other. In most instances a single SRGB will be used across the entire network. In a SR MPLS deployment the SRGB and SRLB correspond to the label blocks allocated to SR. IOS-XR has a maximum configurable SRGB limit of 512,000 labels, however please consult platform-specific documentation for maximum values. The SRLB corresponds to the labels allocated for SIDs local to the node, such as Adjacency-SIDs. It is recommended to configure the same SRLB block across all nodes. The SRLB must not overlap with the SRGB.  The SRGB and SRLB are configured in IOS-XR with the following configuration:   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing 
+segment-routing
+ global-block 16000 16999
+ local-block 17000 17999
+</pre> 
+</div>
+
 ### IGP Protocol (ISIS) and Segment Routing MPLS configuration
 
 **Router isis configuration**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 key chain ISIS-KEY
  key 1
  accept-lifetime 00:00:00 january 01 2018 infinite
  key-string password 00071A150754
  send-lifetime 00:00:00 january 01 2018 infinite
  cryptographic-algorithm HMAC-MD5
-
-```
+</pre> 
+</div>
 
 All Routers, except Provider Edge (PE) Routers, are part of one IGP
 domain (ISIS ACCESS or ISIS-CORE). PEs act as Area Border Routers (ABRs)
 and run two IGP processes (ISIS-ACCESS and ISIS-CORE). Please note that
 Loopback 0 is part of both IGP processes.
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 router isis ISIS-ACCESS
  set-overload-bit on-startup 360
  is-type level-2-only
@@ -129,30 +149,32 @@ router isis ISIS-ACCESS
  nsr
  nsf cisco
  log adjacency changes
- lsp-gen-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+ lsp-gen-interval maximum-wait 5000 initial-wait 5 secondary-wait 100
  lsp-refresh-interval 65000
  max-lsp-lifetime 65535
  lsp-password keychain ISIS-KEY
- lsp-password keychain ISIS-KEY level 1
  address-family ipv4 unicast
   metric-style wide
-  spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+  spf-interval maximum-wait 1000 initial-wait 5 secondary-wait 100
   segment-routing mpls
   spf prefix-priority critical tag 5000
   spf prefix-priority high tag 1000
  !
+</div> 
+</pre> 
 
-```
-**PEs Loopback 0 is part of both IGP processes together with same
+**PEs Loopback 0 on domain boundary is part of both IGP processes together with same
 “prefix-sid index” value.**
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
  interface Loopback0
+  ipv4 address 100.0.1.50 255.255.255.255
   address-family ipv4 unicast
    prefix-sid index 150
-  !
- !
-```
+</div> 
+</pre> 
+
 
 **TI-LFA FRR configuration**
 
@@ -166,10 +188,6 @@ router isis ISIS-ACCESS
    metric 100
   !
  ! 
-!
-
-interface Loopback0
- ipv4 address 100.0.1.50 255.255.255.255
 !
 ```
 

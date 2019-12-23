@@ -793,8 +793,6 @@ policy-map hqos-ingress-parent-5g
  </pre>   
 
 <pre> 
-
-<pre> 
 class-map match-any edge-hqos-2-in
  match dscp 46
  end-class-map
@@ -837,12 +835,6 @@ policy-map hqos-ingress-child-policer
 
 ### G.8275.1 end to end timing  
 
-
-
-
-
-
-
 # Cable Converged Interconnect Network (CIN)  
 
 ## Summary  
@@ -876,7 +868,7 @@ The cBR-8 supports both upstream and downstream redundancy. Supervisor redundanc
 ## Remote PHY Communication 
 
 ### DHCP 
-The RPD is provisioned using ZTP (Zero Touch Provisioning). DHCPv4 and DHCPv6 are used along with CableLabs DHCP options in order to attach the RPD to the correct GCP server for further provisioning.  
+The RPD is provisioned using ZTP (Zero Touch Provisioning). DHCPv4 and DHCPv6 are used along with CableLabs DHCP options in order to attach the RPD to the correct GCP server for further provisioning.   
 
 ### Remote PHY Standard Flows 
 The following diagram shows the different core functions of a Remote PHY solution and the communication between those elements. 
@@ -914,23 +906,25 @@ As a critical component of the initial boot and provisioning of RPDs, the networ
 ## Deployment Topology Options 
 The Converged SDN Transport design is extremely flexible in how Remote PHY components are deployed. Depending on the size of the deployment, components can be deployed in a scalable leaf-spine fabric with dedicated routers for RPD and cBR-8 DPIC connections or collapsed into a single pair of routers for smaller deployments. If a smaller deployment needs to be expanded, the flexible L3 routed design makes it very easy to simply interconnect new devices and scale the design to a fabric supporting thousands of RPD and other access network connections.  
 
-### High Scale Design
-This option maximizes statistical multiplexing by aggregating Digital PIC downstream connections on a separate leaf device, allowing one to connect a number of cBR-8 connections to a fabric with minimal 100GE uplink capacity. The topology also supports the connectivity of remote shelves for hub consolidation.   
+### High Scale Design (Recommended)
+This option maximizes statistical multiplexing by aggregating Digital PIC downstream connections on a separate leaf device, allowing one to connect a number of cBR-8 interfaces to a fabric with minimal 100GE uplink capacity. The topology also supports the connectivity of remote shelves for hub consolidation. Another benefit is the fabric has optimal HA and the ability to easily scale with more leaf and spine nodes.     
 
-![](http://xrdocs.io/design/images/cmf-hld/cmf-cmf-rphy-topology-full.png)
+![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-topology-full.png)
 _High scale topology_ 
 
 ### Collapsed Digital PIC and SUP Uplink Connectivity  
-This design for smaller deployments connects both the downstream Digital PIC connections and uplinks on the same CIN core device. If there is enough physical port availability and future growth does not dictate capacity beyond these nodes this design can be used. This design still provides full redundancy and the ability to connect RPDs to any cBR-8.  Care should be taken to ensure traffic between the DPIC and RPD does not traverse the SUP uplink interfaces.  
+This design for smaller deployments connects both the downstream Digital PIC connections and uplinks on the same CIN core device. If there is enough physical port availability and future growth does not dictate capacity beyond these nodes this design can be used. This design still provides full redundancy and the ability to connect RPDs to any cBR-8.  Care should be taken to ensure traffic between the DPIC and RPD does not traverse the SUP uplink interfaces. 
 
-![](http://xrdocs.io/design/images/cmf-hld/cmf-cmf-rphy-topology-small.png)
+![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-topology-small.png)
 _Collapsed cBR-8 uplink and Digital PIC connectivity_ 
 
 ### Collapsed RPD and cBR-8 DPIC Connectivity 
 This design connects each cBR-8 Digital PIC connection to the RPD leaf connected to the RPDs it will serve. This design can also be considered a "pod" design where cBR-8 and RPD connectivity is pre-planned. Careful planning is needed since the number of ports on a single device may not scale efficiently with bandwidth in this configuration.   
 
-![](http://xrdocs.io/design/images/cmf-hld/cmf-cmf-rphy-topology-collapsed.png)
+![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-topology-collapsed.png)
 _Collapsed or Pod cBR-8 Digital PIC and RPD connectivity_ 
+
+In the collapsed desigs care must be taken to ensure traffic between each RPD can reach the appropriate DPIC interface. If a leaf is single-homed to the aggregation router its DPIC interface is on, RPDs may not be able to reach their DPIC IP. The options with the shortest convergence time are: Adding interconnects between the agg devices or multiple uplinks from the leaf to agg devices.  
 
 ## Cisco Hardware 
 The following table highlights the Cisco hardware utilized within the Converged SDN Transport design for Remote PHY. This table is non-exhaustive. One highlight is all NCS platforms listed are built using the same NPU family and share most features across all platforms. See specific platforms for supported scale and feature support.   
@@ -966,7 +960,11 @@ Like the overall CST design, we utilize IS-IS for IPv4 and IPv6 underlay routing
 |CIN Spine | BGP (optional) | In a native IP design the spine must learn BGP routes for proper forwarding |  
 
 ### CIN Router to Router Interconnection
-It is recommended to use multiple L3 links when interconnecting adjacent routers, as opposed to using LAG, if possible. Bundles increase the possibility for timing inaccuracy due to asymmetric timing traffic flow between slave and master. If bundle interfaces are utilized, care should be taken to ensure the difference in paths between two member links is kept to a minimum.  All router links will be configured according to the global CST design. Leaf devices will be considered CST access PE devices and utilize BGP for all services routing.   
+It is recommended to use multiple L3 links when interconnecting adjacent routers, as opposed to using LAG, if possible. Bundles increase the possibility for timing inaccuracy due to asymmetric timing traffic flow between slave and master. If bundle interfaces are utilized, care should be taken to ensure the difference in paths between two member links is kept to a minimum.  All router links will be configured according to the global CST design. Leaf devices will be considered CST access PE devices and utilize BGP for all services routing. 
+
+#### Leaf Transit Traffic 
+In a single IGP network with equal IGP metrics, certain link failures may cause a leaf to become a transit node. Several options are available to keep transit traffic from transiting a leaf and potentially causing congestion. Using high metrics on all leaf to agg uplinks will prohibit this. 
+
 
 ### cBR-8 DPIC to CIN Interconnection  
 The cBR-8 supports two mechanisms for DPIC high availability outlined in the overview section. DPIC line card and link redundancy is recommended but not a requirement. In the CST reference design, if link redundancy is being used each port pair on the active and standby line cards is connected to a different router and the default active ports (even port number) is connected to a different router. In the example figure, port 0 from active DPIC card 0 is connected to R1 and port 0 from standby DPIC card 1 is connected to R2.  DPIC link redundancy MUST be configured using the "cold" method since the design is using L3 to each DPIC interface and no intermediate L2 switching.  This is done with the _cable rphy link redundancy cold_ global command and will keep the standby link in a down/down state until switchover occurs. 
@@ -981,7 +979,7 @@ If no link redundancy is utilized each DPIC interface will connect to the router
 
 If using cBR-8 link HA, failover time is reduced by utilizing the same gateway MAC address on each router. Link HA uses the same IP and MAC address on each port pair on the cBR-8, and retains routing and ARP information for the L3 gateway. If a different MAC address is used on each router, traffic will be dropped until an ARP occurs to populate the GW MAC address on the router after failover.  On the NCS platforms, a static MAC address cannot be set on a physical L3 interface.  The method used to set a static MAC address is to use a BVI (Bridged Virtual Interface), which allows one to set a static MAC address. In the case of DPIC interface connectivity, each DPIC interface should be placed into its own bridge domain with an associated BVI interface. Since each DPIC port is directly connected to the router interface, the same MAC address can be utilized on each BVI.  
 
-If using IS-IS to distribute routes across the CIN, each DPIC physical interface or BVI should be configured as a passive IS-IS interface in the topology. If using BGP to distribute routing information the "redistribute connected" command should be used. The BGP configuration is the same whether using L3VPN or the global routing table.   
+If using IS-IS to distribute routes across the CIN, each DPIC physical interface or BVI should be configured as a passive IS-IS interface in the topology. If using BGP to distribute routing information the "redistribute connected" command should be used with an appropriate route policy to restrict connected routes to only DPIC interface. The BGP configuration is the same whether using L3VPN or the global routing table.   
 
 ![](http://xrdocs.io/design/images/cmf-rphy-dpic-redundancy.png)
 _DPIC line card and link HA_ 
