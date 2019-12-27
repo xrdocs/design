@@ -68,26 +68,38 @@ _Figure 4: Testbed IGP Domains_
 
 ## Devices
 
-**Access Routers**
+**Access PE (A-PE) Routers**
 
-  - Cisco NCS5501-SE (IOS-XR) – A-PE1, A-PE2, A-PE3, A-PE7
-  - Cisco NCS540 
-
+  - Cisco NCS5501-SE (IOS-XR) – A-PE7
+  - Cisco NCS540 (IOS-XR) - A-PE1, A-PE2, A-PE3, A-PE8 
   - Cisco ASR920 (IOS-XE) – A-PE4, A-PE5, A-PE6, A-PE9
 
-**Area Border Routers (ABRs) and Provider Edge Routers:**
+**Pre-Aggregation (PA) Routers**
 
-  - Cisco ASR9000 (IOS-XR) – PE1, PE2, PE3, PE4
+  - Cisco NCS5501-SE (IOS-XR) – PA3, PA4  
 
-**Route Reflectors (RRs):**
+**Aggregation (PA) Routers**
+
+  - Cisco NCS5501-SE (IOS-XR) – AG1, AG2, AG3, AG4 
+
+**High-scale Provider Edge Routers**
+
+  - Cisco ASR9000 (IOS-XR) – PE1, PE2, PE3, PE4 
+
+**Area Border Routers (ABRs)**
+
+  - Cisco ASR9000 (IOS-XR) – PE3, PE4 
+  - Cisco 55A2-MOD-SE - PA2 
+  - Cisco NCS540 - PA1 
+
+**Service and Transport Route Reflectors (RRs)**
 
   - Cisco IOS XRv 9000 – tRR1-A, tRR1-B, sRR1-A, sRR1-B, sRR2-A, sRR2-B,
     sRR3-A, sRR3-B
 
-**Segment Routing Path Computation Element (SR-PCE):**
+**Segment Routing Path Computation Element (SR-PCE)**
 
-  - Cisco IOS XRv 9000 – SR-PCE1-A, SR-PCE1-B, SR-PCE2-A, SR-PCE2-B, SR-PCE3-A, SR-PCE3-B
-
+  - Cisco IOS XRv 9000 – SRPCE-A1-A, SRPCE-A1-B, SRPCE-A2-A, SRPCE-A2-A, SRPCE-CORE-A, SRPCE-CORE-B  
 
 # Key Resources to Allocate  
 - IP Addressing 
@@ -120,12 +132,13 @@ segment-routing
 </pre> 
 </div>
 
-### IGP Protocol (ISIS) and Segment Routing MPLS configuration
+### IGP protocol (ISIS) and Segment Routing MPLS configuration
 
-**Router isis configuration**
+**Router ISIS global configuration**
 
 <div class="highlighter-rouge">
 <pre class="highlight">
+
 key chain ISIS-KEY
  key 1
  accept-lifetime 00:00:00 january 01 2018 infinite
@@ -191,7 +204,7 @@ The prefix SID can be configured as either _absolute_ or _index_.  The _index_ c
 
 ** IS-IS interface configuration with TI-LFA ** 
 
-It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible for backup path computation. In the case of having multiple adjacencies between the same two nodes, use the same adjacency-sid on each link. 
+It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible for backup path computation, meaning if a packet ingresses the node with the label a backup path will be provided in case of a failure. In the case of having multiple adjacencies between the same two nodes, use the same adjacency-sid on each link. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -370,9 +383,10 @@ interface TenGigabitEthernet0/0/12
 
 ### Area Border Routers (ABRs) IGP-ISIS Redistribution configuration
 
-PEs have to provide IP reachability for RRs, SR-PCEs and NSO between both
-ISIS-ACCESS and ISIS-CORE IGP domains. This is done by specific IP
-prefixes redistribution.
+The ABR nodes must provide IP reachability for RRs, SR-PCEs and NSO between both
+ISIS-ACCESS and ISIS-CORE IGP domains. This is done by IP
+prefix redistribution between IS-IS processes. The ABR nodes have static hold-down routes for the 
+block of IP space used in each domain across the network.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -395,7 +409,7 @@ end-set
 </div>
 </pre> 
 
-**redistribute Core SvRR and TvRR loopback into Access domain**
+**Redistribute Core SvRR and TvRR loopback into Access domain**
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -413,7 +427,7 @@ router isis ACCESS
 </div>
 </pre> 
 
-**redistribute Access SR-PCE and SvRR loopbacks into Core domain**
+**Redistribute Access SR-PCE and SvRR loopbacks into Core domain**
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -446,6 +460,10 @@ router bgp 100
  !
  address-family vpnv6 unicast
  !
+ address-family ipv4 mvpn
+ !
+ address-family ipv6 mvpn
+ !
  address-family l2vpn evpn
  !
  neighbor-group SvRR
@@ -455,12 +473,15 @@ router bgp 100
   !
   address-family vpnv6 unicast
   !
+  address-family ipv4 mvpn
+  !
+  address-family ipv6 mvpn
+  !
   address-family l2vpn evpn
   !
  !
  neighbor 100.0.1.201
   use neighbor-group SvRR
- !
 </div>
 </pre> 
 

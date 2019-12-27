@@ -988,6 +988,7 @@ _DPIC line card and link HA_
 The Converged SDN Transport design supports both P2P L3 interfaces for RPD and DPIC aggregation as well as using Bridge Virtual Interfaces. A BVI is a logical L3 interface within a L2 bridge domain. In the BVI deployment the DPIC and RPD physical interfaces connected to a single leaf device share a common IP subnet with the gateway residing on the leaf router.  
 
 It is recommended to configure the RPD leaf using bridge-domains and BVI interfaces. This eases configuration on the leaf device as well as the DHCP configuration used for RPD provisioning. 
+
 It is recommended to connect each cBR-8 DPIC interface using P2P L3 interfaces, using a /31 for IPv4 and /127 for IPv6 addresses.  The following shows the two potential deployment options.  
 {: .notice--success}
 
