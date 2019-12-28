@@ -134,11 +134,9 @@ segment-routing
 
 ### IGP protocol (ISIS) and Segment Routing MPLS configuration
 
-**Router ISIS global configuration**
-
+**Key chain global configuration for IS-IS authentication**
 <div class="highlighter-rouge">
 <pre class="highlight">
-
 key chain ISIS-KEY
  key 1
  accept-lifetime 00:00:00 january 01 2018 infinite
@@ -148,15 +146,11 @@ key chain ISIS-KEY
 </pre> 
 </div>
 
-All Routers, except Provider Edge (PE) Routers, are part of one IGP
-domain (ISIS ACCESS or ISIS-CORE). PEs act as Area Border Routers (ABRs)
-and run two IGP processes (ISIS-ACCESS and ISIS-CORE). Please note that
-Loopback 0 is part of both IGP processes.
+**ISIS router configuration**
 
 All routers, except Area Border Routers (ABRs), are part of one IGP
 domain and L2 area (ISIS-ACCESS or ISIS-CORE). Area border routers  
-run two IGP IS-IS processes (ISIS-ACCESS and ISIS-CORE). Please note that
-Loopback 0 is part of both IGP processes.
+run two IGP IS-IS processes (ISIS-ACCESS and ISIS-CORE).  Note that Loopback0 is part of both IGP processes.
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -186,12 +180,13 @@ router isis ISIS-ACCESS
 </div> 
 </pre> 
 
-**PEs Loopback 0 on domain boundary is part of both IGP processes together with same
-“prefix-sid absolute” value**
+ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
+{: .notice--success}
 
 The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
 {: .notice--success}
 
+**IS-IS Loopback and node SID configuration** 
 <div class="highlighter-rouge">
 <pre class="highlight">
  interface Loopback0
@@ -202,7 +197,7 @@ The prefix SID can be configured as either _absolute_ or _index_.  The _index_ c
 </pre> 
 
 
-** IS-IS interface configuration with TI-LFA ** 
+**IS-IS interface configuration with TI-LFA** 
 
 It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible for backup path computation, meaning if a packet ingresses the node with the label a backup path will be provided in case of a failure. In the case of having multiple adjacencies between the same two nodes, use the same adjacency-sid on each link. 
 
@@ -347,8 +342,6 @@ interface Loopback0
  ip router isis ACCESS
  isis circuit-type level-2-only
 end
-</div>
-</pre> 
 </div>
 </pre> 
 
