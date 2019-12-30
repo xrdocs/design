@@ -264,7 +264,6 @@ segment-routing
 </div> 
 </pre> 
 
-
 ## Transport IOS-XE – All IOS-XE nodes
     
 ### Segment Routing MPLS configuration

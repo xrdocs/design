@@ -1133,8 +1133,7 @@ prefix over an LDP prefix, allowing a seamless migration to SR without needing t
 SR completely within a domain.  
  
 ### Segment Routing Mapping Server Design
-One component  
-introduced with Segment Routing is the SR Mapping Server (SRMS), a control-plane 
+One component introduced with Segment Routing is the SR Mapping Server (SRMS), a control-plane 
 element converting unicast LDP FECs to Segment Routing prefix-SIDs for advertisement 
 throughout the Segment Routing domain. Each separate IGP domain requires a pair of 
 SRMS nodes until full migratino to SR is complete.   
