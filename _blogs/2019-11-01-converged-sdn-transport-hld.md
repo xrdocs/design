@@ -57,7 +57,7 @@ service level agreements (SLAs).
 
 ![](http://xrdocs.io/design/images/cmf-hld/end-to-end.png)
 
-The  Converged SDN Transport design brings tremendous value to the Service
+The  Converged SDN Transport design brings tremendous value to Service
 Providers:
 
   - **Fast service deployment** and **rapid time to market** through
@@ -69,7 +69,7 @@ Providers:
   - **Smooth migration towards an SDN-ready architecture** thanks to
     backward-compatibility with existing network protocols and services
 
-  - **Next generation services** creation leveraging guaranteed SLAs
+  - **Next generation service** creation leveraging guaranteed SLAs
 
   - **Enhanced and optimized operations** using telemetry/analytics in
     conjunction with automation tools

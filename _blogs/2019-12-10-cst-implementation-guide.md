@@ -120,6 +120,25 @@ _Figure 4: Testbed IGP Domains_
     
 ## Transport IOS-XR – All IOS-XR nodes
 
+### Underlay physical interface configuration with BFD  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/10
+ bfd mode ietf
+ bfd address-family ipv4 timers start 180
+ bfd address-family ipv4 multiplier 3
+ bfd address-family ipv4 destination 10.1.2.1
+ bfd address-family ipv4 fast-detect
+ bfd address-family ipv4 minimum-interval 50
+ mtu 9216
+ ipv4 address 10.15.150.1 255.255.255.254
+ ipv4 unreachables disable
+ load-interval 30
+ dampening
+</div> 
+</pre> 
+
 ### SRGB and SRLB Definition 
 It's recommended to first configure the Segment Routing Global Block (SRGB) across all nodes needing connectivity between each other. In most instances a single SRGB will be used across the entire network. In a SR MPLS deployment the SRGB and SRLB correspond to the label blocks allocated to SR. IOS-XR has a maximum configurable SRGB limit of 512,000 labels, however please consult platform-specific documentation for maximum values. The SRLB corresponds to the labels allocated for SIDs local to the node, such as Adjacency-SIDs. It is recommended to configure the same SRLB block across all nodes. The SRLB must not overlap with the SRGB.  The SRGB and SRLB are configured in IOS-XR with the following configuration:   
 
@@ -146,7 +165,7 @@ key chain ISIS-KEY
 </pre> 
 </div>
 
-**ISIS router configuration**
+#### ISIS router configuration
 
 All routers, except Area Border Routers (ABRs), are part of one IGP
 domain and L2 area (ISIS-ACCESS or ISIS-CORE). Area border routers  
@@ -169,7 +188,6 @@ router isis ISIS-ACCESS
   metric-style wide
   spf-interval maximum-wait 1000 initial-wait 5 secondary-wait 100
   segment-routing mpls
-  spf prefix-priority critical tag 5000
   spf prefix-priority high tag 1000
   maximum-redistributed-prefixes 100 level 2
  ! 
@@ -186,18 +204,19 @@ ABR Loopback 0 on domain boundary is part of both IGP processes together with sa
 The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
 {: .notice--success}
 
-**IS-IS Loopback and node SID configuration** 
+#### IS-IS Loopback and node SID configuration
 <div class="highlighter-rouge">
 <pre class="highlight">
  interface Loopback0
   ipv4 address 100.0.1.50 255.255.255.255
   address-family ipv4 unicast
-   <b>prefix-sid absolute 16150</b> 
+   <b>prefix-sid absolute 16150</b>
+   tag 1000 
 </div> 
 </pre> 
 
 
-**IS-IS interface configuration with TI-LFA** 
+#### IS-IS interface configuration with TI-LFA
 
 It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible for backup path computation, meaning if a packet ingresses the node with the label a backup path will be provided in case of a failure. In the case of having multiple adjacencies between the same two nodes, use the same adjacency-sid on each link. 
 
@@ -219,24 +238,6 @@ It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible fo
 </div> 
 </pre> 
 
-**MPLS interface configuration with BFD**
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface TenGigE0/0/0/10
- bfd mode ietf
- bfd address-family ipv4 timers start 180
- bfd address-family ipv4 multiplier 3
- bfd address-family ipv4 destination 10.1.2.1
- bfd address-family ipv4 fast-detect
- bfd address-family ipv4 minimum-interval 50
- mtu 9216
- ipv4 address 10.15.150.1 255.255.255.254
- ipv4 unreachables disable
- load-interval 30
- dampening
-</div> 
-</pre> 
 
 ### MPLS Segment Routing Traffic Engineering (SRTE) configuration
 The following configuration is done at the global ISIS configuration level.  
@@ -262,7 +263,24 @@ segment-routing
   interface TenGigE0/0/0/6
    metric 1000
 </div> 
-</pre> 
+</pre>
+
+#### Interface delay metric static configuration  
+
+In the absence of dynamic realtime one-way latency monitoring for physical interfaces, the interface delay can be set manually. The one-way delay measurement value is used when computing SR Policy paths with the "latency" constraint type. The configured value is advertised in the IGP using extensions defined in RFC 7810, and advertised to the PCE using BGP-LS extensions. Keep in mind the delay metric value is defined in microseconds, so if you are mixing dynamic computation with static values they should be set appropriately.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+performance-measurement
+ interface TenGigE0/0/0/10
+  delay-measurement
+   advertise-delay 15000
+ interface TenGigE0/0/0/20
+  delay-measurement
+   advertise-delay 10000
+</div> 
+</pre>
+
 
 ## Transport IOS-XE – All IOS-XE nodes
     
@@ -284,7 +302,7 @@ segment-routing mpls
 </div>
 </pre>
 
-**Prefix-SID assignment to loopback 0 configuration**
+#### Prefix-SID assignment to loopback 0 configuration
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -306,7 +324,6 @@ key chain ISIS-KEY
    accept-lifetime 00:00:00 Jan 1 2018 infinite
    send-lifetime 00:00:00 Jan 1 2018 infinite
 !
-
 router isis ACCESS
  net 49.0001.0102.0000.0254.00
  is-type level-2-only
@@ -326,7 +343,7 @@ router isis ACCESS
 </div>
 </pre> 
 
-**TI-LFA FRR configuration**
+#### TI-LFA FRR configuration
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -344,7 +361,7 @@ end
 </div>
 </pre> 
 
-**MPLS Interface configuration**
+#### MPLS Interface configuration
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -373,12 +390,12 @@ interface TenGigabitEthernet0/0/12
 </div>
 </pre> 
 
-### Area Border Routers (ABRs) IGP-ISIS Redistribution configuration
+### Area Border Routers (ABRs) IGP-ISIS Redistribution configuration (IOS-XR)
 
-The ABR nodes must provide IP reachability for RRs, SR-PCEs and NSO between both
+The ABR nodes must provide IP reachability for RRs, SR-PCEs and NSO between 
 ISIS-ACCESS and ISIS-CORE IGP domains. This is done by IP
 prefix redistribution between IS-IS processes. The ABR nodes have static hold-down routes for the 
-block of IP space used in each domain across the network.  
+block of IP space used in each domain across the network.   
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -401,7 +418,7 @@ end-set
 </div>
 </pre> 
 
-**Redistribute Core SvRR and TvRR loopback into Access domain**
+#### Redistribute Core SvRR and TvRR loopback into Access domain
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -462,14 +479,19 @@ router bgp 100
   remote-as 100
   update-source Loopback0
   address-family vpnv4 unicast
+  soft-reconfiguration inbound always
   !
   address-family vpnv6 unicast
+  soft-reconfiguration inbound always
   !
   address-family ipv4 mvpn
+  soft-reconfiguration inbound always
   !
   address-family ipv6 mvpn
+  soft-reconfiguration inbound always
   !
   address-family l2vpn evpn
+  soft-reconfiguration inbound always
   !
  !
  neighbor 100.0.1.201
@@ -666,7 +688,7 @@ router bgp 100
 </div>
 </pre> 
 
-## Segment Routing Path Computation Element (SR-PCE)
+## Segment Routing Path Computation Element (SR-PCE) configuration
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -695,7 +717,15 @@ router bgp 100
  !
 !
 pce
- address ipv4 100.0.0.100
+ address ipv4 100.100.100.1
+ rest
+  user rest_user
+   password encrypted 00141215174C04140B
+  !
+  authentication basic
+ !
+ state-sync ipv4 100.100.100.2
+ peer-filter ipv4 access-list pe-routers
 !
 </div>
 </pre> 
@@ -703,7 +733,7 @@ pce
 ## Segment Routing Traffic Engineering (SRTE) and Services Integration
 
 This section shows how to integrate Traffic Engineering (SRTE) with
-Services. Particular usecase refers to next sub-section.
+services. ODN is configured by first defining a global ODN color associated with specific SR Policy constraints. The color and BGP next-hop address on the service route will be used to dynamically instantiate a SR Policy to the remote VPN endpoint.   
 
 ### On Demand Next-Hop (ODN) configuration – IOS-XR
 
@@ -929,10 +959,9 @@ initial ODN configuration.
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-l2vpn                                                                                                                                                            
- xconnect group evpn_vpws                                                                                                                                        
- p2p odn-1                                                                                                                                                      
-  interface TenGigE0/0/0/5                                                                                                                                
+l2vpn                                                                                                                           xconnect group evpn_vpws                                                                                                        
+ p2p odn-1                                                                                                                      
+  interface TenGigE0/0/0/5                                                                                                      
    neighbor evpn evi 1000 target 1 source 1  
 
 interface TenGigE0/0/0/5 
@@ -1201,10 +1230,10 @@ interface GigabitEthernet0/0/1
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-vrf L3VPN-ODNTE-VRF1                                                                                                                   
- address-family ipv4 unicast                                                                                                           
+vrf L3VPN-ODNTE-VRF1                                                                                                          
+ address-family ipv4 unicast                                                                                                  
   import route-target                                                                                                                  
-   100:501                                                                                                                             
+   100:501                                                                                                                   
   !                                                                                                                                    
   export route-target                                                                                                                  
    100:501                                                                                                                             
