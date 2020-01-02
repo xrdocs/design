@@ -144,10 +144,9 @@ It's recommended to first configure the Segment Routing Global Block (SRGB) acro
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-segment-routing 
 segment-routing
- global-block 16000 16999
- local-block 17000 17999
+ global-block 16000 23999
+ local-block 15000 15999
 </pre> 
 </div>
 
@@ -395,7 +394,10 @@ interface TenGigabitEthernet0/0/12
 The ABR nodes must provide IP reachability for RRs, SR-PCEs and NSO between 
 ISIS-ACCESS and ISIS-CORE IGP domains. This is done by IP
 prefix redistribution between IS-IS processes. The ABR nodes have static hold-down routes for the 
-block of IP space used in each domain across the network.   
+block of IP space used in each domain across the network.  
+
+
+router isis core_access_east address-family ipv4 unicast distance 254 0.0.0.0/0 SR-PCE
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -406,7 +408,7 @@ address-family ipv4 unicast
   100.1.0.0/24 Null0
   100.1.1.0/24 Null0
 
-prefix-set ACCESS-XTC_SvRR-LOOPBACKS
+prefix-set ACCESS-PCE_SvRR-LOOPBACKS
   100.0.1.0/24,
   100.1.1.0/24
 end-set
@@ -431,17 +433,18 @@ route-policy CORE-TO-ACCESS1
 end-policy
 
 router isis ACCESS                                                    
- address-family ipv4 unicast                                          
+ address-family ipv4 unicast                                         
+  distance 254 0.0.0.0/0 RR-LOOPBACKS 
   redistribute static route-policy CORE-TO-ACCESS1    
 </div>
 </pre> 
 
-**Redistribute Access SR-PCE and SvRR loopbacks into Core domain**
+**Redistribute Access SR-PCE and SvRR loopbacks into CORE domain**
 
 <div class="highlighter-rouge">
 <pre class="highlight">
 route-policy ACCESS1-TO-CORE                                     
-  if destination in ACCESS-XTC_SvRR-LOOPBACKS then               
+  if destination in ACCESS-PCE_SvRR-LOOPBACKS then               
     pass                                                         
   else                                                            
     drop                                                         
@@ -449,20 +452,167 @@ route-policy ACCESS1-TO-CORE
 end-policy                                                       
 
 router isis CORE                      
-address-family ipv4 unicast                                          
+address-family ipv4 unicast                           
+  distance 254 0.0.0.0/0 ACCESS-PCE_SvRR-LOOPBACKS                
   redistribute static route-policy CORE-TO-ACCESS1    
 </div>
 </pre> 
 
-## BGP – Access or Provider Edge Routers
+## Segment Routing Path Computation Element (SR-PCE) configuration
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router static
+ address-family ipv4 unicast
+  0.0.0.0/1 Null0
+
+router bgp 100
+ nsr
+ bgp router-id 100.0.0.100
+ bgp graceful-restart graceful-reset
+ bgp graceful-restart
+ ibgp policy out enforce-modifications
+ address-family link-state link-state
+ !
+ neighbor-group TvRR
+  remote-as 100
+  update-source Loopback0
+  address-family link-state link-state
+  !
+ !
+ neighbor 100.0.0.10
+  use neighbor-group TvRR
+ !
+ neighbor 100.1.0.10
+  use neighbor-group TvRR
+ !
+!
+pce
+ address ipv4 100.100.100.1
+ rest
+  user rest_user
+   password encrypted 00141215174C04140B
+  !
+  authentication basic
+ !
+ state-sync ipv4 100.100.100.2
+ peer-filter ipv4 access-list pe-routers
+!
+</div>
+</pre> 
+
+## BGP - Services (sRR) and Transport (tRR) route reflector configuration 
+
+### Services Route Reflector (sRR) configuration 
+In the CST validation a sRR is used to reflect all service routes. In a production network each service could be allocated its own sRR based on resiliency and scale demands.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router static
+ address-family ipv4 unicast
+  0.0.0.0/1 Null0
+
+router bgp 100
+ nsr
+ bgp router-id 100.0.0.200
+ bgp graceful-restart
+ ibgp policy out enforce-modifications
+ address-family vpnv4 unicast
+  nexthop trigger-delay critical 10
+  additional-paths receive
+  additional-paths send
+ !
+ address-family vpnv6 unicast
+  nexthop trigger-delay critical 10
+  additional-paths receive
+  additional-paths send
+  retain route-target all
+ !
+ address-family l2vpn evpn
+  additional-paths receive
+  additional-paths send
+ !
+ address-family ipv4 mvpn
+  nexthop trigger-delay critical 10
+  soft-reconfiguration inbound always
+  !
+ address-family ipv6 mvpn
+  nexthop trigger-delay critical 10
+  soft-reconfiguration inbound always
+  !
+ neighbor-group SvRR-Client
+  remote-as 100
+  bfd fast-detect 
+  bfd minimum-interval 3 
+  update-source Loopback0
+  address-family l2vpn evpn
+   route-reflector-client
+   !
+  address-family vpnv4 unicast 
+   route-reflector-client
+   !
+  address-family vpnv6 unicast  
+   route-reflector-client
+   !
+  address-family ipv4 mvpn
+   route-reflector-client
+   !
+  address-family ipv6 mvpn
+   route-reflector-client
+  !
+ !
+ neighbor 100.0.0.1
+  use neighbor-group SvRR-Client
+ !
+!
+</div>
+</pre> 
+
+### Transport Route Reflector (tRR) configuration
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router static
+ address-family ipv4 unicast
+  0.0.0.0/1 Null0
+
+router bgp 100
+ nsr
+ bgp router-id 100.0.0.10
+ bgp graceful-restart
+ ibgp policy out enforce-modifications
+ address-family link-state link-state
+  additional-paths receive
+  additional-paths send
+ !
+ neighbor-group RRC
+  remote-as 100
+  update-source Loopback0
+  address-family link-state link-state
+   route-reflector-client
+  !
+ !
+ neighbor 100.0.0.1
+  use neighbor-group RRC
+ !
+ neighbor 100.0.0.2
+  use neighbor-group RRC
+!
+</div>
+</pre> 
+
+
+## BGP – Provider Edge Routers (A-PEx and PEx) to service RR 
+Each PE router is configured with BGP sessions to service route-reflectors for advertising VPN service routes across the inter-domain network.  
     
-### IOS-XR configuration
+### IOS-XR configuration 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
 router bgp 100
  nsr
  bgp router-id 100.0.1.50
+ bgp graceful-restart graceful-reset
  bgp graceful-restart
  ibgp policy out enforce-modifications
  address-family vpnv4 unicast
@@ -477,6 +627,8 @@ router bgp 100
  !
  neighbor-group SvRR
   remote-as 100
+  bfd fast-detect 
+  bfd minimum-interval 3 
   update-source Loopback0
   address-family vpnv4 unicast
   soft-reconfiguration inbound always
@@ -496,6 +648,8 @@ router bgp 100
  !
  neighbor 100.0.1.201
   use neighbor-group SvRR
+  ! 
+! 
 </div>
 </pre> 
 
@@ -530,12 +684,16 @@ router bgp 100
 </div>
 </pre> 
 
-## Area Border Routers (ABRs) IGP Topology Distribution
+## Area Border Routers (ABRs) IGP topology distribution
 
 Next network diagram: “BGP-LS Topology Distribution” shows how Area
 Border Routers (ABRs) distribute IGP network topology from ISIS ACCESS
 and ISIS CORE to Transport Route-Reflectors (tRRs). tRRs then reflect
-topology to Segment Routing Path Computation Element (SR-PCEs)
+topology to Segment Routing Path Computation Element (SR-PCEs). Each SR-PCE has full 
+visibility of the entire inter-domain network. 
+
+Each IS-IS process in the network requires a unique instance-id to identify itself to the PCE.
+{: .notice--warning}
 
 ![]({{site.baseurl}}/images/cmfi/image5.png)
 
@@ -543,20 +701,21 @@ _Figure 5: BGP-LS Topology Distribution_
 
 <div class="highlighter-rouge">
 <pre class="highlight">
+
 router isis ACCESS
- distribute link-state instance-id 101
+ **distribute link-state instance-id 101**
  net 49.0001.0101.0000.0001.00
  address-family ipv4 unicast
   mpls traffic-eng router-id Loopback0
 
 router isis CORE
- distribute link-state instance-id 100
+ **distribute link-state instance-id 100**
  net 49.0001.0100.0000.0001.00
  address-family ipv4 unicast
   mpls traffic-eng router-id Loopback0
 
 router bgp 100
- address-family link-state link-state
+ **address-family link-state link-state**
  !
  neighbor-group TvRR
   remote-as 100
@@ -572,163 +731,6 @@ router bgp 100
 </div>
 </pre> 
 
-## Transport Route Reflector (tRR)
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-router static
- address-family ipv4 unicast
-  0.0.0.0/1 Null0
-
-router bgp 100
- nsr
- bgp router-id 100.0.0.10
- bgp graceful-restart
- ibgp policy out enforce-modifications
- address-family link-state link-state
-  additional-paths receive
-  additional-paths send
- !
- neighbor-group RRC
-  remote-as 100
-  update-source Loopback0
-  address-family link-state link-state
-   route-reflector-client
-  !
- !
- neighbor 100.0.0.1
-  use neighbor-group RRC
- !
- neighbor 100.0.0.2
-  use neighbor-group RRC
- !
- neighbor 100.0.0.3
-  use neighbor-group RRC
- !
- neighbor 100.0.0.4
-  use neighbor-group RRC
- !
- neighbor 100.0.0.100
-  use neighbor-group RRC
- !
- neighbor 100.0.1.101
-  use neighbor-group RRC
- !
- neighbor 100.0.2.102
-  use neighbor-group RRC
- !
- neighbor 100.1.1.101
-  use neighbor-group RRC
- !
-!
-</div>
-</pre> 
-
-## Services Route Reflector (sRR)
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-router static
- address-family ipv4 unicast
-  0.0.0.0/1 Null0
-
-
-router bgp 100
- nsr
- bgp router-id 100.0.0.200
- bgp graceful-restart
- ibgp policy out enforce-modifications
- address-family vpnv4 unicast
-  additional-paths receive
-  additional-paths send
- !
- address-family vpnv6 unicast
-  additional-paths receive
-  additional-paths send
-  retain route-target all
- !
- address-family l2vpn evpn
-  additional-paths receive
-  additional-paths send
- !
- neighbor-group SvRR-Client
-  remote-as 100
-  update-source Loopback0
-  address-family l2vpn evpn
-   route-reflector-client
-  !
- !
- neighbor 100.0.0.1
-  use neighbor-group SvRR-Client
- !
- neighbor 100.0.0.2
-  use neighbor-group SvRR-Client
- !
- neighbor 100.0.0.3
-  use neighbor-group SvRR-Client
- !
- neighbor 100.0.0.4
-  use neighbor-group SvRR-Client
- !
- neighbor 100.2.0.5
-  use neighbor-group SvRR-Client
-  description Ixia-P1
- !
- neighbor 100.2.0.6
-  use neighbor-group SvRR-Client
-  description Ixia-P2
- !
- neighbor 100.0.1.201
-  use neighbor-group SvRR-Client
- !
- neighbor 100.0.2.202
-  use neighbor-group SvRR-Client
- !
-!
-</div>
-</pre> 
-
-## Segment Routing Path Computation Element (SR-PCE) configuration
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-router static
- address-family ipv4 unicast
-  0.0.0.0/1 Null0
-
-router bgp 100
- nsr
- bgp router-id 100.0.0.100
- bgp graceful-restart
- ibgp policy out enforce-modifications
- address-family link-state link-state
- !
- neighbor-group TvRR
-  remote-as 100
-  update-source Loopback0
-  address-family link-state link-state
-  !
- !
- neighbor 100.0.0.10
-  use neighbor-group TvRR
- !
- neighbor 100.1.0.10
-  use neighbor-group TvRR
- !
-!
-pce
- address ipv4 100.100.100.1
- rest
-  user rest_user
-   password encrypted 00141215174C04140B
-  !
-  authentication basic
- !
- state-sync ipv4 100.100.100.2
- peer-filter ipv4 access-list pe-routers
-!
-</div>
-</pre> 
 
 ## Segment Routing Traffic Engineering (SRTE) and Services Integration
 
