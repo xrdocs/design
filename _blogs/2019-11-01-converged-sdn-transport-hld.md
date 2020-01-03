@@ -1065,8 +1065,8 @@ LDP can automatically be enabled on all IS-IS interfaces with the following conf
 router isis ACCESS
  address-family ipv4 unicast
   mpls ldp auto-config
-</div>
 </pre> 
+</div> 
 
 ### LDP mLDP-only Session Capability (RFC 7473)  
 In Converged SDN Transport 3.0 we introduce the ability to only advertise mLDP state on each router adjacency, eliminating the need to filter LDP unicast FECs from advertisement into the network. This is done using the SAC (State Advertisement Control) TLV in the LDP initialization messages to advertise which LDP FEC classes to receive from an adjacent peer.  We can restrict the capabilities to mLDP only using the following configuration.  Please see the implementation guide and configurations for the full LDP configuration.   
@@ -1075,8 +1075,8 @@ In Converged SDN Transport 3.0 we introduce the ability to only advertise mLDP s
 <pre class="highlight">
 mpls ldp
  capabilities sac mldp-only
-</div>
 </pre> 
+</div> 
 
 ### LDP Unicast FEC Filtering for SR Unicast with mLDP Multicast  
 The following is for historical context, please see the above section regarding disabling LDP unicast FECs using session capability advertisements. 
@@ -1096,8 +1096,8 @@ address-family ipv4
   label
    local
     allocate for no-unicast-ldp
-</div>
 </pre> 
+</div> 
 
 
 ## EVPN Multicast 
