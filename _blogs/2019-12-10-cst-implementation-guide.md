@@ -62,7 +62,7 @@ _Figure 2: Testbed Physical Topology_
 
 _Figure 3: Testbed Route-Reflector and SR-PCE physical connectivity_
 
-![]({{site.baseurl}}/images/cmfi/image4.png)
+![](http://xrdocs.io/design/images/cmfi/image4.png)
 
 _Figure 4: Testbed IGP Domains_
 
@@ -456,7 +456,7 @@ address-family ipv4 unicast
 ### Overview 
 This portion of the implementation guide instructs the user how to configure mLDP end to end across the multi-domain network. Multicast service examples are given in the "Services" section of the implementation guide. 
 
-### mLDP base configuration 
+### mLDP core configuration 
 In order to use mLDP across the Converged SDN Transport network LDP must first be enabled.  There are two mechanisms to enable LDP on physical interfaces across the network, LDP auto-configuration or manually under the MPLS LDP configuration context.  The capabilities statement will ensure LDP unicast FECs are not advertised, only mLDP FECs. Recursive forwarding is required in a multi-domain network. mLDP must be enabled on all participating A-PE, PE, AG, PA, and P routers.   
 
 #### LDP base configuration with defined interfaces 
@@ -492,7 +492,217 @@ router isis ACCESS
     segment-routing mpls sr-prefer
     mpls ldp auto-config
 </pre> 
-</div> 
+</div>
+
+## G.8275.1 and G.8275.2 PTP (1588v2) timing configuration 
+
+### Summary 
+This section contains the base configurations used for both G.8275.1 and G.8275.2 timing. Please see the CST 3.0 HLD for an overview on timing in general.  
+
+![](http://xrdocs.io/design/images/cmfi/cmf-timing.png)
+
+### Enable frequency synchronization
+In order to lock the internal oscillator to a PTP source, frequency synchronization must first be enabled globally.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+frequency synchronization
+ quality itu-t option 1
+ clock-interface timing-mode system
+ log selection changes
+!
+</pre> 
+</div>
+
+### Optional Synchronous Ethernet configuration (PTP hybrid mode) 
+If the end-to-end devices support SyncE it should be enabled. SyncE will allow much faster frequency sync and maintain integrity for long periods of time during holdover events. Using SyncE for frequency and PTP for phase is known as "Hybrid" mode. A lower priority is used on the SyncE input (50 for SyncE vs. 100 for PTP). 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/10
+ frequency synchronization
+  selection input
+  priority 50
+ !
+!
+</pre> 
+</div>
+
+### PTP G.8275.2 global timing configuration 
+As of CST 3.0, IOS-XR supports a single PTP timing profile and single clock type in the global PTP configuration. The clock domain should follow the ITU-T guidelines for specific profiles using a domain >44 for G.8275.2 clocks.   
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp
+ clock
+  domain 60
+  profile g.8275.2 clock-type T-BC 
+  ! 
+ frequency priority 100  
+ time-of-day priority 50 
+ log
+  servo events
+  best-master-clock changes
+ !
+</pre> 
+</div>
+
+### PTP G.8275.2 interface profile definitions 
+It is recommended to use "profiles" defined globally which are then applied to interfaces participating in timing. This helps minimize per-interface timing configuration. It is also recommended to define different profiles for "master" and "slave" interfaces.   
+
+#### IPv4 G.8275.2 master profile 
+The master profile is assigned to interfaces for which the router is acting as a boundary clock
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp
+ profile g82752_master_v4
+  transport ipv4
+  port state master-only
+  sync frequency 16
+  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
+  announce timeout 10
+  announce interval 1
+  unicast-grant invalid-request deny
+  delay-request frequency 16
+ !
+!
+</pre> 
+</div>
+
+#### IPv6 G.8275.2 master profile 
+The master profile is assigned to interfaces for which the router is acting as a boundary clock
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp
+ profile g82752_master_v6
+  transport ipv6
+  port state master-only
+  sync frequency 16
+  clock operation one-step
+  announce timeout 10
+  announce interval 1
+  unicast-grant invalid-request deny
+  delay-request frequency 16
+ !
+!
+</pre> 
+</div>
+
+#### IPv4 G.8275.2 slave profile 
+The slave profile is assigned to interfaces for which the router is acting as a slave to another master clock  
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp
+ profile g82752_master_v4
+  transport ipv4
+  port state slave-only 
+  sync frequency 16
+  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
+  announce timeout 10
+  announce interval 1
+  unicast-grant invalid-request deny
+  delay-request frequency 16
+ !
+!
+</pre> 
+</div>
+
+#### IPv6 G.8275.2 slave profile 
+The slave profile is assigned to interfaces for which the router is acting as a slave to another master clock  
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp
+ profile g82752_master_v6
+  transport ipv6
+  port state slave-only 
+  sync frequency 16
+  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
+  announce timeout 10
+  announce interval 1
+  unicast-grant invalid-request deny
+  delay-request frequency 16
+ !
+!
+</pre> 
+</div>
+
+### PTP G.8275.1 global timing configuration 
+As of CST 3.0, IOS-XR supports a single PTP timing profile and single clock type in the global PTP configuration. The clock domain should follow the ITU-T guidelines for specific profiles using a domain <44 for G.8275.1 clocks.   
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp
+clock domain 24
+  operation one-step <b>Use one-step for NCS series, two-step for ASR 9000</b>  
+  physical-layer-frequency
+  frequency priority 100 
+  profile g.8275.1 clock-type T-BC
+log
+  servo events
+  best-master-clock changes
+</pre> 
+</div>
+
+#### IPv6 G.8275.1 slave profile 
+The slave profile is assigned to interfaces for which the router is acting as a slave to another master clock  
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp
+ profile g82751_slave
+  port state slave-only 
+  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
+  announce timeout 10
+  announce interval 1
+  delay-request frequency 16
+  multicast transport ethernet
+ !
+!
+</pre> 
+</div>
+
+#### IPv6 G.8275.1 master profile 
+The master profile is assigned to interfaces for which the router is acting as a master to slave devices 
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp
+ profile g82751_slave
+  port state master-only  
+  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b>
+  sync frequency 16 
+  announce timeout 10
+  announce interval 1
+  delay-request frequency 16
+  multicast transport ethernet
+ !
+!
+</pre> 
+</div>
+
+### Application of PTP profile to physical interface 
+In CST 3.0 PTP may only be enabled on physical interfaces. G.8275.1 operates at L2 andsupports PTP across Bundle member links and interfaces part of a bridge domain. G.8275.2 operates at L3 and does not support Bundle interfaces or BVI interfaces.   
+{: .notice--warning}
+
+#### G.8275.2 interface configuration 
+This example is of a slave device using a master of 2405:10:23:253::0.  
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/6
+ ptp
+  profile g82752_slave_v6
+  master ipv6 2405:10:23:253::
+  !
+ !
+</pre> 
+</div>
+
+#### G.8275.1 interface configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/6
+ ptp
+  profile g82751_slave
+  !
+ !
+</pre> 
+</div>
 
 ## Segment Routing Path Computation Element (SR-PCE) configuration
 
@@ -731,7 +941,7 @@ visibility of the entire inter-domain network.
 Each IS-IS process in the network requires a unique instance-id to identify itself to the PCE.
 {: .notice--warning}
 
-![]({{site.baseurl}}/images/cmfi/image5.png)
+![](http://xrdocs.io/design/images/cmfi/image5.png)
 
 _Figure 5: BGP-LS Topology Distribution_
 
@@ -883,17 +1093,17 @@ mpls traffic-eng pcc report-all
     
 ## End-To-End Services
 
-![]({{site.baseurl}}/images/cmfi/image6.png)
+![](http://xrdocs.io/design/images/cmfi/image6.png)
 
 _Figure 6: End-To-End Services Table_
 
 ### L3VPN MP-BGP VPNv4 On-Demand Next-Hop
 
-![]({{site.baseurl}}/images/cmfi/image7.png)
+![](http://xrdocs.io/design/images/cmfi/image7.png)
 
 _Figure 7: L3VPN MP-BGP VPNv4 On-Demand Next-Hop Control Plane_
 
-**Access Routers:** **Cisco ASR920 IOS-XE**
+**Access Routers:** **Cisco ASR920 IOS-XE and NCS540 IOS-XR**
 
 1.  **Operator:** New VPNv4 instance via CLI or NSO
 
@@ -908,10 +1118,82 @@ _Figure 7: L3VPN MP-BGP VPNv4 On-Demand Next-Hop Control Plane_
 5.  **Access Router:** Programs Segment Routing Traffic Engineering
     (SRTE) Policy to reach remote access router
 
-Please refer to “**On Demand Next-Hop (ODN) – IOS-XE**” section for
-initial ODN configuration.
+Please refer to “**On Demand Next-Hop (ODN)**” sections for initial ODN configuration.
 
-#### Access Router Service Provisioning (IOS-XE):
+#### Access Router Service Provisioning (IOS-XR)
+
+**ODN route-policy configuration** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+extcommunity-set opaque ODN-GREEN
+  100
+end-set
+
+route-policy ODN-L3VPN-OUT 
+  set extcommunity color ODN-GREEN 
+  pass
+end-policy
+</pre> 
+</div> 
+
+**VRF definition configuration**
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf ODN-L3VPN
+ rd 100:1
+ address-family ipv4 unicast
+  import route-target
+   100:1
+  !
+  export route-target
+  export route-policy ODN-L3VPN-OUT
+   100:1
+  !
+ !
+ address-family ipv6 unicast
+  import route-target
+   100:1
+  !
+  export route-target
+  export route-policy ODN-L3VPN-OUT
+   100:1
+  !
+ !
+</pre> 
+</div> 
+
+
+**VRF Interface configuration**
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/23.2000
+ mtu 9216 
+ vrf ODN-L3VPN  
+ ipv4 address 172.106.1.1 255.255.255.0
+ encapsulation dot1q 2000
+</pre> 
+</div> 
+
+**BGP VRF configuration with static/connected only**  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ vrf VRF-MLDP
+  rd auto
+  address-family ipv4 unicast
+   redistribute connected
+   redistribute static
+  !
+  address-family ipv6 unicast 
+   redistribute connected 
+   redistribute static 
+  !
+</pre> 
+</div> 
+
+
+#### Access Router Service Provisioning (IOS-XE)
 
 **VRF definition configuration**
 
@@ -969,7 +1251,7 @@ router bgp 100
 
 ### L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop
 
-![]({{site.baseurl}}/images/cmfi/image8.png)
+![](http://xrdocs.io/design/images/cmfi/image8.png)
 
 _Figure 8: L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop Control Plane_
 
@@ -988,12 +1270,12 @@ _Figure 8: L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop Control Plane_
 5.  **Access Router:** Programs Segment Routing Traffic Engineering
     (SRTE) Policy to reach remote access router
 
-Please refer to “**On Demand Next-Hop (ODN) – IOS-XR**” section for
-initial ODN configuration.
+Please refer to **On Demand Next-Hop (ODN) – IOS-XR** section for initial ODN configuration. The correct EVPN L2VPN routes must be advertised with a specific color ext-community to trigger dynamic SR Policy instantiation.   
+{: .notice--success}
 
 #### Access Router Service Provisioning (IOS-XR):
 
-**PORT Based service configuration**
+**Port based service configuration**
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1026,7 +1308,7 @@ interface TenGigE0/0/0/5.1 l2transport
 
 ### L2VPN Static Pseudowire (PW) – Preferred Path (PCEP)
 
-![]({{site.baseurl}}/images/cmfi/image9.png)
+![](http://xrdocs.io/design/images/cmfi/image9.png)
 
 _Figure 9: L2VPN Static Pseudowire (PW) – Preferred Path (PCEP) Control
 Plane_
@@ -1091,15 +1373,15 @@ interface TenGigE0/0/0/15
   l2transport
 
 l2vpn 
- pw-class static-pw-class-PE7
+ pw-class static-pw-class-PE3
   encapsulation mpls
    control-word
-   preferred-path sr-te policy GREEN-PE7
+   preferred-path sr-te policy srte_c_1001_ep_100.0.1.50
 
- p2p Static-PW-to-PE7-1
+ p2p Static-PW-to-PE3-1
   interface TenGigE0/0/0/15
-   neighbor ipv4 100.0.2.52 pw-id 1000                      
-    mpls static label local 1000 remote 1000 pw-class static-pw-class-PE7   
+   neighbor ipv4 100.0.0.3 pw-id 1000                      
+    mpls static label local 1000 remote 1000 pw-class static-pw-class-PE3   
 </pre> 
 </div> 
 
@@ -1113,14 +1395,14 @@ interface TenGigE0/0/0/5.1001 l2transport
  rewrite ingress tag pop 1 symmetric
 
 l2vpn 
- pw-class static-pw-class-PE7
+ pw-class static-pw-class-PE3
   encapsulation mpls
    control-word
-   preferred-path sr-te policy GREEN-PE7
+   preferred-path sr-te policy srte_c_1001_ep_100.0.1.50 
   p2p Static-PW-to-PE7-2                                                                                                                                      
    interface TenGigE0/0/0/5.1001
-    neighbor ipv4 100.0.2.52 pw-id 1001                      
-     mpls static label local 1001 remote 1001 pw-class static-pw-class-PE7 
+    neighbor ipv4 100.0.0.3 pw-id 1001                      
+     mpls static label local 1001 remote 1001 pw-class static-pw-class-PE3 
 </pre> 
 </div> 
 
@@ -1176,23 +1458,177 @@ pseudowire-class mpls
  protocol none                                                            
  preferred-path interface Tunnel1  
 </pre> 
-</div> 
+</div>
+
+### Multicast NG-MVPN Profile 14 using mLDP and ODN L3VPN
+In ths service example we will implement multicast delivery across the CST network using mLDP transport for multicast and SR-MPLS for unicast traffic. L3VPN SR paths will be dynamically created using ODN. Multicast profile 14 is the "Partitioned MDT - MLDP P2MP - BGP-AD - BGP C-Mcast Signaling"  Using this profile each mVPN will use a dedicated P2MP tree, endpoints will be auto-discovered using NG-MVPN BGP NLRI, and customer multicast state such as source streams, PIM, and IGMP membership data will be signaled using BGP. Profile 14 is the recommended profile for high scale and utilizing label-switched multicast (LSM) across the core.      
+
+#### Multicast core configuration 
+The multicast "core" includes transit endpoints participating in mLDP only. See the mLDP core configuration section for details on end-to-end mLDP configuration.  
+
+#### Unicast L3VPN PE configuration 
+In order to complete an RPF check for SSM sources, unicast L3VPN configuration is required. Additionally the VRF must be defined under the BGP configuration with the NG-MVPN address families configured. In our use case we are utilizing ODN for creating the paths between L3VPN endpoints with a route-policy attached to the mVPN VRF to set a specific color on advertised routes.   
+
+**ODN opaque ext-community set** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+extcommunity-set opaque MLDP
+  1000
+end-set
+</pre> 
+</div>
+
+**ODN route-policy** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+route-policy ODN-MVPN
+  set extcommunity color MLDP
+  pass
+end-policy
+</pre> 
+</div>
+
+
+**Global L3VPN VRF definition** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf VRF-MLDP
+ address-family ipv4 unicast
+  import route-target
+   100:38
+  !
+  export route-policy ODN-MVPN
+  export route-target
+   100:38
+  !
+ !
+ address-family ipv6 unicast
+  import route-target
+   100:38
+  !
+  export route-policy ODN-MVPN
+  export route-target
+   100:38
+  !
+ !
+!
+</pre> 
+</div>
+
+**BGP configuration** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ vrf VRF-MLDP
+  rd auto
+  address-family ipv4 unicast
+   redistribute connected
+   redistribute static
+  !
+  address-family ipv6 unicast
+   redistribute connected
+   redistribute static
+  ! 
+  address-family ipv4 mvpn
+  !
+  address-family ipv6 mvpn
+  !
+ !
+!
+</pre> 
+</div>
+
+#### Multicast PE configuration
+The multicast "edge" includes all endpoints connected to native multicast sources or receivers. 
+
+**Define RPF policy** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+route-policy mldp-partitioned-p2mp
+  set core-tree mldp-partitioned-p2mp
+end-policy
+!
+</pre> 
+</div>
+
+**Enable Multicast and define mVPN VRF** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+ address-family ipv4
+  interface Loopback0
+   enable
+  !
+ !
+ vrf VRF-MLDP
+  address-family ipv4
+   mdt source Loopback0
+   rate-per-route
+   interface all enable
+   accounting per-prefix
+   bgp auto-discovery mldp
+   !
+   mdt partitioned mldp ipv4 p2mp
+   mdt data 100
+  !
+ !
+!
+</pre> 
+</div>
+
+**Enable PIM for mVPN VRF** 
+In this instance there is an interface TenGigE0/0/0/23.2000 which is using PIM within the VRF 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router pim
+ address-family ipv4
+  rp-address 100.0.1.50
+ !
+ vrf VRF-MLDP
+  address-family ipv4
+   rpf topology route-policy mldp-partitioned-p2mp
+   mdt c-multicast-routing bgp
+   !
+   interface TenGigE0/0/0/23.2000
+    enable
+   !
+  !
+</pre> 
+</div>
+
+**Enable IGMP for mVPN VRF interface** 
+To discover listeners for a specific group, enable IGMP on interfaces within the VRF. These interested receivers will be advertised via BGP to establish end to end P2MP trees from the source.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router igmp
+ vrf VRF-MLDP
+  interface TenGigE0/0/0/23.2001
+  !
+  version 3
+ !
+!
+</pre> 
+</div>
 
 ### End-To-End Services Data Plane
 
-![]({{site.baseurl}}/images/cmfi/image10.png)
+![](http://xrdocs.io/design/images/cmfi/image10.png)
 
 _Figure 10: End-To-End Services Data Plane_
 
 ## Hierarchical Services
 
-![]({{site.baseurl}}/images/cmfi/image11.png)
+![](http://xrdocs.io/design/images/cmfi/image11.png)
 
 _Figure 11: Hierarchical Services Table_
 
 ### L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Headend (PWHE)
 
-![]({{site.baseurl}}/images/cmfi/image12.png)
+![](http://xrdocs.io/design/images/cmfi/image12.png)
 
 _Figure 12: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Headend (PWHE) Control Plane_
 
@@ -1353,14 +1789,14 @@ l2vpn
 </pre> 
 </div> 
 
-![]({{site.baseurl}}/images/cmfi/image13.png)
+![](http://xrdocs.io/design/images/cmfi/image13.png)
 
 _Figure 13: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with
 Pseudowire-Headend (PWHE) Data Plane_
 
 ### L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4 with Anycast IRB
 
-![]({{site.baseurl}}/images/cmfi/image14.png)
+![](http://xrdocs.io/design/images/cmfi/image14.png)
 
 _Figure 14: L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4 with
 Anycast IRB Control Plane_
@@ -1584,14 +2020,14 @@ router bgp 100
 </pre> 
 </div> 
 
-![]({{site.baseurl}}/images/cmfi/image15.png)
+![](http://xrdocs.io/design/images/cmfi/image15.png)
 
 _Figure 15: L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4/6 with
 Anycast IRB Datal Plane_
 
 ### L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN with Anycast IRB
 
-![]({{site.baseurl}}/images/cmfi/image16.png)
+![](http://xrdocs.io/design/images/cmfi/image16.png)
 
 _Figure 16: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
 with Anycast IRB Control Plane_
@@ -1824,7 +2260,7 @@ router bgp 100
 </pre> 
 </div> 
 
-![]({{site.baseurl}}/images/cmfi/image17.png)
+![](http://xrdocs.io/design/images/cmfi/image17.png)
 
 _Figure 17: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
 with Anycast IRB Data Plane_
