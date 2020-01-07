@@ -1,6 +1,6 @@
 ---
 published: true
-date: '2018-05-09 16:54 -0500'
+date: '2020-01-05 16:54 -0500'
 title: Metro Design Implementation Guide
 position: hidden 
 author: Phil Bedard 
@@ -16,9 +16,327 @@ tags:
 
 {% include toc %}
 
+## Remote PHY CIN Implementation 
+
+### Summary 
+Detail can be found in the CST 3.0 high-level design guide for design decisions, this section will provide sample configurations. 
+
+### Sample QoS Policies 
+The following are usable policies but policies should be tailored for specific network deployments.  
+
+#### Class maps 
+Class maps are used within a policy map to match packet criteria for further treatment 
+<div class="highlighter-rouge">
+<pre class="highlight">
+class-map match-any match-ef-exp5
+ description High priority, EF
+ match dscp 46
+ match mpls experimental topmost 5
+ end-class-map
+!
+class-map match-any match-cs5-exp4
+ description Second highest priority
+ match dscp 40
+ match mpls experimental topmost 4
+ end-class-map
+!
+class-map match-any match-video-cs4-exp2
+ description Video
+ match dscp 32
+ match mpls experimental topmost 2
+ end-class-map
+!
+class-map match-any match-cs6-exp6
+ description Highest priority control-plane traffic
+ match dscp cs6
+ match mpls experimental topmost 6
+ end-class-map
+!
+class-map match-any match-qos-group-1
+ match qos-group 1
+ end-class-map
+!
+class-map match-any match-qos-group-2
+ match qos-group 2
+ end-class-map
+!
+class-map match-any match-qos-group-3
+ match qos-group 3
+ end-class-map
+!
+class-map match-any match-qos-group-6
+ match qos-group 3
+ end-class-map
+!
+class-map match-any match-traffic-class-1
+ description "Match highest priority traffic-class 1"
+ match traffic-class 1
+ end-class-map
+!
+class-map match-any match-traffic-class-2
+ description "Match high priority traffic-class 2"
+ match traffic-class 2
+ end-class-map
+!
+class-map match-any match-traffic-class-3
+ description "Match medium traffic-class 3"
+ match traffic-class 3
+ end-class-map
+!
+class-map match-any match-traffic-class-6
+ description "Match video traffic-class 6"
+ match traffic-class 6
+ end-class-map
+</pre> 
+</div>
+
+#### CIN core uplink policy maps 
+These are applied to all core facing interfaces.  
+
+#### RPD and DPIC interface policy maps
+These are applied to all interfaces connected to cBR-8 DPIC and RPD devices. 
+
+Egress queueing maps are not supported on L3 BVI interfaces 
+{: .notice--warning}
+
+**RPD/DPIC ingress classifier policy map** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map rpd-dpic-ingress-classifier
+ class match-cs6-exp6
+  set traffic-class 1
+  set qos-group 1
+ !
+ class match-ef-exp5
+  set traffic-class 2
+  set qos-group 2
+ !
+ class match-cs5-exp4
+  set traffic-class 3
+  set qos-group 3
+ !
+ class match-video-cs4-exp2
+  set traffic-class 6
+  set qos-group 6
+ !
+ class class-default
+  set traffic-class 0
+  set dscp 0
+  set qos-group 0
+ !
+ end-policy-map
+!
+</pre> 
+</div>
+
+**RPD/DPIC egress queueing policy map** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map rpd-dpic-egress-queuing
+ class match-traffic-class-1
+  priority level 1
+  queue-limit 500 us
+ !
+ class match-traffic-class-2
+  priority level 2
+  queue-limit 100 us
+ !
+ class match-traffic-class-3
+  priority level 3
+  queue-limit 500 us
+ !
+ class match-traffic-class-6
+  priority level 6
+  queue-limit 500 us
+ !
+ class class-default
+  queue-limit 250 ms
+ !
+ end-policy-map
+!
+</pre> 
+</div>
+
+#### Core ingress classifier map 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map core-ingress-classifier
+ class match-cs6-exp6
+  set traffic-class 1
+ !
+ class match-ef-exp5
+  set traffic-class 2
+ !
+ class match-cs5-exp4
+  set traffic-class 3
+ !
+ class match-video-cs4-exp2
+  set traffic-class 6
+ !
+ class class-default
+  set mpls experimental topmost 0
+  set traffic-class 0
+  set dscp 0
+ !
+ end-policy-map
+!
+</pre> 
+</div>
+
+#### Core egress queueing map 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map core-egress-queuing
+ class match-traffic-class-2
+  priority level 2
+  queue-limit 100 us
+ !
+ class match-traffic-class-3
+  priority level 3
+  queue-limit 500 us
+ !
+ class match-traffic-class-6
+  priority level 6
+  queue-limit 500 us
+ !
+ class match-traffic-class-1
+  priority level 1
+  queue-limit 500 us
+ !
+ class class-default
+  queue-limit 250 ms
+ !
+ end-policy-map
+!
+</pre> 
+</div>
+
+#### Core egress MPLS EXP marking map 
+The following policy must be applied for CIN PE devices with MPLS-based VPN services.  
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map core-egress-exp-marking
+ class match-qos-group-1
+  set mpls experimental imposition 6
+ !
+ class match-qos-group-2
+  set mpls experimental imposition 5
+ !
+ class match-qos-group-3
+  set mpls experimental imposition 4
+ !
+ class match-qos-group-6
+  set mpls experimental imposition 2
+ !
+ class class-default
+  set mpls experimental imposition 0
+ !
+ end-policy-map
+!
+</pre> 
+</div>
+
+### cBR-8 DPIC interface configuration without Link HA
+Without link HA the DPIC port is configured as a normal physical interface   
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/25
+ description .. Connected to cbr8 port te1/1/0
+ service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing
+ ipv4 address 4.4.9.101 255.255.255.0
+ ipv6 address 2001:4:4:9::101/64
+ carrier-delay up 0 down 0
+ load-interval 30
+</pre> 
+</div>
+
+### cBR-8 DPIC interface configuration with Link HA
+When using Link HA faster convergence is achieved when each DPIC interface is placed into a BVI with a statically assigned MAC address. Each DPIC interface is placed into a separate bridge-domain with a unique BVI L3 interface. The same MAC address should be utilized on all BVI interfaces.  Convergence using BVI interfaces is <50ms, L3 physical interfaces is 1-2s.   
+
+**Even DPIC port configuration** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/25
+ description "Connected to cBR8 port Te1/1/0" 
+ lldp
+ !
+ carrier-delay up 0 down 0
+ load-interval 30
+ l2transport
+ !
+!
+l2vpn
+ bridge group cbr8
+  bridge-domain port-ha-0
+   interface TenGigE0/0/0/25
+   !
+   routed interface BVI500
+   !
+  !
+ !
+ interface BVI500
+ description "BVI for cBR8 port HA, requires static MAC"
+ service-policy input rpd-dpic-ingress-classifier
+ ipv4 address 4.4.9.101 255.255.255.0
+ ipv6 address 2001:4:4:9::101/64
+ mac-address 8a.9698.64
+ load-interval 30
+!
+</pre> 
+</div>
+
+**Odd DPIC port configuration** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/26
+ description "Connected to cBR8 port Te1/1/1" 
+ lldp
+ !
+ carrier-delay up 0 down 0
+ load-interval 30
+ l2transport
+ !
+!
+l2vpn
+ bridge group cbr8
+  bridge-domain port-ha-1 
+   interface TenGigE0/0/0/26
+   !
+   routed interface BVI501
+   !
+  !
+ !
+ interface BVI501
+ description "BVI for cBR8 port HA, requires static MAC"
+ service-policy input rpd-dpic-ingress-classifier
+ ipv4 address 4.4.9.101 255.255.255.0
+ ipv6 address 2001:4:4:9::101/64
+ mac-address 8a.9698.64
+ load-interval 30
+!
+</pre> 
+</div>
+
+### cBR-8 Digital PIC Interface Configuration  
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/25
+ description .. Connected to cbr8 port te1/1/0
+ service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing
+ ipv4 address 4.4.9.101 255.255.255.0
+ ipv6 address 2001:4:4:9::101/64
+ carrier-delay up 0 down 0
+ load-interval 30
+</pre> 
+</div>
+
+#### 
 
 # Targets
-
 
   - Hardware:
     
@@ -1092,7 +1410,7 @@ mpls traffic-eng pcc report-all
 
 # Services
     
-## End-To-End Services
+## End-To-End VPN Services
 
 ![](http://xrdocs.io/design/images/cmfi/image6.png)
 
@@ -1356,11 +1674,9 @@ The auto-configured policy name will be persistant and must be used as a referen
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-RP/0/RP0/CPU0:A-PE8#show segment-routing traffic-eng policy candidate-path name GREEN-PE3-1
+RP/0/RP0/CPU0:A-PE8#show segment-routing traffic-eng policy candidate-path name GREEN-PE3-1 
 
-SR-TE policy database
----------------------
-
+<u>SR-TE policy database</u>
 Color: 1001, End-point: 100.0.1.50
   Name: **srte_c_1001_ep_100.0.1.50**
 </pre> 
@@ -1461,13 +1777,13 @@ pseudowire-class mpls
 </pre> 
 </div>
 
-### Multicast NG-MVPN Profile 14 using mLDP and ODN L3VPN
+## Multicast NG-MVPN Profile 14 using mLDP and ODN L3VPN
 In ths service example we will implement multicast delivery across the CST network using mLDP transport for multicast and SR-MPLS for unicast traffic. L3VPN SR paths will be dynamically created using ODN. Multicast profile 14 is the "Partitioned MDT - MLDP P2MP - BGP-AD - BGP C-Mcast Signaling"  Using this profile each mVPN will use a dedicated P2MP tree, endpoints will be auto-discovered using NG-MVPN BGP NLRI, and customer multicast state such as source streams, PIM, and IGMP membership data will be signaled using BGP. Profile 14 is the recommended profile for high scale and utilizing label-switched multicast (LSM) across the core.      
 
-#### Multicast core configuration 
+### Multicast core configuration 
 The multicast "core" includes transit endpoints participating in mLDP only. See the mLDP core configuration section for details on end-to-end mLDP configuration.  
 
-#### Unicast L3VPN PE configuration 
+### Unicast L3VPN PE configuration 
 In order to complete an RPF check for SSM sources, unicast L3VPN configuration is required. Additionally the VRF must be defined under the BGP configuration with the NG-MVPN address families configured. In our use case we are utilizing ODN for creating the paths between L3VPN endpoints with a route-policy attached to the mVPN VRF to set a specific color on advertised routes.   
 
 **ODN opaque ext-community set** 
@@ -1539,7 +1855,7 @@ router bgp 100
 </pre> 
 </div>
 
-#### Multicast PE configuration
+### Multicast PE configuration
 The multicast "edge" includes all endpoints connected to native multicast sources or receivers. 
 
 **Define RPF policy** 
@@ -1615,7 +1931,7 @@ router igmp
 </pre> 
 </div>
 
-### End-To-End Services Data Plane
+### End-To-End VPN Services Data Plane
 
 ![](http://xrdocs.io/design/images/cmfi/image10.png)
 
