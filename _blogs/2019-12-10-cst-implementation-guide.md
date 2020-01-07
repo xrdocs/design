@@ -165,7 +165,7 @@ key chain ISIS-KEY
 </pre> 
 </div>
 
-#### ISIS router configuration
+#### IS-IS router configuration
 
 All routers, except Area Border Routers (ABRs), are part of one IGP
 domain and L2 area (ISIS-ACCESS or ISIS-CORE). Area border routers  
@@ -186,6 +186,7 @@ router isis ISIS-ACCESS
  lsp-password keychain ISIS-KEY
  address-family ipv4 unicast
   metric-style wide
+  advertise link attributes
   spf-interval maximum-wait 1000 initial-wait 5 secondary-wait 100
   segment-routing mpls
   spf prefix-priority high tag 1000
@@ -393,7 +394,7 @@ interface TenGigabitEthernet0/0/12
 The ABR nodes must provide IP reachability for RRs, SR-PCEs and NSO between 
 ISIS-ACCESS and ISIS-CORE IGP domains. This is done by IP
 prefix redistribution between IS-IS processes. The ABR nodes have static hold-down routes for the 
-block of IP space used in each domain across the network.  
+block of IP space used in each domain across the network. The distance command is used to ensure redistributed routes are not preferred over local IS-IS routes.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
