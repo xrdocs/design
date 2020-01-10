@@ -156,84 +156,9 @@ policy-map rpd-dpic-egress-queuing
 </pre> 
 </div>
 
-#### Core ingress classifier map 
-<div class="highlighter-rouge">
-<pre class="highlight">
-policy-map core-ingress-classifier
- class match-cs6-exp6
-  set traffic-class 1
- !
- class match-ef-exp5
-  set traffic-class 2
- !
- class match-cs5-exp4
-  set traffic-class 3
- !
- class match-video-cs4-exp2
-  set traffic-class 6
- !
- class class-default
-  set mpls experimental topmost 0
-  set traffic-class 0
-  set dscp 0
- !
- end-policy-map
-!
-</pre> 
-</div>
+#### Core QoS 
+Please see the general QoS section for core-facing QoS configuration  
 
-#### Core egress queueing map 
-<div class="highlighter-rouge">
-<pre class="highlight">
-policy-map core-egress-queuing
- class match-traffic-class-2
-  priority level 2
-  queue-limit 100 us
- !
- class match-traffic-class-3
-  priority level 3
-  queue-limit 500 us
- !
- class match-traffic-class-6
-  priority level 6
-  queue-limit 500 us
- !
- class match-traffic-class-1
-  priority level 1
-  queue-limit 500 us
- !
- class class-default
-  queue-limit 250 ms
- !
- end-policy-map
-!
-</pre> 
-</div>
-
-#### Core egress MPLS EXP marking map 
-The following policy must be applied for CIN PE devices with MPLS-based VPN services.  
-<div class="highlighter-rouge">
-<pre class="highlight">
-policy-map core-egress-exp-marking
- class match-qos-group-1
-  set mpls experimental imposition 6
- !
- class match-qos-group-2
-  set mpls experimental imposition 5
- !
- class match-qos-group-3
-  set mpls experimental imposition 4
- !
- class match-qos-group-6
-  set mpls experimental imposition 2
- !
- class class-default
-  set mpls experimental imposition 0
- !
- end-policy-map
-!
-</pre> 
-</div>
 
 ### Multicast configuration  
 
@@ -473,8 +398,6 @@ router isis ACCESS
   address-family ipv6 unicast
 </pre> 
 </div>
-
-
 
 # Targets
 
@@ -1554,52 +1477,180 @@ mpls traffic-eng pcc report-all
 Please see the CST 3.0 HLD for in-depth information on design choices. 
 
 ### Core QoS configuration 
-The core QoS policies defined for CST 3.0 utilize priority levels, with no bandwidth guarantees per traffic class. In a production network it is recommended to analyze traffic flows and determine an appropriate BW guarantee per traffic class. The core QoS uses four classes. Note the "video" class 
+The core QoS policies defined for CST 3.0 utilize priority levels, with no bandwidth guarantees per traffic class. In a production network it is recommended to analyze traffic flows and determine an appropriate BW guarantee per traffic class. The core QoS uses four classes. Note the "video" class uses priority level 6 since only levels 6 and 7 are supported for high priority multicast.   
 
 ![](http://xrdocs.io/design/images/cmfi/cmf-qos-core.png)
 
- Traffic Type | Priority | Default Marking | Comments | 
-| ----------|---------|----------|---------------|-------------| 
-| BGP | Routers, cBR-8 | Highest | CS6 (DSCP 48) | None |  
-| IS-IS | Routers, cBR-8 | Highest | CS6 | IS-IS is single-hop and uses highest priority queue by default | 
-| BFD | Routers | Highest | CS6 | BFD is single-hop and uses highest priority queue by default | 
-| DHCP | RPD | High | CS5 | DHCP COS is set explicitly | 
-| PTP | All | High | DSCP 46 | Default on all routers, cBR-8, and RPD | 
-| DOCSIS MAP/UCD | RPD, cBR-8 DPIC | High | DSCP 46 | | 
-| DOCSIS BWR | RPD, cBR-8 DPIC | High | DSCP 46 | | 
-| GCP | RPD, cBR-8 DPIC | Low | DSCP 0 | 
-| DOCSIS Data | RPD, cBR-8 DPIC | Low | DSCP 0 | 
-| Video | cBR-8 | Medium | DSCP 32 | Video within multicast L2TPv3 tunnel when cBR-8 is video core | 
+ Traffic Type | Priority Level | Core EXP Marking  
+| ----------|---------|----------|---------------|
+| Network Control | 1 | 6 | 
+| Voice |  2 | 5 | 
+| High Priority |  3 | 4| 
+| Video |  6 | 2 | 
+| Default | 0 | 0 | 
 
-![](http://xrdocs.io/design/images/cmfi/cmf-qos-core.png)
+#### Class maps used in QoS policies 
+Class maps are used within a policy map to match packet criteria or internal QoS markings like traffic-class or qos-group 
+<div class="highlighter-rouge">
+<pre class="highlight">
+class-map match-any match-ef-exp5
+ description High priority, EF
+ match dscp 46
+ match mpls experimental topmost 5
+ end-class-map
+!
+class-map match-any match-cs5-exp4
+ description Second highest priority
+ match dscp 40
+ match mpls experimental topmost 4
+ end-class-map
+!
+class-map match-any match-video-cs4-exp2
+ description Video
+ match dscp 32
+ match mpls experimental topmost 2
+ end-class-map
+!
+class-map match-any match-cs6-exp6
+ description Highest priority control-plane traffic
+ match dscp cs6
+ match mpls experimental topmost 6
+ end-class-map
+!
+class-map match-any match-qos-group-1
+ match qos-group 1
+ end-class-map
+!
+class-map match-any match-qos-group-2
+ match qos-group 2
+ end-class-map
+!
+class-map match-any match-qos-group-3
+ match qos-group 3
+ end-class-map
+!
+class-map match-any match-qos-group-6
+ match qos-group 3
+ end-class-map
+!
+class-map match-any match-traffic-class-1
+ description "Match highest priority traffic-class 1"
+ match traffic-class 1
+ end-class-map
+!
+class-map match-any match-traffic-class-2
+ description "Match high priority traffic-class 2"
+ match traffic-class 2
+ end-class-map
+!
+class-map match-any match-traffic-class-3
+ description "Match medium traffic-class 3"
+ match traffic-class 3
+ end-class-map
+!
+class-map match-any match-traffic-class-6
+ description "Match video traffic-class 6"
+ match traffic-class 6
+ end-class-map
+</pre> 
+</div
 
-#### Core class-maps 
-Class maps are used for matching ingress header criteria as well as internal traffic-class and qos-group markings for egress queuing and marking.  
+#### Core ingress classifier policy  
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map core-ingress-classifier
+ class match-cs6-exp6
+  set traffic-class 1
+ !
+ class match-ef-exp5
+  set traffic-class 2
+ !
+ class match-cs5-exp4
+  set traffic-class 3
+ !
+ class match-video-cs4-exp2
+  set traffic-class 6
+ !
+ class class-default
+  set mpls experimental topmost 0
+  set traffic-class 0
+  set dscp 0
+ !
+ end-policy-map
+!
+</pre> 
+</div>
 
+#### Core egress queueing map 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map core-egress-queuing
+ class match-traffic-class-2
+  priority level 2
+  queue-limit 100 us
+ !
+ class match-traffic-class-3
+  priority level 3
+  queue-limit 500 us
+ !
+ class match-traffic-class-6
+  priority level 6
+  queue-limit 500 us
+ !
+ class match-traffic-class-1
+  priority level 1
+  queue-limit 500 us
+ !
+ class class-default
+  queue-limit 250 ms
+ !
+ end-policy-map
+!
+</pre> 
+</div>
+
+#### Core egress MPLS EXP marking map 
+The following policy must be applied for CIN PE devices with MPLS-based VPN services.  
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map core-egress-exp-marking
+ class match-qos-group-1
+  set mpls experimental imposition 6
+ !
+ class match-qos-group-2
+  set mpls experimental imposition 5
+ !
+ class match-qos-group-3
+  set mpls experimental imposition 4
+ !
+ class match-qos-group-6
+  set mpls experimental imposition 2
+ !
+ class class-default
+  set mpls experimental imposition 0
+ !
+ end-policy-map
+!
+</pre> 
+</div>
 
 
 ### H-QoS configuration  
 
 #### Enabling H-QoS on NCS 540 and NCS 5500 
 Enabling H-QoS on the NCS platforms requires the following global command and requires a reload of the device. 
-<pre> 
+<div class="highlighter-rouge">
+<pre class="highlight">
 hw-module profile qos hqos-enable
-</pre>
+</pre> 
+</div>
 
 #### Example H-QoS policy for 5G services 
-The following H-QoS policy 
+The following H-QoS policy represents an example QoS policy reserving 5Gbps on a sub-interface. On ingress each child class is policed to a certain percentage of the 5Gbps policer.  In the egress queuing policy, shaping is used with guaranteed each class a certain amount of egress bandwidth, with high priority traffic being serviced in a low-latency queue (LLQ).  
 
-<pre>
-policy-map hqos-ingress-parent-5g
- class class-default
-  service-policy hqos-ingress-child-policer
-  police rate 5 gbps
-  !
- !
- end-policy-map
- </pre>   
-
-<pre> 
+#### Class maps used in ingress H-QoS policies 
+<div class="highlighter-rouge">
+<pre class="highlight">
 class-map match-any edge-hqos-2-in
  match dscp 46
  end-class-map
@@ -1612,8 +1663,24 @@ class-map match-any edge-hqos-6-in
  match dscp 32
  end-class-map
 </pre> 
+</div>
 
-<pre>
+#### Parent ingress QoS policy 
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map hqos-ingress-parent-5g
+ class class-default
+  service-policy hqos-ingress-child-policer
+  police rate 5 gbps
+  !
+ !
+ end-policy-map
+</pre> 
+</div>
+
+#### H-QoS ingress child policies  
+<div class="highlighter-rouge">
+<pre class="highlight">
 policy-map hqos-ingress-child-policer
  class edge-hqos-2-in
   set traffic-class 2
@@ -1637,8 +1704,90 @@ policy-map hqos-ingress-child-policer
   !
  !
  end-policy-map
- </pre> 
+</pre> 
+</div>
 
+#### Egress H-QoS parent policy (Priority levels) 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map hqos-egress-parent-4g-priority
+ class class-default
+  service-policy hqos-egress-child-priority
+  shape average 4 gbps
+ !
+ end-policy-map
+!
+</pre> 
+</div>
+
+#### Egress H-QoS child using priority only 
+In this policy all classes can access 100% of the bandwidth, queues are services based on priority level. The lower priority level has preference.   
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map hqos-egress-child-priority
+ class match-traffic-class-2
+  shape average percent 100
+  priority level 2
+ !
+ class match-traffic-class-3
+  shape average percent 100
+  priority level 3
+ !
+ class match-traffic-class-6
+  priority level 4
+  shape average percent 100
+ !
+ class class-default
+ !
+ end-policy-map
+</pre> 
+</div>
+
+#### Egress H-QoS child using reserved bandwidth
+In this policy each class is reserved a certain percentage of bandwidth. Each class may utilize up to 100% of the bandwidth, if traffic exceeds the guaranteed bandwidth it is eligible for drop.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map hqos-egress-child-bw
+ class match-traffic-class-2
+  bandwidth remaining percent 30
+ !
+ class match-traffic-class-3
+  bandwidth remaining percent 30
+ !
+ class match-traffic-class-6
+  bandwidth remaining percent 30
+ !
+ class class-default
+  bandwidth remaining percent 10
+ !
+ end-policy-map
+</pre> 
+</div>
+
+#### Egress H-QoS child using shaping  
+In this policy each class is shaped to a defined amount and cannot exceed the defined bandwidth. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map hqos-egress-child-shaping
+ class match-traffic-class-2
+  shape average percent 30
+ !
+ class match-traffic-class-3
+  shape average percent 30
+ !
+ class match-traffic-class-6
+  shape average percent 30
+ !
+ class class-default
+  shape average percent 10
+ !
+ end-policy-map
+!
+</pre> 
+</div>
 
 # Services
     
