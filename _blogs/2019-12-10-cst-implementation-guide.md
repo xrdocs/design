@@ -1521,7 +1521,7 @@ router bgp 100
 </pre> 
 </div> 
 
-### Preferred Path configuration – IOS-XR
+### SR-PCE configuration – IOS-XR
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1537,7 +1537,7 @@ segment-routing
 </pre> 
 </div> 
 
-### Preferred Path configuration – IOS-XE
+### SR-PCE configuration – IOS-XE
 
 </pre> 
 </div> 
@@ -1547,6 +1547,98 @@ mpls traffic-eng pcc peer 100.0.1.111 source 100.0.1.51
 mpls traffic-eng pcc report-all
 </pre> 
 </div> 
+
+## QoS Implementation 
+
+### Summary 
+Please see the CST 3.0 HLD for in-depth information on design choices. 
+
+### Core QoS configuration 
+The core QoS policies defined for CST 3.0 utilize priority levels, with no bandwidth guarantees per traffic class. In a production network it is recommended to analyze traffic flows and determine an appropriate BW guarantee per traffic class. The core QoS uses four classes. Note the "video" class 
+
+![](http://xrdocs.io/design/images/cmfi/cmf-qos-core.png)
+
+ Traffic Type | Priority | Default Marking | Comments | 
+| ----------|---------|----------|---------------|-------------| 
+| BGP | Routers, cBR-8 | Highest | CS6 (DSCP 48) | None |  
+| IS-IS | Routers, cBR-8 | Highest | CS6 | IS-IS is single-hop and uses highest priority queue by default | 
+| BFD | Routers | Highest | CS6 | BFD is single-hop and uses highest priority queue by default | 
+| DHCP | RPD | High | CS5 | DHCP COS is set explicitly | 
+| PTP | All | High | DSCP 46 | Default on all routers, cBR-8, and RPD | 
+| DOCSIS MAP/UCD | RPD, cBR-8 DPIC | High | DSCP 46 | | 
+| DOCSIS BWR | RPD, cBR-8 DPIC | High | DSCP 46 | | 
+| GCP | RPD, cBR-8 DPIC | Low | DSCP 0 | 
+| DOCSIS Data | RPD, cBR-8 DPIC | Low | DSCP 0 | 
+| Video | cBR-8 | Medium | DSCP 32 | Video within multicast L2TPv3 tunnel when cBR-8 is video core | 
+
+![](http://xrdocs.io/design/images/cmfi/cmf-qos-core.png)
+
+#### Core class-maps 
+Class maps are used for matching ingress header criteria as well as internal traffic-class and qos-group markings for egress queuing and marking.  
+
+
+
+### H-QoS configuration  
+
+#### Enabling H-QoS on NCS 540 and NCS 5500 
+Enabling H-QoS on the NCS platforms requires the following global command and requires a reload of the device. 
+<pre> 
+hw-module profile qos hqos-enable
+</pre>
+
+#### Example H-QoS policy for 5G services 
+The following H-QoS policy 
+
+<pre>
+policy-map hqos-ingress-parent-5g
+ class class-default
+  service-policy hqos-ingress-child-policer
+  police rate 5 gbps
+  !
+ !
+ end-policy-map
+ </pre>   
+
+<pre> 
+class-map match-any edge-hqos-2-in
+ match dscp 46
+ end-class-map
+!
+class-map match-any edge-hqos-3-in
+ match dscp 40
+ end-class-map
+!
+class-map match-any edge-hqos-6-in
+ match dscp 32
+ end-class-map
+</pre> 
+
+<pre>
+policy-map hqos-ingress-child-policer
+ class edge-hqos-2-in
+  set traffic-class 2
+  police rate percent 10
+  !
+ !
+ class edge-hqos-3-in
+  set traffic-class 3
+  police rate percent 30
+  !
+ !
+ class edge-hqos-6-in
+  set traffic-class 6
+  police rate percent 30
+  !
+ !
+ class class-default
+  set traffic-class 0
+  set dscp 0
+  police rate percent 100 
+  !
+ !
+ end-policy-map
+ </pre> 
+
 
 # Services
     
