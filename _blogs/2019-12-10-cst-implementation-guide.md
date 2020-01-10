@@ -90,9 +90,6 @@ class-map match-any match-traffic-class-6
 </pre> 
 </div>
 
-#### CIN core uplink policy maps 
-These are applied to all core facing interfaces.  
-
 #### RPD and DPIC interface policy maps
 These are applied to all interfaces connected to cBR-8 DPIC and RPD devices. 
 
@@ -238,6 +235,101 @@ policy-map core-egress-exp-marking
 </pre> 
 </div>
 
+### Multicast configuration  
+
+#### Global multicast configuration - Native multicast 
+On CIN aggregation nodes all interfaces should have multicast enabled.  
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+ address-family ipv4
+  interface all enable
+ !
+ address-family ipv6
+  interface all enable  
+   enable
+ !
+</pre> 
+</div>
+
+#### PIM configuration - Native multicast
+PIM should be enabled for IPv4/IPv6 on all core facing interfaces 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router pim
+ address-family ipv4
+  interface Loopback0
+   enable
+  !
+  interface TenGigE0/0/0/6
+   enable
+  !
+  interface TenGigE0/0/0/7
+   enable
+  !
+ !
+</pre> 
+</div>
+
+#### IGMPv3/MLDv2 configuration - Native multicast 
+Interfaces connected to RPD and DPIC interfaces should have IGMPv3 and MLDv2 enabled 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router igmp
+ interface BVI100
+  version 3
+ !
+ interface TenGigE0/0/0/25  
+  version 3
+ !
+!
+router mld
+ interface BVI100
+  version 2
+ interface TenGigE0/0/0/25  
+  version 3
+ !
+ !
+</pre> 
+</div>
+
+#### IGMPv3 / MLDv2 snooping profile configuration (BVI aggregation)
+In order to limit L2 multicast replication for specific groups to only interfaces with interested receivers, IGMP and MLD snooping must be enabled.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+igmp snooping profile igmp-snoop-1
+!
+mld snooping profile mld-snoop-1
+!
+</pre> 
+</div>
+
+### RPD DHCPv4/v6 relay configuration  
+In order for RPDs to self-provision DHCP relay must be enabled on all RPD-facing L3 interfaces. In IOS-XR the DHCP relay configuration is done in its own configuration context without any configuration on the interface itself. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+dhcp ipv4
+ profile rpd-dhcpv4 relay
+  helper-address vrf default 4.4.9.100
+  helper-address vrf default 10.0.2.3
+ !
+ interface BVI100 relay profile rpd-dhcpv4
+ interface TenGigE0/0/0/15 relay profile rpd-dhcpv4
+!
+dhcp ipv6
+ profile rpd-dhcpv6 relay
+  helper-address vrf default 2001:10:0:2::3
+  iana-route-add
+  source-interface BVI100
+ !
+ interface BVI100 relay profile rpd-dhcpv6
+ interface TenGigE0/0/0/15 relay profile rpd-dhcpv6
+!
+</pre> 
+</div>
+
 ### cBR-8 DPIC interface configuration without Link HA
 Without link HA the DPIC port is configured as a normal physical interface   
 <div class="highlighter-rouge">
@@ -256,7 +348,7 @@ interface TenGigE0/0/0/25
 ### cBR-8 DPIC interface configuration with Link HA
 When using Link HA faster convergence is achieved when each DPIC interface is placed into a BVI with a statically assigned MAC address. Each DPIC interface is placed into a separate bridge-domain with a unique BVI L3 interface. The same MAC address should be utilized on all BVI interfaces.  Convergence using BVI interfaces is <50ms, L3 physical interfaces is 1-2s.   
 
-**Even DPIC port configuration** 
+**Even DPIC port CIN interface configuration** 
 <div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigE0/0/0/25
@@ -288,7 +380,7 @@ l2vpn
 </pre> 
 </div>
 
-**Odd DPIC port configuration** 
+**Odd DPIC port CIN interface configuration** 
 <div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigE0/0/0/26
@@ -334,7 +426,55 @@ interface TenGigE0/0/0/25
 </pre> 
 </div>
 
-#### 
+### RPD interface configuration
+
+#### P2P L3 
+
+#### BVI
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ bridge group rpd
+  bridge-domain rpd-1
+   mld snooping profile mld-snoop-1
+   igmp snooping profile igmp-snoop-1
+   interface TenGigE0/0/0/15
+   !
+   interface TenGigE0/0/0/16
+   !
+   interface TenGigE0/0/0/17
+   !
+   routed interface BVI100
+   !
+   !
+  !
+ !
+!
+interface BVI100
+ description ... to downstream RPD hosts  
+ service-policy input rpd-dpic-ingress-classifier
+ ipv4 address 192.168.2.1 255.255.255.0
+ ipv6 address 2001:192:168:2::1/64
+ ipv6 enable
+ !
+</pre> 
+</div>
+
+### RPD/DPIC agg device IS-IS configuration 
+The standard IS-IS configuration should be used on all core interfaces with the addition of specifying all DPIC and RPD connected as IS-IS passive interfaces. Using passive interfaces is preferred over redistributing connected routes. This configuration is needed for reachability between DPIC and RPDs across the CIN network.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS
+ interface TenGigE0/0/0/25
+  passive
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+</pre> 
+</div>
+
+
 
 # Targets
 
