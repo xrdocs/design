@@ -543,12 +543,22 @@ _Figure 13: PCE Path Computation_
 
 5.  Access Router acknowledges
 
+
+## Segment Routing and Unified MPLS (BGP-LU) Co-existence 
+
+### Summary 
+
+In the Converged SDN Transport 3.0 design we introduce validation for the co-existence of services using BGP Labeled Unicast transport for inter-domain forwarding and those using SR-TE. Many networks deployed today have an existing BGP-LU design which may not be easily migrated to SR, so graceful introduction between the two transport methods is required. In the case of a multipoint service such as EVPN ELAN or L3VPN, an endpoint may utilize BGP-LU to one endpoint and SR-TE to another.  
+
+### ABR BGP-LU design  
+In a BGP-LU design each IGP domain or ASBR boundary node will exchange BGP labeled prefixes between domains while resetting the BGP next-hop to its own loopback address. The labeled unicast label will change at each domain boundary across the end to end network. Within each IGP domain, a label distribution protocol is used to supply MPLS connectivity between the domain boundary and interior nodes. In the Converged SDN Transport design, IS-IS with SR-MPLS extensions is used to provide intra-domain MPLS transport. This ensures within each domain BGP-LU prefixes are protected using TI-LFA.  
+
+The BGP-LU design utilized in the Converged SDN Transport validation is based on Cisco's Unified MPLS design used in EPN 4.0. More information can be found at https://www.cisco.com/c/dam/en/us/td/docs/solutions/Enterprise/Mobility/EPN/4_0/EPN_4_Transport_Infrastructure_DIG.pdf 
+
 # Quality of Service and Assurance 
 
 ## Overview 
 Quality of Service is of utmost importance in today's multi-service converged networks. The Converged SDN Transport design has the ability to enforce end to end traffic path SLAs using Segment Routing Traffic Engineering. In addition to satisfying those path constraints, traditional QoS is used to make sure the PHB (Per-Hop Behavior) of each packet is enforced at each node across the converged network.  
-
-##  
 
 ## NCS 540, 560, and 5500 QoS Primer 
 Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: 
@@ -776,64 +786,6 @@ H-QoS enables a provider to set an overall traffic rate across all services, and
 | Best Effort | IPP 0 | EXP 0 | General user traffic | 
 | Network Control | IPP 6 | EXP 6 | Underlay network control plane |  
 
-**** Implementation guide portion  
-Enabling H-QoS on the NCS platforms requires the following global command and requires a reload of the device. 
-<pre> 
-hw-module profile qos hqos-enable
-</pre>
-
-<pre>
-policy-map hqos-ingress-parent-5g
- class class-default
-  service-policy hqos-ingress-child-policer
-  police rate 5 gbps
-  !
- !
- end-policy-map
- </pre>   
-
-<pre> 
-class-map match-any edge-hqos-2-in
- match dscp 46
- end-class-map
-!
-class-map match-any edge-hqos-3-in
- match dscp 40
- end-class-map
-!
-class-map match-any edge-hqos-6-in
- match dscp 32
- end-class-map
-</pre> 
-
-<pre>
-policy-map hqos-ingress-child-policer
- class edge-hqos-2-in
-  set traffic-class 2
-  police rate percent 10
-  !
- !
- class edge-hqos-3-in
-  set traffic-class 3
-  police rate percent 30
-  !
- !
- class edge-hqos-6-in
-  set traffic-class 6
-  police rate percent 30
-  !
- !
- class class-default
-  set traffic-class 0
-  set dscp 0
-  police rate percent 100 
-  !
- !
- end-policy-map
- </pre> 
-
-
-### G.8275.1 end to end timing  
 
 # Cable Converged Interconnect Network (CIN)  
 
@@ -1155,6 +1107,14 @@ the interface is not active, the ZTP process will begin the process on data port
 can be part of an ecosystem of automated device and service provisioning via Cisco NSO.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/ztp-metro-fabric.png)
+
+## Model-Driven Telemetry 
+
+In the 3.0 release the implementation guide includes a table of model-driven telemetry paths applicable to different components within the design.  More information on Cisco model-driven telemetry can be found at https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/telemetry/66x/b-telemetry-cg-ncs5500-66x.html. Additional information about how to consume and visualize telemetry data can be found at https://xrdocs.io/telemetry. We also introduce integration with Cisco Crosswork Health Insights, a telemetry and automated remediation platform, and sensor packs correspondding to Converged SDN Transport components. More information on Crosswork Health Insights can be found at https://www.cisco.com/c/en/us/support/cloud-systems-management/crosswork-health-insights/model.html.  
+
+## NSO Service Automation 
+Sample NSO service provisioning models are included in the Converged SDN Transport design. These cover both end-to-end and hierarchical services.  
+
 
 # Services – Design
     

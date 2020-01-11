@@ -1312,6 +1312,58 @@ router bgp 100
 </pre> 
 </div> 
 
+## BGP-LU co-existence bgp configuration 
+CST 3.0 introduced co-existence between services using BGP-LU and SR endpoints.  
+
+#### Boundary node configuration  
+The following configuration is necessary on all domain boundary nodes. Note the _ibgp policy out enforce-modifications_ command is required to change the next-hop on reflected IBGP routes.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ ibgp policy out enforce-modifications
+ neighbor-group BGP-LU-PE
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 labeled-unicast
+   soft-reconfiguration inbound always 
+   route-reflector-client
+   next-hop-self
+  !
+ !
+!
+ neighbor 100.0.2.53
+  use neighbor-group BGP-LU-PE
+ !
+ neighbor 100.0.2.52
+  use neighbor-group BGP-LU-PE 
+ !
+</pre> 
+</div>
+
+
+#### PE node configuration  
+The following configuration is necessary on all domain PE nodes participating in BGP-LU services.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+neighbor-group BGP-LU-BORDER
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 labeled-unicast
+  !
+ !
+neighbor 100.0.0.3 
+  use neighbor-group BGP-LU-BORDER
+ !
+neighbor 100.0.0.4 
+  use neighbor-group BGP-LU-BORDER
+ !
+</pre> 
+</div>
+
+
+
 ## Area Border Routers (ABRs) IGP topology distribution
 
 Next network diagram: “BGP-LS Topology Distribution” shows how Area
