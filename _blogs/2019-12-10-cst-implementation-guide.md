@@ -1331,13 +1331,28 @@ router bgp 100
    next-hop-self
   !
  !
-!
+ neighbor-group BGP-LU-PE
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 labeled-unicast
+   soft-reconfiguration inbound always 
+   route-reflector-client
+   next-hop-self
+  !
+ !
  neighbor 100.0.2.53
   use neighbor-group BGP-LU-PE
  !
  neighbor 100.0.2.52
   use neighbor-group BGP-LU-PE 
  !
+ neighbor 100.0.0.1 
+  use neighbor-group BGP-LU-BORDER
+ !
+ neighbor 100.0.0.2 
+  use neighbor-group BGP-LU-BORDER
+ ! 
+! 
 </pre> 
 </div>
 
