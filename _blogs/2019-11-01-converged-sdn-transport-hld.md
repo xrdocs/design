@@ -506,13 +506,9 @@ _Figure 12: XR Transport Controller – Components_
 **Segment Routing Path Computation Element (SR-PCE):**
 
   - Runs as a feature on a physicla or virtual IOS-XR node 
-
   - Collects topology from BGP using BGP-LS, ISIS, or OSPF 
-
   - Deploys SR Policies based on client requests  
-
   - Computes Shortest, Disjoint, Low Latency, and Avoidance paths
-
   - North Bound interface with applications via REST API
 
     
