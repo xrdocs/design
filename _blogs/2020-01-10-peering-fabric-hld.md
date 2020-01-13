@@ -460,8 +460,7 @@ across my larger SP network. Some of this traffic may be Best Effort with no con
 ### DDoS Traffic Steering using SR-TE and EPE  
 SR-TE and Egress Peer Engineering can be utilized to direct DDoS traffic to a specific end node and specific DDoS destination interface without the complexities of using VRFs to separate dirty/clean traffic. On ingress, traffic is immediately steered into a SR-TE Policy and no IP lookup is performed between the ingress node and egress DDoS "dirty" interface. In the 3.0 design using IOS-XR 6.6.3 Flowspec redirects traffic to a next-hop IP pointing to a pre-configured "DDoS" SR-Policy. An MPLS xconnect is used map DDoS traffic with a specific EPE label on the egress node to a specific egress interface.   
 
-
-
+![](http://xrdocs.io/design/images/cpf-hld/cpf-ddos-srte.png)
 
 # Low-Level Design
 
@@ -1955,7 +1954,56 @@ from the valid owner. BGPSEC standards are being worked on in the SIDR
 working group. Cisco continues to monitor the standards related to BGPSEC and 
 similar technologies to determine which to implement to best serve our customers.  
 
-## DDoS traffic steering using SR-TE 
+## DDoS traffic steering using SR-TE
+See the overview design section for more details. This shows the configuration of a single SR-TE Policy which will balance traffic to two different egress DDoS "dirty" interfaces. If a BGP session is enabled between the DDoS mitigation appliance and the router, an EPE label can be assigned to the interface. In the absence of EPE, a MPLS static LSP can be created on the core-facing interfaces on the egress node, with the action set to "pop" towards the DDoS mitigation interface. 
+
+### SR-TE Policy configuration
+In this example the node SID is 16441. The EPE or manual xconnect SID for a specific egress interface is 28000 and 28001. The weight of each path is 100, so traffic will be equally balanced across the paths.   
+
+```
+segment-routing
+ traffic-eng
+  segment-list pr1-ddos-1
+   index 1 mpls label 16441
+   index 2 mpls label 28000
+  segment-list pr1-ddos-2
+   index 1 mpls label 16441
+   index 2 mpls label 28001
+  policy pr1_ddos1_epe
+   color 999 end-point ipv4 192.168.14.4
+   candidate-paths
+    preference 100
+     explicit segment-list pr1-ddos-1
+      weight 100  
+     !
+     explicit segment-list pr1-ddos-2
+      weight 100
+```
+
+### Egress node BGP configuration 
+On the egress BGP node, 192.168.14.4, prefixes are set with a specific "DDoS" color to enable the ingress node to steer traffic into the correct SR Policy. An example is given of injecting the 50.50.50.50/32 route with the "DDoS" color of 999.   
+
+```
+extcommunity-set opaque DDOS 
+  999 
+end-set
+!
+route-policy SET-DDOS-COLOR  
+  set extcommunity color DDOS  
+  pass
+end-policy
+!
+router static 
+ address-family ipv4 unicast 
+  50.50.50.50/32 null0
+  ! 
+ ! 
+router bgp 100 
+ address-family ipv4 unicast 
+  network 50.50.50/32 route-policy SET-DDOS-COLOR
+  !
+ !
+```
 
 # Appendix
 
