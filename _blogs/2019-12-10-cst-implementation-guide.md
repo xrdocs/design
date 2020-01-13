@@ -774,8 +774,8 @@ interface TenGigabitEthernet0/0/12
 
 The ABR nodes must provide IP reachability for RRs, SR-PCEs and NSO between 
 ISIS-ACCESS and ISIS-CORE IGP domains. This is done by IP
-prefix redistribution between IS-IS processes. The ABR nodes have static hold-down routes for the 
-block of IP space used in each domain across the network. The distance command is used to ensure redistributed routes are not preferred over local IS-IS routes.  
+prefix redistribution. The ABR nodes have static hold-down routes for the 
+block of IP space used in each domain across the network, those static routes are then redistributed into the domains using the _redistribute static_ command with a route-policy. The distance command is used to ensure redistributed routes are not preferred over local IS-IS routes on the opposite ABR.  The distance command must be applied to both ABR nodes. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
