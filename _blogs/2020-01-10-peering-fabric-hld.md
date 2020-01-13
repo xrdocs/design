@@ -1,9 +1,9 @@
 ---
 published: true
-date: '2019-04-01 15:22 -0600'
+date: '2020-01-15 15:22 -0600'
 title: Peering Fabric Design 
 author: Phil Bedard 
-excerpt: Peering Fabric Design - 2.0 
+excerpt: Peering Fabric Design - 3.0 
 tags:
   - iosxr
   - Design
