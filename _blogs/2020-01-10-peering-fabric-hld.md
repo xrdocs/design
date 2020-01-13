@@ -2005,6 +2005,21 @@ router bgp 100
  !
 ```
 
+### Egress node MPLS static LSP configuration 
+If EPE is not being utilized, the last label in the SR Policy path must be matched to a static LSP. The ingress label on the egress node is used to map traffic to a specific IP next-hop and interface. We will give an example using the label 28000 in the SR Policy path.  The core-facing ingress interface is HundredGigE0/0/0/1, the egress DDoS "dirty" interface is TenGigE0/0/0/1 with a NH address of 192.168.100.1.   
+
+```
+mpls static
+ interface HundredGigE0/0/0/1
+ lsp ddos-interface-1
+  in-label 28000 allocate
+  forward
+   path 1 nexthop TenGigE0/0/0/1 192.168.100.1 out-label pop
+  !
+ !
+!
+```
+
 # Appendix
 
 ## Applicable YANG Models
