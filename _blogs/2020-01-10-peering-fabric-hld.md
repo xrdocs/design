@@ -19,7 +19,7 @@ position: hidden
 | 1.0       | 05/08/2018 | Initial Peering Fabric publication| 
 | 1.5          | 07/31/2018 |BGP-FS, QPPB, ZTP, Internet/Peering in a VRF, NSO Services|
 | 2.0       | 04/01/2019  |IXP Fabric, ODN and SR-PCE for Peering, RPKI |
-| 3.0       | 01/10/2020  |SR-TE steering for DDoS, BGP graceful shutdown | 
+| 3.0       | 01/10/2020  |SR-TE steering for DDoS, BGP graceful shutdown, Radware DDoS validation | 
 
 # Key Drivers
 
