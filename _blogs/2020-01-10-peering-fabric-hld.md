@@ -241,10 +241,18 @@ DefensePro is used for attack detection and traffic scrubbing. DefensePro can be
 #### Radware DefenseFlow
 DefenseFlow can work in a variety of ways as part of a comprehensive DDoS mitigation solution. DefenseFlow performs $anomaly detection by using advanced network behavioral analysis to first baseline a network during peacetime and then evaluate anomalies to determine when an attack is occurring. DefenseFlow can also incorporate third party data such as flow data or other data to enhance its attack detection capability. DefenseFlow also coordinates the mitigation actions of other solution components such as DefensePro and initiates traffic redirection through the use of BGP and BGP Flowspec on edge routers.   
 
+#### Solution description 
+The following steps describe the analysis and mitigation of DDoS attacks using Radware components.  
+
+1. Radware DefenseFlow is deployed to orchestrate DDoS attack detection and mitigation.   
+2. Virtual or appliance version of Radware DefensePro is deployed to a peering fabric location or centralized location.   
+3. PFL nodes use interface monitoring sessions to mirror specific ingress traffic to an interface connected to the DefensePro element. The interface can be local to the PFL node or traffic or SPAN over Pseudowire can be used to tunnel traffic to an interface attached to a centralized DefensePro.   
+
+
 #### Solution diagram 
 ![](http://xrdocs.io/design/images/cpf-hld/cpf-radware.png)
 
-#### Router SPAN (monitor) session configuration 
+#### Router SPAN (monitor) to physical interface configuration 
 The following is used to direct traffic to a DefensePro virtual machine or appliance. 
 
 <div class="highlighter-rouge">
@@ -257,6 +265,28 @@ interface TenGigE0/0/2/1
 !
  interface TenGigE0/0/2/2
  description "SPAN interface to DefensePro" 
+!
+interface TenGigE0/0/2/3
+ description "Transit peer connection" 
+ ipv4 address 182.30.1.1 255.255.255.252 
+ monitor-session radware ethernet port-level  
+!
+end
+</pre> 
+</div>
+
+#### Router SPAN (monitor) to PWE  
+The following is used to direct traffic to a DefensePro virtual machine or appliance at a remote location  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+monitor-session radware ethernet destination pseudowire  
+!
+l2vpn
+ xconnect group defensepro-remote  
+ p2p dp1  
+ monitor-session radware  
+ neighbor ipv4 100.0.0.1 pw-id 1
 !
 interface TenGigE0/0/2/3
  description "Transit peer connection" 
@@ -426,6 +456,11 @@ into the Policy once the SR-TE Policy is instantiated.
 
 An applicable example is the use case where I have several types of peers on the same device sending traffic to destinations 
 across my larger SP network. Some of this traffic may be Best Effort with no constraints, other traffic from cloud partners may be considered low-latency traffic, and traffic from a services partner may have additional constraints such as maintaining a disjoint path from the same peer on another router. Traffic in the reverse direction egressing a peer from a SP location can also utilize the same mechanisms to apply constraints to egress traffic. 
+
+### DDoS Traffic Steering using SR-TE and EPE  
+SR-TE and Egress Peer Engineering can be utilized to direct DDoS traffic to a specific end node and specific DDoS destination interface without the complexities of using VRFs to separate dirty/clean traffic. On ingress, traffic is immediately steered into a SR-TE Policy and no IP lookup is performed between the ingress node and egress DDoS "dirty" interface. In the 3.0 design using IOS-XR 6.6.3 Flowspec redirects traffic to a next-hop IP pointing to a pre-configured "DDoS" SR-Policy. An MPLS xconnect is used map DDoS traffic with a specific EPE label on the egress node to a specific egress interface.   
+
+
 
 
 # Low-Level Design
@@ -1920,6 +1955,7 @@ from the valid owner. BGPSEC standards are being worked on in the SIDR
 working group. Cisco continues to monitor the standards related to BGPSEC and 
 similar technologies to determine which to implement to best serve our customers.  
 
+## DDoS traffic steering using SR-TE 
 
 # Appendix
 
