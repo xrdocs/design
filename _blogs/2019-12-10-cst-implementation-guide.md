@@ -354,6 +354,17 @@ interface TenGigE0/0/0/25
 ### RPD interface configuration
 
 #### P2P L3 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TeGigE0/0/0/15  
+ description To RPD-1  
+ service-policy input rpd-dpic-ingress-classifier
+ ipv4 address 192.168.2.0 255.255.255.254 
+ ipv6 address 2001:192:168:2::0/127 
+ ipv6 enable
+ !
+</pre> 
+</div>
 
 #### BVI
 <div class="highlighter-rouge">
