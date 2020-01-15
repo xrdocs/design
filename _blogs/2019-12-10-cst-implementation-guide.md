@@ -16,7 +16,6 @@ tags:
 
 {% include toc %}
 
-
 # Targets
 
   - Hardware:

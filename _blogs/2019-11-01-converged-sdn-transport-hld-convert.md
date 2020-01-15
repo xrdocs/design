@@ -1583,7 +1583,7 @@ _Figure 44: Transport and Services Data-Plane_
 Figure 45 shows a consolidated view of the Transport and Services
 Control-Plane.
 
-![](http://xrdocs.io/design/images/cmf-hld/image46.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-topology.png)
 
 _Figure 45: Transport and Services Control-Plane_
 

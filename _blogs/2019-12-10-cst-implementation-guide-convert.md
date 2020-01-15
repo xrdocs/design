@@ -534,7 +534,7 @@ ptp
   transport ipv4
   port state master-only
   sync frequency 16
-  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
+  clock operation one-step <-- Note the NCS series should be configured with one-step, ASR9000 with two-step 
   announce timeout 10
   announce interval 1
   unicast-grant invalid-request deny
@@ -572,7 +572,7 @@ ptp
   transport ipv4
   port state slave-only 
   sync frequency 16
-  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
+  clock operation one-step <-- Note the NCS series should be configured with one-step, ASR9000 with two-step
   announce timeout 10
   announce interval 1
   unicast-grant invalid-request deny
@@ -591,7 +591,7 @@ ptp
   transport ipv6
   port state slave-only 
   sync frequency 16
-  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
+  clock operation one-step <-- Note the NCS series should be configured with one-step, ASR9000 with two-step
   announce timeout 10
   announce interval 1
   unicast-grant invalid-request deny
@@ -986,19 +986,20 @@ _Figure 5: BGP-LS Topology Distribution_
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-
 router isis ACCESS
  **distribute link-state instance-id 101**
  net 49.0001.0101.0000.0001.00
  address-family ipv4 unicast
   mpls traffic-eng router-id Loopback0
-
+  !
+! 
 router isis CORE
  **distribute link-state instance-id 100**
  net 49.0001.0100.0000.0001.00
  address-family ipv4 unicast
   mpls traffic-eng router-id Loopback0
-
+  !
+!  
 router bgp 100
  **address-family link-state link-state**
  !
