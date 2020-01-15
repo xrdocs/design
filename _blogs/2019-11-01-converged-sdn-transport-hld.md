@@ -699,7 +699,7 @@ cable access, mobile, and business services over the same converged network infr
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-multi-service-network.png) 
 
 
-# 5G Mobile Networks 
+# 5G Mobile Networks  
 
 ## Summary and 5G Service Types  
 The Converged SDN Transport design introduces initial support for 5G networks and 5G services. There are a variety of new service use cases being defined by 3GPP for use on 5G networks, illustrated by the figure below. Networks must now be built to support the stringent SLA requirements of Ultra-Reliable Low-Latency services while also being able to cope with the massive bandwidth introduced by Enhanced Mobile Broadband services. The initial support for 5G in the Converged SDN Transport design focuses on the backhaul and midhaul portions of the network utilizing end to end Segment Routing. The design introduces no new service types, the existing scalable L3VPN and EVPN based services using BGP are sufficient for carrying 5G control-plane and user-plane traffic.   
@@ -1086,8 +1086,6 @@ element converting unicast LDP FECs to Segment Routing prefix-SIDs for advertise
 throughout the Segment Routing domain. Each separate IGP domain requires a pair of 
 SRMS nodes until full migratino to SR is complete.   
 
-
-
 # Automation 
 
 ## Zero Touch Provisioning
@@ -1108,9 +1106,68 @@ can be part of an ecosystem of automated device and service provisioning via Cis
 
 In the 3.0 release the implementation guide includes a table of model-driven telemetry paths applicable to different components within the design.  More information on Cisco model-driven telemetry can be found at https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/telemetry/66x/b-telemetry-cg-ncs5500-66x.html. Additional information about how to consume and visualize telemetry data can be found at https://xrdocs.io/telemetry. We also introduce integration with Cisco Crosswork Health Insights, a telemetry and automated remediation platform, and sensor packs correspondding to Converged SDN Transport components. More information on Crosswork Health Insights can be found at https://www.cisco.com/c/en/us/support/cloud-systems-management/crosswork-health-insights/model.html.  
 
-## NSO Service Automation 
-Sample NSO service provisioning models are included in the Converged SDN Transport design. These cover both end-to-end and hierarchical services.  
+## Network Services Orchestrator (NSO)
 
+The NSO is a management and orchestration (MANO) solution for network
+services and Network Functions Virtualization (NFV). The NSO includes
+capabilities for describing, deploying, configuring, and managing
+network services and VNFs, as well as configuring the multi-vendor
+physical underlay network elements with the help of standard open APIs
+such as NETCONF/YANG or a vendor-specific CLI using Network Element
+Drivers (NED).
+
+In the  Converged SDN Transport design, the NSO is used for Services
+Management, Service Provisioning, and Service Orchestration.
+
+**The NSO provides several options for service designing as shown in**
+**Figure 32**
+
+  - Service model with service template
+
+  - Service model with mapping logic
+
+  - Service model with mapping logic and service
+templates
+
+![](http://xrdocs.io/design/images/cmf-hld/image33.png)
+
+_Figure 32: NSO – Components_
+
+A service model is a way of defining a service in a template format.
+Once the service is defined, the service model accepts user inputs for
+the actual provisioning of the service. For example, a E-Line service
+requires two endpoints and a unique virtual circuit ID to enable the
+service. The end devices, attachment circuit UNI interfaces, and a
+circuit ID are required parameters that should be provided by the user
+to bring up the E-Line service. The service model uses the YANG modeling
+language (RFC 6020) inside NSO to define a service.
+
+Once the service characteristics are defined based on the requirements,
+the next step is to build the mapping logic in NSO to extract the user
+inputs. The mapping logic can be implemented using Python or Java. The
+purpose of the mapping logic is to transform the service models to
+device models. It includes mechanisms of how service related operations
+are reflected on the actual devices. This involves mapping a service
+operation to available operations on the devices.
+
+Finally, service templates need to be created in XML for each device
+type. In NSO, the service templates are required to translate the
+service logic into final device configuration through CLI NED. The NSO
+can also directly use the device YANG models using NETCONF for device
+configuration. These service templates enable NSO to operate in a
+multi-vendor environment.
+
+### Converged SDN Transport Supported Service Models
+
+Converged SDN Transport 1.5 and later supports the following NSO service models for provisioning both 
+hierarchical and flat services across the fabric. All NSO service modules in 1.5 
+utilize the IOS-XR and IOS-XE CLI NEDs for configuration. 
+
+![](http://xrdocs.io/design/images/cmf-hld/automation-flat-1_5.png)
+
+_Figure 33: Automation – Flat Service Models_
+
+![](http://xrdocs.io/design/images/cmf-hld/automation-hierarchy-1_5.png)
 
 # Services – Design
     
@@ -1372,70 +1429,8 @@ The described solution is very scalable and can be easily extended to
 scale to higher numbers of BGP sessions by adding another pair of S-RRs
 in the Access Domain.
 
-## Network Services Orchestrator (NSO)
-
-The NSO is a management and orchestration (MANO) solution for network
-services and Network Functions Virtualization (NFV). The NSO includes
-capabilities for describing, deploying, configuring, and managing
-network services and VNFs, as well as configuring the multi-vendor
-physical underlay network elements with the help of standard open APIs
-such as NETCONF/YANG or a vendor-specific CLI using Network Element
-Drivers (NED).
-
-In the  Converged SDN Transport design, the NSO is used for Services
-Management, Service Provisioning, and Service Orchestration.
-
-**The NSO provides several options for service designing as shown in**
-**Figure 32**
-
-  - Service model with service template
-
-  - Service model with mapping logic
-
-  - Service model with mapping logic and service
-templates
-
-![](http://xrdocs.io/design/images/cmf-hld/image33.png)
-
-_Figure 32: NSO – Components_
-
-A service model is a way of defining a service in a template format.
-Once the service is defined, the service model accepts user inputs for
-the actual provisioning of the service. For example, a E-Line service
-requires two endpoints and a unique virtual circuit ID to enable the
-service. The end devices, attachment circuit UNI interfaces, and a
-circuit ID are required parameters that should be provided by the user
-to bring up the E-Line service. The service model uses the YANG modeling
-language (RFC 6020) inside NSO to define a service.
-
-Once the service characteristics are defined based on the requirements,
-the next step is to build the mapping logic in NSO to extract the user
-inputs. The mapping logic can be implemented using Python or Java. The
-purpose of the mapping logic is to transform the service models to
-device models. It includes mechanisms of how service related operations
-are reflected on the actual devices. This involves mapping a service
-operation to available operations on the devices.
-
-Finally, service templates need to be created in XML for each device
-type. In NSO, the service templates are required to translate the
-service logic into final device configuration through CLI NED. The NSO
-can also directly use the device YANG models using NETCONF for device
-configuration. These service templates enable NSO to operate in a
-multi-vendor environment.
-
-### Converged SDN Transport Supported Service Models
-
-Converged SDN Transport 1.5 supports the following NSO service models for provisioning both 
-hierarchical and flat services across the fabric. All NSO service modules in 1.5 
-utilize the IOS-XR and IOS-XE CLI NEDs for configuration. 
-
-![](http://xrdocs.io/design/images/cmf-hld/automation-flat-1_5.png)
-
-_Figure 33: Automation – Flat Service Models_
-
-![](http://xrdocs.io/design/images/cmf-hld/automation-hierarchy-1_5.png)
-
-_Figure 34: 
+## Ethernet Services OAM using Ethernet CFM 
+Ethernet CFM using 802.1ag/Y.1731 has been added in the CST 3.0 design. Ethernet CFM provides end-to-end continuity monitoring and alerting on a per-service basis. Additional details about Ethernet CFM can be found in the implementation guide.   
 
 # Transport and Services Integration
 
