@@ -421,19 +421,21 @@ router isis ACCESS
 
 # Testbed Overview
 
-[](http://xrdocs.io/design/images/cmfi/image1.png)
+# Testbed Overview
+
+[](https://xrdocs.io/design/images/cmfi/image1.png)
 
 _Figure 1: Compass Converged SDN Transport High Level Topology_
 
-![](http://xrdocs.io/design/images/cmfi/cst-topology.png)
+![](https://xrdocs.io/design/images/cmfi/cst-topology.png)
 
 _Figure 2: Testbed Physical Topology_
 
-![](http://xrdocs.io/design/images/cmfi/image3.png)
+![](https://xrdocs.io/design/images/cmfi/image3.png)
 
 _Figure 3: Testbed Route-Reflector and SR-PCE physical connectivity_
 
-![](http://xrdocs.io/design/images/cmfi/image4.png)
+![](https://xrdocs.io/design/images/cmfi/image4.png)
 
 _Figure 4: Testbed IGP Domains_
 
