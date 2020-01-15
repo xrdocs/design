@@ -1597,7 +1597,7 @@ validation.
 _Figure 46: Testbed_
 
 Figure 47 shows the detailed topology of the testbed used for 
-validation.
+CIN and Remote PHY validation.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-rphy-validation-topology.png)
 

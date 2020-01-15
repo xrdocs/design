@@ -1595,10 +1595,11 @@ _Figure 43: Services Route-Reflectors (S-RRs)_
 Network Services Orchestrator (NSO) is used for service provisioning.
 Refer to Section: "Network Services Orchestrator (NSO)".
 
+
 ## Transport and Services Integration 
 
 Transport and Services integration is described in Section: "Transport and Services Integration" of this document. Figure 44 shows an example of End-To-End LSP and services
-integration in Phase 1.
+integration.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/image45.png)
 
@@ -1611,12 +1612,19 @@ Control-Plane.
 
 _Figure 45: Transport and Services Control-Plane_
 
-Figure 46 shows the physical topology of the testbed used for Phase 1
+Figure 46 shows the detailed topology of the testbed used for 
 validation.
 
-![](http://xrdocs.io/design/images/cmf-hld/image47.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-topology.png)
 
-_Figure 46: Testbed – Phase 1_
+_Figure 46: Testbed_
+
+Figure 47 shows the detailed topology of the testbed used for 
+CIN and Remote PHY validation.
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-rphy-validation-topology.png)
+
+_Figure 47: Remote PHY/CIN Validation Testbed_
 
 # The Converged SDN Transport Design - Summary
 
