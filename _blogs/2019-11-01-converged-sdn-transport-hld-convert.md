@@ -1,22 +1,3 @@
----
-published: true 
-date: '2019-11-01 11:00-0400'
-title: Converged SDN Transport High Level Design v3.0 
-excerpt: 
-  Cisco Converged SDN Transport (CMF) design introduces an SDN-ready architecture which
-  evolves traditional Metro network  design towards an SDN enabled, programmable
-  network capable of delivering all services. 3.0 Update
-author: Phil Bedard 
-tags:
-  - iosxr
-  - Metro
-  - Design
-  - 5G 
-  - Cable
-  - CIN
-position: hidden 
----
-
 # Revision History
 
 | Version          |Date                    |Comments| 
@@ -25,8 +6,6 @@ position: hidden
 | 1.5          | 09/24/2018 |NCS540 Access, ZTP, NSO Services|
 | 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55A2-MOD, IPv4/IPv6/mLDP Multicast, LDP to SR Migration |  
 | 3.0        | 1/1/2019 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
-
-
 
 # Value Proposition
 
@@ -569,8 +548,7 @@ The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR pla
 
 The <code>priority-level</code> command used in an egress QoS policy specifies the egress transmit priority of the traffic vs. other priority traffic. Priority levels can be configured as 1-7 with 1 being the highest priority.  Priority level 0 is reserved for best-effort traffic.  
 
-Please note, multicast traffic does not follow the same constructs as unicast traffic for prioritization. All multicast traffic assigned to Traffic Classes 1-4 are treated as Low Priority and traffic assigned to 5-6 treated as high priority.     
-{: .notice--warning}
+**Note:** Multicast traffic does not follow the same constructs as unicast traffic for prioritization. All multicast traffic assigned to Traffic Classes 1-4 are treated as Low Priority and traffic assigned to 5-6 treated as high priority.     
 
 ## Hierarchical Edge QoS 
 Hierarchical QoS enables a provider to set an overall traffic rate across all services, and then configure parameters per-service via a child QoS policy where the percentages of guaranteed bandwidth are derived from the parent rate
@@ -764,8 +742,7 @@ segment-routing
    metric 10
 </pre>
 
-The link-delay metrics are quantified in the unit of microseconds.  On most networks this can be quite large and may be out of range from normal IGP metrics, so care must be taken to ensure proper compatibility when mixing metric types. The largest possible IS-IS metric is 16777214 which is equivalent to 16.77 seconds.    
-{: .notice--warning}
+**Note:** The link-delay metrics are quantified in the unit of microseconds.  On most networks this can be quite large and may be out of range from normal IGP metrics, so care must be taken to ensure proper compatibility when mixing metric types. The largest possible IS-IS metric is 16777214 which is equivalent to 16.77 seconds.    
 
 ### End to end network QoS with H-QoS on Access PE 
 QoS is of utmost importance for ensuring the mobile control plane and critical user plane traffic meets SLA requirements. Overall network QoS is covered in the QoS section in this document, this section will focus on basic Hierarchical QoS to support 5G services. 
@@ -937,8 +914,7 @@ The Converged SDN Transport design supports both P2P L3 interfaces for RPD and D
 
 It is recommended to configure the RPD leaf using bridge-domains and BVI interfaces. This eases configuration on the leaf device as well as the DHCP configuration used for RPD provisioning. 
 
-It is recommended to connect each cBR-8 DPIC interface using P2P L3 interfaces, using a /31 for IPv4 and /127 for IPv6 addresses.  The following shows the two potential deployment options.  
-{: .notice--success}
+**Note:** It is recommended to connect each cBR-8 DPIC interface using P2P L3 interfaces, using a /31 for IPv4 and /127 for IPv6 addresses.  The following shows the two potential deployment options.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-bvi-p2p.png)
 

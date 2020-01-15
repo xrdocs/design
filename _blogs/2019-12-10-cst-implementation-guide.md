@@ -16,399 +16,6 @@ tags:
 
 {% include toc %}
 
-## Remote PHY CIN Implementation 
-
-### Summary 
-Detail can be found in the CST 3.0 high-level design guide for design decisions, this section will provide sample configurations. 
-
-### Sample QoS Policies 
-The following are usable policies but policies should be tailored for specific network deployments.  
-
-#### Class maps 
-Class maps are used within a policy map to match packet criteria for further treatment 
-<div class="highlighter-rouge">
-<pre class="highlight">
-class-map match-any match-ef-exp5
- description High priority, EF
- match dscp 46
- match mpls experimental topmost 5
- end-class-map
-!
-class-map match-any match-cs5-exp4
- description Second highest priority
- match dscp 40
- match mpls experimental topmost 4
- end-class-map
-!
-class-map match-any match-video-cs4-exp2
- description Video
- match dscp 32
- match mpls experimental topmost 2
- end-class-map
-!
-class-map match-any match-cs6-exp6
- description Highest priority control-plane traffic
- match dscp cs6
- match mpls experimental topmost 6
- end-class-map
-!
-class-map match-any match-qos-group-1
- match qos-group 1
- end-class-map
-!
-class-map match-any match-qos-group-2
- match qos-group 2
- end-class-map
-!
-class-map match-any match-qos-group-3
- match qos-group 3
- end-class-map
-!
-class-map match-any match-qos-group-6
- match qos-group 3
- end-class-map
-!
-class-map match-any match-traffic-class-1
- description "Match highest priority traffic-class 1"
- match traffic-class 1
- end-class-map
-!
-class-map match-any match-traffic-class-2
- description "Match high priority traffic-class 2"
- match traffic-class 2
- end-class-map
-!
-class-map match-any match-traffic-class-3
- description "Match medium traffic-class 3"
- match traffic-class 3
- end-class-map
-!
-class-map match-any match-traffic-class-6
- description "Match video traffic-class 6"
- match traffic-class 6
- end-class-map
-</pre> 
-</div>
-
-#### RPD and DPIC interface policy maps
-These are applied to all interfaces connected to cBR-8 DPIC and RPD devices. 
-
-Egress queueing maps are not supported on L3 BVI interfaces 
-{: .notice--warning}
-
-**RPD/DPIC ingress classifier policy map** 
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-policy-map rpd-dpic-ingress-classifier
- class match-cs6-exp6
-  set traffic-class 1
-  set qos-group 1
- !
- class match-ef-exp5
-  set traffic-class 2
-  set qos-group 2
- !
- class match-cs5-exp4
-  set traffic-class 3
-  set qos-group 3
- !
- class match-video-cs4-exp2
-  set traffic-class 6
-  set qos-group 6
- !
- class class-default
-  set traffic-class 0
-  set dscp 0
-  set qos-group 0
- !
- end-policy-map
-!
-</pre> 
-</div>
-
-**RPD/DPIC egress queueing policy map** 
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-policy-map rpd-dpic-egress-queuing
- class match-traffic-class-1
-  priority level 1
-  queue-limit 500 us
- !
- class match-traffic-class-2
-  priority level 2
-  queue-limit 100 us
- !
- class match-traffic-class-3
-  priority level 3
-  queue-limit 500 us
- !
- class match-traffic-class-6
-  priority level 6
-  queue-limit 500 us
- !
- class class-default
-  queue-limit 250 ms
- !
- end-policy-map
-!
-</pre> 
-</div>
-
-#### Core QoS 
-Please see the general QoS section for core-facing QoS configuration  
-
-
-### Multicast configuration  
-
-#### Global multicast configuration - Native multicast 
-On CIN aggregation nodes all interfaces should have multicast enabled.  
-<div class="highlighter-rouge">
-<pre class="highlight">
-multicast-routing
- address-family ipv4
-  interface all enable
- !
- address-family ipv6
-  interface all enable  
-   enable
- !
-</pre> 
-</div>
-
-#### PIM configuration - Native multicast
-PIM should be enabled for IPv4/IPv6 on all core facing interfaces 
-<div class="highlighter-rouge">
-<pre class="highlight">
-router pim
- address-family ipv4
-  interface Loopback0
-   enable
-  !
-  interface TenGigE0/0/0/6
-   enable
-  !
-  interface TenGigE0/0/0/7
-   enable
-  !
- !
-</pre> 
-</div>
-
-#### IGMPv3/MLDv2 configuration - Native multicast 
-Interfaces connected to RPD and DPIC interfaces should have IGMPv3 and MLDv2 enabled 
-<div class="highlighter-rouge">
-<pre class="highlight">
-router igmp
- interface BVI100
-  version 3
- !
- interface TenGigE0/0/0/25  
-  version 3
- !
-!
-router mld
- interface BVI100
-  version 2
- interface TenGigE0/0/0/25  
-  version 3
- !
- !
-</pre> 
-</div>
-
-#### IGMPv3 / MLDv2 snooping profile configuration (BVI aggregation)
-In order to limit L2 multicast replication for specific groups to only interfaces with interested receivers, IGMP and MLD snooping must be enabled.  
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-igmp snooping profile igmp-snoop-1
-!
-mld snooping profile mld-snoop-1
-!
-</pre> 
-</div>
-
-### RPD DHCPv4/v6 relay configuration  
-In order for RPDs to self-provision DHCP relay must be enabled on all RPD-facing L3 interfaces. In IOS-XR the DHCP relay configuration is done in its own configuration context without any configuration on the interface itself. 
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-dhcp ipv4
- profile rpd-dhcpv4 relay
-  helper-address vrf default 4.4.9.100
-  helper-address vrf default 10.0.2.3
- !
- interface BVI100 relay profile rpd-dhcpv4
- interface TenGigE0/0/0/15 relay profile rpd-dhcpv4
-!
-dhcp ipv6
- profile rpd-dhcpv6 relay
-  helper-address vrf default 2001:10:0:2::3
-  iana-route-add
-  source-interface BVI100
- !
- interface BVI100 relay profile rpd-dhcpv6
- interface TenGigE0/0/0/15 relay profile rpd-dhcpv6
-!
-</pre> 
-</div>
-
-### cBR-8 DPIC interface configuration without Link HA
-Without link HA the DPIC port is configured as a normal physical interface   
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface TenGigE0/0/0/25
- description .. Connected to cbr8 port te1/1/0
- service-policy input rpd-dpic-ingress-classifier
- service-policy output rpd-dpic-egress-queuing
- ipv4 address 4.4.9.101 255.255.255.0
- ipv6 address 2001:4:4:9::101/64
- carrier-delay up 0 down 0
- load-interval 30
-</pre> 
-</div>
-
-### cBR-8 DPIC interface configuration with Link HA
-When using Link HA faster convergence is achieved when each DPIC interface is placed into a BVI with a statically assigned MAC address. Each DPIC interface is placed into a separate bridge-domain with a unique BVI L3 interface. The same MAC address should be utilized on all BVI interfaces.  Convergence using BVI interfaces is <50ms, L3 physical interfaces is 1-2s.   
-
-**Even DPIC port CIN interface configuration** 
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface TenGigE0/0/0/25
- description "Connected to cBR8 port Te1/1/0" 
- lldp
- !
- carrier-delay up 0 down 0
- load-interval 30
- l2transport
- !
-!
-l2vpn
- bridge group cbr8
-  bridge-domain port-ha-0
-   interface TenGigE0/0/0/25
-   !
-   routed interface BVI500
-   !
-  !
- !
- interface BVI500
- description "BVI for cBR8 port HA, requires static MAC"
- service-policy input rpd-dpic-ingress-classifier
- ipv4 address 4.4.9.101 255.255.255.0
- ipv6 address 2001:4:4:9::101/64
- mac-address 8a.9698.64
- load-interval 30
-!
-</pre> 
-</div>
-
-**Odd DPIC port CIN interface configuration** 
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface TenGigE0/0/0/26
- description "Connected to cBR8 port Te1/1/1" 
- lldp
- !
- carrier-delay up 0 down 0
- load-interval 30
- l2transport
- !
-!
-l2vpn
- bridge group cbr8
-  bridge-domain port-ha-1 
-   interface TenGigE0/0/0/26
-   !
-   routed interface BVI501
-   !
-  !
- !
- interface BVI501
- description "BVI for cBR8 port HA, requires static MAC"
- service-policy input rpd-dpic-ingress-classifier
- ipv4 address 4.4.9.101 255.255.255.0
- ipv6 address 2001:4:4:9::101/64
- mac-address 8a.9698.64
- load-interval 30
-!
-</pre> 
-</div>
-
-### cBR-8 Digital PIC Interface Configuration  
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface TenGigE0/0/0/25
- description .. Connected to cbr8 port te1/1/0
- service-policy input rpd-dpic-ingress-classifier
- service-policy output rpd-dpic-egress-queuing
- ipv4 address 4.4.9.101 255.255.255.0
- ipv6 address 2001:4:4:9::101/64
- carrier-delay up 0 down 0
- load-interval 30
-</pre> 
-</div>
-
-### RPD interface configuration
-
-#### P2P L3 
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface TeGigE0/0/0/15  
- description To RPD-1  
- service-policy input rpd-dpic-ingress-classifier
- ipv4 address 192.168.2.0 255.255.255.254 
- ipv6 address 2001:192:168:2::0/127 
- ipv6 enable
- !
-</pre> 
-</div>
-
-#### BVI
-<div class="highlighter-rouge">
-<pre class="highlight">
-l2vpn
- bridge group rpd
-  bridge-domain rpd-1
-   mld snooping profile mld-snoop-1
-   igmp snooping profile igmp-snoop-1
-   interface TenGigE0/0/0/15
-   !
-   interface TenGigE0/0/0/16
-   !
-   interface TenGigE0/0/0/17
-   !
-   routed interface BVI100
-   !
-   !
-  !
- !
-!
-interface BVI100
- description ... to downstream RPD hosts  
- service-policy input rpd-dpic-ingress-classifier
- ipv4 address 192.168.2.1 255.255.255.0
- ipv6 address 2001:192:168:2::1/64
- ipv6 enable
- !
-</pre> 
-</div>
-
-### RPD/DPIC agg device IS-IS configuration 
-The standard IS-IS configuration should be used on all core interfaces with the addition of specifying all DPIC and RPD connected as IS-IS passive interfaces. Using passive interfaces is preferred over redistributing connected routes. This configuration is needed for reachability between DPIC and RPDs across the CIN network.   
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-router isis ACCESS
- interface TenGigE0/0/0/25
-  passive
-  address-family ipv4 unicast
-  !
-  address-family ipv6 unicast
-</pre> 
-</div>
 
 # Targets
 
@@ -3108,3 +2715,397 @@ router bgp 100
 
 _Figure 17: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
 with Anycast IRB Data Plane_
+
+## Remote PHY CIN Implementation 
+
+### Summary 
+Detail can be found in the CST 3.0 high-level design guide for design decisions, this section will provide sample configurations. 
+
+### Sample QoS Policies 
+The following are usable policies but policies should be tailored for specific network deployments.  
+
+#### Class maps 
+Class maps are used within a policy map to match packet criteria for further treatment 
+<div class="highlighter-rouge">
+<pre class="highlight">
+class-map match-any match-ef-exp5
+ description High priority, EF
+ match dscp 46
+ match mpls experimental topmost 5
+ end-class-map
+!
+class-map match-any match-cs5-exp4
+ description Second highest priority
+ match dscp 40
+ match mpls experimental topmost 4
+ end-class-map
+!
+class-map match-any match-video-cs4-exp2
+ description Video
+ match dscp 32
+ match mpls experimental topmost 2
+ end-class-map
+!
+class-map match-any match-cs6-exp6
+ description Highest priority control-plane traffic
+ match dscp cs6
+ match mpls experimental topmost 6
+ end-class-map
+!
+class-map match-any match-qos-group-1
+ match qos-group 1
+ end-class-map
+!
+class-map match-any match-qos-group-2
+ match qos-group 2
+ end-class-map
+!
+class-map match-any match-qos-group-3
+ match qos-group 3
+ end-class-map
+!
+class-map match-any match-qos-group-6
+ match qos-group 3
+ end-class-map
+!
+class-map match-any match-traffic-class-1
+ description "Match highest priority traffic-class 1"
+ match traffic-class 1
+ end-class-map
+!
+class-map match-any match-traffic-class-2
+ description "Match high priority traffic-class 2"
+ match traffic-class 2
+ end-class-map
+!
+class-map match-any match-traffic-class-3
+ description "Match medium traffic-class 3"
+ match traffic-class 3
+ end-class-map
+!
+class-map match-any match-traffic-class-6
+ description "Match video traffic-class 6"
+ match traffic-class 6
+ end-class-map
+</pre> 
+</div>
+
+#### RPD and DPIC interface policy maps
+These are applied to all interfaces connected to cBR-8 DPIC and RPD devices. 
+
+Egress queueing maps are not supported on L3 BVI interfaces 
+{: .notice--warning}
+
+**RPD/DPIC ingress classifier policy map** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map rpd-dpic-ingress-classifier
+ class match-cs6-exp6
+  set traffic-class 1
+  set qos-group 1
+ !
+ class match-ef-exp5
+  set traffic-class 2
+  set qos-group 2
+ !
+ class match-cs5-exp4
+  set traffic-class 3
+  set qos-group 3
+ !
+ class match-video-cs4-exp2
+  set traffic-class 6
+  set qos-group 6
+ !
+ class class-default
+  set traffic-class 0
+  set dscp 0
+  set qos-group 0
+ !
+ end-policy-map
+!
+</pre> 
+</div>
+
+**RPD/DPIC egress queueing policy map** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map rpd-dpic-egress-queuing
+ class match-traffic-class-1
+  priority level 1
+  queue-limit 500 us
+ !
+ class match-traffic-class-2
+  priority level 2
+  queue-limit 100 us
+ !
+ class match-traffic-class-3
+  priority level 3
+  queue-limit 500 us
+ !
+ class match-traffic-class-6
+  priority level 6
+  queue-limit 500 us
+ !
+ class class-default
+  queue-limit 250 ms
+ !
+ end-policy-map
+!
+</pre> 
+</div>
+
+#### Core QoS 
+Please see the general QoS section for core-facing QoS configuration  
+
+
+### Multicast configuration  
+
+#### Global multicast configuration - Native multicast 
+On CIN aggregation nodes all interfaces should have multicast enabled.  
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+ address-family ipv4
+  interface all enable
+ !
+ address-family ipv6
+  interface all enable  
+   enable
+ !
+</pre> 
+</div>
+
+#### PIM configuration - Native multicast
+PIM should be enabled for IPv4/IPv6 on all core facing interfaces 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router pim
+ address-family ipv4
+  interface Loopback0
+   enable
+  !
+  interface TenGigE0/0/0/6
+   enable
+  !
+  interface TenGigE0/0/0/7
+   enable
+  !
+ !
+</pre> 
+</div>
+
+#### IGMPv3/MLDv2 configuration - Native multicast 
+Interfaces connected to RPD and DPIC interfaces should have IGMPv3 and MLDv2 enabled 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router igmp
+ interface BVI100
+  version 3
+ !
+ interface TenGigE0/0/0/25  
+  version 3
+ !
+!
+router mld
+ interface BVI100
+  version 2
+ interface TenGigE0/0/0/25  
+  version 3
+ !
+ !
+</pre> 
+</div>
+
+#### IGMPv3 / MLDv2 snooping profile configuration (BVI aggregation)
+In order to limit L2 multicast replication for specific groups to only interfaces with interested receivers, IGMP and MLD snooping must be enabled.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+igmp snooping profile igmp-snoop-1
+!
+mld snooping profile mld-snoop-1
+!
+</pre> 
+</div>
+
+### RPD DHCPv4/v6 relay configuration  
+In order for RPDs to self-provision DHCP relay must be enabled on all RPD-facing L3 interfaces. In IOS-XR the DHCP relay configuration is done in its own configuration context without any configuration on the interface itself. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+dhcp ipv4
+ profile rpd-dhcpv4 relay
+  helper-address vrf default 4.4.9.100
+  helper-address vrf default 10.0.2.3
+ !
+ interface BVI100 relay profile rpd-dhcpv4
+ interface TenGigE0/0/0/15 relay profile rpd-dhcpv4
+!
+dhcp ipv6
+ profile rpd-dhcpv6 relay
+  helper-address vrf default 2001:10:0:2::3
+  iana-route-add
+  source-interface BVI100
+ !
+ interface BVI100 relay profile rpd-dhcpv6
+ interface TenGigE0/0/0/15 relay profile rpd-dhcpv6
+!
+</pre> 
+</div>
+
+### cBR-8 DPIC interface configuration without Link HA
+Without link HA the DPIC port is configured as a normal physical interface   
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/25
+ description .. Connected to cbr8 port te1/1/0
+ service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing
+ ipv4 address 4.4.9.101 255.255.255.0
+ ipv6 address 2001:4:4:9::101/64
+ carrier-delay up 0 down 0
+ load-interval 30
+</pre> 
+</div>
+
+### cBR-8 DPIC interface configuration with Link HA
+When using Link HA faster convergence is achieved when each DPIC interface is placed into a BVI with a statically assigned MAC address. Each DPIC interface is placed into a separate bridge-domain with a unique BVI L3 interface. The same MAC address should be utilized on all BVI interfaces.  Convergence using BVI interfaces is <50ms, L3 physical interfaces is 1-2s.   
+
+**Even DPIC port CIN interface configuration** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/25
+ description "Connected to cBR8 port Te1/1/0" 
+ lldp
+ !
+ carrier-delay up 0 down 0
+ load-interval 30
+ l2transport
+ !
+!
+l2vpn
+ bridge group cbr8
+  bridge-domain port-ha-0
+   interface TenGigE0/0/0/25
+   !
+   routed interface BVI500
+   !
+  !
+ !
+ interface BVI500
+ description "BVI for cBR8 port HA, requires static MAC"
+ service-policy input rpd-dpic-ingress-classifier
+ ipv4 address 4.4.9.101 255.255.255.0
+ ipv6 address 2001:4:4:9::101/64
+ mac-address 8a.9698.64
+ load-interval 30
+!
+</pre> 
+</div>
+
+**Odd DPIC port CIN interface configuration** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/26
+ description "Connected to cBR8 port Te1/1/1" 
+ lldp
+ !
+ carrier-delay up 0 down 0
+ load-interval 30
+ l2transport
+ !
+!
+l2vpn
+ bridge group cbr8
+  bridge-domain port-ha-1 
+   interface TenGigE0/0/0/26
+   !
+   routed interface BVI501
+   !
+  !
+ !
+ interface BVI501
+ description "BVI for cBR8 port HA, requires static MAC"
+ service-policy input rpd-dpic-ingress-classifier
+ ipv4 address 4.4.9.101 255.255.255.0
+ ipv6 address 2001:4:4:9::101/64
+ mac-address 8a.9698.64
+ load-interval 30
+!
+</pre> 
+</div>
+
+### cBR-8 Digital PIC Interface Configuration  
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/25
+ description .. Connected to cbr8 port te1/1/0
+ service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing
+ ipv4 address 4.4.9.101 255.255.255.0
+ ipv6 address 2001:4:4:9::101/64
+ carrier-delay up 0 down 0
+ load-interval 30
+</pre> 
+</div>
+
+### RPD interface configuration
+
+#### P2P L3 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TeGigE0/0/0/15  
+ description To RPD-1  
+ service-policy input rpd-dpic-ingress-classifier
+ ipv4 address 192.168.2.0 255.255.255.254 
+ ipv6 address 2001:192:168:2::0/127 
+ ipv6 enable
+ !
+</pre> 
+</div>
+
+#### BVI
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ bridge group rpd
+  bridge-domain rpd-1
+   mld snooping profile mld-snoop-1
+   igmp snooping profile igmp-snoop-1
+   interface TenGigE0/0/0/15
+   !
+   interface TenGigE0/0/0/16
+   !
+   interface TenGigE0/0/0/17
+   !
+   routed interface BVI100
+   !
+   !
+  !
+ !
+!
+interface BVI100
+ description ... to downstream RPD hosts  
+ service-policy input rpd-dpic-ingress-classifier
+ ipv4 address 192.168.2.1 255.255.255.0
+ ipv6 address 2001:192:168:2::1/64
+ ipv6 enable
+ !
+</pre> 
+</div>
+
+### RPD/DPIC agg device IS-IS configuration 
+The standard IS-IS configuration should be used on all core interfaces with the addition of specifying all DPIC and RPD connected as IS-IS passive interfaces. Using passive interfaces is preferred over redistributing connected routes. This configuration is needed for reachability between DPIC and RPDs across the CIN network.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS
+ interface TenGigE0/0/0/25
+  passive
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+</pre> 
+</div>
