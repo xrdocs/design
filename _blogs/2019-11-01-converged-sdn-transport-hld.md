@@ -145,6 +145,29 @@ blocks:**
       - Zero Touch Provisioning and Deployment (ZTP/ZTD)
 
 
+# Hardware Components in Design 
+
+## NCS-55A2-MOD 
+The Converged SDN Transport design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
+router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
+per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
+100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
+configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
+
+## NCS-5501, NCS-5501-SE, and N540-24Z8Q2C-M 
+The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Converged SDN Transport. The 5501 
+has 48x1G/10G SFP+ and 6x100G QSFP28 interfaces, the SE adds higher route scale via an external TCAM.  The N540-24Z8Q2C-M is a next-generation 
+access node with 24x10G SFP+, 8x25G SFP28, and 2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with a conformal 
+coating for deployment deep into access networks. 
+
+## ASR-920 
+The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. All services adn the Segment Routing dataplane are validated 
+on the ASR 920.   
+
+## ASR 9000 
+The ASR 9000 is the router of choice for high scale edge services.  The Converged SDN Transport utilizes the ASR 9000 in a PE function role, performing high scale 
+L2VPN, L3VPN, and Pseudowire headend termination. All testing up to 3.0 has been performed using Tomahawk series line cards on the ASR 9000.  
+
 # Transport – Design Components  
     
 ## Network Domain Structure 
@@ -1661,25 +1684,3 @@ standards based solution.
 For all those reasons, the Cisco Converged SDN Transport design really brings an
 exciting evolution in Service Provider Networking.
 
-# Hardware Validation
-
-## NCS-55A2-MOD 
-The Converged SDN Transport design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
-router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
-per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
-100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
-configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
-
-## NCS-5501, NCS-5501-SE, and N540-24Z8Q2C-M 
-The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Converged SDN Transport. The 5501 
-has 48x1G/10G SFP+ and 6x100G QSFP28 interfaces, the SE adds higher route scale via an external TCAM.  The N540-24Z8Q2C-M is a next-generation 
-access node with 24x10G SFP+, 8x25G SFP28, and 2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with a conformal 
-coating for deployment deep into access networks. 
-
-## ASR-920 
-The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. All services adn the Segment Routing dataplane are validated 
-on the ASR 920.   
-
-## ASR 9000 
-The ASR 9000 is the router of choice for high scale edge services.  The Converged SDN Transport utilizes the ASR 9000 in a PE function role, performing high scale 
-L2VPN, L3VPN, and Pseudowire headend termination. All testing up to 2.0 has been performed using Tomahawk series line cards on the ASR 9000.  
