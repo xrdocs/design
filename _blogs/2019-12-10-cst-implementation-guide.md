@@ -2133,10 +2133,10 @@ The auto-configured policy name will be persistant and must be used as a referen
 <div class="highlighter-rouge">
 <pre class="highlight">
 RP/0/RP0/CPU0:A-PE8#show segment-routing traffic-eng policy candidate-path name GREEN-PE3-1 
-                                       
-<u>SR-TE policy database</u>
+&nbsp; 
+SR-TE policy database  
 Color: 1001, End-point: 100.0.1.50
-  Name: **srte_c_1001_ep_100.0.1.50**
+  Name: <b>srte_c_1001_ep_100.0.1.50</b> 
 </pre> 
 </div> 
 
@@ -2255,7 +2255,7 @@ ethernet cfm
 </div>
 
 ### MEP configuration for EVPN-VPWS services
-For L2VPN xconnect services, each service must have a MEP created on the end PE device. In the following configuration the xconnect group "EVPN-VPWS-ODN-PE3" and service odn-8 are already defined. This configuration will send Ethernet CFM Continuity Check (CC) messages every 1 minute to verify end to end reachability.   
+For L2VPN xconnect services, each service must have a MEP created on the end PE device. There are two components to defining a MEP, first defining the Ethernet CFM "service" and then defining the MEP on the physical or logical interface participating in the L2VPN xconnect service. In the following configuration the xconnect group "EVPN-VPWS-ODN-PE3" and P2P EVPN VPWS service odn-8 are already defined. The Ethernet CFM service of "odn-8" does NOT have to match the xconnect service name. The MEP crosscheck defines a remote MEP to listen for Continuity Check messages from.  It does not have to be the same as the local MEP defined on the physical sub-interface (103), but for P2P services it is best practice to make them identical.  This configuration will send Ethernet CFM Continuity Check (CC) messages every 1 minute to verify end to end reachability.   
 
 **L2VPN configuration**
 <div class="highlighter-rouge">
@@ -2272,7 +2272,21 @@ l2vpn
 </pre> 
 </div>
 
-**MEP configuration** 
+**Physical sub-interface configuration** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/23.8 l2transport
+ encapsulation dot1q 8
+ rewrite ingress tag pop 1 symmetric
+ ethernet cfm
+  mep domain EVPN-VPWS-PE3-PE8 service odn-8 mep-id 103
+  !
+ !
+!
+</pre> 
+</div>
+
+**Ethernet CFM service configuration** 
 <div class="highlighter-rouge">
 <pre class="highlight">
 ethernet cfm
@@ -2291,6 +2305,8 @@ ethernet cfm
 !
 </pre> 
 </div>
+
+
 
 
 ## Multicast NG-MVPN Profile 14 using mLDP and ODN L3VPN
