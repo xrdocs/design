@@ -1408,7 +1408,7 @@ in the Access Domain.
 ## Ethernet Services OAM using Ethernet CFM 
 Ethernet CFM using 802.1ag/Y.1731 has been added in the CST 3.0 design. Ethernet CFM provides end-to-end continuity monitoring and alerting on a per-service basis. Maintenance End Points (MEPs) are configured on PE-CE interfaces with periodic Continuity Check Messages (CCMs) sent between them utilizing the same forwarding path as service traffic. Ethernet CFM also enables the transmission of Alarm Indication Signal (AIS) messages to alert remote endpoints of local faults. Additional information on Ethernet CFM can be found in the CST Implementation Guide at https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide. The following diagram gives a representation of end to end Ethernet CFM monitoring.  
 
-
+![](http://xrdocs.io/design/images/cmf-hld/cst-cfm-example.png)
 
 # Transport and Services Integration
 
