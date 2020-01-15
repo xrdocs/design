@@ -1970,7 +1970,6 @@ router bgp 100
 </pre> 
 </div> 
 
-
 #### Access Router Service Provisioning (IOS-XE)
 
 **VRF definition configuration**
@@ -2134,7 +2133,7 @@ The auto-configured policy name will be persistant and must be used as a referen
 <div class="highlighter-rouge">
 <pre class="highlight">
 RP/0/RP0/CPU0:A-PE8#show segment-routing traffic-eng policy candidate-path name GREEN-PE3-1 
-
+                                       
 <u>SR-TE policy database</u>
 Color: 1001, End-point: 100.0.1.50
   Name: **srte_c_1001_ep_100.0.1.50**
@@ -2147,13 +2146,16 @@ Color: 1001, End-point: 100.0.1.50
 <pre class="highlight">
 interface TenGigE0/0/0/15 
   l2transport
-
+  ! 
+! 
 l2vpn 
  pw-class static-pw-class-PE3
   encapsulation mpls
    control-word
    preferred-path sr-te policy srte_c_1001_ep_100.0.1.50
-
+   ! 
+  !
+ ! 
  p2p Static-PW-to-PE3-1
   interface TenGigE0/0/0/15
    neighbor ipv4 100.0.0.3 pw-id 1000                      
@@ -2169,7 +2171,8 @@ l2vpn
 interface TenGigE0/0/0/5.1001 l2transport
  encapsulation dot1q 1001
  rewrite ingress tag pop 1 symmetric
-
+ ! 
+!  
 l2vpn 
  pw-class static-pw-class-PE3
   encapsulation mpls
@@ -2200,9 +2203,11 @@ interface GigabitEthernet0/0/1
    no mpls control-word
  !
  pseudowire-static-oam class static-oam                        
- timeout refresh send 10                                      
- ttl 255                     
-        
+  timeout refresh send 10                                      
+  ttl 255                     
+  ! 
+ ! 
+!  
 pseudowire-class mpls                                                     
  encapsulation mpls                                                       
  no control-word                                                          
@@ -2226,8 +2231,9 @@ interface GigabitEthernet0/0/1
   xconnect 100.0.2.54 100 encapsulation mpls manual pw-class mpls
    mpls label 100 100
    no mpls control-word
- !
-
+   !
+  ! 
+! 
 pseudowire-class mpls                                                     
  encapsulation mpls                                                       
  no control-word                                                          
@@ -2235,6 +2241,57 @@ pseudowire-class mpls
  preferred-path interface Tunnel1  
 </pre> 
 </div>
+
+## Ethernet CFM for L2VPN service assurance 
+Ethernet Connectivity Fault Management is an Ethernet OAM component used to validate end-to-end connectivity between service endpoints. Ethernet CFM is defined by two standards, 802.1ag and Y.1731. Within an SP network, Maintenance Domains are created based on service scope. Domains are typically separated by operator boundaries and may be nested but cannot overlap.  Within each service, maintenance points can be created to verify bi-directional end to end connectivity. These are known as MEPs (Maintenance End-Point) and MIPs (Maintenance Intermediate Points). These maintenance points process CFM messages. A MEP is configured at service endpoints and has directionality where an "up" MEP faces the core of the network and a "down" MEP faces a CE device or NNI port. MIPs are optional and are created dynamically. Detailed information on Ethernet CFM configuration and operation can be found at https://www.cisco.com/c/en/us/td/docs/routers/ncs5500/software/interfaces/configuration/guide/b-interfaces-hardware-component-cg-ncs5500-66x/b-interfaces-hardware-component-cg-ncs5500-66x_chapter_0101.html 
+
+### Maintenance Domain configuration 
+A Maintenance Domain is defined by a unique name and associated level. The level can be 0-7. The numerical identifier usually corresponds to the scope of the MD, where 7 is associated with CE endpoints, 6 associated with PE devices connected to a CE. Additional levels may be required based on the topology and service boundaries which occur along the end-to-end service.  In this example we only a single domain and utilize level 0 for all MEPs.   
+<div class="highlighter-rouge">
+<pre class="highlight">
+ethernet cfm
+ domain EVPN-VPWS-PE3-PE8 level 0
+</pre> 
+</div>
+
+### MEP configuration for EVPN-VPWS services
+For L2VPN xconnect services, each service must have a MEP created on the end PE device. In the following configuration the xconnect group "EVPN-VPWS-ODN-PE3" and service odn-8 are already defined. This configuration will send Ethernet CFM Continuity Check (CC) messages every 1 minute to verify end to end reachability.   
+
+**L2VPN configuration**
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ xconnect group EVPN-VPWS-ODN-PE3
+  p2p odn-8
+   interface TenGigE0/0/0/23.8
+   neighbor evpn evi 1318 target 8 source 8
+   !
+  !
+ !
+!
+</pre> 
+</div>
+
+**MEP configuration** 
+<div class="highlighter-rouge">
+<pre class="highlight">
+ethernet cfm
+ domain EVPN-VPWS-PE3-PE8
+  service odn-8 xconnect group EVPN-VPWS-ODN-PE3 p2p odn-8
+   mip auto-create all
+   continuity-check interval 1m
+   mep crosscheck
+    mep-id 103
+   !
+   log crosscheck errors
+   log continuity-check errors
+   log continuity-check mep changes
+  !
+ !
+!
+</pre> 
+</div>
+
 
 ## Multicast NG-MVPN Profile 14 using mLDP and ODN L3VPN
 In ths service example we will implement multicast delivery across the CST network using mLDP transport for multicast and SR-MPLS for unicast traffic. L3VPN SR paths will be dynamically created using ODN. Multicast profile 14 is the "Partitioned MDT - MLDP P2MP - BGP-AD - BGP C-Mcast Signaling"  Using this profile each mVPN will use a dedicated P2MP tree, endpoints will be auto-discovered using NG-MVPN BGP NLRI, and customer multicast state such as source streams, PIM, and IGMP membership data will be signaled using BGP. Profile 14 is the recommended profile for high scale and utilizing label-switched multicast (LSM) across the core.      
@@ -2454,9 +2511,12 @@ interface TenGigE0/0/0/5.501 l2transport
 l2vpn                                                                                                                                                            
  xconnect group evpn-vpws-l3vpn-PE1                                                                                           
  p2p odn-1                                                                                                                                                      
- interface TenGigE0/0/0/5                                                                                                                                
+  interface TenGigE0/0/0/5                                                                                                                                
    neighbor evpn evi 13 target 502 source 502  
-
+   !
+  ! 
+ !
+! 
 interface TenGigE0/0/0/5 
   l2transport
 </pre> 
@@ -2615,8 +2675,8 @@ l2vpn
 interface TenGigE0/0/0/2.1 l2transport
  encapsulation dot1q 1
  rewrite ingress tag pop 1 symmetric
-!
-
+ !
+! 
 l2vpn
  pw-class static-pw-h-l3vpn-class
   encapsulation mpls
@@ -2640,8 +2700,8 @@ l2vpn
   !
 interface TenGigE0/0/0/2 
  l2transport
-!
-
+ !
+! 
 l2vpn
  pw-class static-pw-h-l3vpn-class
   encapsulation mpls
@@ -2703,11 +2763,10 @@ interface Loopback100
  description Anycast
  ipv4 address 100.100.100.12 255.255.255.255
 !
-
 router isis ACCESS
  interface Loopback100
  address-family ipv4 unicast
- prefix-sid index 1012
+  prefix-sid index 1012 n-flag-clear 
 </pre> 
 </div> 
 
@@ -2741,9 +2800,8 @@ l2vpn
 <pre class="highlight">
 evpn
  evi 12001
-  !
+ !
   advertise-mac
-  !
  !
  virtual neighbor 100.0.1.50 pw-id 5001
   ethernet-segment
@@ -2761,7 +2819,6 @@ interface BVI1
  ipv4 address 12.0.1.1 255.255.255.0
  mac-address 12.0.1
  load-interval 30
-!
 </pre> 
 </div> 
 
@@ -2854,7 +2911,6 @@ interface TenGigE0/0/0/2.1 l2transport
  encapsulation dot1q 1
  rewrite ingress tag pop 1 symmetric
 !
-
 l2vpn
  pw-class static-pw-h-l3vpn-class
   encapsulation mpls
@@ -2876,16 +2932,14 @@ l2vpn
     pw-class static-pw-h-l3vpn-class
    !
   !
-  
+!
 interface TenGigE0/0/0/2 
  l2transport
 !
-
 l2vpn
  pw-class static-pw-h-l3vpn-class
   encapsulation mpls
    control-word
-  !
 </pre> 
 </div> 
 
@@ -2942,11 +2996,10 @@ interface Loopback100
  description Anycast
  ipv4 address 100.100.100.12 255.255.255.255
 !
-
 router isis ACCESS
  interface Loopback100
- address-family ipv4 unicast
- prefix-sid index 1012
+  address-family ipv4 unicast
+   prefix-sid index 1012
 </pre> 
 </div> 
 
