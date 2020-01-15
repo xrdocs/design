@@ -1,21 +1,3 @@
----
-published: true
-date: '2020-01-05 16:54 -0500'
-title: Metro Design Implementation Guide
-position: hidden 
-author: Phil Bedard 
-tags:
-  - iosxr
-  - cisco
-  - 5G 
-  - cin  
-  - rphy 
-  - Metro
-  - Design
----
-
-{% include toc %}
-
 ## Remote PHY CIN Implementation 
 
 ### Summary 
@@ -93,8 +75,7 @@ class-map match-any match-traffic-class-6
 #### RPD and DPIC interface policy maps
 These are applied to all interfaces connected to cBR-8 DPIC and RPD devices. 
 
-Egress queueing maps are not supported on L3 BVI interfaces 
-{: .notice--warning}
+**Note:** Egress queueing maps are not supported on L3 BVI interfaces
 
 **RPD/DPIC ingress classifier policy map** 
 
@@ -438,7 +419,6 @@ router isis ACCESS
       - Network Timing: G.8275.1 and G.8275.2
       - Network Assurance: 802.1ag  
 
-
 # Testbed Overview
 
 [](http://xrdocs.io/design/images/cmfi/image1.png)
@@ -590,11 +570,9 @@ router isis ISIS-ACCESS
 </div> 
 </pre> 
 
-ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
-{: .notice--success}
+**Note:** ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
 
-The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
-{: .notice--success}
+**Note:** The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
 
 #### IS-IS Loopback and node SID configuration
 <div class="highlighter-rouge">
@@ -1069,8 +1047,7 @@ ptp
 </div>
 
 ### Application of PTP profile to physical interface 
-In CST 3.0 PTP may only be enabled on physical interfaces. G.8275.1 operates at L2 andsupports PTP across Bundle member links and interfaces part of a bridge domain. G.8275.2 operates at L3 and does not support Bundle interfaces or BVI interfaces.   
-{: .notice--warning}
+**Note:** In CST 3.0 PTP may only be enabled on physical interfaces. G.8275.1 operates at L2 andsupports PTP across Bundle member links and interfaces part of a bridge domain. G.8275.2 operates at L3 and does not support Bundle interfaces or BVI interfaces.   
 
 #### G.8275.2 interface configuration 
 This example is of a slave device using a master of 2405:10:23:253::0.  
@@ -1397,8 +1374,7 @@ and ISIS CORE to Transport Route-Reflectors (tRRs). tRRs then reflect
 topology to Segment Routing Path Computation Element (SR-PCEs). Each SR-PCE has full 
 visibility of the entire inter-domain network. 
 
-Each IS-IS process in the network requires a unique instance-id to identify itself to the PCE.
-{: .notice--warning}
+**Note:** Each IS-IS process in the network requires a unique instance-id to identify itself to the PCE.
 
 ![](http://xrdocs.io/design/images/cmfi/image5.png)
 
@@ -2046,8 +2022,7 @@ _Figure 8: L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop Control Plane_
 5.  **Access Router:** Programs Segment Routing Traffic Engineering
     (SRTE) Policy to reach remote access router
 
-Please refer to **On Demand Next-Hop (ODN) – IOS-XR** section for initial ODN configuration. The correct EVPN L2VPN routes must be advertised with a specific color ext-community to trigger dynamic SR Policy instantiation.   
-{: .notice--success}
+**Note:** Please refer to **On Demand Next-Hop (ODN) – IOS-XR** section for initial ODN configuration. The correct EVPN L2VPN routes must be advertised with a specific color ext-community to trigger dynamic SR Policy instantiation.   
 
 #### Access Router Service Provisioning (IOS-XR):
 
@@ -2103,11 +2078,9 @@ Plane_
     
 #### Access Router Service Provisioning (IOS-XR):
 
-Note EVPN VPWS dual homing is not supported when using an SR-TE preferred path.  
-{: .notice--warning}
+**Note:** EVPN VPWS dual homing is not supported when using an SR-TE preferred path.  
 
-In IOS-XR 6.6.3 the SR Policy used as the preferred path must be referenced by its generated name and not the configured policy name.  This requires first issuing the command   
-{: .notice--info}
+**Note:** In IOS-XR 6.6.3 the SR Policy used as the preferred path must be referenced by its generated name and not the configured policy name.  This requires first issuing the command   
 
 **Define SR Policy** 
 
