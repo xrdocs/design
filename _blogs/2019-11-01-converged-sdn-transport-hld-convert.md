@@ -1406,7 +1406,9 @@ scale to higher numbers of BGP sessions by adding another pair of S-RRs
 in the Access Domain.
 
 ## Ethernet Services OAM using Ethernet CFM 
-Ethernet CFM using 802.1ag/Y.1731 has been added in the CST 3.0 design. Ethernet CFM provides end-to-end continuity monitoring and alerting on a per-service basis. Maintenance End Points (MEPs) are configured on PE-CE interfaces with periodic Continuity Check Messages (CCMs) sent between them utilizing the same forwarding path as service traffic. Ethernet CFM also enables the transmission of Alarm Indication Signal (AIS) messages to alert remote endpoints of local faults. Additional information on Ethernet CFM can be found in the CST Implementation Guide at https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide  
+Ethernet CFM using 802.1ag/Y.1731 has been added in the CST 3.0 design. Ethernet CFM provides end-to-end continuity monitoring and alerting on a per-service basis. Maintenance End Points (MEPs) are configured on PE-CE interfaces with periodic Continuity Check Messages (CCMs) sent between them utilizing the same forwarding path as service traffic. Ethernet CFM also enables the transmission of Alarm Indication Signal (AIS) messages to alert remote endpoints of local faults. Additional information on Ethernet CFM can be found in the CST Implementation Guide at https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide. The following diagram gives a representation of end to end Ethernet CFM monitoring.  
+
+
 
 # Transport and Services Integration
 
@@ -1574,7 +1576,7 @@ Refer to Section: "Network Services Orchestrator (NSO)".
 ## Transport and Services Integration 
 
 Transport and Services integration is described in Section: "Transport and Services Integration" of this document. Figure 44 shows an example of End-To-End LSP and services
-integration in Phase 1.
+integration.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/image45.png)
 
@@ -1583,16 +1585,23 @@ _Figure 44: Transport and Services Data-Plane_
 Figure 45 shows a consolidated view of the Transport and Services
 Control-Plane.
 
-![](http://xrdocs.io/design/images/cmf-hld/cst-topology.png)
+![](http://xrdocs.io/design/images/cmf-hld/image46.png)
 
 _Figure 45: Transport and Services Control-Plane_
 
-Figure 46 shows the physical topology of the testbed used for Phase 1
+Figure 46 shows the detailed topology of the testbed used for 
 validation.
 
-![](http://xrdocs.io/design/images/cmf-hld/image47.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-topology.png)
 
-_Figure 46: Testbed – Phase 1_
+_Figure 46: Testbed_
+
+Figure 47 shows the detailed topology of the testbed used for 
+validation.
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-rphy-validation-topology.png)
+
+_Figure 47: Remote PHY/CIN Validation Testbed_
 
 # The Converged SDN Transport Design - Summary
 
