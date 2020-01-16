@@ -11,10 +11,6 @@ date: null
 {% include base_path %}
 
 
-
-
-
-
 <div class="feature__wrapper">
     <div class="feature__item--right">
       <div class="archive__item">
@@ -23,20 +19,20 @@ date: null
             <img src="{{ base_path }}/images/design_lp/metro-design.png" alt="" />
           </div>
         <div class="archive__item-body">
-            <h2 class="archive__item-title">Converged SDN Transport &nbsp; 
+            <h2 class="archive__item-title">Converged SDN Transport 3.0 &nbsp; 
             <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
               <p>Read about the goals of the Converged SDN Transport Design (formerly known as Metro Fabric)
                 and familiarize 
-              yourself with all its components: the platforms, the software,
-               the technologies and use cases
+              yourself with all its components: Platforms, software,
+               technologies, and use cases
               </p>
             </div>
             <p>
             <a href="{{ base_path }}/blogs/latest-converged-sdn-transport-hld" 
                   class="btn ">High Level Design 📖</a>
-            <a href="{{ base_path }}/blogs/2019-04-01-converged-sdn-transport-implementation-guide/" 
-                  class="btn ">Implementation Guide</a>
+            <a href="{{ base_path }}/blogs/latest-converged-sdn-transport-hld" 
+                  class="btn ">Implementation Guide 📖</a>
                   </p>
         </div>
       </div>
@@ -53,12 +49,12 @@ date: null
             <img src="{{ base_path }}/images/design_lp/traffic_cloud.png" alt="" />
           </div>
         <div class="archive__item-body">
-            <h2 class="archive__item-title">Peering Fabric Design
+            <h2 class="archive__item-title">Peering Fabric Design 3.0
             &nbsp; <img src="{{ base_path }}/images/design_lp/updated.png" alt="" />
              </h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
             <p> Read about the goals of the Peering Fabric Design and
-             familiarize yourself with all the components: the platforms, the software, the technologies and use cases
+             familiarize yourself its components: Platforms, software, technologies, and use cases
             </p>
             </div>
             <p><a href="{{ base_path }}/blogs/latest-peering-fabric-hld" 
