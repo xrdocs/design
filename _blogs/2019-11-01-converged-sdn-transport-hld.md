@@ -2,11 +2,9 @@
 published: true 
 date: '2019-11-01 11:00-0400'
 title: Converged SDN Transport High Level Design v3.0 
-excerpt: 
-  Cisco Converged SDN Transport (CMF) design introduces an SDN-ready architecture which
-  evolves traditional Metro network  design towards an SDN enabled, programmable
-  network capable of delivering all services. 3.0 Update
+excerpt: Cisco Converged SDN Transport (CST) design introduces an SDN-ready architecture evolving network design towards an SDN enabled, programmable network capable of delivering all services. 3.0 Update
 author: Phil Bedard 
+permalink: /blogs/latest-converged-sdn-transport-hld
 tags:
   - iosxr
   - Metro
@@ -14,8 +12,10 @@ tags:
   - 5G 
   - Cable
   - CIN
-position: hidden 
+position: top  
 ---
+
+{% include toc %}
 
 # Revision History
 

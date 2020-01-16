@@ -2,8 +2,10 @@
 published: true
 date: '2020-01-05 16:54 -0500'
 title: Metro Design Implementation Guide
-position: hidden 
+position: top 
 author: Phil Bedard 
+excerpt: Converged SDN Transport Implementation Guide - 3.0 
+permalink: /blogs/latest-converged-sdn-transport-ig
 tags:
   - iosxr
   - cisco
