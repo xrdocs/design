@@ -31,7 +31,7 @@ date: null
             <p>
             <a href="{{ base_path }}/blogs/latest-converged-sdn-transport-hld" 
                   class="btn ">High Level Design 📖</a>
-            <a href="{{ base_path }}/blogs/latest-converged-sdn-transport-hld" 
+            <a href="{{ base_path }}/blogs/latest-converged-sdn-transport-ig" 
                   class="btn ">Implementation Guide 📖</a>
                   </p>
         </div>
