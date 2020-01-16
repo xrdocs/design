@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2020-01-05 16:54 -0500'
-title: Metro Design Implementation Guide
+title: Converged SDN Transport Implementation Guide
 position: top 
 author: Phil Bedard 
 excerpt: Converged SDN Transport Implementation Guide - 3.0 
