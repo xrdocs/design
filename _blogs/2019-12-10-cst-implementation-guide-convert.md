@@ -535,7 +535,7 @@ ptp
   port state master-only
   sync frequency 16
   clock operation one-step <-- Note the NCS series should be configured with one-step, ASR9000 with two-step 
-  announce timeout 10
+  announce timeout 5 
   announce interval 1
   unicast-grant invalid-request deny
   delay-request frequency 16
@@ -1265,7 +1265,7 @@ policy-map core-egress-queuing
 </div>
 
 #### Core egress MPLS EXP marking map 
-The following policy must be applied for CIN PE devices with MPLS-based VPN services.  
+The following policy must be applied for PE devices with MPLS-based VPN services in order for service traffic classified in a specific QoS Group to be marked. VLAN-based P2P L2VPN services will by default inspect the incoming 802.1p bits and copy those the egress MPLS EXP if no specific ingress policy overrides that behavior.    
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map core-egress-exp-marking
@@ -2791,7 +2791,7 @@ policy-map rpd-dpic-ingress-classifier
 </pre> 
 </div>
 
-**RPD/DPIC egress queueing policy map** 
+**P2P RPD and DPIC egress queueing policy map** 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -2823,7 +2823,34 @@ policy-map rpd-dpic-egress-queuing
 #### Core QoS 
 Please see the general QoS section for core-facing QoS configuration  
 
-### Multicast configuration  
+### CIN Timing Configuration 
+Please see the G.8275.2 timing configuration guide in this document for details on timing configuration. The following values should be used for PTP configuration attributes.  Please note in CST 3.0 the use of an IOS-XR router as a Boundary Clock is only supported on P2P L3 interfaces. The use of a BVI for RPD aggregation requires the BC used for RPD nodes be located upstream, or alternatively a physical loopback cable may be used to provide timing off the IOS-XR based RPD leaf device.   
+
+| PTP variable | IOS-XR configuration value | IOS-XE value | 
+| ---------- | --------- | -------------- | 
+| Announce Interval | 1 | 1 | 
+| Announce Timeout  | 5 | 5 | 
+| Sync Frequency | 16 | -4 | 
+| Delay Request Frequency | 16 | -4 | 
+
+#### Example CBR-8 RPD DTI Profile 
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp r-dti 4
+ profile G.8275.2
+ ptp-domain 60
+ clock-port 1
+   clock source ip 192.168.3.1
+   sync interval -4
+   announce timeout 5
+   delay-req interval -4
+</pre> 
+</div> 
+
+### Multicast configuration 
+
+#### Summary 
+We present two different configuration options based on either native multicast deployment or the use of a L3VPN to carry Remote PHY traffic. The L3VPN option shown uses Label Switched Multicast profile 14 (partitioned mLDP) however profile 6 could also be utilized. 
 
 #### Global multicast configuration - Native multicast 
 On CIN aggregation nodes all interfaces should have multicast enabled.  
@@ -2836,6 +2863,25 @@ multicast-routing
  address-family ipv6
   interface all enable  
    enable
+ !
+</pre> 
+</div>
+
+#### Global multicast configuration - LSM using profile 14 
+On CIN aggregation nodes all interfaces should have multicast enabled.  
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf VRF-MLDP
+  address-family ipv4
+   mdt source Loopback0
+   rate-per-route
+   interface all enable
+   accounting per-prefix
+   bgp auto-discovery mldp
+   !
+   mdt partitioned mldp ipv4 p2mp
+   mdt data 100
+  !
  !
 </pre> 
 </div>
@@ -2856,6 +2902,27 @@ router pim
    enable
   !
  !
+</pre> 
+</div>
+
+#### PIM configuration - LSM using profile 14
+The PIM configuration is utilized even though no PIM neighbors may be connected.   
+<div class="highlighter-rouge">
+<pre class="highlight">
+route-policy mldp-partitioned-p2mp
+  set core-tree mldp-partitioned-p2mp
+end-policy
+!
+router pim
+ address-family ipv4
+  interface Loopback0
+   enable
+ vrf rphy-vrf
+  address-family ipv4
+   rpf topology route-policy mldp-partitioned-p2mp  
+   mdt c-multicast-routing bgp
+   !
+  !
 </pre> 
 </div>
 
@@ -2881,6 +2948,29 @@ router mld
 </pre> 
 </div>
 
+#### IGMPv3/MLDv2 configuration - LSM profile 14  
+Interfaces connected to RPD and DPIC interfaces should have IGMPv3 and MLDv2 enabled as needed  
+<div class="highlighter-rouge">
+<pre class="highlight">
+router igmp
+ vrf rphy-vrf
+  interface BVI101
+   version 3
+  !
+  interface TenGigE0/0/0/15
+  !
+ !
+!
+router mld
+ vrf rphy-vrf
+  interface TenGigE0/0/0/15
+   version 2
+  !
+ !
+!
+</pre> 
+</div>
+
 #### IGMPv3 / MLDv2 snooping profile configuration (BVI aggregation)
 In order to limit L2 multicast replication for specific groups to only interfaces with interested receivers, IGMP and MLD snooping must be enabled.  
 
@@ -2893,18 +2983,17 @@ mld snooping profile mld-snoop-1
 </pre> 
 </div>
 
-### RPD DHCPv4/v6 relay configuration  
+### RPD DHCPv4/v6 relay configuration 
 In order for RPDs to self-provision DHCP relay must be enabled on all RPD-facing L3 interfaces. In IOS-XR the DHCP relay configuration is done in its own configuration context without any configuration on the interface itself. 
 
+#### Native IP / Default VRF  
 <div class="highlighter-rouge">
 <pre class="highlight">
 dhcp ipv4
  profile rpd-dhcpv4 relay
-  helper-address vrf default 4.4.9.100
   helper-address vrf default 10.0.2.3
  !
  interface BVI100 relay profile rpd-dhcpv4
- interface TenGigE0/0/0/15 relay profile rpd-dhcpv4
 !
 dhcp ipv6
  profile rpd-dhcpv6 relay
@@ -2913,7 +3002,24 @@ dhcp ipv6
   source-interface BVI100
  !
  interface BVI100 relay profile rpd-dhcpv6
- interface TenGigE0/0/0/15 relay profile rpd-dhcpv6
+</pre> 
+</div>
+
+#### RPHY L3VPN  
+In this example it is assumed the DHCP server exists within the rphy-vrf VRF, if it does not then additional routing may be necessary to forward packets between VRFs. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+dhcp ipv4
+ vrf rphy-vrf relay profile rpd-dhcpv4-vrf
+ profile rpd-dhcpv4-vrf relay
+  helper-address vrf rphy-vrf 10.0.2.3
+  relay information option allow-untrusted
+ !
+ inner-cos 5
+ outer-cos 5
+ interface BVI101 relay profile rpd-dhcpv4-vrf
+ interface TenGigE0/0/0/15 relay profile rpd-dhcpv4-vrf
 !
 </pre> 
 </div>
@@ -3016,11 +3122,16 @@ interface TenGigE0/0/0/25
 
 ### RPD interface configuration
 
-#### P2P L3 
+#### P2P L3
+In this example the interface has PTP enabled towards the RPD  
 <div class="highlighter-rouge">
 <pre class="highlight">
 interface TeGigE0/0/0/15  
- description To RPD-1  
+ description To RPD-1
+ mtu 9200
+ ptp
+  profile g82752_master_v4
+ !  
  service-policy input rpd-dpic-ingress-classifier
  ipv4 address 192.168.2.0 255.255.255.254 
  ipv6 address 2001:192:168:2::0/127 
@@ -3070,5 +3181,49 @@ router isis ACCESS
   address-family ipv4 unicast
   !
   address-family ipv6 unicast
+</pre> 
+</div>
+
+### Additional configuration for L3VPN Design 
+
+#### Global VRF Configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf rphy-vrf
+ address-family ipv4 unicast
+  import route-target
+   100:5000
+  !
+  export route-target
+   100:5000
+  !
+ !
+ address-family ipv6 unicast
+  import route-target
+   100:5000
+  !
+  export route-target
+   100:5000
+  !
+ !
+</pre> 
+</div>
+
+#### BGP Configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ vrf rphy-vrf
+  rd auto
+  address-family ipv4 unicast
+   label mode per-ce
+   redistribute connected
+   redistribute static
+  !
+  address-family ipv4 mvpn
+  !
+  address-family ipv6 mvpn
+  !
+ !
 </pre> 
 </div>
