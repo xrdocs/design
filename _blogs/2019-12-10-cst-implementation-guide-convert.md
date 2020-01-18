@@ -3133,6 +3133,7 @@ interface TeGigE0/0/0/15
   profile g82752_master_v4
  !  
  service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing 
  ipv4 address 192.168.2.0 255.255.255.254 
  ipv6 address 2001:192:168:2::0/127 
  ipv6 enable
@@ -3187,6 +3188,7 @@ router isis ACCESS
 ### Additional configuration for L3VPN Design 
 
 #### Global VRF Configuration 
+This configuration is required on all DPIC and RPD connected routers as well as ancillary elements communicating with Remote PHY elements   
 <div class="highlighter-rouge">
 <pre class="highlight">
 vrf rphy-vrf
@@ -3209,16 +3211,20 @@ vrf rphy-vrf
 </pre> 
 </div>
 
-#### BGP Configuration 
+#### BGP Configuration
+This configuration is required on all DPIC and RPD connected routers as well as ancillary elements communicating with Remote PHY elements   
 <div class="highlighter-rouge">
 <pre class="highlight">
 router bgp 100
  vrf rphy-vrf
   rd auto
   address-family ipv4 unicast
-   label mode per-ce
+   label mode per-vrf 
    redistribute connected
-   redistribute static
+  !
+  address-family ipv6 unicast
+   label mode per-vrf 
+   redistribute connected
   !
   address-family ipv4 mvpn
   !
