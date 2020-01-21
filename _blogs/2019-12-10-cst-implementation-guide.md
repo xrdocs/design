@@ -2,9 +2,10 @@
 published: true
 date: '2020-01-05 16:54 -0500'
 title: Converged SDN Transport Implementation Guide
-position: hidden 
+position: top 
 author: Phil Bedard 
 excerpt: Converged SDN Transport Implementation Guide - 3.0 
+permalink: /blogs/latest-converged-sdn-transport-ig
 tags:
   - iosxr
   - cisco
@@ -44,7 +45,6 @@ tags:
         (EVPN and L3VPN/mVPN)
       - Network Timing: G.8275.1 and G.8275.2
       - Network Assurance: 802.1ag  
-
 
 # Testbed Overview
 
@@ -135,8 +135,8 @@ interface TenGigE0/0/0/10
  ipv4 unreachables disable
  load-interval 30
  dampening
-</pre> 
-</div> 
+</pre>
+</div>
 
 ### SRGB and SRLB Definition 
 It's recommended to first configure the Segment Routing Global Block (SRGB) across all nodes needing connectivity between each other. In most instances a single SRGB will be used across the entire network. In a SR MPLS deployment the SRGB and SRLB correspond to the label blocks allocated to SR. IOS-XR has a maximum configurable SRGB limit of 512,000 labels, however please consult platform-specific documentation for maximum values. The SRLB corresponds to the labels allocated for SIDs local to the node, such as Adjacency-SIDs. It is recommended to configure the same SRLB block across all nodes. The SRLB must not overlap with the SRGB.  The SRGB and SRLB are configured in IOS-XR with the following configuration:   
@@ -194,14 +194,12 @@ router isis ISIS-ACCESS
   metric-style wide
   spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
   maximum-redistributed-prefixes 100 level 2
-</pre> 
-</div> 
+</pre>
+</div>
 
-ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
-{: .notice--success}
+**Note:** ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
 
-The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
-{: .notice--success}
+**Note:** The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
 
 #### IS-IS Loopback and node SID configuration
 <div class="highlighter-rouge">
@@ -211,8 +209,8 @@ The prefix SID can be configured as either _absolute_ or _index_.  The _index_ c
   address-family ipv4 unicast
    <b>prefix-sid absolute 16150</b>
    tag 1000 
-</pre> 
-</div> 
+</pre>
+</div>
 
 #### IS-IS interface configuration with TI-LFA
 
@@ -233,8 +231,8 @@ It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible fo
    fast-reroute per-prefix 
    fast-reroute per-prefix ti-lfa 
    metric 100 
-</pre> 
-</div> 
+</pre>
+</div>
 
 
 ### MPLS Segment Routing Traffic Engineering (SRTE) configuration
@@ -246,8 +244,8 @@ router isis ACCESS
  address-family ipv4 unicast
   mpls traffic-eng level-2-only
   mpls traffic-eng router-id Loopback0
-</pre> 
-</div> 
+</pre>
+</div>
 
 #### MPLS Segment Routing Traffic Engineering (SRTE) TE metric configuration  
 
@@ -313,8 +311,8 @@ segment-routing mpls
 
 ### IGP protocol (ISIS) with Segment Routing MPLS configuration
 
-</div> 
-</pre>
+<div class="highlighter-rouge">
+<pre class="highlight">
 key chain ISIS-KEY
  key 1
   key-string cisco
@@ -423,7 +421,7 @@ route-policy CORE-TO-ACCESS1
     drop
   endif
 end-policy
-
+!
 router isis ACCESS 
  address-family ipv4 unicast
   distance 254 0.0.0.0/0 RR-LOOPBACKS
@@ -442,9 +440,9 @@ route-policy ACCESS1-TO-CORE
     drop                                                         
   endif                                                          
 end-policy                                                       
-
+! 
 router isis CORE
-address-family ipv4 unicast
+ address-family ipv4 unicast
   distance 254 0.0.0.0/0 ACCESS-PCE_SvRR-LOOPBACKS
   redistribute static route-policy CORE-TO-ACCESS1
 </pre> 
@@ -556,8 +554,8 @@ ptp
   transport ipv4
   port state master-only
   sync frequency 16
-  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
-  announce timeout 10
+  clock operation one-step <-- Note the NCS series should be configured with one-step, ASR9000 with two-step 
+  announce timeout 5 
   announce interval 1
   unicast-grant invalid-request deny
   delay-request frequency 16
@@ -594,7 +592,7 @@ ptp
   transport ipv4
   port state slave-only 
   sync frequency 16
-  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
+  clock operation one-step <-- Note the NCS series should be configured with one-step, ASR9000 with two-step
   announce timeout 10
   announce interval 1
   unicast-grant invalid-request deny
@@ -613,7 +611,7 @@ ptp
   transport ipv6
   port state slave-only 
   sync frequency 16
-  clock operation one-step <b><-- Note the NCS series should be configured with one-step, ASR9000 with two-step</b> 
+  clock operation one-step <-- Note the NCS series should be configured with one-step, ASR9000 with two-step
   announce timeout 10
   announce interval 1
   unicast-grant invalid-request deny
@@ -675,8 +673,7 @@ ptp
 </div>
 
 ### Application of PTP profile to physical interface 
-In CST 3.0 PTP may only be enabled on physical interfaces. G.8275.1 operates at L2 andsupports PTP across Bundle member links and interfaces part of a bridge domain. G.8275.2 operates at L3 and does not support Bundle interfaces or BVI interfaces.   
-{: .notice--warning}
+**Note:** In CST 3.0 PTP may only be enabled on physical interfaces. G.8275.1 operates at L2 andsupports PTP across Bundle member links and interfaces part of a bridge domain. G.8275.2 operates at L3 and does not support Bundle interfaces or BVI interfaces.   
 
 #### G.8275.2 interface configuration 
 This example is of a slave device using a master of 2405:10:23:253::0.  
@@ -993,8 +990,6 @@ neighbor 100.0.0.4
 </pre> 
 </div>
 
-
-
 ## Area Border Routers (ABRs) IGP topology distribution
 
 Next network diagram: “BGP-LS Topology Distribution” shows how Area
@@ -1003,8 +998,7 @@ and ISIS CORE to Transport Route-Reflectors (tRRs). tRRs then reflect
 topology to Segment Routing Path Computation Element (SR-PCEs). Each SR-PCE has full 
 visibility of the entire inter-domain network. 
 
-Each IS-IS process in the network requires a unique instance-id to identify itself to the PCE.
-{: .notice--warning}
+**Note:** Each IS-IS process in the network requires a unique instance-id to identify itself to the PCE.
 
 ![](http://xrdocs.io/design/images/cmfi/image5.png)
 
@@ -1012,19 +1006,20 @@ _Figure 5: BGP-LS Topology Distribution_
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-
 router isis ACCESS
  **distribute link-state instance-id 101**
  net 49.0001.0101.0000.0001.00
  address-family ipv4 unicast
   mpls traffic-eng router-id Loopback0
-
+  !
+! 
 router isis CORE
  **distribute link-state instance-id 100**
  net 49.0001.0100.0000.0001.00
  address-family ipv4 unicast
   mpls traffic-eng router-id Loopback0
-
+  !
+!  
 router bgp 100
  **address-family link-state link-state**
  !
@@ -1073,7 +1068,7 @@ segment-routing
    pce address ipv4 100.1.1.101
    !
   !
-!
+
 extcommunity-set opaque BLUE
   100
 end-set
@@ -1081,7 +1076,7 @@ end-set
 route-policy ODN_EVPN
   set extcommunity color BLUE
 end-policy
-!
+
 router bgp 100
   address-family l2vpn evpn
    route-policy ODN_EVPN out
@@ -1114,10 +1109,8 @@ route-map L3VPN-ODN-TE-INIT permit 10
 route-map L3VPN-SR-ODN-Mark-Comm permit 10
  match ip address L3VPN-ODN-Prefixes
  set community 9999
+ !
 !
-!
-end
-
 router bgp 100
  address-family vpnv4
   neighbor SvRR send-community both
@@ -1292,7 +1285,7 @@ policy-map core-egress-queuing
 </div>
 
 #### Core egress MPLS EXP marking map 
-The following policy must be applied for CIN PE devices with MPLS-based VPN services.  
+The following policy must be applied for PE devices with MPLS-based VPN services in order for service traffic classified in a specific QoS Group to be marked. VLAN-based P2P L2VPN services will by default inspect the incoming 802.1p bits and copy those the egress MPLS EXP if no specific ingress policy overrides that behavior.    
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map core-egress-exp-marking
@@ -1651,8 +1644,7 @@ _Figure 8: L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop Control Plane_
 5.  **Access Router:** Programs Segment Routing Traffic Engineering
     (SRTE) Policy to reach remote access router
 
-Please refer to **On Demand Next-Hop (ODN) – IOS-XR** section for initial ODN configuration. The correct EVPN L2VPN routes must be advertised with a specific color ext-community to trigger dynamic SR Policy instantiation.   
-{: .notice--success}
+**Note:** Please refer to **On Demand Next-Hop (ODN) – IOS-XR** section for initial ODN configuration. The correct EVPN L2VPN routes must be advertised with a specific color ext-community to trigger dynamic SR Policy instantiation.   
 
 #### Access Router Service Provisioning (IOS-XR):
 
@@ -1708,11 +1700,9 @@ Plane_
     
 #### Access Router Service Provisioning (IOS-XR):
 
-Note EVPN VPWS dual homing is not supported when using an SR-TE preferred path.  
-{: .notice--warning}
+**Note:** EVPN VPWS dual homing is not supported when using an SR-TE preferred path.  
 
-In IOS-XR 6.6.3 the SR Policy used as the preferred path must be referenced by its generated name and not the configured policy name.  This requires first issuing the command   
-{: .notice--info}
+**Note:** In IOS-XR 6.6.3 the SR Policy used as the preferred path must be referenced by its generated name and not the configured policy name.  This requires first issuing the command   
 
 **Define SR Policy** 
 
@@ -1909,9 +1899,6 @@ ethernet cfm
 !
 </pre> 
 </div>
-
-
-
 
 ## Multicast NG-MVPN Profile 14 using mLDP and ODN L3VPN
 In ths service example we will implement multicast delivery across the CST network using mLDP transport for multicast and SR-MPLS for unicast traffic. L3VPN SR paths will be dynamically created using ODN. Multicast profile 14 is the "Partitioned MDT - MLDP P2MP - BGP-AD - BGP C-Mcast Signaling"  Using this profile each mVPN will use a dedicated P2MP tree, endpoints will be auto-discovered using NG-MVPN BGP NLRI, and customer multicast state such as source streams, PIM, and IGMP membership data will be signaled using BGP. Profile 14 is the recommended profile for high scale and utilizing label-switched multicast (LSM) across the core.      
@@ -2182,7 +2169,7 @@ interface GigabitEthernet0/0/1
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-vrf L3VPN-ODNTE-VRF1                                                                                       
+vrf L3VPN-ODNTE-VRF1                                                                                                          
  address-family ipv4 unicast                                                                                                  
   import route-target                                                                                                                  
    100:501                                                                                                                   
@@ -2791,8 +2778,7 @@ class-map match-any match-traffic-class-6
 #### RPD and DPIC interface policy maps
 These are applied to all interfaces connected to cBR-8 DPIC and RPD devices. 
 
-Egress queueing maps are not supported on L3 BVI interfaces 
-{: .notice--warning}
+**Note:** Egress queueing maps are not supported on L3 BVI interfaces
 
 **RPD/DPIC ingress classifier policy map** 
 
@@ -2825,7 +2811,7 @@ policy-map rpd-dpic-ingress-classifier
 </pre> 
 </div>
 
-**RPD/DPIC egress queueing policy map** 
+**P2P RPD and DPIC egress queueing policy map** 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -2857,8 +2843,34 @@ policy-map rpd-dpic-egress-queuing
 #### Core QoS 
 Please see the general QoS section for core-facing QoS configuration  
 
+### CIN Timing Configuration 
+Please see the G.8275.2 timing configuration guide in this document for details on timing configuration. The following values should be used for PTP configuration attributes.  Please note in CST 3.0 the use of an IOS-XR router as a Boundary Clock is only supported on P2P L3 interfaces. The use of a BVI for RPD aggregation requires the BC used for RPD nodes be located upstream, or alternatively a physical loopback cable may be used to provide timing off the IOS-XR based RPD leaf device.   
 
-### Multicast configuration  
+| PTP variable | IOS-XR configuration value | IOS-XE value | 
+| ---------- | --------- | -------------- | 
+| Announce Interval | 1 | 1 | 
+| Announce Timeout  | 5 | 5 | 
+| Sync Frequency | 16 | -4 | 
+| Delay Request Frequency | 16 | -4 | 
+
+#### Example CBR-8 RPD DTI Profile 
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp r-dti 4
+ profile G.8275.2
+ ptp-domain 60
+ clock-port 1
+   clock source ip 192.168.3.1
+   sync interval -4
+   announce timeout 5
+   delay-req interval -4
+</pre> 
+</div> 
+
+### Multicast configuration 
+
+#### Summary 
+We present two different configuration options based on either native multicast deployment or the use of a L3VPN to carry Remote PHY traffic. The L3VPN option shown uses Label Switched Multicast profile 14 (partitioned mLDP) however profile 6 could also be utilized. 
 
 #### Global multicast configuration - Native multicast 
 On CIN aggregation nodes all interfaces should have multicast enabled.  
@@ -2871,6 +2883,25 @@ multicast-routing
  address-family ipv6
   interface all enable  
    enable
+ !
+</pre> 
+</div>
+
+#### Global multicast configuration - LSM using profile 14 
+On CIN aggregation nodes all interfaces should have multicast enabled.  
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf VRF-MLDP
+  address-family ipv4
+   mdt source Loopback0
+   rate-per-route
+   interface all enable
+   accounting per-prefix
+   bgp auto-discovery mldp
+   !
+   mdt partitioned mldp ipv4 p2mp
+   mdt data 100
+  !
  !
 </pre> 
 </div>
@@ -2891,6 +2922,27 @@ router pim
    enable
   !
  !
+</pre> 
+</div>
+
+#### PIM configuration - LSM using profile 14
+The PIM configuration is utilized even though no PIM neighbors may be connected.   
+<div class="highlighter-rouge">
+<pre class="highlight">
+route-policy mldp-partitioned-p2mp
+  set core-tree mldp-partitioned-p2mp
+end-policy
+!
+router pim
+ address-family ipv4
+  interface Loopback0
+   enable
+ vrf rphy-vrf
+  address-family ipv4
+   rpf topology route-policy mldp-partitioned-p2mp  
+   mdt c-multicast-routing bgp
+   !
+  !
 </pre> 
 </div>
 
@@ -2916,6 +2968,29 @@ router mld
 </pre> 
 </div>
 
+#### IGMPv3/MLDv2 configuration - LSM profile 14  
+Interfaces connected to RPD and DPIC interfaces should have IGMPv3 and MLDv2 enabled as needed  
+<div class="highlighter-rouge">
+<pre class="highlight">
+router igmp
+ vrf rphy-vrf
+  interface BVI101
+   version 3
+  !
+  interface TenGigE0/0/0/15
+  !
+ !
+!
+router mld
+ vrf rphy-vrf
+  interface TenGigE0/0/0/15
+   version 2
+  !
+ !
+!
+</pre> 
+</div>
+
 #### IGMPv3 / MLDv2 snooping profile configuration (BVI aggregation)
 In order to limit L2 multicast replication for specific groups to only interfaces with interested receivers, IGMP and MLD snooping must be enabled.  
 
@@ -2928,18 +3003,17 @@ mld snooping profile mld-snoop-1
 </pre> 
 </div>
 
-### RPD DHCPv4/v6 relay configuration  
+### RPD DHCPv4/v6 relay configuration 
 In order for RPDs to self-provision DHCP relay must be enabled on all RPD-facing L3 interfaces. In IOS-XR the DHCP relay configuration is done in its own configuration context without any configuration on the interface itself. 
 
+#### Native IP / Default VRF  
 <div class="highlighter-rouge">
 <pre class="highlight">
 dhcp ipv4
  profile rpd-dhcpv4 relay
-  helper-address vrf default 4.4.9.100
   helper-address vrf default 10.0.2.3
  !
  interface BVI100 relay profile rpd-dhcpv4
- interface TenGigE0/0/0/15 relay profile rpd-dhcpv4
 !
 dhcp ipv6
  profile rpd-dhcpv6 relay
@@ -2948,7 +3022,24 @@ dhcp ipv6
   source-interface BVI100
  !
  interface BVI100 relay profile rpd-dhcpv6
- interface TenGigE0/0/0/15 relay profile rpd-dhcpv6
+</pre> 
+</div>
+
+#### RPHY L3VPN  
+In this example it is assumed the DHCP server exists within the rphy-vrf VRF, if it does not then additional routing may be necessary to forward packets between VRFs. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+dhcp ipv4
+ vrf rphy-vrf relay profile rpd-dhcpv4-vrf
+ profile rpd-dhcpv4-vrf relay
+  helper-address vrf rphy-vrf 10.0.2.3
+  relay information option allow-untrusted
+ !
+ inner-cos 5
+ outer-cos 5
+ interface BVI101 relay profile rpd-dhcpv4-vrf
+ interface TenGigE0/0/0/15 relay profile rpd-dhcpv4-vrf
 !
 </pre> 
 </div>
@@ -3051,12 +3142,18 @@ interface TenGigE0/0/0/25
 
 ### RPD interface configuration
 
-#### P2P L3 
+#### P2P L3
+In this example the interface has PTP enabled towards the RPD  
 <div class="highlighter-rouge">
 <pre class="highlight">
 interface TeGigE0/0/0/15  
- description To RPD-1  
+ description To RPD-1
+ mtu 9200
+ ptp
+  profile g82752_master_v4
+ !  
  service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing 
  ipv4 address 192.168.2.0 255.255.255.254 
  ipv6 address 2001:192:168:2::0/127 
  ipv6 enable
@@ -3105,5 +3202,54 @@ router isis ACCESS
   address-family ipv4 unicast
   !
   address-family ipv6 unicast
+</pre> 
+</div>
+
+### Additional configuration for L3VPN Design 
+
+#### Global VRF Configuration 
+This configuration is required on all DPIC and RPD connected routers as well as ancillary elements communicating with Remote PHY elements   
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf rphy-vrf
+ address-family ipv4 unicast
+  import route-target
+   100:5000
+  !
+  export route-target
+   100:5000
+  !
+ !
+ address-family ipv6 unicast
+  import route-target
+   100:5000
+  !
+  export route-target
+   100:5000
+  !
+ !
+</pre> 
+</div>
+
+#### BGP Configuration
+This configuration is required on all DPIC and RPD connected routers as well as ancillary elements communicating with Remote PHY elements   
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ vrf rphy-vrf
+  rd auto
+  address-family ipv4 unicast
+   label mode per-vrf 
+   redistribute connected
+  !
+  address-family ipv6 unicast
+   label mode per-vrf 
+   redistribute connected
+  !
+  address-family ipv4 mvpn
+  !
+  address-family ipv6 mvpn
+  !
+ !
 </pre> 
 </div>
