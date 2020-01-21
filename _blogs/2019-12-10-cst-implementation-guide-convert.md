@@ -115,8 +115,8 @@ interface TenGigE0/0/0/10
  ipv4 unreachables disable
  load-interval 30
  dampening
-</div> 
-</pre> 
+</pre>
+</div>
 
 ### SRGB and SRLB Definition 
 It's recommended to first configure the Segment Routing Global Block (SRGB) across all nodes needing connectivity between each other. In most instances a single SRGB will be used across the entire network. In a SR MPLS deployment the SRGB and SRLB correspond to the label blocks allocated to SR. IOS-XR has a maximum configurable SRGB limit of 512,000 labels, however please consult platform-specific documentation for maximum values. The SRLB corresponds to the labels allocated for SIDs local to the node, such as Adjacency-SIDs. It is recommended to configure the same SRLB block across all nodes. The SRLB must not overlap with the SRGB.  The SRGB and SRLB are configured in IOS-XR with the following configuration:   
@@ -174,8 +174,8 @@ router isis ISIS-ACCESS
   metric-style wide
   spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
   maximum-redistributed-prefixes 100 level 2
-</div> 
-</pre> 
+</pre>
+</div>
 
 **Note:** ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
 
@@ -189,8 +189,8 @@ router isis ISIS-ACCESS
   address-family ipv4 unicast
    <b>prefix-sid absolute 16150</b>
    tag 1000 
-</div> 
-</pre> 
+</pre>
+</div>
 
 #### IS-IS interface configuration with TI-LFA
 
@@ -211,8 +211,8 @@ It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible fo
    fast-reroute per-prefix 
    fast-reroute per-prefix ti-lfa 
    metric 100 
-</div> 
-</pre> 
+</pre>
+</div>
 
 
 ### MPLS Segment Routing Traffic Engineering (SRTE) configuration
@@ -224,8 +224,8 @@ router isis ACCESS
  address-family ipv4 unicast
   mpls traffic-eng level-2-only
   mpls traffic-eng router-id Loopback0
-</div> 
-</pre> 
+</pre>
+</div>
 
 #### MPLS Segment Routing Traffic Engineering (SRTE) TE metric configuration  
 
@@ -238,8 +238,8 @@ segment-routing
  traffic-eng
   interface TenGigE0/0/0/6
    metric 1000
-</div> 
 </pre>
+</div>
 
 #### Interface delay metric static configuration  
 
@@ -254,8 +254,8 @@ performance-measurement
  interface TenGigE0/0/0/20
   delay-measurement
    advertise-delay 10000
-</div> 
 </pre>
+</div>
 
 ## IOS-XE Nodes - SR-MPLS Transport 
     
@@ -291,8 +291,8 @@ segment-routing mpls
 
 ### IGP protocol (ISIS) with Segment Routing MPLS configuration
 
-</div> 
-</pre>
+<div class="highlighter-rouge">
+<pre class="highlight">
 key chain ISIS-KEY
  key 1
   key-string cisco
@@ -401,7 +401,7 @@ route-policy CORE-TO-ACCESS1
     drop
   endif
 end-policy
-
+!
 router isis ACCESS 
  address-family ipv4 unicast
   distance 254 0.0.0.0/0 RR-LOOPBACKS
@@ -420,9 +420,9 @@ route-policy ACCESS1-TO-CORE
     drop                                                         
   endif                                                          
 end-policy                                                       
-
+! 
 router isis CORE
-address-family ipv4 unicast
+ address-family ipv4 unicast
   distance 254 0.0.0.0/0 ACCESS-PCE_SvRR-LOOPBACKS
   redistribute static route-policy CORE-TO-ACCESS1
 </pre> 

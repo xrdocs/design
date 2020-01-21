@@ -195,8 +195,8 @@ router isis ISIS-ACCESS
   metric-style wide
   spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
   maximum-redistributed-prefixes 100 level 2
-</div> 
 </pre> 
+</div> 
 
 ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
 {: .notice--success}
@@ -212,9 +212,8 @@ The prefix SID can be configured as either _absolute_ or _index_.  The _index_ c
   address-family ipv4 unicast
    <b>prefix-sid absolute 16150</b>
    tag 1000 
-</div> 
 </pre> 
-
+</div> 
 
 #### IS-IS interface configuration with TI-LFA
 
@@ -235,8 +234,8 @@ It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible fo
    fast-reroute per-prefix 
    fast-reroute per-prefix ti-lfa 
    metric 100 
-</div> 
 </pre> 
+</div> 
 
 
 ### MPLS Segment Routing Traffic Engineering (SRTE) configuration
@@ -248,8 +247,8 @@ router isis ACCESS
  address-family ipv4 unicast
   mpls traffic-eng level-2-only
   mpls traffic-eng router-id Loopback0
-</div> 
 </pre> 
+</div> 
 
 #### MPLS Segment Routing Traffic Engineering (SRTE) TE metric configuration  
 
@@ -262,8 +261,8 @@ segment-routing
  traffic-eng
   interface TenGigE0/0/0/6
    metric 1000
-</div> 
 </pre>
+</div>
 
 #### Interface delay metric static configuration  
 
@@ -278,8 +277,8 @@ performance-measurement
  interface TenGigE0/0/0/20
   delay-measurement
    advertise-delay 10000
-</div> 
 </pre>
+</div>
 
 ## IOS-XE Nodes - SR-MPLS Transport 
     
@@ -1075,7 +1074,7 @@ segment-routing
    pce address ipv4 100.1.1.101
    !
   !
-
+!
 extcommunity-set opaque BLUE
   100
 end-set
@@ -1083,7 +1082,7 @@ end-set
 route-policy ODN_EVPN
   set extcommunity color BLUE
 end-policy
-
+!
 router bgp 100
   address-family l2vpn evpn
    route-policy ODN_EVPN out
@@ -1107,9 +1106,8 @@ mpls traffic-eng lsp attributes L3VPN-SRTE
  path-selection metric igp
  pce
 !
-
 ip community-list 1 permit 9999
-
+!
 route-map L3VPN-ODN-TE-INIT permit 10
  match community 1
  set attribute-set L3VPN-SRTE
@@ -2185,7 +2183,7 @@ interface GigabitEthernet0/0/1
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-vrf L3VPN-ODNTE-VRF1                                                                                                          
+vrf L3VPN-ODNTE-VRF1                                                                                       
  address-family ipv4 unicast                                                                                                  
   import route-target                                                                                                                  
    100:501                                                                                                                   
