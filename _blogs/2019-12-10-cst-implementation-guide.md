@@ -1229,7 +1229,7 @@ class-map match-any match-traffic-class-6
  match traffic-class 6
  end-class-map
 </pre> 
-</div
+</div>
 
 #### Core ingress classifier policy 
 
