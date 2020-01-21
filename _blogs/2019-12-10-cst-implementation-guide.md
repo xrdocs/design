@@ -1166,6 +1166,7 @@ The core QoS policies defined for CST 3.0 utilize priority levels, with no bandw
 
 #### Class maps used in QoS policies 
 Class maps are used within a policy map to match packet criteria or internal QoS markings like traffic-class or qos-group 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 class-map match-any match-ef-exp5
@@ -1230,7 +1231,8 @@ class-map match-any match-traffic-class-6
 </pre> 
 </div
 
-#### Core ingress classifier policy  
+#### Core ingress classifier policy 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map core-ingress-classifier
@@ -1257,6 +1259,7 @@ policy-map core-ingress-classifier
 </div>
 
 #### Core egress queueing map 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map core-egress-queuing
@@ -1286,6 +1289,7 @@ policy-map core-egress-queuing
 
 #### Core egress MPLS EXP marking map 
 The following policy must be applied for PE devices with MPLS-based VPN services in order for service traffic classified in a specific QoS Group to be marked. VLAN-based P2P L2VPN services will by default inspect the incoming 802.1p bits and copy those the egress MPLS EXP if no specific ingress policy overrides that behavior.    
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map core-egress-exp-marking
@@ -1314,6 +1318,7 @@ policy-map core-egress-exp-marking
 
 #### Enabling H-QoS on NCS 540 and NCS 5500 
 Enabling H-QoS on the NCS platforms requires the following global command and requires a reload of the device. 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 hw-module profile qos hqos-enable
@@ -1324,6 +1329,7 @@ hw-module profile qos hqos-enable
 The following H-QoS policy represents an example QoS policy reserving 5Gbps on a sub-interface. On ingress each child class is policed to a certain percentage of the 5Gbps policer.  In the egress queuing policy, shaping is used with guaranteed each class a certain amount of egress bandwidth, with high priority traffic being serviced in a low-latency queue (LLQ).  
 
 #### Class maps used in ingress H-QoS policies 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 class-map match-any edge-hqos-2-in
@@ -1341,6 +1347,7 @@ class-map match-any edge-hqos-6-in
 </div>
 
 #### Parent ingress QoS policy 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map hqos-ingress-parent-5g
@@ -1354,6 +1361,7 @@ policy-map hqos-ingress-parent-5g
 </div>
 
 #### H-QoS ingress child policies  
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map hqos-ingress-child-policer
@@ -1398,6 +1406,7 @@ policy-map hqos-egress-parent-4g-priority
 
 #### Egress H-QoS child using priority only 
 In this policy all classes can access 100% of the bandwidth, queues are services based on priority level. The lower priority level has preference.   
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 policy-map hqos-egress-child-priority
