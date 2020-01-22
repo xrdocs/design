@@ -24,7 +24,7 @@ position: top
 | 1.0       | 05/08/2018 |Initial Converged SDN Transport publication| 
 | 1.5          | 09/24/2018 |NCS540 Access, ZTP, NSO Services|
 | 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55A2-MOD, IPv4/IPv6/mLDP Multicast, LDP to SR Migration |  
-| 3.0        | 1/1/2019 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
+| 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
 
 
 
@@ -795,6 +795,7 @@ The link-delay metrics are quantified in the unit of microseconds.  On most netw
 QoS is of utmost importance for ensuring the mobile control plane and critical user plane traffic meets SLA requirements. Overall network QoS is covered in the QoS section in this document, this section will focus on basic Hierarchical QoS to support 5G services. 
 
 H-QoS enables a provider to set an overall traffic rate across all services, and then configure parameters per-service via a child QoS policy where the percentages of guaranteed bandwidth are derived from the parent rate. NCS platforms support 2-level and 3-level H-QoS. 3-level H-QoS applies a policer (ingress) or shaper (egress) to a physical interface, with each sub-interface having a 2-level H-QoS policy applied.  
+
 
 #### CST QoS mapping with 5 classes 
 
