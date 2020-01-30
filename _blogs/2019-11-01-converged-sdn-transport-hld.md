@@ -353,7 +353,7 @@ Inter-Domain LSPs without requiring additional protocols such as BGP-LU
 
 Please refer to Section: "Transport Programmability" for additional details.
 
-V### Area Border Routers – Prefix-SID vs Anycast-SID
+### Area Border Routers – Prefix-SID vs Anycast-SID
 
 Section: "Inter-Domain Forwarding" showed the use of Anycast-SID at the ABRs for the
 provisioning of an Access to Access End-To-End LSP. When the LSP is set
