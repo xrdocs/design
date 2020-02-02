@@ -186,7 +186,7 @@ the Core domain is extended over the Aggregation domain, thus increasing
 the number of nodes in the
 Core.
 
-![](http://xrdocs.io/design/images/cmf-hld/cmf-expanded-access.png)
+![](http://xrdocs.io/design/images/cmf-hld/cmf-expanded-core.png)
 
 _Figure 2: Distributed with expanded access_ 
 
@@ -195,7 +195,7 @@ domain remains unaltered and the Access domain is extended over the
 Aggregation domain, thus increasing the number of nodes in the Access
 domain.:%s/
 
-![](http://xrdocs.io/design/images/cmf-hld/cmf-expanded-core.png)
+![](http://xrdocs.io/design/images/cmf-hld/cmf-expanded-access.png)
 
 _Figure 3: Distributed with expanded core_ 
 
