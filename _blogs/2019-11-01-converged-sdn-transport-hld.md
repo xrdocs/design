@@ -942,7 +942,8 @@ In a single IGP network with equal IGP metrics, certain link failures may cause 
 ### cBR-8 DPIC to CIN Interconnection  
 The cBR-8 supports two mechanisms for DPIC high availability outlined in the overview section. DPIC line card and link redundancy is recommended but not a requirement. In the CST reference design, if link redundancy is being used each port pair on the active and standby line cards is connected to a different router and the default active ports (even port number) is connected to a different router. In the example figure, port 0 from active DPIC card 0 is connected to R1 and port 0 from standby DPIC card 1 is connected to R2.  DPIC link redundancy MUST be configured using the "cold" method since the design is using L3 to each DPIC interface and no intermediate L2 switching.  This is done with the _cable rphy link redundancy cold_ global command and will keep the standby link in a down/down state until switchover occurs. 
 
-![](http://xrdocs.io/design/images/cmf-rphy-dpic-redundancy.png)
+![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-dpic-redundancy.png)
+_DPIC line card and link HA_ 
 
 #### DPIC Interface Configuration 
 Each DPIC interface should be configured in its own L3 VRF. This ensures traffic from an RPD assigned to a specific DPIC interface takes the traffic path via the specific interface and does not traverse the SUP interface for either ingress or egress traffic. It's recommended to use a static default route within each DPIC VRF towards the CIN network. Dynamic routing protocols could be utilized, however it will slow convergence during redundancy switchover.   
@@ -954,16 +955,15 @@ If using cBR-8 link HA, failover time is reduced by utilizing the same gateway M
 
 If using IS-IS to distribute routes across the CIN, each DPIC physical interface or BVI should be configured as a passive IS-IS interface in the topology. If using BGP to distribute routing information the "redistribute connected" command should be used with an appropriate route policy to restrict connected routes to only DPIC interface. The BGP configuration is the same whether using L3VPN or the global routing table.   
 
-![](http://xrdocs.io/design/images/cmf-rphy-dpic-redundancy.png)
-_DPIC line card and link HA_ 
+It is recommended to use a /31 for IPv4 and /127 for IPv6 addresses for each DPIC port whether using a L3 physical interface or BVI on the CIN router.   
+{: .notice--success}
 
 ### RPD to Router Interconnection  
 The Converged SDN Transport design supports both P2P L3 interfaces for RPD and DPIC aggregation as well as using Bridge Virtual Interfaces. A BVI is a logical L3 interface within a L2 bridge domain. In the BVI deployment the DPIC and RPD physical interfaces connected to a single leaf device share a common IP subnet with the gateway residing on the leaf router.  
 
 It is recommended to configure the RPD leaf using bridge-domains and BVI interfaces. This eases configuration on the leaf device as well as the DHCP configuration used for RPD provisioning. 
 
-It is recommended to connect each cBR-8 DPIC interface using P2P L3 interfaces, using a /31 for IPv4 and /127 for IPv6 addresses.  The following shows the two potential deployment options.  
-{: .notice--success}
+ The following shows the P2P and BVI deployment options.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-rphy-bvi-p2p.png)
 
