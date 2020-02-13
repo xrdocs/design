@@ -925,11 +925,26 @@ router bgp 100
 </pre> 
 </div> 
 
-## BGP-LU co-existence bgp configuration 
-CST 3.0 introduced co-existence between services using BGP-LU and SR endpoints.  
+## BGP-LU co-existence BGP configuration 
+CST 3.0 introduced co-existence between services using BGP-LU and SR endpoints. If you are using SR and BGP-LU within the same domain it requires using BGP-SR in order to resolve prefixes correctly on the each ABR. BGP-SR uses a new BGP community attached to the BGP-LU prefix to convey the SR prefix-sid index end to end across the network. 
+
+It is recommended to enable the BGP-SR configuration when enabling SR on the node. Without the setting the label-index and enabling BGP-SR, the 
+
+#### Segment Routing Global Block Configuration 
+The BGP process must know about the SRGB in order to properly allocate local BGP-SR labels when receiving a BGP-LU prefix with a BGP-SR index community.  This is done via the following configuration. If a SRGB is defined under the IGP it must match the global SRGB value. The IGP will inherit this SRGB value if none is previously defined.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ global-block 32000 64000
+ !
+! 
+</pre> 
+</div>
+
 
 #### Boundary node configuration  
-The following configuration is necessary on all domain boundary nodes. Note the _ibgp policy out enforce-modifications_ command is required to change the next-hop on reflected IBGP routes.   
+The following configuration is necessary on all domain boundary nodes. Note the _ibgp policy out enforce-modifications_ command is required to change the next-hop on reflected IBGP routes.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -971,20 +986,29 @@ router bgp 100
 
 
 #### PE node configuration  
-The following configuration is necessary on all domain PE nodes participating in BGP-LU services.   
+The following configuration is necessary on all domain PE nodes participating in BGP-LU/BGP-SR. The label-index set must match the index of the Loopback addresses being advertised into BGP. This example shows a single Loopback address being advertised into BGP.   
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-neighbor-group BGP-LU-BORDER
+route-policy LOOPBACK-INTO-BGP-LU($SID-LOOPBACK0)
+  set label-index $SID-LOOPBACK0
+  set aigp-metric igp-cost
+end-policy
+!
+router bgp 100 
+  address-family ipv4 unicast
+   network 100.0.2.53/32 route-policy LOOPBACK-INTO-BGP-LU(153)
+ !
+ neighbor-group BGP-LU-BORDER
   remote-as 100
   update-source Loopback0
   address-family ipv4 labeled-unicast
   !
  !
-neighbor 100.0.0.3 
+ neighbor 100.0.0.3 
   use neighbor-group BGP-LU-BORDER
  !
-neighbor 100.0.0.4 
+ neighbor 100.0.0.4 
   use neighbor-group BGP-LU-BORDER
  !
 </pre> 
