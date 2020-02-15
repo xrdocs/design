@@ -673,7 +673,7 @@ ptp
 </div>
 
 ### Application of PTP profile to physical interface 
-**Note:** In CST 3.0 PTP may only be enabled on physical interfaces. G.8275.1 operates at L2 andsupports PTP across Bundle member links and interfaces part of a bridge domain. G.8275.2 operates at L3 and does not support Bundle interfaces or BVI interfaces.   
+**Note:** In CST 3.0 PTP may only be enabled on physical interfaces. G.8275.1 operates at L2 and supports PTP across Bundle member links and interfaces part of a bridge domain. G.8275.2 operates at L3 and does not support Bundle interfaces or BVI interfaces.   
 
 #### G.8275.2 interface configuration 
 This example is of a slave device using a master of 2405:10:23:253::0.  
@@ -926,9 +926,9 @@ router bgp 100
 </div> 
 
 ## BGP-LU co-existence BGP configuration 
-CST 3.0 introduced co-existence between services using BGP-LU and SR endpoints. If you are using SR and BGP-LU within the same domain it requires using BGP-SR in order to resolve prefixes correctly on the each ABR. BGP-SR uses a new BGP community attached to the BGP-LU prefix to convey the SR prefix-sid index end to end across the network. 
+CST 3.0 introduced co-existence between services using BGP-LU and SR endpoints. If you are using SR and BGP-LU within the same domain it requires using BGP-SR in order to resolve prefixes correctly on the each ABR. BGP-SR uses a new BGP community attached to the BGP-LU prefix to convey the SR prefix-sid index end to end across the network. Using the same prefix-sid index both within the SR-MPLS IGP domain and across the BGP-LU network simplifies the network from an operational perspective since the path to an end node can always be identified by that SID.  
 
-It is recommended to enable the BGP-SR configuration when enabling SR on the node. Without the setting the label-index and enabling BGP-SR, the 
+It is recommended to enable the BGP-SR configuration when enabling SR on the PE node. See the PE configuration below for an example of this configuration.   
 
 #### Segment Routing Global Block Configuration 
 The BGP process must know about the SRGB in order to properly allocate local BGP-SR labels when receiving a BGP-LU prefix with a BGP-SR index community.  This is done via the following configuration. If a SRGB is defined under the IGP it must match the global SRGB value. The IGP will inherit this SRGB value if none is previously defined.  
@@ -1312,7 +1312,7 @@ policy-map core-egress-queuing
 </div>
 
 #### Core egress MPLS EXP marking map 
-The following policy must be applied for PE devices with MPLS-based VPN services in order for service traffic classified in a specific QoS Group to be marked. VLAN-based P2P L2VPN services will by default inspect the incoming 802.1p bits and copy those the egress MPLS EXP if no specific ingress policy overrides that behavior.    
+The following policy must be applied for PE devices with MPLS-based VPN services in order for service traffic classified in a specific QoS Group to be marked. VLAN-based P2P L2VPN services will by default inspect the incoming 802.1p bits and copy those the egress MPLS EXP if no specific ingress policy overrides that behavior. Note the EXP can be set in either an ingress or egress QoS policy. This QoS example sets the EXP via the egress map.   
 
 <div class="highlighter-rouge">
 <pre class="highlight">
