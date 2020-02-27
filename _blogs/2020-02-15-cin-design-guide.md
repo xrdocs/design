@@ -1101,6 +1101,296 @@ router bgp 100
 # Network Deployment Example 
 
 ## Summary 
-In this section we will show an example deployment with complete configurations 
+In this section we will show an example deployments with complete configurations. There are two flavors of deployment covered in this section, the first using the Global Routing Table (GRT) to carry CIN traffic, the second using a L3VPN to carry all CIN traffic. The recommended design option for those building a converged access and aggregation network is to utilize a L3VPN to carry CIN traffic. In both designs we will enable Segment Routing to provide 50ms failover across the CIN network.   
+
+## Network Diagrams 
+
+## Consistent Configuration across GRT and L3VPN Designs 
+
+### PE4 Configuration 
+PE4 has the uplink to the SUP-250 supervisor module. Its configuration is the same across both designs. 
+
+#### PE4 IS-IS Configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+key chain ISIS-CBR
+ key 1
+  accept-lifetime 00:00:00 january 01 2018 infinite
+  key-string password 08285F471A09040401
+  send-lifetime 00:00:00 january 01 2018 infinite
+  cryptographic-algorithm HMAC-MD5
+ !
+!
+router isis ACCESS
+ set-overload-bit on-startup 360
+ is-type level-2-only
+ net 49.0001.0102.0000.0004.00
+ segment-routing global-block 32000 64000
+ nsr
+ nsf cisco
+ log adjacency changes
+ lsp-gen-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+ lsp-refresh-interval 65000
+ max-lsp-lifetime 65535
+ address-family ipv4 unicast
+  metric-style wide
+  mpls traffic-eng level-2-only
+  mpls traffic-eng router-id Loopback0
+  spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+  segment-routing mpls
+  spf prefix-priority critical tag 5000
+  spf prefix-priority high tag 1000
+ !
+ address-family ipv6 unicast
+  metric-style wide
+ !
+ interface TenGigE0/0/0/19
+  circuit-type level-2-only
+  point-to-point
+  hello-password keychain ISIS-CBR
+  address-family ipv4 unicast
+   metric 100
+  !
+  address-family ipv6 unicast
+   metric 100
+  !
+ !
+!
+</pre> 
+</div>
+
+#### PE4 BGP Configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ nsr
+ bgp router-id 100.0.0.4
+ bgp graceful-restart
+ ibgp policy out enforce-modifications
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+ neighbor 1.0.0.13
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 unicast
+  !
+ !
+ neighbor 2001:1::13
+  remote-as 100
+  update-source Loopback0
+  address-family ipv6 unicast
+  !
+ !
+!
+</pre> 
+</div>
+
+### cBR-8 Configuration  
+The cBR-8 configuration will remain the same across each design option.  
+
+#### cBR-8 Line Card Redundancy Configuration
+<div class="highlighter-rouge">
+<pre class="highlight">
+redundancy
+ mode sso
+ linecard-group 0 internal-switch
+  class 1:N
+  member slot 1 primary
+  member slot 0 secondary
+  no revertive
+</pre> 
+</div>
+
+#### cBR-8 Link HA Configuration
+<div class="highlighter-rouge">
+<pre class="highlight">
+cable rphy link redundancy cold
+</pre> 
+</div>
+
+#### cBR-8 DPIC and DPIC Routing Configuration
+Each DPIC interface is placed in a VRF with associated default routes pointing to the CIN device as its gateway. This configuration ensures traffic destined for the DPIC IP address will only ingress the DPIC interface and not the SUP interface.  
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf definition lc0_p0
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+interface TenGigabitEthernet0/1/0
+ description "Connected to PA4 TenGigE0/0/0/25"
+ vrf forwarding lc0_p0
+ ip address 3.3.9.100 255.255.255.0
+ logging event link-status
+ cdp enable
+ ipv6 address 2001:3:3:9::100/64
+ ipv6 enable
+!
+ip route vrf lc0_p0 0.0.0.0 0.0.0.0 3.3.9.101
+!
+ipv6 route vrf lc0_p0 ::/0 2001:4:4:9::101
+! 
+vrf definition lc0_p1
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+interface TenGigabitEthernet0/1/2
+ description "Connected to AG3 TenGigE0/0/0/25"
+ vrf forwarding lc0_p1
+ ip address 5.5.9.100 255.255.255.0
+ logging event link-status
+ cdp enable
+ ipv6 address 2001:5:5:9::100/64
+ ipv6 enable
+!
+ip route vrf lc0_p1 0.0.0.0 0.0.0.0 5.5.9.101
+!
+ipv6 route vrf lc0_p1 ::/0 2001:5:5:9::101
+! 
+vrf definition lc1_p0
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+interface TenGigabitEthernet1/1/0
+ description "Connected to PA4 TenGigE0/0/0/25"
+ vrf forwarding lc1_p0
+ ip address 4.4.9.100 255.255.255.0
+ logging event link-status
+ load-interval 30
+ cdp enable
+ ipv6 address 2001:4:4:9::100/64
+ ipv6 enable
+!
+ip route vrf lc1_p0 0.0.0.0 0.0.0.0 4.4.9.101
+!
+ipv6 route vrf lc1_p0 ::/0 2001:4:4:9::101
+!
+vrf definition lc1_p1
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+interface TenGigabitEthernet1/1/2
+ description "Connected to AG3 TenGigE0/0/0/25"
+ vrf forwarding lc1_p1
+ ip address 6.6.9.100 255.255.255.0
+ logging event link-status
+ cdp enable
+ ipv6 address 2001:6:6:9::100/64
+ ipv6 enable
+!
+ip route vrf lc1_p1 0.0.0.0 0.0.0.0 6.6.9.101
+!
+ipv6 route vrf lc1_p1 ::/0 2001:6:6:9::101
+</pre> 
+</div>
+
+#### cBR-8 SUP Routing 
+In this example we will utilize IS-IS between the cBR-8 and provider network, and utilize BGP to advertise subscriber and cable modem address space to the rest of the network. 
+
+<b>IS-IS Configuration</b> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+key chain ISIS-KEYCHAIN 
+ key 0
+  key-string isispass
+   accept-lifetime 00:00:00 Jan 1 2018 infinite
+   send-lifetime 00:00:00 Jan 1 2018 infinite
+   cryptographic-algorithm md5
+   !
+  !
+!
+router isis access
+ net 49.0001.0010.0000.0013.00
+ is-type level-2-only
+ router-id Loopback0
+ metric-style wide
+ log-adjacency-changes
+ !
+ address-family ipv6
+  multi-topology
+ exit-address-family
+!
+interface Loopback0
+ ip address 1.0.0.13 255.255.255.255
+ ip router isis access
+ isis circuit-type level-2-only
+end
+!
+interface TenGigabitEthernet4/1/6
+ description "Connected to PE4  TenGigE 0/0/0/19"
+ ip address 4.1.6.1 255.255.255.0
+ ip router isis access
+ load-interval 30
+ cdp enable
+ ipv6 address 2001:4:1:6::1/64
+ ipv6 router isis access
+ mpls ip
+ isis circuit-type level-2-only
+ isis network point-to-point
+ isis authentication mode md5
+ isis authentication key-chain ISIS-KEYCHAIN 
+ isis csnp-interval 10
+ hold-queue 400 in
+end
+</pre> 
+</div>
+
+<b>BGP Configuration</b> 
+router bgp 100
+ bgp router-id 1.0.0.13
+ bgp log-neighbor-changes
+ bgp graceful-restart
+ timers bgp 5 60
+ neighbor 2001:100::4 remote-as 100
+ neighbor 2001:100::4 ha-mode sso
+ neighbor 2001:100::4 update-source Loopback0
+ neighbor 2001:100::4 ha-mode graceful-restart
+ neighbor 100.0.0.4 remote-as 100
+ neighbor 100.0.0.4 ha-mode sso
+ neighbor 100.0.0.4 update-source Loopback0
+ neighbor 100.0.0.4 ha-mode graceful-restart
+ !
+ address-family ipv4
+  redistribute connected
+  redistribute static route-map static-route
+  no neighbor 2001:100::4 activate
+  neighbor 100.0.0.4 activate
+  neighbor 100.0.0.4 send-community extended
+  neighbor 100.0.0.4 next-hop-self
+  neighbor 100.0.0.4 soft-reconfiguration inbound
+ exit-address-family
+ !
+ address-family ipv6
+  redistribute connected
+  neighbor 2001:100::4 activate
+  neighbor 2001:100::4 send-community extended
+  neighbor 2001:100::4 next-hop-self
+  neighbor 2001:100::4 soft-reconfiguration inbound
+ exit-address-family
+</pre> 
+</div>
+
+
 
 
