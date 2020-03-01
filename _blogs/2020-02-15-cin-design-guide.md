@@ -1105,10 +1105,40 @@ In this section we will show an example deployments with complete configurations
 
 ## Network Diagrams 
 
+## Connecti Table 
+| A Node | A Int | Z Node | Z Int | Role | 
+| ----------- | ------|-----|-------|------|  
+| PE4 | Te0/0/0/19 | CBR8 | Te4/1/6 | SUP Uplink | 
+| PE3 | Te0/0/0/19 | CBR8 | Te4/1/5 | SUP Uplink | 
+| PA3 | Te0/0/0/25 | CBR8 | Te0/1/0 | GRT DPIC to CIN Secondary Active| 
+| PA3 | Te0/0/0/26 | CBR8 | Te1/1/1 | GRT DPIC to CIN Primary Standby | 
+| PA3 | BE321 | PE3 | BE321 | Core | 
+| PA3 | BE421 | PE4 | BE421 | Core | 
+| PA3 | Te0/0/0/21 | AG3 | Te0/0/0/20 | Core | 
+| PA3 | Te0/0/0/20 | AG4 | Te0/0/0/21 | Core |  
+| PA4 | Te0/0/0/25 | CBR8 | Te0/1/1 | GRT DPIC to CIN Secondary Standby |  
+| PA4 | Te0/0/0/26 | CBR8 | Te1/1/0 | GRT DPIC to CIN Primary Active |
+| PA4 | Te0/0/0/5 | TGM-903 | Te0/3/2 | CIN to PTP GM |
+| PA4 | BE322 | PE3 | BE322 | Core | 
+| PA4 | BE422 | PE4 | BE422 | Core | 
+| PA4 | Te0/0/0/21 | AG3 | Te0/0/0/21 | Core | 
+| PA4 | Te0/0/0/20 | AG4 | Te0/0/0/20 | Core |  
+| AG3 | Hu0/0/1/0 | Ag4 | Hu0/0/1/1 | Core |  
+| AG3 | Te0/0/0/30 | A-PE8 | Te0/0/0/6 | Core (RPD leaf) |  
+| AG3 | Te0/0/0/25 | CBR8 | Te0/1/2 | L3VPN DPIC to CIN Secondary Active |  
+| AG3 | Te0/0/0/26 | CBR8 | Te1/1/3 | L3VPN DPIC to CIN Primary Standby |  
+| AG4 | Te0/0/0/30 | A-PE8 | Te0/0/0/7 | Core (RPD leaf) |  
+| AG4 | Te0/0/0/25 | CBR8 | Te0/1/3 | L3VPN DPIC to CIN Secondary Standby |  
+| AG4 | Te0/0/0/26 | CBR8 | Te1/1/2 | L3VPN DPIC to CIN Primary Active |  
+| A-PE8 | Te0/0/0/15 | RPD0 | Eth0  | RPD |  
+| A-PE8 | Te0/0/0/16 | RPD1 | Eth0  | RPD |  
+| A-PE8 | Te0/0/0/17 | RPD2 | Eth0  | RPD |  
+
+
 ## Consistent Configuration across GRT and L3VPN Designs 
 
 ### PE4 Configuration 
-PE4 has the uplink to the SUP-250 supervisor module. Its configuration is the same across both designs. 
+PE4 connects to the uplink interfaces on the cBR-8 SUP-250 supervisor module. Its configuration is the same across both designs. 
 
 #### PE4 IS-IS Configuration 
 <div class="highlighter-rouge">
@@ -1158,6 +1188,52 @@ router isis ACCESS
 !
 </pre> 
 </div>
+
+#### PE4 Multicast and PIM Configuration 
+In IOS-XR multicast must be enabled on all participating interfaces for IPv4 and IPv6. It is easiest to enable multicast on all interfaces with the "interface all enable" command. PIM should be enabled for IPv4 and IPv6 on all core interfaces as well as the interface to the cBR8 if the cBR8 is acting as a video core.  
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+ address-family ipv4
+  mdt source Loopback0
+  rate-per-route
+  interface all enable
+  accounting per-prefix
+ !
+ address-family ipv6
+  rate-per-route
+  interface all enable
+  accounting per-prefix
+ !
+!
+router pim
+ address-family ipv4
+  interface Loopback0
+   enable
+  !
+  interface Bundle-Ether421
+   enable
+  !
+  interface Bundle-Ether422
+   enable
+  !
+  interface TenGigE0/0/0/19
+   enable
+ address-family ipv6
+  interface Loopback0
+   enable
+  !
+  interface Bundle-Ether421
+   enable
+  !
+  interface Bundle-Ether422
+   enable
+  !
+  interface TenGigE0/0/0/19
+   enable
+</pre> 
+</div>
+
 
 #### PE4 BGP Configuration 
 <div class="highlighter-rouge">
@@ -1393,10 +1469,11 @@ router bgp 100
 
 ## GRT Specific Configuration 
 
-### DPIC CIN Node Configuration - PA3 
+### DPIC CIN Node Configuration - PA3 and PA4  
 
 #### Core Facing Interface Configuration 
-Referencing the original diagram, 
+
+
 
 #### IS-IS Configuration  
 
