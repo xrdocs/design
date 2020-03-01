@@ -1391,6 +1391,12 @@ router bgp 100
 </pre> 
 </div>
 
+## GRT Specific Configuration 
 
+### DPIC CIN Node Configuration - PA3 
 
+#### Core Facing Interface Configuration 
+Referencing the original diagram, 
+
+#### IS-IS Configuration  
 
