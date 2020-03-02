@@ -1111,7 +1111,8 @@ In this section we will show an example deployments with complete configurations
 ![](http://xrdocs.io/design/images/rphy-design-guide/cin-topology-l3vpn.png)
 
 
-## Connectivity Table 
+## Connectivity Table
+ 
 | A Node | A Int | Z Node | Z Int | Role | 
 | ----------- | ------|-----|-------|------|
 | PE4 | Te0/0/0/19 | CBR8 | Te4/1/6 | SUP Uplink |  
@@ -1139,6 +1140,16 @@ In this section we will show an example deployments with complete configurations
 | A-PE8 | Te0/0/0/15 | RPD0 | Eth0  | RPD |  
 | A-PE8 | Te0/0/0/16 | RPD1 | Eth0  | RPD |  
 | A-PE8 | Te0/0/0/17 | RPD2 | Eth0  | RPD |  
+
+| Product | Role | 10GE SFP+ | 25G SFP28 | 100G QSFP28 | Timing | Comments |
+| ------- | -----| ---------| -----------| --------------------- | ------ | -------- |  
+| NCS-55A1-24Q6H-S | RPD leaf | 48  | 24 | 6 | Class B | |  
+| N540-24Z8Q2C  | RPD leaf | 24 | 8 | 2 | Class B | Smaller deployments | 
+| NCS-55A1-48Q6H-S | DPIC leaf | 48  | 48 | 6 | Class B | |  
+| NCS-55A2-MOD | Remote agg | 40  | 24 | upto 8 | Class B | CFP2-DCO support | 
+| NCS-55A1-36H-S | Spine | 144 (breakout)  | 0 | 36 | Class B | | 
+| NCS-5502 | Spine | 192 (breakout) | 0 | 48 | None | |
+| NCS-5504 | Multi | Upto 576 | x | Upto 144 | Class B | 4-slot modular platform |  
 
 
 ## Consistent Configuration across GRT and L3VPN Designs 
