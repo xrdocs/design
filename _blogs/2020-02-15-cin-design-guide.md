@@ -303,7 +303,6 @@ router isis ISIS-ACCESS
  lsp-gen-interval maximum-wait 5000 initial-wait 5 secondary-wait 100
  lsp-refresh-interval 65000
  max-lsp-lifetime 65535
- lsp-password keychain ISIS-KEY
  address-family ipv4 unicast
   metric-style wide
   advertise link attributes
@@ -1105,10 +1104,17 @@ In this section we will show an example deployments with complete configurations
 
 ## Network Diagrams 
 
-## Connecti Table 
+### Global Routing Table with DPIC Leaf 
+![](http://xrdocs.io/design/images/rphy-design-guide/cin-topology-grt.png)
+
+### L3VPN Collapsed  
+![](http://xrdocs.io/design/images/rphy-design-guide/cin-topology-l3vpn.png)
+
+
+## Connectivity Table 
 | A Node | A Int | Z Node | Z Int | Role | 
-| ----------- | ------|-----|-------|------|  
-| PE4 | Te0/0/0/19 | CBR8 | Te4/1/6 | SUP Uplink | 
+| ----------- | ------|-----|-------|------|
+| PE4 | Te0/0/0/19 | CBR8 | Te4/1/6 | SUP Uplink |  
 | PE3 | Te0/0/0/19 | CBR8 | Te4/1/5 | SUP Uplink | 
 | PA3 | Te0/0/0/25 | CBR8 | Te0/1/0 | GRT DPIC to CIN Secondary Active| 
 | PA3 | Te0/0/0/26 | CBR8 | Te1/1/1 | GRT DPIC to CIN Primary Standby | 
@@ -1138,9 +1144,32 @@ In this section we will show an example deployments with complete configurations
 ## Consistent Configuration across GRT and L3VPN Designs 
 
 ### PE4 Configuration 
-PE4 connects to the uplink interfaces on the cBR-8 SUP-250 supervisor module. Its configuration is the same across both designs. 
+PE4 connects to the uplink interfaces on the cBR-8 SUP-250 supervisor module. Its configuration is the same across both designs.  
 
-#### PE4 IS-IS Configuration 
+#### PE4 to Core Sample Interface Configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface Bundle-Ether34
+ bfd mode ietf
+ bfd address-family ipv4 timers start 180
+ bfd address-family ipv4 multiplier 3
+ bfd address-family ipv4 destination 10.3.4.0
+ bfd address-family ipv4 fast-detect
+ bfd address-family ipv4 minimum-interval 50
+ mtu 9216
+ service-policy input core-ingress-classifier-9k
+ service-policy output core-egress-queuing-9k
+ ipv4 address 10.3.4.1 255.255.255.254
+ ipv4 unreachables disable
+ ipv6 address 2405:10:3:4::1/127
+ bundle minimum-active links 1
+ load-interval 30
+ dampening
+!
+</pre> 
+</div>
+
+####  IS-IS Configuration 
 <div class="highlighter-rouge">
 <pre class="highlight">
 key chain ISIS-CBR
@@ -1179,9 +1208,13 @@ router isis ACCESS
   point-to-point
   hello-password keychain ISIS-CBR
   address-family ipv4 unicast
+   fast-reroute per-prefix 
+   fast-reroute per-prefix ti-lfa
    metric 100
   !
   address-family ipv6 unicast
+   fast-reroute per-prefix
+   fast-reroute per-prefix ti-lfa
    metric 100
   !
  !
@@ -1235,7 +1268,7 @@ router pim
 </div>
 
 
-#### PE4 BGP Configuration 
+#### PE4 BGP Configuration to CBR8 
 <div class="highlighter-rouge">
 <pre class="highlight">
 router bgp 100
@@ -1421,7 +1454,8 @@ interface TenGigabitEthernet4/1/6
  cdp enable
  ipv6 address 2001:4:1:6::1/64
  ipv6 router isis access
- mpls ip
+ ! mpls ip optionsal for LDP enabled CMTS 
+ mpls ip 
  isis circuit-type level-2-only
  isis network point-to-point
  isis authentication mode md5
@@ -1467,13 +1501,120 @@ router bgp 100
 </pre> 
 </div>
 
-## GRT Specific Configuration 
+### CIN Node Configuration 
+Much of the configuration across the IOS-XR CIN nodes is the same with regards to routing. Single examples will be given which can be applied across the specific devices and interfaces in the design.   
 
-### DPIC CIN Node Configuration - PA3 and PA4  
+#### Network Timing Configuration 
+See the timing configuration section in this document for standard timing profiles.  The following diagram shows the flow of timing end to end across the network.  
 
-#### Core Facing Interface Configuration 
+![](http://xrdocs.io/design/images/rphy-design-guide/cin-timing-diagram.png)
 
 
+#### Timing Configuration between PA4 and ASR-903 Grandmaster
+The following configuration enabled IPv4 G.8275.2 and SyncE between the Grandmaster to the CIN network  
 
-#### IS-IS Configuration  
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/5
+ description Connected to PTP Grandmaster 
+ ptp
+  profile g82752_slave_v4
+  transport ipv4
+  port state slave-only
+  master ipv4 23.23.23.1
+  !
+ !
+ ipv4 address 10.1.15.1 255.255.255.0
+ ipv6 nd prefix default no-adv
+ ipv6 nd other-config-flag
+ ipv6 nd managed-config-flag
+ ipv6 address 2001:10:1:15::1/64
+ load-interval 30
+ frequency synchronization
+  selection input
+  priority 1
+  wait-to-restore 1
+ !
+!
+</pre> 
+</div>
 
+#### Physical Interface Configuration for Timing Master 
+The following is used on core interfaces with downstream slave interfaces  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/20
+ mtu 9216
+ ptp
+  profile g82752_master_v4
+ !
+ service-policy input core-ingress-classifier
+ service-policy output core-egress-queuing
+ service-policy output core-egress-exp-marking
+ ipv4 address 10.22.24.0 255.255.255.254
+ ipv4 unreachables disable
+ ipv6 address 2405:10:22:24::/127
+ load-interval 30
+ dampening
+!
+</pre> 
+</div>
+
+#### IS-IS Configuration - PA3, PA4, AG3, AG4, A-PE8 
+The following IS-IS configuration is used on all CIN IOS-XR nodes. An example is given for a core interface along with the loopback interface with SR enabled.  The prefix-sid index of Lo0 must be unique on each node.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS
+ set-overload-bit on-startup 360
+ is-type level-2-only
+ net 49.0001.0102.0000.0022.00
+ segment-routing global-block 32000 64000
+ nsr
+ nsf cisco
+ log adjacency changes
+ lsp-gen-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+ lsp-refresh-interval 65000
+ max-lsp-lifetime 65535
+ address-family ipv4 unicast
+  metric-style wide
+  microloop avoidance segment-routing
+  mpls traffic-eng level-2-only
+  mpls traffic-eng router-id Loopback0
+  spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+  segment-routing mpls
+  spf prefix-priority critical tag 5000
+  spf prefix-priority high tag 1000
+ !
+ address-family ipv6 unicast
+  metric-style wide
+ !
+ interface Loopback0
+  address-family ipv4 unicast
+   prefix-sid index 22
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface Bundle-Ether322
+  bfd minimum-interval 50
+  bfd multiplier 3
+  bfd fast-detect ipv4
+  bfd fast-detect ipv6
+  point-to-point
+  hello-password keychain ISIS-KEY
+  address-family ipv4 unicast
+   fast-reroute per-prefix
+   fast-reroute per-prefix ti-lfa
+   metric 100
+   adjacency-sid absolute 15322 protected
+  !
+  address-family ipv6 unicast
+   fast-reroute per-prefix
+   fast-reroute per-prefix ti-lfa
+   metric 100
+  !
+ !
+</pre> 
+</div>
