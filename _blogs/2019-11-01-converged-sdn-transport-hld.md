@@ -147,12 +147,15 @@ blocks:**
 
 # Hardware Components in Design 
 
-## NCS-55A2-MOD 
-The Converged SDN Transport design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
-router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
-per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
-100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
-configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
+## NCS-560 
+The NCS-560 with RSP4 is a next-generation platform with high scale and modularity to fit in many access, pre-aggregation, and aggregation roles. Available in 4-slot and 7-slot versions, the NCS 560 is fully redundant with a variety of 40GE/100GE, 10GE, and 1GE modular adapters. The NCS 560 RSP4 has built-in GNSS timing support along with a high scale (-E) version to support full Internet routing tables or large VPN routing tables with room to spare for 5+ years of growth. The NCS 560 provides all of this with a very low power and space footprint with a depth of 9.5". 
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs560.png)
+
+## NCS 5504, 5508, 5516 Modular Chassis 
+The modular chassis version of the NCS 5500 is available in 4, 8, and 16 slot versions for flexible interfaces at high scale with dual RP modules. A variety of line cards are available with 10G, 40G, 100G, and 400G interface support. The NCS 5500 fully supports timing distribution for applications needing high accuracy clocks like mobile backhaul.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs5500.png)
 
 ## NCS-5501, NCS-5501-SE, and N540-24Z8Q2C-M 
 The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Converged SDN Transport. The 5501 
@@ -160,13 +163,28 @@ has 48x1G/10G SFP+ and 6x100G QSFP28 interfaces, the SE adds higher route scale 
 access node with 24x10G SFP+, 8x25G SFP28, and 2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with a conformal 
 coating for deployment deep into access networks. 
 
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55xx.png)
+
+## NCS-55A2-MOD 
+The Converged SDN Transport design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
+router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
+per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
+100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
+configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55a2-mod.png)
+
 ## ASR-920 
 The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. All services adn the Segment Routing dataplane are validated 
 on the ASR 920.   
 
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-asr920.png)
+
 ## ASR 9000 
 The ASR 9000 is the router of choice for high scale edge services.  The Converged SDN Transport utilizes the ASR 9000 in a PE function role, performing high scale 
 L2VPN, L3VPN, and Pseudowire headend termination. All testing up to 3.0 has been performed using Tomahawk series line cards on the ASR 9000.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-asr9000.png)
 
 # Transport – Design Components  
     
@@ -911,6 +929,7 @@ The following table highlights the Cisco hardware utilized within the Converged 
 | NCS-55A1-36H-S | Spine | 144 (breakout)  | 0 | 36 | Class B | | 
 | NCS-5502 | Spine | 192 (breakout) | 0 | 48 | None | |
 | NCS-5504 | Multi | Upto 576 | x | Upto 144 | Class B | 4-slot modular platform |  
+
 
 ## Scalable L3 Routed Design  
 The Cisco validated design for cable CIN utilizes a L3 design with or without Segment Routing. Pure L2 networks are no longer used for most networks due to their inability to scale, troubleshooting difficulty, poor network efficiency, and poor resiliency. L2 bridging can be utilized on RPD aggregation routers to simplify RPD connectivity.   
