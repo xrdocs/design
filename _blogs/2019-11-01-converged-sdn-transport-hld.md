@@ -147,6 +147,12 @@ blocks:**
 
 # Hardware Components in Design 
 
+## ASR 9000 
+The ASR 9000 is the router of choice for high scale edge services.  The Converged SDN Transport utilizes the ASR 9000 in a PE function role, performing high scale 
+L2VPN, L3VPN, and Pseudowire headend termination. All testing up to 3.0 has been performed using Tomahawk series line cards on the ASR 9000.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-asr9000.png)
+
 ## NCS-560 
 The NCS-560 with RSP4 is a next-generation platform with high scale and modularity to fit in many access, pre-aggregation, and aggregation roles. Available in 4-slot and 7-slot versions, the NCS 560 is fully redundant with a variety of 40GE/100GE, 10GE, and 1GE modular adapters. The NCS 560 RSP4 has built-in GNSS timing support along with a high scale (-E) version to support full Internet routing tables or large VPN routing tables with room to spare for 5+ years of growth. The NCS 560 provides all of this with a very low power and space footprint with a depth of 9.5". 
 
@@ -175,16 +181,10 @@ configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55a2-mod.png)
 
 ## ASR-920 
-The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. All services adn the Segment Routing dataplane are validated 
-on the ASR 920.   
+The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. The Segment Routing data plane and supported service types are validated 
+on the ASR 920 within the CST design. <b>Please see the services support section for all service types supported on the ASR 920. </b>  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-asr920.png)
-
-## ASR 9000 
-The ASR 9000 is the router of choice for high scale edge services.  The Converged SDN Transport utilizes the ASR 9000 in a PE function role, performing high scale 
-L2VPN, L3VPN, and Pseudowire headend termination. All testing up to 3.0 has been performed using Tomahawk series line cards on the ASR 9000.  
-
-![](http://xrdocs.io/design/images/cmf-hld/cst-hw-asr9000.png)
 
 # Transport – Design Components  
     
