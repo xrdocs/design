@@ -1250,8 +1250,7 @@ Service Provider Networks:
     
 ### Ethernet VPN Hardware Support 
 
-In CST 3.0 EVPN ELAN, ETREE, and VPWS services are supported on all IOS-XR devices. The ASR920 running IOS-XE does not support native EVPN services, but can integrate into an overall EVPN service by utilizing service hierarchy. Please see the tables under Flat and Hierarchical Services for supported service types.  
-
+In CST 3.0 EVPN ELAN, ETREE, and VPWS services are supported on all IOS-XR devices. The ASR920 running IOS-XE does not support native EVPN services, but can integrate into an overall EVPN service by utilizing service hierarchy. Please see the tables under Flat and Hierarchical Services for supported service types.  Please note ODN is NOT supported for EVPN ELAN services in IOS-XR 6.6.3.   
 
 ### Multi-Homed & All-Active Ethernet Access
 
