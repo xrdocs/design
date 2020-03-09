@@ -91,7 +91,7 @@ The  Converged SDN Transport design satisfies the following criteria for scalabl
 
 
   - **Simple:** based on Segment Routing as unified forwarding plane and
-    EVPN and L3VPN as a common BGP based control plane
+    EVPN and L3VPN as a common BGP based services control plane
 
   - **Programmable:** Using SR-PCE to program end-to-end multi-domain paths across the
     network with guaranteed SLAs
@@ -100,8 +100,6 @@ The  Converged SDN Transport design satisfies the following criteria for scalabl
     and YANG models; Analytics with model driven telemetry in
     conjunction with Crosswork Network Insights to  
     enhance operations and network visibility  
-
-  - **Repeatable:** The Convergned SDN  
 
 
 # Technical Overview
@@ -468,7 +466,7 @@ The Service End Points create a SR-TE Policy and use the SID list returned by SR
 path.   
 
 Service End Points can be located on the Access Routers for Flat
-Services or at both the Access and ABR routers for Hierarchical Services. The SR-TE Policy Data
+Services or at both the Access and domain PE routers for Hierarchical Services. The domain PE routers and ABRs may or may not be the same router. The SR-TE Policy Data
 Plane in the case of Service End Point co-located with the Access router
 was described in Figure 5.
 
@@ -1250,6 +1248,11 @@ Service Provider Networks:
   - Service Provider Network - Integration with Central Office or with
     Data Center
     
+### Ethernet VPN Hardware Support 
+
+In CST 3.0 EVPN ELAN, ETREE, and VPWS services are supported on all IOS-XR devices. The ASR920 running IOS-XE does not support native EVPN services, but can integrate into an overall EVPN service by utilizing service hierarchy. Please see the tables under Flat and Hierarchical Services for supported service types.  
+
+
 ### Multi-Homed & All-Active Ethernet Access
 
 Figure 21 demonstrates the greatest limitation of traditional L2
