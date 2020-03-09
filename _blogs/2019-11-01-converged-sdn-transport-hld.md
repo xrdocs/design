@@ -165,9 +165,7 @@ The modular chassis version of the NCS 5500 is available in 4, 8, and 16 slot ve
 The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Converged SDN Transport. The 5501 
 has 48x1G/10G SFP+ and 6x100G QSFP28 interfaces, the SE adds higher route scale via an external TCAM.  The N540-24Z8Q2C-M is a next-generation 
 access node with 24x10G SFP+, 8x25G SFP28, and 2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with a conformal 
-coating for deployment deep into access networks. 
-
-![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55xx.png)
+coating for deployment deep into access networks.
 
 ## NCS-55A2-MOD 
 The Converged SDN Transport design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
@@ -176,7 +174,8 @@ per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/1
 100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
 configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
 
-![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55a2-mod.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55xx.png)
+
 
 ## ASR-920 
 The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. The Segment Routing data plane and supported service types are validated 
