@@ -1204,11 +1204,13 @@ Converged SDN Transport 1.5 and later supports the following NSO service models 
 hierarchical and flat services across the fabric. All NSO service modules in 1.5 
 utilize the IOS-XR and IOS-XE CLI NEDs for configuration. 
 
-![](http://xrdocs.io/design/images/cmf-hld/automation-flat-1_5.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-nso-flat.png)
 
-_Figure 33: Automation – Flat Service Models_
+_Figure 33: Automation – End-to-End Service Models_
 
-![](http://xrdocs.io/design/images/cmf-hld/automation-hierarchy-1_5.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-nso-hierarchical.png)
+
+_Figure 34: Automation – Hierarchical Service Models_
 
 # Services – Design
     
