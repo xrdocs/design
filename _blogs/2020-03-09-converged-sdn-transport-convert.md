@@ -1341,7 +1341,7 @@ Plane.
 The End-To-End Services use cases are summarized in the table in Figure
 24 and shown in the network diagram in Figure 25.
 
-![](http://xrdocs.io/design/images/cmf-hld/image25.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-services-flat.png)
 
 _Figure 24: End-To-End – Services table_
 
@@ -1357,6 +1357,8 @@ Refer also to Section: "Transport and Services Integration".
 
 Hierarchical Services Use Cases are summarized in the table of Figure 26
 and shown in the network diagram of Figure 27.
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-services-hierarchical.png)
 
 _Figure 26: Hierarchical – Services table_
 
