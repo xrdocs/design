@@ -624,7 +624,7 @@ QoS designs are typically tailored for each provider, but we introduce a 5-level
 | Traffic Type |  Core Marking | Core Priority | Comments | 
 | ----------|---------|----------|---------------|-------------| 
 | Network Control |  EXP 6 | Highest | Underlay network control plane |  
-| Low latency |  | EXP 5 | Highest | Low latency service, consistent delay |  
+| Low latency | EXP 5 | Highest | Low latency service, consistent delay |  
 | High Priority 1 | EXP 3 | Medium-High | High priority service traffic |     
 | Medium Priority / Multicast | EXP 2  | Medium priority and multicast | 
 | Best Effort | EXP 0 | General user traffic | 
@@ -1607,7 +1607,7 @@ The table in Figure 41 describes the End-To-End services, while the
 network diagram in Figure 40 shows how services are deployed in the
 network. Refer also to Section: "Services - Design" of this document.
 
-![](http://xrdocs.io/design/images/cmf-hld/image40.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-services-flat.png)
 
 _Figure 41: End-To-End Services table_
 
@@ -1622,7 +1622,7 @@ network. Refer also to Section: "Services - Design" of this document.
 In addition, the table in Figure 44 shows where PE ABRs Anycast-SID is
 required and where ODN in the Core IGP domain is used.
 
-![](http://xrdocs.io/design/images/cmf-hld/image42.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-services-hierarchical.png)
 
 _Figure 41: Hierarchical Services table_
 
