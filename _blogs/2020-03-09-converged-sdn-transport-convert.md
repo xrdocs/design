@@ -4,6 +4,7 @@ date: '2019-11-01 11:00-0400'
 title: Converged SDN Transport High Level Design v3.0 
 excerpt: Cisco Converged SDN Transport (CST) design introduces an SDN-ready architecture evolving network design towards an SDN enabled, programmable network capable of delivering all services. 3.0 Update
 author: Phil Bedard 
+permalink: /blogs/latest-converged-sdn-transport-hld
 tags:
   - iosxr
   - Metro
@@ -11,7 +12,7 @@ tags:
   - 5G 
   - Cable
   - CIN
-position: hidden  
+position: top  
 ---
 
 {% include toc %}
@@ -1605,7 +1606,7 @@ This section describes the Services used in the  Converged SDN Transport
 Phase 1.
 
 The table in Figure 41 describes the End-To-End services, while the
-network diagram in Figure 40 shows how services are deployed in the
+network diagram in Figure 42 shows how services are deployed in the
 network. Refer also to Section: "Services - Design" of this document.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-services-flat.png)
@@ -1616,8 +1617,8 @@ _Figure 41: End-To-End Services table_
 
 _Figure 42: End-To-End Services_
 
-The table in Figure 42 describes the hierarchical services, while the
-network diagram in Figure 43 shows how services are deployed in the
+The table in Figure 43 describes the hierarchical services, while the
+network diagram in Figure 44 shows how services are deployed in the
 network. Refer also to Section: "Services - Design" of this document.
 
 In addition, the table in Figure 44 shows where PE ABRs Anycast-SID is
@@ -1625,18 +1626,18 @@ required and where ODN in the Core IGP domain is used.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-services-hierarchical.png)
 
-_Figure 41: Hierarchical Services table_
+_Figure 43: Hierarchical Services table_
 
 ![](http://xrdocs.io/design/images/cmf-hld/image43.png)
 
-_Figure 42: Hierarchical Services_
+_Figure 44: Hierarchical Services_
 
 The  Converged SDN Transport uses the hierarchical Services Route-Reflectors
-(S-RRs) design described in Section: "Services - Route-Reflector (S-RR)". Figure 43 shows in detail the S-RRs design used for Phase 1.
+(S-RRs) design described in Section: "Services - Route-Reflector (S-RR)". Figure 45 shows in detail the S-RRs design used for Phase 1.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image44.png)
 
-_Figure 43: Services Route-Reflectors (S-RRs)_
+_Figure 45: Services Route-Reflectors (S-RRs)_
 
 Network Services Orchestrator (NSO) is used for service provisioning.
 Refer to Section: "Network Services Orchestrator (NSO)".
@@ -1644,33 +1645,33 @@ Refer to Section: "Network Services Orchestrator (NSO)".
 
 ## Transport and Services Integration 
 
-Transport and Services integration is described in Section: "Transport and Services Integration" of this document. Figure 44 shows an example of End-To-End LSP and services
+Transport and Services integration is described in Section: "Transport and Services Integration" of this document. Figure 46 shows an example of End-To-End LSP and services
 integration.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/image45.png)
 
-_Figure 44: Transport and Services Data-Plane_
+_Figure 46: Transport and Services Data-Plane_
 
-Figure 45 shows a consolidated view of the Transport and Services
+Figure 47 shows a consolidated view of the Transport and Services
 Control-Plane.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image46.png)
 
-_Figure 45: Transport and Services Control-Plane_
+_Figure 47: Transport and Services Control-Plane_
 
-Figure 46 shows the detailed topology of the testbed used for 
+Figure 48 shows the detailed topology of the testbed used for 
 validation.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-topology.png)
 
-_Figure 46: Testbed_
+_Figure 48: Testbed_
 
-Figure 47 shows the detailed topology of the testbed used for 
+Figure 49 shows the detailed topology of the testbed used for 
 CIN and Remote PHY validation.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-rphy-validation-topology.png)
 
-_Figure 47: Remote PHY/CIN Validation Testbed_
+_Figure 49: Remote PHY/CIN Validation Testbed_
 
 # The Converged SDN Transport Design - Summary
 
@@ -1690,7 +1691,7 @@ centralized path computation.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image48.png)
 
-_Figure 47: Converged SDN Transport – Evolution_
+_Figure 50: Converged SDN Transport – Evolution_
 
 The transport layer requires only IGP protocols with Segment Routing
 extensions for Intra and Inter Domain forwarding. Fast recovery for node
