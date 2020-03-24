@@ -161,9 +161,9 @@ The modular chassis version of the NCS 5500 is available in 4, 8, and 16 slot ve
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs5500.png)
 
-## NCS-5501, NCS-5501-SE, and N540-24Z8Q2C-M 
+## NCS-5501, NCS-5501-SE, and N540-ACC-SYS 
 The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Converged SDN Transport. The 5501 
-has 48x1G/10G SFP+ and 6x100G QSFP28 interfaces, the SE adds higher route scale via an external TCAM.  The N540-24Z8Q2C-M is a next-generation 
+has 48x1G/10G SFP+ and 6x100G QSFP28 interfaces, the SE adds higher route scale via an external TCAM.  The N540-ACC-SYS is a next-generation 
 access node with 24x10G SFP+, 8x25G SFP28, and 2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with a conformal 
 coating for deployment deep into access networks.
 
@@ -920,7 +920,7 @@ The following table highlights the Cisco hardware utilized within the Converged 
 | Product | Role | 10GE SFP+ | 25G SFP28 | 100G QSFP28 | Timing | Comments |
 | ------- | -----| ---------| -----------| --------------------- | ------ | -------- |  
 | NCS-55A1-24Q6H-S | RPD leaf | 48  | 24 | 6 | Class B | |  
-| N540-24Z8Q2C  | RPD leaf | 24 | 8 | 2 | Class B | Smaller deployments | 
+| N540-ACC-SYS | RPD leaf | 24 | 8 | 2 | Class B | Smaller deployments | 
 | NCS-55A1-48Q6H-S | DPIC leaf | 48  | 48 | 6 | Class B | |  
 | NCS-55A2-MOD | Remote agg | 40  | 24 | upto 8 | Class B | CFP2-DCO support | 
 | NCS-55A1-36H-S | Spine | 144 (breakout)  | 0 | 36 | Class B | | 
