@@ -273,7 +273,7 @@ segment-routing
 
 ### IGP protocol (ISIS) and Segment Routing MPLS configuration
 
-**Key chain global configuration for IS-IS authentication**
+<b>Key chain global configuration for IS-IS authentication</b>
 <div class="highlighter-rouge">
 <pre class="highlight">
 key chain ISIS-KEY
@@ -1629,7 +1629,7 @@ The following gives an example of the configuration between the CIN interface an
 #### CIN to DPIC Global Routing Table 
 In this use case we are utilizing the IGP, IS-IS for reachability between the RPD and DPIC interface.  
 
-<i>**PA4 Te0/0/0/26 to cBR8 DPIC Te0/1/1 primary active interface**</i> 
+<i><b>PA4 Te0/0/0/26 to cBR8 DPIC Te0/1/1 primary active interface</b></i> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigE0/0/0/26
@@ -1646,7 +1646,7 @@ interface TenGigE0/0/0/26
 </div>
 
 
-<i>**IS-IS Configuration**</i> 
+<i><b>IS-IS Configuration</b></i> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 router isis ACCESS
@@ -1664,7 +1664,7 @@ router isis ACCESS
 #### CIN to DPIC L3VPN  
 The L3VPN configuration requires additional configuration for the RPHY VRF as well as BGP configuration to exchange VPNv4 prefixes between the RPD leaf node and the DPIC leaf node.  In this use case an external route-reflector is used to exchange routes between all CIN routers.   
 
-<i>**BGP Configuration**</i> 
+<i><b>BGP Configuration<</b>/i> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 router bgp 100
@@ -1703,7 +1703,7 @@ router bgp 100
 </pre> 
 </div>
 
-<i>**VRF Configuration**</i> 
+<i><b>VRF Configuration</b></i> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 vrf rphy-vrf
@@ -1722,7 +1722,7 @@ vrf rphy-vrf
 </pre> 
 </div>
 
-<i>**AG4 Te0/0/0/26 to cBR8 DPIC Te1/1/2 primary active interface**</i> 
+<i><b>AG4 Te0/0/0/26 to cBR8 DPIC Te1/1/2 primary active interface</b></i> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigE0/0/0/26
@@ -1745,7 +1745,7 @@ This section will highlight configurations used to support the RPD in both GRT a
 #### CIN to RPD Router Timing Configuration
 The timing configuration is shared across both GRT and L3VPN configurations.  
 
-<i>**Global timing configuration**</i> 
+<i><b>Global timing configuration</b></i> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 ptp
@@ -1800,7 +1800,7 @@ ptp
 </pre> 
 </div>
 
-<i>**Core-facing (slave) timing configuration**</i> 
+<i><b>Core-facing (slave) timing configuration</b></i> 
 This node has two core-facing interfaced to PA3 and PA4. On interface Te0/0/0/6 to PA3 we will use IPv6 and on Te0/0/0/7 to PA4 we will use IPv4.  There is also an example of utilizing a VRF and sub-interface to force traffic into this physical interface. PTP packets must ingress the physical interface to be considered valid.  There can be a situation with a dual-homed leaf where traffic to the Te0/0/0/6 interface comes in through the Te0/0/0/7 interface.  One way to alleviate the issue is via proper IGP routing configuration, the second to use a local VRF with no reachability except via a single physical interface.   
 
 <div class="highlighter-rouge">
@@ -1850,7 +1850,7 @@ interface TenGigE0/0/0/7
 
 #### GRT Specific Configuration 
 
-<i>**DHCP Configuration**</i> 
+<i><b>DHCP Configuration</b></i> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 dhcp ipv4
@@ -1865,7 +1865,7 @@ dhcp ipv4
 </pre> 
 </div>
 
-<i>**Multicast Routing Configuration**</i> 
+<i><b>Multicast Routing Configuration</b></i> 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1902,7 +1902,7 @@ multicast-routing
 </pre> 
 </div>
 
-<i>**PIM Configuration**</i>
+<i><b>PIM Configuration</b></i>
 <div class="highlighter-rouge">
 <pre class="highlight">
 router pim
@@ -1920,7 +1920,7 @@ router pim
 </div>
 
 
-<i>**IGMP/MLD and Snooping Configuration**</i>
+<i><b>IGMP/MLD and Snooping Configuration</b></i>
 <div class="highlighter-rouge">
 <pre class="highlight">
 router mld
@@ -1940,7 +1940,7 @@ igmp snooping profile igmp-snoop-1
 </div>
 
 
-<i>**DHCP Configuration**</i> 
+<i><b>DHCP Configuration</b></i> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 dhcp ipv4
@@ -1960,7 +1960,7 @@ dhcp ipv4
 </pre> 
 </div>
 
-<i>**Physical Interface Configuration**</i>
+<i><b>Physical Interface Configuration</b></i>
 In this configuration we are using a BVI to aggregate RPDs into a single L3 IP subnet, so note the "l2transport" keyword which places the RPD port in L2 mode   
 
 <div class="highlighter-rouge">
@@ -1973,7 +1973,7 @@ interface TenGigE0/0/0/16
 </div>
 
 
-<i>**L2VPN Bridge Domain Configuration**</i>
+<i><b>L2VPN Bridge Domain Configuration</b></i>
 In IOS-XR all L2 configuration is done under the L2VPN context. 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1992,7 +1992,7 @@ l2vpn
 </pre> 
 </div>
 
-<i>**IRB/BRI Logical Interface Configuration**</i>
+<i><b>IRB/BRI Logical Interface Configuration</b></i>
 The BVI acts as the gateway interface for all RPDs placed within the same bridge-domain with BVI100 assigned as its routed interface. The command "local-proxy-arp" requires all traffic to bridge through the L3 interface, otherwise ARP traffic is broadcast between all connected ports.   
 
 <div class="highlighter-rouge">
@@ -2011,7 +2011,7 @@ interface BVI100
 </pre> 
 </div>
 
-<i>**IS-IS Routing Configuration for RPD Interface**</i>
+<i><b>IS-IS Routing Configuration for RPD Interface</b></i>
 Communication between DPIC interface and RPD is realized by advertising the BVI interface throughout the IS-IS domain. We utilize the "passive" option to advertise the interface with it participating in IS-IS itself.  
 
 <div class="highlighter-rouge">
@@ -2029,9 +2029,33 @@ router isis ACCESS
 The L3VPN configuration is similar to the GRT configuration with the following major differences: 
 * Multicast traffic is carried using Label Switched Multicast with mLDP and using the NG-MVPN BGP control-plane. This is known as multicast profile 14.
 * Like the DPIC configuration, the RPD interface is advertised using MP-BGP using the VPNv4/VPNv6 address families 
-* Changes are needed to enable multicast, IGMP/MLD, and DHCP for VRF awareness 
+* Changes are needed to enable multicast, IGMP/MLD, and DHCP for VRF awareness
+* In the following configuration, the RPD is connected to the router via a point-to-point L3 interface, no bridge-domain is utilized. There is no restriction using L3VPN with BVI interfaces.  
 
-<i>**DHCP Configuration**></i>
+<i><b>VRF Configuration</b></i>
+<div class="highlighter-rouge">
+<pre class="highlight">
+ vrf rphy-vrf
+  rd auto
+  address-family ipv4 unicast
+   label mode per-ce 
+   redistribute connected
+   redistribute static
+  !
+  address-family ipv6 unicast
+   label mode per-ce 
+   redistribute connected
+   redistribute static
+  !
+  address-family ipv4 mvpn
+  !
+  address-family ipv6 mvpn
+  !
+ !
+</pre> 
+</div>
+
+<i><b>DHCP Configuration</b></i>
 <div class="highlighter-rouge">
 <pre class="highlight">
 dhcp ipv4
@@ -2047,7 +2071,7 @@ dhcp ipv4
 </pre> 
 </div>
 
-<i>**MPLS mLDP Configuration**</i>
+<i><b>MPLS mLDP Configuration</b></i>
 LDP is configured with mLDP-only on the two core interfaces to PA3/PA4. 
 
 <div class="highlighter-rouge">
@@ -2073,10 +2097,135 @@ mpls ldp
 </pre> 
 </div>
 
-<i>**Multicast Configuration**</i>
+<i><b>BGP Configuration</b></i>
+BGP is configured for two purposes. Distribute VPNv4/VPNv6 across the network for RPD to DPIC connectivity, and to exchange multicast routes between source and receiver nodes to build dynamic mLDP P2MP trees.  Again, a cetnralized route reflector is used between all CIN elements.   
 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ nsr
+ bgp router-id 100.0.2.53
+ bgp graceful-restart
+ ibgp policy out enforce-modifications
+ address-family vpnv4 unicast
+ !
+ address-family vpnv6 unicast
+ !
+ address-family ipv4 mvpn
+ !
+ address-family ipv6 mvpn
+ !
+ neighbor-group SvRR
+  remote-as 100
+  update-source Loopback0
+  address-family vpnv4 unicast
+   soft-reconfiguration inbound always
+  !
+  address-family vpnv6 unicast
+   soft-reconfiguration inbound always
+  !
+  address-family ipv4 mvpn
+   soft-reconfiguration inbound always
+  !
+  address-family ipv6 mvpn
+   soft-reconfiguration inbound always
+  !
+ !
+ neighbor 100.0.2.202
+  use neighbor-group SvRR
+ !
+ vrf rphy-vrf
+  rd auto
+  address-family ipv4 unicast
+   label mode per-ce
+   redistribute connected
+   redistribute static
+  !
+  address-family ipv4 mvpn
+  !
+  address-family ipv6 mvpn
+  !
 </pre> 
 </div>
+
+
+
+<i><b>Multicast Configuration</b></i>
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+ address-family ipv4
+  interface Loopback0
+   enable
+   !
+  !
+ !
+ vrf rphy-vrf
+  address-family ipv4
+   mdt source Loopback0
+   rate-per-route
+   interface all enable
+   accounting per-prefix
+   bgp auto-discovery mldp
+   !
+   mdt partitioned mldp ipv4 p2mp
+  !
+ !
+</pre> 
+</div>
+
+<i><b>PIM Configuration</b></i>
+<div class="highlighter-rouge">
+<pre class="highlight">
+router pim
+ vrf rphy-vrf
+  address-family ipv4
+   rpf topology route-policy mldp-partitioned-p2mp
+   mdt c-multicast-routing bgp
+   !
+  !
+</pre> 
+</div>
+
+<i><b>MLD and PIM Configuration</b></i>
+<div class="highlighter-rouge">
+<pre class="highlight">
+router mld
+ vrf rphy-vrf
+  interface TenGigE0/0/0/15
+   version 2
+  !
+ !
+!
+router igmp
+ vrf rphy-vrf
+  interface BVI101
+   version 3
+  !
+  interface TenGigE0/0/0/15
+  !
+ !
+!
+</pre> 
+</div>
+
+<i><b>Router to RPD Physical Interface Configuration</b></i>
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/15
+ description .. to RPD0
+ ptp
+  profile g82752_master_v4
+ !
+ service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing
+ vrf rphy-vrf
+ ipv4 address 192.168.3.1 255.255.255.0
+ load-interval 30
+!
+</pre> 
+</div>
+
 
 
 
