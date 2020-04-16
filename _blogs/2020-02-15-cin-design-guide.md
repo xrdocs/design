@@ -1414,6 +1414,7 @@ ipv6 route vrf lc1_p1 ::/0 2001:6:6:9::101
 </pre> 
 </div>
 
+
 #### cBR-8 SUP Routing 
 In this example we will utilize IS-IS between the cBR-8 and provider network, and utilize BGP to advertise subscriber and cable modem address space to the rest of the network. 
 
@@ -1454,7 +1455,7 @@ interface TenGigabitEthernet4/1/6
  cdp enable
  ipv6 address 2001:4:1:6::1/64
  ipv6 router isis access
- ! mpls ip optionsal for LDP enabled CMTS 
+ !! mpls ip optional for LDP enabled CMTS 
  mpls ip 
  isis circuit-type level-2-only
  isis network point-to-point
@@ -1503,7 +1504,8 @@ router bgp 100
 </pre> 
 </div>
 
-### CIN Node Configuration 
+
+### CIN Core Configuration 
 Much of the configuration across the IOS-XR CIN nodes is the same with regards to routing. Single examples will be given which can be applied across the specific devices and interfaces in the design.   
 
 #### Network Timing Configuration 
@@ -1620,3 +1622,355 @@ router isis ACCESS
  !
 </pre> 
 </div>
+
+### CIN to cBR8 DPIC Configurations  
+The following gives an example of the configuration between the CIN interface and the DPIC interface on the cBR8 for both global routing table (GRT) and L3VPN deployments. This also includes the routing configuration needed to advertise the DPIC IP address across the CIN for reachability between RPD and DPIC.  
+
+#### CIN to DPIC Global Routing Table 
+In this use case we are utilizing the IGP, IS-IS for reachability between the RPD and DPIC interface.  
+
+<i>**PA4 Te0/0/0/26 to cBR8 DPIC Te0/1/1 primary active interface**</i> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/26
+ description Connected to cbr8 port te0/1/1
+ cdp
+ service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing
+ ipv4 address 3.3.9.101 255.255.255.0
+ ipv6 address 2001:3:3:9::101/64
+ carrier-delay up 150 down 0
+ load-interval 30
+! 
+</pre> 
+</div>
+
+
+<i>**IS-IS Configuration**</i> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS
+ interface TenGigE0/0/0/26
+  passive
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+!
+</pre> 
+</div>
+
+#### CIN to DPIC L3VPN  
+The L3VPN configuration requires additional configuration for the RPHY VRF as well as BGP configuration to exchange VPNv4 prefixes between the RPD leaf node and the DPIC leaf node.  In this use case an external route-reflector is used to exchange routes between all CIN routers.   
+
+<i>**BGP Configuration**</i> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ nsr
+ bgp router-id 100.0.2.4
+ bgp graceful-restart
+ ibgp policy out enforce-modifications
+ address-family vpnv4 unicast
+ !
+ address-family vpnv6 unicast
+ neighbor-group SvRR
+  remote-as 100
+  update-source Loopback0
+  address-family vpnv4 unicast
+   soft-reconfiguration inbound always
+  !
+  address-family vpnv6 unicast
+   soft-reconfiguration inbound always
+  !
+ neighbor 100.0.2.202
+  use neighbor-group SvRR
+ !
+ vrf rphy-vrf
+  rd auto
+  address-family ipv4 unicast
+   label mode per-vrf
+   redistribute connected
+   redistribute static
+  !
+  address-family ipv4 mvpn
+  !
+  address-family ipv6 mvpn
+  !
+ !
+!
+</pre> 
+</div>
+
+<i>**VRF Configuration**</i> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf rphy-vrf
+  rd auto
+  address-family ipv4 unicast
+   label mode per-vrf
+   redistribute connected
+   redistribute static
+  !
+  address-family ipv4 mvpn
+  !
+  address-family ipv6 mvpn
+  !
+ !
+!
+</pre> 
+</div>
+
+<i>**AG4 Te0/0/0/26 to cBR8 DPIC Te1/1/2 primary active interface**</i> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/26
+ description .. Connected to cbr8 port te0/1/3
+ cdp
+ service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing
+ vrf rphy-vrf
+ ipv4 address 5.5.9.101 255.255.255.0
+ ipv6 address 2001:5:5:9::101/64
+ ipv6 address 2001:6:6:9::101/64
+ load-interval 30
+!
+</pre> 
+</div>
+
+### CIN to RPD Configuration 
+This section will highlight configurations used to support the RPD in both GRT and L3VPN configurations, including all relevant protocols.  
+
+#### CIN to RPD Router Timing Configuration
+The timing configuration is shared across both GRT and L3VPN configurations.  
+
+<i>**Global timing configuration**</i> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+ptp
+ clock
+  domain 60
+  profile g.8275.2 clock-type T-BC
+ !
+ profile g82752_slave_v4
+  transport ipv4
+  port state slave-only
+  sync frequency 16
+  clock operation one-step
+  announce interval 1
+  unicast-grant invalid-request deny
+  delay-request frequency 16
+ !
+ profile g82752_slave_v6
+  transport ipv6
+  port state slave-only
+  sync frequency 16
+  clock operation one-step
+  announce interval 1
+  unicast-grant invalid-request deny
+  delay-request frequency 16
+ !
+ profile g82752_master_v4
+  transport ipv4
+  port state master-only
+  sync frequency 16
+  clock operation one-step
+  announce interval 1
+  unicast-grant invalid-request deny
+  delay-request frequency 16
+ !
+ profile g82752_master_v6
+  transport ipv6
+  port state master-only
+  sync frequency 16
+  clock operation one-step
+  announce timeout 10
+  announce interval 1
+  unicast-grant invalid-request deny
+  delay-request frequency 16
+ !
+ frequency priority 5
+ time-of-day priority 5
+ log
+  servo events
+  best-master-clock changes
+ !
+!
+</pre> 
+</div>
+
+<i>**Core-facing (slave) timing configuration**</i> 
+This node has two core-facing interfaced to PA3 and PA4. On interface Te0/0/0/6 to PA3 we will use IPv6 and on Te0/0/0/7 to PA4 we will use IPv4.  There is also an example of utilizing a VRF and sub-interface to force traffic into this physical interface. PTP packets must ingress the physical interface to be considered valid.  There can be a situation with a dual-homed leaf where traffic to the Te0/0/0/6 interface comes in through the Te0/0/0/7 interface.  One way to alleviate the issue is via proper IGP routing configuration, the second to use a local VRF with no reachability except via a single physical interface.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/6
+ cdp
+ service-policy input core-ingress-classifier
+ service-policy output core-egress-queuing
+ service-policy output core-egress-exp-marking
+ ipv4 address 10.23.253.1 255.255.255.254
+ ipv6 address 2405:10:23:253::1/127
+ load-interval 30
+!
+interface TenGigE0/0/0/6.1000
+ ptp
+  profile g82752_master_v6
+  master ipv6 2001:999::
+   priority 5
+  !
+ !
+ vrf PTP-test
+ ipv4 address 10.1.1.1 255.255.255.254
+ ipv6 address 2001:999::1/64
+ load-interval 30
+ encapsulation dot1q 1000
+!
+interface TenGigE0/0/0/7
+ cdp
+ ptp
+  profile g82752_slave_v4
+  master ipv4 10.24.253.0
+  !
+  master ipv4 100.100.100.1
+   priority 10
+  !
+ !
+ service-policy input core-ingress-classifier
+ service-policy output core-egress-queuing
+ service-policy output core-egress-exp-marking
+ ipv4 address 10.24.253.1 255.255.255.254
+ ipv6 address 2405:10:24:253::1/127
+ load-interval 30
+!
+</pre> 
+</div>
+
+
+#### GRT Specific Configuration 
+
+<i>DHCP Configuration</i> 
+<div class="highlighter-rouge">
+<pre class="highlight">
+dhcp ipv4
+ profile rpd-dhcpv4 relay
+  helper-address vrf default 4.4.9.100
+  helper-address vrf default 10.0.2.3
+ !
+ inner-cos 5
+ outer-cos 5
+ interface TenGigE0/0/0/16 relay profile rpd-dhcpv4
+ interface TenGigE0/0/0/17 relay profile rpd-dhcpv4
+</pre> 
+</div>
+
+<i>Multicast Routing Configuration</i> 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+ address-family ipv4
+  interface Loopback0
+   enable
+  !
+  interface TenGigE0/0/0/6
+   enable
+  !
+  interface TenGigE0/0/0/7
+   enable
+  !
+  mdt source Loopback0
+  rate-per-route
+  interface all enable
+  accounting per-prefix
+ !
+ address-family ipv6
+  interface Loopback0
+   enable
+  !
+  interface TenGigE0/0/0/6
+   enable
+  !
+  interface TenGigE0/0/0/7
+   enable
+  !
+  rate-per-route
+  interface all enable
+  accounting per-prefix
+ !
+</pre> 
+</div>
+
+<i>PIM Configuratino</i>
+<div class="highlighter-rouge">
+<pre class="highlight">
+router pim
+ address-family ipv4
+  interface Loopback0
+   enable
+  !
+  interface TenGigE0/0/0/6
+   enable
+  !
+  interface TenGigE0/0/0/7
+   enable
+  !
+</pre> 
+</div>
+
+
+<i>DHCP Configuration</i> 
+dhcp ipv4
+ vrf rphy-vrf relay profile rpd-dhcpv4-vrf
+ profile rpd-dhcpv4 relay
+  helper-address vrf default 4.4.9.100
+  helper-address vrf default 10.0.2.3
+ !
+ profile rpd-dhcpv4-vrf relay
+  helper-address vrf rphy-vrf 10.0.2.3
+  relay information option allow-untrusted
+ !
+ inner-cos 5
+ outer-cos 5
+ interface BVI100 relay profile rpd-dhcpv4
+ interface BVI101 relay profile rpd-dhcpv4-vrf
+ interface TenGigE0/0/0/15 relay profile rpd-dhcpv4-vrf
+ interface TenGigE0/0/0/16 relay profile rpd-dhcpv4
+ interface TenGigE0/0/0/17 relay profile rpd-dhcpv4
+!
+
+interface TenGigE0/0/0/15
+ description .. to RPD0
+ mtu 9200
+ ptp
+  profile g82752_master_v4
+ !
+ service-policy input rpd-dpic-ingress-classifier
+ service-policy output rpd-dpic-egress-queuing
+ vrf rphy-vrf
+ ipv4 address 192.168.3.1 255.255.255.0
+ load-interval 30
+!
+interface TenGigE0/0/0/16
+ description .. to RPD1
+ mtu 9200
+ ptp
+  multicast
+  transport ethernet
+  port state master-only
+ !
+ load-interval 30
+ l2transport
+ !
+
+
+
+
+
+
+
+
+
+
+
