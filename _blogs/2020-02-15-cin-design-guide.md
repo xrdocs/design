@@ -138,7 +138,8 @@ The following table highlights the Cisco hardware utilized within the Converged 
 | Product | Role | 10GE SFP+ | 25G SFP28 | 100G QSFP28 | Timing | Comments |
 | ------- | -----| ---------| -----------| --------------------- | ------ | -------- |  
 | NCS-55A1-24Q6H-S | RPD leaf | 48  | 24 | 6 | Class B | |  
-| N540-24Z8Q2C  | RPD leaf | 24 | 8 | 2 | Class B | Smaller deployments | 
+| N540-ACC-SYS  | RPD leaf | 24 | 8 | 2 | Class B | Smaller deployments | 
+| N540-28Z4C-A/D  | RPD leaf | 28 | 0 | 4 | Class B | Smaller deployments | 
 | NCS-55A1-48Q6H-S | DPIC leaf | 48  | 48 | 6 | Class B | |  
 | NCS-55A2-MOD | Remote agg | 40  | 24 | upto 8 | Class B | CFP2-DCO support | 
 | NCS-55A1-36H-S | Spine | 144 (breakout)  | 0 | 36 | Class B | | 
@@ -1961,6 +1962,7 @@ dhcp ipv4
 </div>
 
 <i><b>Physical Interface Configuration</b></i>
+
 In this configuration we are using a BVI to aggregate RPDs into a single L3 IP subnet, so note the "l2transport" keyword which places the RPD port in L2 mode   
 
 <div class="highlighter-rouge">
@@ -1974,6 +1976,7 @@ interface TenGigE0/0/0/16
 
 
 <i><b>L2VPN Bridge Domain Configuration</b></i>
+
 In IOS-XR all L2 configuration is done under the L2VPN context. 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1993,6 +1996,7 @@ l2vpn
 </div>
 
 <i><b>IRB/BRI Logical Interface Configuration</b></i>
+
 The BVI acts as the gateway interface for all RPDs placed within the same bridge-domain with BVI100 assigned as its routed interface. The command "local-proxy-arp" requires all traffic to bridge through the L3 interface, otherwise ARP traffic is broadcast between all connected ports.   
 
 <div class="highlighter-rouge">
@@ -2012,6 +2016,7 @@ interface BVI100
 </div>
 
 <i><b>IS-IS Routing Configuration for RPD Interface</b></i>
+
 Communication between DPIC interface and RPD is realized by advertising the BVI interface throughout the IS-IS domain. We utilize the "passive" option to advertise the interface with it participating in IS-IS itself.  
 
 <div class="highlighter-rouge">
@@ -2072,6 +2077,7 @@ dhcp ipv4
 </div>
 
 <i><b>MPLS mLDP Configuration</b></i>
+
 LDP is configured with mLDP-only on the two core interfaces to PA3/PA4. 
 
 <div class="highlighter-rouge">
@@ -2098,6 +2104,7 @@ mpls ldp
 </div>
 
 <i><b>BGP Configuration</b></i>
+
 BGP is configured for two purposes. Distribute VPNv4/VPNv6 across the network for RPD to DPIC connectivity, and to exchange multicast routes between source and receiver nodes to build dynamic mLDP P2MP trees.  Again, a cetnralized route reflector is used between all CIN elements.   
 
 <div class="highlighter-rouge">
