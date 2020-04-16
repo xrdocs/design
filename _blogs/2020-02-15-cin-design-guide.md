@@ -1850,7 +1850,7 @@ interface TenGigE0/0/0/7
 
 #### GRT Specific Configuration 
 
-<i>DHCP Configuration</i> 
+<i>**DHCP Configuration**</i> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 dhcp ipv4
@@ -1865,7 +1865,7 @@ dhcp ipv4
 </pre> 
 </div>
 
-<i>Multicast Routing Configuration</i> 
+<i>**Multicast Routing Configuration**</i> 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1902,7 +1902,7 @@ multicast-routing
 </pre> 
 </div>
 
-<i>PIM Configuratino</i>
+<i>**PIM Configuration**</i>
 <div class="highlighter-rouge">
 <pre class="highlight">
 router pim
@@ -1920,7 +1920,29 @@ router pim
 </div>
 
 
-<i>DHCP Configuration</i> 
+<i>**IGMP/MLD and Snooping Configuration**</i>
+<div class="highlighter-rouge">
+<pre class="highlight">
+router mld
+ interface BVI100
+  version 2
+ !
+!
+router igmp
+ interface BVI100
+  version 3
+ !
+!
+mld snooping profile mld-snoop-1
+!
+igmp snooping profile igmp-snoop-1
+</pre> 
+</div>
+
+
+<i>**DHCP Configuration**</i> 
+<div class="highlighter-rouge">
+<pre class="highlight">
 dhcp ipv4
  vrf rphy-vrf relay profile rpd-dhcpv4-vrf
  profile rpd-dhcpv4 relay
@@ -1934,35 +1956,129 @@ dhcp ipv4
  inner-cos 5
  outer-cos 5
  interface BVI100 relay profile rpd-dhcpv4
- interface BVI101 relay profile rpd-dhcpv4-vrf
- interface TenGigE0/0/0/15 relay profile rpd-dhcpv4-vrf
- interface TenGigE0/0/0/16 relay profile rpd-dhcpv4
- interface TenGigE0/0/0/17 relay profile rpd-dhcpv4
 !
+</pre> 
+</div>
 
-interface TenGigE0/0/0/15
- description .. to RPD0
- mtu 9200
- ptp
-  profile g82752_master_v4
- !
- service-policy input rpd-dpic-ingress-classifier
- service-policy output rpd-dpic-egress-queuing
- vrf rphy-vrf
- ipv4 address 192.168.3.1 255.255.255.0
- load-interval 30
-!
+<i>**Physical Interface Configuration**</i>
+In this configuration we are using a BVI to aggregate RPDs into a single L3 IP subnet, so note the "l2transport" keyword which places the RPD port in L2 mode   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
 interface TenGigE0/0/0/16
  description .. to RPD1
- mtu 9200
- ptp
-  multicast
-  transport ethernet
-  port state master-only
- !
  load-interval 30
  l2transport
+</pre> 
+</div>
+
+
+<i>**L2VPN Bridge Domain Configuration**</i>
+In IOS-XR all L2 configuration is done under the L2VPN context. 
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ bridge group rpd
+  bridge-domain rpd-1
+   mld snooping profile mld-snoop-1
+   igmp snooping profile igmp-snoop-1
+   interface TenGigE0/0/0/16
+   !
+   interface TenGigE0/0/0/17
+   !
+   routed interface BVI100
+   !
+  !
+</pre> 
+</div>
+
+<i>**IRB/BRI Logical Interface Configuration**</i>
+The BVI acts as the gateway interface for all RPDs placed within the same bridge-domain with BVI100 assigned as its routed interface. The command "local-proxy-arp" requires all traffic to bridge through the L3 interface, otherwise ARP traffic is broadcast between all connected ports.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface BVI100
+ description ... to downstream RPD
+ service-policy input rpd-dpic-ingress-classifier
+ ipv4 address 192.168.2.1 255.255.255.0
+ local-proxy-arp
+ ipv6 nd suppress-ra
+ ipv6 nd other-config-flag
+ ipv6 nd managed-config-flag
+ ipv6 address 2001:192:168:2::1/64
+ ipv6 enable
+!
+</pre> 
+</div>
+
+<i>**IS-IS Routing Configuration for RPD Interface**</i>
+Communication between DPIC interface and RPD is realized by advertising the BVI interface throughout the IS-IS domain. We utilize the "passive" option to advertise the interface with it participating in IS-IS itself.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS 
+  interface BVI100
+    passive
+    address-family ipv4 unicast
+    !
+    address-family ipv6 unicast
+</pre> 
+</div>
+
+#### L3VPN Configuration 
+The L3VPN configuration is similar to the GRT configuration with the following major differences: 
+* Multicast traffic is carried using Label Switched Multicast with mLDP and using the NG-MVPN BGP control-plane. This is known as multicast profile 14.
+* Like the DPIC configuration, the RPD interface is advertised using MP-BGP using the VPNv4/VPNv6 address families 
+* Changes are needed to enable multicast, IGMP/MLD, and DHCP for VRF awareness 
+
+<i>**DHCP Configuration**></i>
+<div class="highlighter-rouge">
+<pre class="highlight">
+dhcp ipv4
+ vrf rphy-vrf relay profile rpd-dhcpv4-vrf
+ profile rpd-dhcpv4-vrf relay
+  helper-address vrf rphy-vrf 10.0.2.3
+  relay information option allow-untrusted
  !
+ inner-cos 5
+ outer-cos 5
+ interface TenGigE0/0/0/15 relay profile rpd-dhcpv4-vrf
+!
+</pre> 
+</div>
+
+<i>**MPLS mLDP Configuration**</i>
+LDP is configured with mLDP-only on the two core interfaces to PA3/PA4. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+mpls ldp
+ capabilities sac mldp-only
+ mldp
+  address-family ipv4
+   make-before-break delay 30
+   forwarding recursive
+   recursive-fec
+  !
+ !
+ router-id 100.0.2.53
+ session protection
+ address-family ipv4
+ !
+ interface TenGigE0/0/0/6
+ !
+ interface TenGigE0/0/0/7
+ !
+!
+</pre> 
+</div>
+
+<i>**Multicast Configuration**</i>
+
+</pre> 
+</div>
+
+
 
 
 
