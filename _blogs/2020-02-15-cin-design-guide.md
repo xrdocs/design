@@ -274,7 +274,7 @@ segment-routing
 
 ### IGP protocol (ISIS) and Segment Routing MPLS configuration
 
-<b>Key chain global configuration for IS-IS authentication</b>
+##### Key chain global configuration for IS-IS authentication
 <div class="highlighter-rouge">
 <pre class="highlight">
 key chain ISIS-KEY
@@ -329,7 +329,7 @@ router isis ISIS-ACCESS
  interface Loopback0
   ipv4 address 100.0.1.50 255.255.255.255
   address-family ipv4 unicast
-   <b>prefix-sid absolute 16150</b>
+   <b>prefix-sid absolute 16150
    tag 1000 
 </pre>
 </div>
@@ -1419,7 +1419,7 @@ ipv6 route vrf lc1_p1 ::/0 2001:6:6:9::101
 #### cBR-8 SUP Routing 
 In this example we will utilize IS-IS between the cBR-8 and provider network, and utilize BGP to advertise subscriber and cable modem address space to the rest of the network. 
 
-<b>IS-IS Configuration</b> 
+<b>IS-IS Configuration 
 <div class="highlighter-rouge">
 <pre class="highlight">
 key chain ISIS-KEYCHAIN 
@@ -1468,7 +1468,7 @@ end
 </pre> 
 </div>
 
-<b>BGP Configuration</b> 
+<b>BGP Configuration 
 <div class="highlighter-rouge">
 <pre class="highlight">
 router bgp 100
@@ -1665,7 +1665,7 @@ router isis ACCESS
 #### CIN to DPIC L3VPN  
 The L3VPN configuration requires additional configuration for the RPHY VRF as well as BGP configuration to exchange VPNv4 prefixes between the RPD leaf node and the DPIC leaf node.  In this use case an external route-reflector is used to exchange routes between all CIN routers.   
 
-##### BGP Configuration<</b>/i> 
+##### BGP Configuration 
 <div class="highlighter-rouge">
 <pre class="highlight">
 router bgp 100
@@ -1998,7 +1998,7 @@ l2vpn
 
 ##### IRB/BRI Logical Interface Configuration
 
-The BVI acts as the gateway interface for all RPDs placed within the same bridge-domain with BVI100 assigned as its routed interface. The command "local-proxy-arp" requires all traffic to bridge through the L3 interface, otherwise ARP traffic is broadcast between all connected ports.   
+The BVI acts as the gateway interface for all RPDs placed within the same bridge-domain with BVI100 assigned as its routed interface. The command "local-proxy-arp" requires all traffic to bridge through the L3 interface, otherwise ARP traffic is b roadcast between all connected ports.   
 
 <div class="highlighter-rouge">
 <pre class="highlight">
