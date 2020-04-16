@@ -10,7 +10,7 @@ tags:
   - Design
   - Cable
   - CIN
-position: hidden 
+position: top 
 ---
 
 {% include toc %}
