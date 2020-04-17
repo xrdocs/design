@@ -1,6 +1,6 @@
 ---
 published: true 
-date: '2020-11-01 11:00-0400'
+date: '2020-04-15 11:00-0400'
 title: Cisco Remote PHY Converged Interconnect Network Design Guide 
 excerpt: Cisco Converged SDN Transport (CST) design introduces an SDN-ready architecture evolving network design towards an SDN enabled, programmable network capable of delivering all services. This guide is an excerpt from the larger CST high-level design and implementation guides specific to CIN.   
 author: Phil Bedard 
