@@ -319,7 +319,7 @@ router isis ISIS-ACCESS
 </pre>
 </div>
 
-**Note:** ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
+**Note:** ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value, giving resiliency to the border. 
 
 **Note:** The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
 
