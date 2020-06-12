@@ -324,6 +324,7 @@ router isis ISIS-ACCESS
 **Note:** The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
 
 #### IS-IS Loopback and node SID configuration
+
 <div class="highlighter-rouge">
 <pre class="highlight">
  interface Loopback0
