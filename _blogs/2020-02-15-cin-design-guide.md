@@ -325,15 +325,11 @@ router isis ISIS-ACCESS
 
 #### IS-IS Loopback and node SID configuration
 
-<div class="highlighter-rouge">
-<pre class="highlight">
  interface Loopback0
   ipv4 address 100.0.1.50 255.255.255.255
   address-family ipv4 unicast
    <b>prefix-sid absolute 16150
    tag 1000 
-</pre>
-</div>
 
 #### IS-IS interface configuration with TI-LFA
 
