@@ -365,6 +365,7 @@ This portion of the implementation guide instructs the user how to configure mLD
 In order to use mLDP across the Converged SDN Transport network LDP must first be enabled.  There are two mechanisms to enable LDP on physical interfaces across the network, LDP auto-configuration or manually under the MPLS LDP configuration context.  The capabilities statement will ensure LDP unicast FECs are not advertised, only mLDP FECs. Recursive forwarding is required in a multi-domain network. mLDP must be enabled on all participating A-PE, PE, AG, PA, and P routers.   
 
 #### LDP base configuration with defined interfaces 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 mpls ldp
@@ -494,6 +495,7 @@ ptp
 
 #### IPv4 G.8275.2 slave profile 
 The slave profile is assigned to interfaces for which the router is acting as a slave to another master clock  
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 ptp
@@ -513,6 +515,7 @@ ptp
 
 #### IPv6 G.8275.2 slave profile 
 The slave profile is assigned to interfaces for which the router is acting as a slave to another master clock  
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 ptp
@@ -535,6 +538,7 @@ ptp
 
 #### G.8275.2 interface configuration 
 This example is of a slave device using a master of 2405:10:23:253::0.  
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 interface TenGigE0/0/0/6
@@ -556,6 +560,7 @@ The following are usable policies but policies should be tailored for specific n
 
 #### Class maps 
 Class maps are used within a policy map to match packet criteria for further treatment 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 class-map match-any match-ef-exp5
@@ -699,6 +704,7 @@ Please see the G.8275.2 timing configuration guide in this document for details 
 | Delay Request Frequency | 16 | -4 | 
 
 #### Example CBR-8 RPD DTI Profile 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 ptp r-dti 4
@@ -719,6 +725,7 @@ We present two different configuration options based on either native multicast 
 
 #### Global multicast configuration - Native multicast 
 On CIN aggregation nodes all interfaces should have multicast enabled.  
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 multicast-routing
@@ -734,6 +741,7 @@ multicast-routing
 
 #### Global multicast configuration - LSM using profile 14 
 On CIN aggregation nodes all interfaces should have multicast enabled.  
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 vrf VRF-MLDP
