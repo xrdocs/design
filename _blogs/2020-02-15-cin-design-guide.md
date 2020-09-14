@@ -25,13 +25,18 @@ https://xrdocs.io/design/blogs/latest-converged-sdn-transport-ig
 ## Cisco Hardware 
 The design utilizes the following Cisco hardware in the following roles. While these are the roles used in the design, all of the devices utilize IOS-XR and could be utilized in any role in the CIN depending on scale requirements. All devices presented support class B timing using PTP.   
 
-### Aggregation Leaf
-Due to the 10G requirements of RPD and future RMD connections, these leaf devices are dense in 10G SFP+ connectivity required to support longer range DWDM optics.  
+### RPD Aggregation Leaf
+Due to the 10G requirements of RPDs and future RMD connections, these leaf devices are dense in 10G SFP+ connectivity required to support longer distance DWDM optics. In addition to supporting 10GE SFP+ on all ports the N540-24Z8Q2C has 8x25G SFP28 ports and the 55A1-24Q6H-S has 24x25G SFP28 ports.   
+
+![](http://xrdocs.io/design/images/rphy-design-guide/cin-hardware-leaf.png)
+
+### DPIC Aggregation  
+In larger deployments a DPIC aggregation leaf is recommended. Depending on the cBR8 DPIC card being used, a 10GE or 100GE aggregation device is required. The above RPD leaf devices can be utilized for high density DPIC 10GE aggregation. 100GE DPIC aggregation can also be served by the NCS-55A1-24H (24x100GE) or NCS-55A1-36H-S (36x100GE), or a variety of line cards for the NCS 5504 or 5508 modular chassis. All 100GE ports support 4x10GE breakouts for seamless migration to 100GE.   
 
 ![](http://xrdocs.io/design/images/rphy-design-guide/cin-hardware-leaf.png)
 
 ### Aggregation Spine  
-The CIN aggregation spine router needs high density 100GE connectivity. Cisco has fixed or modular chassis variants support high density 100GE. 
+The CIN aggregation spine router needs high density 100GE connectivity. Cisco has fixed or modular chassis variants supporting high density 100GE. 
 
 ![](http://xrdocs.io/design/images/rphy-design-guide/cin-hardware-spine.png)
 
