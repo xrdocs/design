@@ -1428,7 +1428,7 @@ ipv6 route vrf lc1_p1 ::/0 2001:6:6:9::101
 #### cBR-8 SUP Routing 
 In this example we will utilize IS-IS between the cBR-8 and provider network, and utilize BGP to advertise subscriber and cable modem address space to the rest of the network. 
 
-<b>IS-IS Configuration 
+<b>IS-IS Configuration</b> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 key chain ISIS-KEYCHAIN 
@@ -1477,7 +1477,7 @@ end
 </pre> 
 </div>
 
-<b>BGP Configuration 
+<b>BGP Configuration</b> 
 <div class="highlighter-rouge">
 <pre class="highlight">
 router bgp 100
