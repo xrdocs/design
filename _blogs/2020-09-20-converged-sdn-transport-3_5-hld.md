@@ -24,9 +24,17 @@ position: hidden
 | 1.5          | 09/24/2018 |NCS540 Access, ZTP, NSO Services|
 | 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55A2-MOD, IPv4/IPv6/mLDP Multicast, LDP to SR Migration |  
 | 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
-| 3.5        | 10/15/2020| E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, SR Performance Measurement | 
+| 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, SR Performance Measurement | 
 
+# Minimum supported IOS-XR Release 
 
+| CST Version          | XR version |  
+| ---------------- | ---------------------- |
+| 1.0       | 6.3.2 |  
+| 1.5        | 6.5.1      |
+| 2.0        | 6.5.3       |
+| 3.0        | 6.6.3 |
+| 3.5        | 7.1.2 |
 
 # Value Proposition
 
@@ -379,7 +387,7 @@ up between the Access Router and the AG/PE ABRs, there are two options:
 2.  Each ABR is represented by a unique Prefix-SID.
 
 Choosing between Anycast-SID or Prefix-SID depends on the requested
-service. Please refer to Section: "Services - Design".
+service and inclusiong of Anycast SIDs in the SR-TE Policy. Please refer to Section: "Services - Design". 
 
 Note that both options can be combined on the same network.
 
@@ -509,6 +517,14 @@ request, the SR-PCE controller calculates the path based on the requested
 SLA, and uses PCEP to dynamically program the ingress node
 with a specific SR-TE Policy.
 
+### Traffic Engineering - Dynamic Anycast-SID Paths and Blackhole Avoidance 
+
+As shown in Figure 7, inter-domain resilience and load-balancing is satisfied 
+by using the same Anycast SID on each boundary node. Starting in CST 3.5 Anycast SIDs are used by a centralized SR-PCE without having to define 
+an explicit SID list. Anycast SIDs are learned via the topology information distributed to the SR-PCE using BGP-LS. Once the SR-PCE knows the location of a set of Anycast SIDs, it will utilize the SID in the path computation to an egress node. The SR-PCE will only utilize the Anycast SID if it has a valid path to the next SID in the computed path, meaning if one ABR loses it's path to the adjacent domain, the SR-PCE will update the head-end path with one utilizing a normal node SID to ensure traffic is not blackhole. 
+
+It is also possible to withdraw an anycast SID from the topology by using the conditional route advertisement feature for IS-IS, new in 3.5. Once the anycast SID Loopback has been withdrawn, it will no longer be used in a SR Policy path. Conditional route advertisement can be used for SR-TE Policies with Anycast SIDs in either dynamic or static SID candidate paths. Conditional route advertisement is implemented by supplying the router with a list of remote prefixes to monitor for reachability in the RIB. If those routes disappear from the RIB, the interface route will be withdrawn.   
+
 ## Transport Controller Path Computation Engine (PCE)
     
 ### Segment Routing Path Computation Element (SR-PCE)
@@ -534,6 +550,8 @@ The SR-PCE provides a path based on constraints such as:
   - Traffic-Engineering metrics. 
   
   - Disjoint paths starting on one or two nodes.
+  
+  - Latency  
 
 ![](http://xrdocs.io/design/images/cmf-hld/image13.png)
 
@@ -554,28 +572,18 @@ _Figure 12: XR Transport Controller – Components_
 
 There are three models available to program transport LSPs:
 
-  - Delegated Computation to SR-PCE
-
-
-All models assume SR-PCE has acquired full network topology through
-BGP-LS.
-
-![](http://xrdocs.io/design/images/cmf-hld/image14.png)
-
-_Figure 13: PCE Path Computation_
-
 #### Delegated Computation to SR-PCE
 
 1.  NSO provisions the service. Alternatively, the service can be
     provisioned via CLI
 
-2.  Access Router requests a path
+2.  Access Router requests a path with metric type and constraints 
 
 3.  SR-PCE computes the path
 
 4.  SR-PCE provides the path to Access Router
 
-5.  Access Router acknowledges
+5.  Access Router acknowledges and installs the SR Policy as the forwarding path for the service.  
 
 
 ## Segment Routing and Unified MPLS (BGP-LU) Co-existence 
@@ -751,6 +759,11 @@ The following key features have been added to the CST validated design to suppor
 ### Low latency SR-TE path computation
 In this release of the CST design, we introduce a new validated constraint type for SR-TE paths used for carrying services across the network. The "latency" constraint used either with a configured SR Policy or ODN SR Policy specifies the computation engine to look for the lowest latency path across the network.  The latency computation algorithm can use different mechanisms for computing the end to end path.  The first and preferred mechanism is to use the realtime measured per-link one-way delay across the network. This measured information is distributed via IGP extensions across the IGP domain and then onto external PCEs using BGP-LS extensions for use in both intra-domain and inter-domain calculations. In version 3.0 of the CST this is supported on ASR9000 links using the Performance Measurement link delay feature. More detail on the configuration can be found at https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-0/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-70x/b-segment-routing-cg-asr9000-70x_chapter_010000.html#id_118505. In release 6.6.3 NCS 540 and NCS 5500 nodes support the configuration of static link-delay values which are distributed using the same method as the dynamic values. Two other metric types can also be utilized as part of the "latency" path computation. The TE metric, which can be defined on all SR IS-IS links and the regular IGP metric can be used in the absence of the link-delay metric.  
 
+#### <b>Dynamic Link Performance Measurement</b>  
+Starting in version 3.5 of the CST, dynamic measurement of one-way and two-way latency on logical links is fully supported across all devices. The delay measurement feature utilizes TWAMP-Lite as the transport mechanism for probes and responses. PTP is a requirement for accurate measurement of one-way latency across links. It is recommended to configure one-way delay on all IS-IS core links within the CST network. A sample configuration can be found below and detailed configuration information can be found in the implementation guide. 
+
+One way latency measurement is also available for SR-TE Policy paths to give the provider an accurate latency measurement for all services utilizing the SR-TE Policy. This information is available through SR Policy statistics using the CLI or model-driven telemetry. The latency measurement is done for all active candidate paths.   
+
 Different metric types can be used in a single path computation, with the following order used:  
 1. Unidirectional link delay metric either computed or statically defined  
 2. Statically defined TE metric 
@@ -781,7 +794,42 @@ segment-routing
      type latency
 </pre>
 
+#### Dynamic link delay metric configuration 
+<pre>
+performance-measurement
+ interface TenGigE0/0/0/10
+  delay-measurement
+ interface TenGigE0/0/0/20
+  delay-measurement
+  !
+ ! 
+  protocol twamp-light
+  measurement delay
+   unauthenticated
+    querier-dst-port 12345
+   !
+  !
+ !
+ delay-profile interfaces
+  advertisement
+   accelerated
+    threshold 25
+   !
+   periodic
+    interval 120
+    threshold 10
+   !
+  !
+  probe
+   measurement-mode one-way 
+   protocol twamp-light
+   computation-interval 60
+  !
+ !
+</pre>
+
 #### Static defined link delay metric
+Static delay is set by configuring the "advertise-delay" value in microseconds under each interface 
 <pre>
 performance-measurement
  interface TenGigE0/0/0/10
@@ -821,6 +869,17 @@ H-QoS enables a provider to set an overall traffic rate across all services, and
 | High Priority Service | IPP 3 (in contract), 1 (out of contract) | EXP 1,3 | Business service | 
 | Best Effort | IPP 0 | EXP 0 | General user traffic | 
 | Network Control | IPP 6 | EXP 6 | Underlay network control plane |  
+
+# FTTH Design using EVPN E-Tree 
+
+## Summary 
+Many providers today are migrating from L2 access networks to more flexible L3 underlay networks using xVPN overlays to support a variety of network services. L3 networks offer more flexibility in terms of topology, resiliency, and support of both L2VPN and L3VPN services. Using a converged aggregation and access network simplifies networks and reduced both capex and opex spend by eliminating duplicate networks. Fiber to the home networks using active Ethernet have typically used L2 designs using proprietary methods like Private VLANs for subscriber isolation. EVPN E-Tree gives us a modern alternative to provide these services across a converged L3 Segment Routing network. 
+
+## E-Tree Diagram 
+<img src="http://xrdocs.io/design/images/cmf-hld/cst-etree.png" width="500"/>
+
+## E-Tree Operation 
+One of the strongest features of EVPN is its dynamic signaling of PE state across the entire EVPN virtual instance. E-Tree extends this paradigm by signaling between EVPN PEs which Ethernet Segments are considered root segments and which ones are considered leaf segments. Similar to hub and spoke L3VPN networks, traffic is allowed between root/leaf and root/root interfaces 
 
 
 # Cable Converged Interconnect Network (CIN)  
@@ -1212,7 +1271,7 @@ _Figure 33: Automation – End-to-End Service Models_
 
 _Figure 34: Automation – Hierarchical Service Models_
 
-# Services – Design
+# Base Services supporting Advanced Use Cases  
     
 ## Overview
 
