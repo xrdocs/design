@@ -387,7 +387,8 @@ up between the Access Router and the AG/PE ABRs, there are two options:
 2.  Each ABR is represented by a unique Prefix-SID.
 
 Choosing between Anycast-SID or Prefix-SID depends on the requested
-service and inclusiong of Anycast SIDs in the SR-TE Policy. Please refer to Section: "Services - Design". 
+service and inclusion of Anycast SIDs in the SR-TE Policy. Please refer to Section: "Services - Design". If one is using the SR-PCE, such as the case 
+of ODN SR-TE paths, the inclusion of Anycast SIDs is done via configuration.   
 
 Note that both options can be combined on the same network.
 
@@ -463,11 +464,7 @@ Redundant Domain SR-PCEs have BGP-LS sessions with the local Domain RRs
 through which they receive the overall network topology. Refer to
 Section: "Segment Routing Path Computation Element (SR-PCE)" for more details about SR-PCE.
 
-SR-PCE is then capable of computing the Inter-Domain LSP path on-demand. The computed path (Segment Routing SID List) is communicated to the Service End Points via a Path Computation Element Protocol (PCEP) response  
- as shown in Figure 9, or
-BGP-SR-TE, as shown in Figure 10. In the case
-of PCEP, SR-PCEs and Service End Points communicate directly, while for
-BGP-SR-TE, they communicate via RRs. Phase 1 uses PCEP only.
+SR-PCE is capable of computing the Inter-Domain LSP path on-demand. The computed path (Segment Routing SID List) is communicated to the Service End Points via a Path Computation Element Protocol (PCEP) response as shown in Figure 9. 
 
 The Service End Points create a SR-TE Policy and use the SID list returned by SR-PCE as the primary 
 path.   
@@ -477,12 +474,8 @@ Services or at both the Access and domain PE routers for Hierarchical Services. 
 Plane in the case of Service End Point co-located with the Access router
 was described in Figure 5.
 
-![](http://xrdocs.io/design/images/cmf-hld/image11.png)
-
-_Figure 10: Transport Programmability – BGP-SR-TE_
-
 The proposed design is very scalable and can be easily extended to
-support even higher numbers of BGP-SR-TE/PCEP sessions by adding
+support even higher numbers of PCEP sessions by adding
 additional RRs and SR-PCE elements into the Access Domain.
 
 Figure 11 shows the  Converged SDN Transport physical topology with examples
