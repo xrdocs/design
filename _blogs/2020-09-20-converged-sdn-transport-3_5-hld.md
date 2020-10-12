@@ -560,23 +560,40 @@ _Figure 12: XR Transport Controller – Components_
   - Computes Shortest, Disjoint, Low Latency, and Avoidance paths
   - North Bound interface with applications via REST API
 
-    
-### Path Computation Engine – Workflow
+### Converged SDN Transport Path Computation Workflows 
 
-There are three models available to program transport LSPs:
-
-#### Delegated Computation to SR-PCE
+#### Static SR-TE Policy Configuration   
 
 1.  NSO provisions the service. Alternatively, the service can be
     provisioned via CLI
 
-2.  Access Router requests a path with metric type and constraints 
+2.  SR-TE Policy is configured via NSO or CLI on the access node to 
+    the other service end points, specifying pcep as the computation method    
 
-3.  SR-PCE computes the path
+3.  Access Router requests a path from SR-PCE with metric type and constraints 
+
+4.  SR-PCE computes the path
 
 4.  SR-PCE provides the path to Access Router
 
-5.  Access Router acknowledges and installs the SR Policy as the forwarding path for the service.  
+6.  Access Router acknowledges and installs the SR Policy as the forwarding path for the service.  
+
+#### On-Demand Next-Hop Driven Configuration  
+
+1.  NSO provisions the service. Alternatively, the service can be
+    provisioned via CLI
+
+2.  On-demand colors are configured on each node, specifying specific constraints 
+    and pcep as the dynamic computation method
+
+3.  On reception of service routes with a specific ODN color community, Access Router 
+    requests a path from SR-PCE to the BGP next-hop as the SR-TE endpoint.   
+
+4.  SR-PCE computes the path
+
+5.  SR-PCE provides the path to Access Router
+
+6.  Access Router acknowledges and installs the SR Policy as the forwarding path for the service.  
 
 
 ## Segment Routing and Unified MPLS (BGP-LU) Co-existence 
