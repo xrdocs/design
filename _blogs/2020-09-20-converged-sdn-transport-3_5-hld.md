@@ -751,7 +751,9 @@ bring SLA awareness into the network.
 The goal of the Converged SDN Transport is to provide a flexible network
 blueprint that can be easily customized to meet customer specific
 requirements. This blueprint must adapt to carry any service type, for example  
-cable access, mobile, and business services over the same converged network infrastructure.  
+cable access, mobile, and business services over the same converged network infrastructure. 
+The following sections highglight some specific customer use cases and the components of the 
+design used in building those solutions.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-multi-service-network.png) 
 
