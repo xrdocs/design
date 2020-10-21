@@ -253,7 +253,7 @@ In this option the nodes are deployed with active or passive multiplexers to max
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-dwdm-mux.png)
 _CFP2-DCO DWDM hub and spoke or partial mesh deployment_ 
 
-The Cisco NCS 55A2-MOD and 55A2-MOD-SE hardened modular platform has a mix of fixed SFP+ and SFP28 ports along with two MPA slots. The coherent aggregation and access solution can utilize either the 2xCFP2-DCO MPA or 2xQSFP28+1xCFP2-DCO MPA. The same MPA modules can be used in the 5504, 5508, and 5516 chassis using the NC55-MOD-A-S and NC55-MODD-A-SE line cards, with 12xSFP+ and 2xQSFP+ ports.  
+The Cisco NCS 55A2-MOD and 55A2-MOD-SE hardened modular platform has a mix of fixed SFP+ and SFP28 ports along with two MPA slots. The coherent aggregation and access solution can utilize either the 2xCFP2-DCO MPA or 2xQSFP28+1xCFP2-DCO MPA. The same MPA modules can be used in the 5504, 5508, and 5516 chassis using the NC55-MOD-A-S and NC55-MODD-A-SE line cards, with 12xSFP+ and 2xQSFP+ ports.  The NCS 560 also now supports a CFP2-DCO line card to support using DWDM links with the NCS 560.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-peyto-mpa.png)
 _Cisco 55A2 modular hardened router_ 
@@ -261,6 +261,40 @@ _Cisco 55A2 modular hardened router_
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-mod-linecard.png)
 _Cisco NCS 5500 chassis modular line card_ 
 
+## Unnumbered Interface Support 
+In this release, starting at IOS-XR 7.1.1 we have added support for unnumbered interfaces. Using unnumbered interfaces in the network eases the burden of 
+deploying nodes by not requiring specific IPv4 or IPv6 interface addresses between adjacent node. When inserting a new node into an existing access ring the provider
+only needs to configure each interface to use a Loopback address on the East and West interfaces of the nodes. IGP adjacencies will be formed over the unnumbered 
+interfaces.   
+
+IS-IS and Segment Routing/SR-TE utilized in the Converged SDN Transport design supports using 
+unnumbered interfaces. SR-PCE used to compute inter-domain SR-TE paths also supports the use of unnumbered interfaces. In the topology database each interface is 
+uniquely identified by a combination of router ID and SNMP IfIndex value. 
+
+Unnumbered interface configuration:  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/2
+ description to-AG2
+ mtu 9216
+ ptp
+  profile My-Slave
+  port state slave-only
+  local-priority 10
+ !
+ service-policy input core-ingress-classifier
+ service-policy output core-egress-exp-marking
+<b> ipv4 point-to-point
+ ipv4 unnumbered Loopback0 </b> 
+ frequency synchronization
+  selection input
+  priority 10
+  wait-to-restore 1
+ !
+!
+</pre>
+</div> 
 
 ## Intra-Domain  
     
@@ -772,9 +806,12 @@ The following key features have been added to the CST validated design to suppor
 In this release of the CST design, we introduce a new validated constraint type for SR-TE paths used for carrying services across the network. The "latency" constraint used either with a configured SR Policy or ODN SR Policy specifies the computation engine to look for the lowest latency path across the network.  The latency computation algorithm can use different mechanisms for computing the end to end path.  The first and preferred mechanism is to use the realtime measured per-link one-way delay across the network. This measured information is distributed via IGP extensions across the IGP domain and then onto external PCEs using BGP-LS extensions for use in both intra-domain and inter-domain calculations. In version 3.0 of the CST this is supported on ASR9000 links using the Performance Measurement link delay feature. More detail on the configuration can be found at https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-0/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-70x/b-segment-routing-cg-asr9000-70x_chapter_010000.html#id_118505. In release 6.6.3 NCS 540 and NCS 5500 nodes support the configuration of static link-delay values which are distributed using the same method as the dynamic values. Two other metric types can also be utilized as part of the "latency" path computation. The TE metric, which can be defined on all SR IS-IS links and the regular IGP metric can be used in the absence of the link-delay metric.  
 
 #### <b>Dynamic Link Performance Measurement</b>  
-Starting in version 3.5 of the CST, dynamic measurement of one-way and two-way latency on logical links is fully supported across all devices. The delay measurement feature utilizes TWAMP-Lite as the transport mechanism for probes and responses. PTP is a requirement for accurate measurement of one-way latency across links. It is recommended to configure one-way delay on all IS-IS core links within the CST network. A sample configuration can be found below and detailed configuration information can be found in the implementation guide. 
+Starting in version 3.5 of the CST, dynamic measurement of one-way and two-way latency on logical links is fully supported across all devices. The delay measurement feature utilizes TWAMP-Lite as the transport mechanism for probes and responses. PTP is a requirement for accurate measurement of one-way latency across links and is recommended for all nodes.  In the absence of PTP a "two-way" delay mode is supported to calculate the one-way link delay. It is recommended to configure one-way delay on all IS-IS core links within the CST network. A sample configuration can be found below and detailed configuration information can be found in the implementation guide. 
 
-One way latency measurement is also available for SR-TE Policy paths to give the provider an accurate latency measurement for all services utilizing the SR-TE Policy. This information is available through SR Policy statistics using the CLI or model-driven telemetry. The latency measurement is done for all active candidate paths.   
+One way delay measurement is also available for SR-TE Policy paths to give the provider an accurate latency measurement for all services utilizing the SR-TE Policy. This information is available through SR Policy statistics using the CLI or model-driven telemetry. The latency measurement is done for all active candidate paths.   
+
+{: .notice--warning}
+Dynamic one-way link delay measurements using PTP are not currently supported on unnumbered interfaces. In the case of unnumbered interfaces, static link delay values must be used.    
 
 Different metric types can be used in a single path computation, with the following order used:  
 1. Unidirectional link delay metric either computed or statically defined  
