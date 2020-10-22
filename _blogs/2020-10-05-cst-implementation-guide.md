@@ -3344,125 +3344,231 @@ router bgp 100
 This is not an exhaustive list of IOS-XR model-driven telemetry sensor paths, but gives some basic paths used to monitor a Converged SDN Transport deployment. Each sensor path may have its own 
 cadence of collection and transmission, but it's recommended to not use values less than 60s when using many sensor paths.  
 
-## PTP Information 
+<br> 
+
+## Device inventory and monitoring
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+| Full inventory via OpenConfig model| openconfig-platform:components|
+| NCS 540/5500 NPU resources |cisco-ios-xr-fretta-bcm-dpa-hw-resources-oper/dpa/stats/nodes/node/hw-resources-datas/hw-resources-data|
+| Optics information |cisco-ios-xr-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info|
+| System uptime| cisco-ios-xr-shellutil-oper:system-time/uptime|
+| System CPU utilization| cisco-ios-xr-wdsysmon-fd-oper:system-monitoring/cpu-utilization|
+<br> 
+
+## Interface Data
+
+| Metric | Sensor path | 
+-----------------------| ---------------------------------------------------|
+|Interface optics state:  Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
+|OpenConfig interface stats|openconfig-interfaces:interfaces|
+|Interface data rates, based on load-interval|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/data-rate| 
+|Interface counters similar to "show int"|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters|
+|Full interface information|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface|
+|Interface stats|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics|
+|Subset of interface stats|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics/basic-interface-stats|
+<br> 
+
+## LLDP Monitoring 
+
+| Metric | Sensor path | 
+-----------------------| ---------------------------------------------------|
+|All LLDP Info| Cisco-IOS-XR-ethernet-lldp-oper:lldp|
+|LLDP neighbor info|Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/neighbors|
+<br> 
+
+## Aggregate bundle information (use interface models for interface counters)
+
+| Metric | Sensor path | 
+-----------------------| ---------------------------------------------------|
+|OpenConfig LAG information|sensor-group openconfig-if-aggregate:aggregate|
+|OpenConfig LAG state only|sensor-group openconfig-if-aggregate:aggregate/state|
+|OpenConfig LACP information|sensor-group openconfig-lacp:lacp|
+|Cisco full bundle information|sensor-group Cisco-IOS-XR-bundlemgr-oper:bundles|
+|Cisco BFD over Bundle stats|sensor-group Cisco-IOS-XR-bundlemgr-oper:bundle-information/bfd-counters|
+<br> 
+
+## PTP and SyncE Information 
+
+| Metric | Sensor path | 
+-----------------------| ---------------------------------------------------|
+|PTP servo status |  Cisco-IOS-XR-ptp-oper:ptp/platform/servo/device-status |
+|PTP servo statistics | Cisco-IOS-XR-ptp-oper:ptp/platform/servo |
+|PTP foreign master information |  Cisco-IOS-XR-ptp-oper:ptp/interface-foreign-masters |
+|PTP interface counters, key is interface name | Cisco-IOS-XR-ptp-oper:ptp/interface-packet-counters | 
+|Frequency sync info |  Cisco-IOS-XR-freqsync-oper:frequency-synchronization/summary/frequency-summary |
+|SyncE interface information, key is interface name | Cisco-IOS-XR-freqsync-oper:frequency-synchronization/interface-datas/interface-data |
+<br> 
+
+## BGP Information  
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|BGP established neighbor count across all AF | Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/vrfs/vrf/process-info/global/established-neighbors-count-total|
+|BGP total neighbor count|  Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/vrfs/vrf/process-info/global/neighbors-count-total|
+|BGP prefix SID count| Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/vrfs/vrf/process-info/global/prefix-sid-label-index-count|
+|BGP total VRF count including default VRF| Cisco-IOS-XR-ipv4-bgp-oper:process-info/ipv4-bgp-oper:global/ipv4-bgp-oper:total-vrf-count|
+|BGP convergence|Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/afs/af/af-process-info/performance-statistics/global/|has-converged|
+|BGP IPv4 route count| Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext/active-routes-count|
+|OpenConfig BGP information|openconfig-bgp:bgp|
+|OpenConfig BGP neighbor info only| openconfig-bgp:bgp/neighbors|
+<br> 
+
+## IS-IS Information
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|IS-IS neighbor info| sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbors|
+|IS-IS interface info| sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces|
+|IS-IS adj information| sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/adjacencies|
+|IS-IS neighbor summary| sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbor-summaries|
+|IS-IS node count|  Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/topology-levels/topology-level/topology-summary/router-node-count/reachable-node-count|
+|IS-IS adj state| Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/level/adjacencies/adjacency/adjacency-state|
+|IS-IS neighbor count|  Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbor-summaries/neighbor-summary/level2-neighbors/neighbor-up-count|
+|IS-IS total route count|  Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2/active-routes-count|
+<br> 
+
+## Routing protocol RIB information 
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|IS-IS L1 Info|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l1|
+|IS-IS L2 Info|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2
+|IS-IS Summary|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-sum|
+|Total route count per protocol|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count|
+|IPv6 IS-IS L1 info|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l1|
+|IPv6 IS-IS L2 info|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2|
+|IPv6 IS-IS summary|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-sum|
+|IPv6 total route count per protocol|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count|
+<br> 
+
+## BGP RIB information
+<b>It is not recommended to monitor these paths using MDT with large tables<b> 
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|openconfig-rib-bgp:bgp-rib|
+|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext|
+|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int|
+|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext|
+|Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int|
+<br>
+
+## Routing policy Information 
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|Routing policy information | Cisco-IOS-XR-policy-repository-oper:routing-policy/policies|
+<br>
+
+## EVPN Information 
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|EVPN information|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/evpn-summary|
+|Total EVPN|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/evpn-summary/total-count|
+|EVPN total ES entries| Cisco-IOS-XR-evpn-oper:evpn/active/summary/es-entries|
+|EVPN local Eth Auto Discovery routes| Cisco-IOS-XR-evpn-oper:evpn/active/summary/local-ead-routes|
+|EVPN remote Eth Auto Discovery routes| Cisco-IOS-XR-evpn-oper:evpn/active/summary/remote-ead-routes|
+<br> 
+
+## Per-Interface QoS Statistics Information 
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|Input stats | Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/|
+|General QoS Stats | Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/general-stats|
+|Per-queue stats | Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/queue-stats-array|
+|General service policy information, keys are policy name and interface applied|  Cisco-IOS-XR-qos-ma-oper:qos/interface-table/interface/input/service-policy-names|
+<br> 
+
+## Per-Policy, Per-Interface, Per-Class statistics 
+
+<b>See sensor path name for detailed information on data leafs</b>  
+
+|  Sensor path | 
+|-----------------------| 
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/match-data-rate|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/pre-policy-matched-bytes|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/pre-policy-matched-packets|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-drop-bytes|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-drop-packets|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-drop-rate|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-transmit-rate|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/transmit-bytes|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-instance-length/value|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-max-length/unit|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-max-length/value|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/random-drop-bytes|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/random-drop-packets|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/tail-drop-bytes|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/tail-drop-packets|
+|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/shared-queue-id|
+<br> 
+
+## L2VPN Information  
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|L2VPN general forwarding information including EVPN and Bridge Domains| Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary|
+|Bridge domain information| Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/bridge-domain-summary| 
+|Total BDs active|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/bridge-domain-summary/bridge-domain-count|
+|Total BDs using EVPN| Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/bridge-domain-summary/bridge-domain-with-evpn-enabled|
+|Total MAC count (Local+remote)| Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/mac-summary/mac-count|
+|L2VPN xconnect Forwarding information| Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/xconnect-summary|
+|Xconnect total count|  Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnect-summary/number-xconnects|
+|Xconnect down count|  Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnect-summary/number-xconnects-down|
+|Xconnect up count| Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnect-summary/number-xconnects-up|
+|Xconnect unresolved| Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnect-summary/number-xconnects-unresolved|
+|Xconnect with down attachment circuits|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/xconnect-summary/ac-down-count-l2vpn|
+|Per-xconnect detailed information including state| xconnect group and name are keys:  Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnects/xconnect|
+|L2VPN bridge domain specific information, will have the BD name as a key|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-bridge-domains/l2fib-bridge-domain|
+|L2VPN EVPN IPv4 MAC/IP information|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip4macs|
+|L2VPN EVPN IPv6 MAC/IP information|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip6macs|
+<br> 
+
+## SR-PCE PCC and SR Policy Information 
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|PCC to PCE peer information|  Cisco-IOS-XR-infra-xtc-agent-oper:pcc/peers|
+|SR policy summary info|  Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary|
+|Specific SR policy information| Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary/configured-down-policy-count|
+|Specific SR policy information| Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary/configured-total-policy-count|
+|Specific SR policy information| Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary/configured-up-policy-count|
+|SR policy information, key is SR policy name|  Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policies/policy|
+|SR policy forwarding info including packet and byte stats per candidate path, key is policy name and candidate path|  Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-forwardings|
+<br> 
+
+## MPLS performance measurement  
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|Summary info|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary|
+|Interface stats for delay measurements|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary/delay-summary/interface-delay-summary/delay-transport-counters/generic-counters|
+|Interface stats for loss measurement|   Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary/loss-summary/interface-loss-summary|
+|SR policy PM statistics|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies/sr-policy-delay |
+|Parent interface oper data sensor path|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces |
+|Delay values for each probe measurement| Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-probes|
+|Delay values aggregated at computation interval| Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-aggregations|
+|Delay values aggregated at advertisement interval| Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-advertisements|
+|SR Policy measurement information|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies|
+<br> 
+
+## mLDP Information 
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|mLDP LSP count|  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/context/lsp-count|
+|mLDP peer count|  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/context/peer-count|
+|mLDP database info, where specific LSP information is stored|  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/databases/database|
+<br> 
+
+## ACL Information
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|Details on ACL resource consumption|  Cisco-IOS-XR-ipv4-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details/current-configured-ac-es|
+|OpenConfig full ACL information | openconfig-acl:acl|
+<br> 
 
 
-PTP servo status:  Cisco-IOS-XR-ptp-oper:ptp/platform/servo/device-status
-PTP servo statistics: Cisco-IOS-XR-ptp-oper:ptp/platform/servo 
-PTP foreign master information:  Cisco-IOS-XR-ptp-oper:ptp/interface-foreign-masters
-PTP interface counters: Key is interface name, Cisco-IOS-XR-ptp-oper:ptp/interface-packet-counters
 
-Frequency sync info:  Cisco-IOS-XR-freqsync-oper:frequency-synchronization/summary/frequency-summary
-SyncE interface information, key is interface name:  Cisco-IOS-XR-freqsync-oper:frequency-synchronization/interface-datas/interface-data
-
-
-BGP established neighbor count across all AF:  Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/vrfs/vrf/process-info/global/established-neighbors-count-total
-BGP total neighbor count:  Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/vrfs/vrf/process-info/global/neighbors-count-total
-
-BGP prefix SID count:  Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/vrfs/vrf/process-info/global/prefix-sid-label-index-count
-BGP total VRF count including default VRF:  /ipv4-bgp-oper:bgp/ipv4-bgp-oper:instances/ipv4-bgp-oper:instance/ipv4-bgp-oper:instance-active/ipv4-bgp-oper:vrfs/ipv4-bgp-oper:vrf/ipv4-bgp-oper:process-info/ipv4-bgp-oper:global/ipv4-bgp-oper:total-vrf-count
-BGP convergence:  Cisco-IOS-XR-ipv4-bgp-oper:bgp/instances/instance/instance-active/default-vrf/afs/af/af-process-info/performance-statistics/global/has-converged
-BGP IPv4 route count:  Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext/active-routes-count
-
-
-IS-IS node count:  Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/topologies/topology/topology-levels/topology-level/topology-summary/router-node-count/reachable-node-count
-IS-IS adj state: Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/level/adjacencies/adjacency/adjacency-state
-IS-IS neighbor count:  Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbor-summaries/neighbor-summary/level2-neighbors/neighbor-up-count
-IS-IS total route count:  Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2/active-routes-count
-
-
-EVPN total ES entries:  Cisco-IOS-XR-evpn-oper:evpn/active/summary/es-entries
-EVPN local Eth Auto Discovery routes:  Cisco-IOS-XR-evpn-oper:evpn/active/summary/local-ead-routes
-EVPN remote Eth Auto Discovery routes:  Cisco-IOS-XR-evpn-oper:evpn/active/summary/remote-ead-routes
-
-QoS Information: 
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/general-stats
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/queue-stats-array
-
-
-General service policy information, keys are policy name and interface applied:  Cisco-IOS-XR-qos-ma-oper:qos/interface-table/interface/input/service-policy-names
-
-Per policy, per-interface, per class statistics:  
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/match-data-rate
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/pre-policy-matched-bytes
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/pre-policy-matched-packets
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-drop-bytes
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-drop-packets
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-drop-rate
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-transmit-rate
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/transmit-bytes
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-instance-length/value
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-max-length/unit
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-max-length/value
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/random-drop-bytes
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/random-drop-packets
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/tail-drop-bytes
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/tail-drop-packets
-Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/shared-queue-id
-
-Old L2VPN model:  
-
-L2VPN general forwarding information including EVPN and Bridge Domains: Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary
-Specific information: 
-Bridge domain information: Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/bridge-domain-summary 
-Total BDs active:  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/bridge-domain-summary/bridge-domain-count
-Total BDs using EVPN: Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/bridge-domain-summary/bridge-domain-with-evpn-enabled
-
-EVPN information:  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/evpn-summary
-Total EVPN:  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/evpn-summary/total-count
-
-Total MAC count (Local+remote): Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/mac-summary/mac-count
-
-L2VPN xconnect Forwarding information: Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/xconnect-summary
-Xconnect total count:  Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnect-summary/number-xconnects
-Xconnect down count:  Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnect-summary/number-xconnects-down
-Xconnect up count: Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnect-summary/number-xconnects-up
-Xconnect unresolved: Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnect-summary/number-xconnects-unresolved
-
-
-Xconnect with down attachment circuits:  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-summary/xconnect-summary/ac-down-count-l2vpn
-Per-xconnect detailed information including state: xconnect group and name are keys:  Cisco-IOS-XR-l2vpn-oper:l2vpnv2/active/xconnects/xconnect
-
-L2VPN bridge domain specific information, will have the BD name as a key:  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-bridge-domains/l2fib-bridge-domain
-
-L2VPN EVPN IPv4 MAC/IP information:  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip4macs
-L2VPN EVPN IPv6 MAC/IP information:  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip6macs
-
-ISIS information:  
-sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbors
-sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/interfaces
-sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/adjacencies
-sensor-path Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbor-summaries
-
-PCC to PCE peer information:  Cisco-IOS-XR-infra-xtc-agent-oper:pcc/peers
-
-SR policy summary info:  Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary
-Specific SR policy information: Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary/configured-down-policy-count
-Specific SR policy information: Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary/configured-total-policy-count
-Specific SR policy information: Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary/configured-up-policy-count
-SR policy information, key is SR policy name:  Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policies/policy
-SR policy forwarding info including packet and byte stats per candidate path, key is policy name and candidate path:  Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-forwardings
-
-
-MPLS performance measurement:  
-Interface stats for delay measurements:  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary/delay-summary/interface-delay-summary/delay-transport-counters/generic-counters
-Last aggregated PM values for each interface, use interface as key:  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/interface-delay/interface-last-aggregations
-Interface stats for loss measurement:   Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary/loss-summary/interface-loss-summary
-SR policy PM statistics:  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies/sr-policy-delay 
-
-mLDP LSP count:  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/context/lsp-count
-mLDP peer count:  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/context/peer-count
-mLDP database info, where specific LSP information is stored:  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/databases/database
-
-Interface optics state:  Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state
-
-ACLs:  Cisco-IOS-XR-ipv4-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details/current-configured-ac-es
-
-Performance Measurement: 
-Summary info:  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary
-Parent interface oper data sensor path:  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces 
-Delay values for each probe measurement: Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-probes
-Delay values aggregated at computation interval: Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-aggregations
-Delay values aggregated at advertisement interval: Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-advertisements
-SR Policy measurement information:  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies
+```
