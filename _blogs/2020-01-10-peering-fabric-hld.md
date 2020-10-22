@@ -2112,10 +2112,8 @@ The data is also available via NETCONF, which does allow subtree filters
 and retrieval of specific data. However, this is a more resource
 intensive operation on the router.
 
-Metric
-Data
 
-|                               |                                                                                                |
+|   Metric                            |      Data                                                                                          |
 | ----------------------------- | ---------------------------------------------------------------------------------------------- |
 | Logical Interface Admin State | Enum                                                                                           |
 | SNMP OID                      | IF-MIB:ifAdminStatus                                                                           |
