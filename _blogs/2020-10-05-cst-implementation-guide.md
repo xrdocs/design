@@ -1212,14 +1212,124 @@ segment-routing
 
 ### SR-PCE configuration – IOS-XE
 
-</pre> 
-</div> 
+<div class="highlighter-rouge">
+<pre class="highlight">
 mpls traffic-eng tunnels
 mpls traffic-eng pcc peer 100.0.1.101 source 100.0.1.51
 mpls traffic-eng pcc peer 100.0.1.111 source 100.0.1.51
 mpls traffic-eng pcc report-all
 </pre> 
 </div> 
+
+<br> 
+
+## SR-TE Policy Configuration 
+At the foundation of CST is the use of Segment Routing Traffic Engineering Policies.  SR-TE allow providers to create end to end traffic paths 
+with engineered constraints to achieve a SLA objective.  SR-TE Policies are either dynamically created by ODN (see ODN section) or users can 
+configure SR-TE Policies on the head-end node.   
+
+### SR-TE Color and Endpoint 
+The components uniquely identifying a SR-TE Policy to a destination PE node are its endpoint and color. 
+* The endpoint is the destination node loopback address.  Note the endpoint address should not be an anycast address. 
+* The color is a 32-bit value which should have a SLA meaning to the network. The color allows for multiple SR-TE Policies 
+to exist between a pair of nodes, each one with its own set of metrics and constraints.  
+
+### SR-TE Candidate Paths 
+* Each SR-TE Policy configured on a node must have at least one candidate path defined. 
+* If multiple candidate paths are defined, only one is active at any one time. 
+* The candidate path with the higher preference value is preferred over candidate paths with a lower preference value. 
+* The candidate path configuration specifies whether the path is dynamic or uses an explicit segment list. 
+* Within the dynamic configuration one can specify whether to use a PCE or not, the metric type used in the path computation (IGP metric, latency, TE metric, hop count), and 
+the additional constraints placed on the path (link affinities, flex-algo constraints, or a cumulative metric of type IGP metric, latency, TE Metric, or hop count)
+* There is a default candidate path with a preference of 200 using head-end IGP path computation 
+* Each candidate path can have multiple explicit segment lists defined with a bandwidth weight value to load balance traffic across multiple explicit paths 
+
+### Service to SR-TE Policy Forwarding 
+Service traffic is forwarded over SR-TE Policies in the CST design using per-destination automated steering. 
+* Per-destination steering utilizes two BGP components of the service route to forward traffic to a matching SR Policy 
+  * A color extended community attached to the service route matching the SR Policy color 
+  * The BGP next-hop address of the service route to match the endpoint of the SR Policy   
+
+### SR-TE Configuration Examples 
+
+#### SR Policy using IGP computation, head-end computation  
+The local PE device will compute a path using the lowest cumulative path to 100.0.1.50.  Note in the multi-domain CST design, this computation will fail to nodes not found within the same IS-IS domain as the PE.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy GREEN-PE3-24
+   color 1024 end-point ipv4 100.0.1.50
+   candidate-paths
+    preference 1
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+</pre>
+</div>
+
+#### SR Policy using lowest IGP metric computation and PCEP
+This policy will request a path from the configured primary PCE with the lowest cumulative IGP metric to the endpoint 100.0.1.50 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy GREEN-PE3-24
+   color 1024 end-point ipv4 100.0.1.50
+   candidate-paths
+    preference 1
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+</pre>
+</div>
+
+#### SR Policy using lowest latency metric and PCEP
+This policy will request a path from the configured primary PCE with the lowest cumulative latency to the endpoint 100.0.1.50.  As covered in the performance-measurement section, 
+the per-link latency metric value used will be the dynamic/static PM value, a configured TE metric value, or the IGP metric.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy GREEN-PE3-24
+   color 1024 end-point ipv4 100.0.1.50
+   candidate-paths
+    preference 1
+     dynamic
+      pcep
+      !
+      metric
+       type latency  
+</pre>
+</div>
+
+#### SR Policy using explicit segment list  
+This policy does not perform any path computation, it will utilize the statically defined segment lists as the forwarding path across the network. The node does however check the validity of the node segments in the list. 
+Each node SID in the segment list can be defined by either IP address or SID.  The full path to the egress node must be defined in the list, but you do not need to define every node explicitly in the path. If you want the 
+path to take a specific link the correct node and adjacency SID must be defined in the list.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  segment-list anycast-path 
+   index 1 mpls label 17034
+   index 2 mpls label 16150 
+  !
+  policy anycast-path-ape3 
+   color 9999 end-point ipv4 100.0.1.50
+   candidate-paths
+    preference 1
+     explicit segment-list anycast-path
+</pre>
+</div>
 
 ## QoS Implementation 
 

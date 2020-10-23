@@ -819,7 +819,8 @@ Different metric types can be used in a single path computation, with the follow
 3. IGP metric 
 
 #### SR Policy latency constraint configuration on configured policy  
-<pre> 
+<div class="highlighter-rouge">
+<pre class="highlight">
 segment-routing
   traffic-eng
     policy LATENCY-POLICY 
@@ -830,9 +831,11 @@ segment-routing
             metric
               type latency
 </pre>
+</div>
 
 #### SR Policy latency constraint configuration for ODN policies 
-<pre> 
+<div class="highlighter-rouge">
+<pre class="highlight">
 segment-routing
  traffic-eng
   on-demand color 100 
@@ -842,9 +845,11 @@ segment-routing
     metric
      type latency
 </pre>
+</div>
 
 #### Dynamic link delay metric configuration 
-<pre>
+<div class="highlighter-rouge">
+<pre class="highlight">
 performance-measurement
  interface TenGigE0/0/0/10
   delay-measurement
@@ -876,10 +881,13 @@ performance-measurement
   !
  !
 </pre>
+</div>
 
 #### Static defined link delay metric
 Static delay is set by configuring the "advertise-delay" value in microseconds under each interface 
-<pre>
+
+<div class="highlighter-rouge">
+<pre class="highlight">
 performance-measurement
  interface TenGigE0/0/0/10
   delay-measurement
@@ -888,9 +896,11 @@ performance-measurement
   delay-measurement
    advertise-delay 10000
 </pre>
+</div>
 
 #### TE metric definition  
-<pre>
+<div class="highlighter-rouge">
+<pre class="highlight">
 segment-routing
  traffic-eng
   interface TenGigE0/0/0/10
@@ -899,9 +909,69 @@ segment-routing
   interface TenGigE0/0/0/20
    metric 10
 </pre>
+</div>
 
 The link-delay metrics are quantified in the unit of microseconds.  On most networks this can be quite large and may be out of range from normal IGP metrics, so care must be taken to ensure proper compatibility when mixing metric types. The largest possible IS-IS metric is 16777214 which is equivalent to 16.77 seconds.    
 {: .notice--warning}
+
+### SR Policy one-way delay measurement 
+In addition to the measurement of delay on physical links, the end to end one-way delay can also be measured across a SR Policy. This allows a provider to monitor the traffic path for increases in delay and log/alarm when thresholds are exceeded. Please note 
+SR Policy latency measurements are not supported for PCE-computed paths, only those using head-end computation or configured static segment lists.  The basic configuration for SR Policy measurement follows:  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+performance-measurement
+ delay-profile sr-policy
+  advertisement
+   accelerated
+    threshold 25
+   !
+   periodic
+    interval 120
+    threshold 10
+   !
+   threshold-check
+    average-delay
+   !
+  !
+  probe
+   tos
+    dscp 46
+   !
+   measurement-mode one-way
+   protocol twamp-light
+   computation-interval 60
+   burst-interval 60
+  !
+ !
+ protocol twamp-light
+  measurement delay
+   unauthenticated
+    querier-dst-port 12345
+   !
+  !
+ !
+!
+segment-routing
+ traffic-eng
+  policy APE7-PM
+   color 888 end-point ipv4 100.0.2.52
+   candidate-paths
+    preference 200
+     dynamic
+      metric
+       type igp
+      !
+     !
+    !
+   !
+   performance-measurement
+    delay-measurement
+     logging
+      delay-exceeded
+</pre>
+</div>
+
 
 ### End to end network QoS with H-QoS on Access PE 
 QoS is of utmost importance for ensuring the mobile control plane and critical user plane traffic meets SLA requirements. Overall network QoS is covered in the QoS section in this document, this section will focus on basic Hierarchical QoS to support 5G services. 
