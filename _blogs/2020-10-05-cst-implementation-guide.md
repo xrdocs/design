@@ -2097,6 +2097,8 @@ ethernet cfm
 ## Multicast NG-MVPN Profile 14 using mLDP and ODN L3VPN
 In ths service example we will implement multicast delivery across the CST network using mLDP transport for multicast and SR-MPLS for unicast traffic. L3VPN SR paths will be dynamically created using ODN. Multicast profile 14 is the "Partitioned MDT - MLDP P2MP - BGP-AD - BGP C-Mcast Signaling"  Using this profile each mVPN will use a dedicated P2MP tree, endpoints will be auto-discovered using NG-MVPN BGP NLRI, and customer multicast state such as source streams, PIM, and IGMP membership data will be signaled using BGP. Profile 14 is the recommended profile for high scale and utilizing label-switched multicast (LSM) across the core.      
 
+**Please note that mLDP requires an IGP path to the source PE loopback address.  The CST design utilizes a multi-domain approach which normally does not advertise IGP routes across domain boundaries. If mLDP is being utilized across domains, controlled redistribution should be used to advertise the source PE loopback addresses to receiver PEs**  
+
 ### Multicast core configuration 
 The multicast "core" includes transit endpoints participating in mLDP only. See the mLDP core configuration section for details on end-to-end mLDP configuration.  
 
@@ -2247,6 +2249,20 @@ router igmp
 !
 </pre> 
 </div>
+
+## Multicast distribution using TreeSID with static S,G Mapping 
+TreeSID utilizes only Segment Routing to create and forward multicast traffic across an optimized tree. The TreeSID tree is configured on the SR-PCE for deployment to the 
+network. PCEP is used to instantiate the correct computed segments end to end.  On the head-end source node, 
+
+**Note TreeSID requires all nodes in the multicast distribution network to have connections to the same SR-PCE instances, please see the PCEP configuration section of the Implmentation Guide**  
+
+### TreeSID SR-PCE Configuration 
+
+### TreeSID Source Node Configuration 
+
+### TreeSID Receiver Node Configuration 
+
+
 
 ### End-To-End VPN Services Data Plane
 

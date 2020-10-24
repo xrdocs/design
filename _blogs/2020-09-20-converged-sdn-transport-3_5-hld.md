@@ -998,7 +998,20 @@ Many providers today are migrating from L2 access networks to more flexible L3 u
 <img src="http://xrdocs.io/design/images/cmf-hld/cst-etree.png" width="500"/>
 
 ## E-Tree Operation 
-One of the strongest features of EVPN is its dynamic signaling of PE state across the entire EVPN virtual instance. E-Tree extends this paradigm by signaling between EVPN PEs which Ethernet Segments are considered root segments and which ones are considered leaf segments. Similar to hub and spoke L3VPN networks, traffic is allowed between root/leaf and root/root interfaces 
+One of the strongest features of EVPN is its dynamic signaling of PE state across the entire EVPN virtual instance. E-Tree extends this paradigm by signaling between EVPN PEs which Ethernet Segments are considered root segments and which ones are considered leaf segments. Similar to hub and spoke L3VPN networks, traffic is allowed between root/leaf and root/root interfaces but not between leaf interfaces either on the same node or on different nodes. EVPN signaling creates the forwarding state and entries to restrict traffic forwarding between endpoints connected to the same leaf Ethernet Segment.   
+
+### Split-Horizon Groups 
+E-Tree enables split horizon groups on access interfaces within the same Bridge Domain/EVI configured for E-Tree to prohibit direct L2 forwarding between these interfaces. 
+
+### L3 IRB Support  
+In a fully distributed FTTH deployment, a provider may choose to put the L3 gateway for downstream access endpoints on the leaf device. The L3 BVI interface defined for the E-Tree 
+BD/EVI is always considered a root endpoint. E-Tree operates at L2 so when a L3 interface is present traffic will be forwarded at L3 between leaf endpoints. Note L2 leaf devices using 
+a centralized IRB L3 GW on an E-Tree root node is not currently supported. In this type of deployment where the L3 GW is not located on the leaf the upstream L3 GW node must be attached via a L2 interface into the E-Tree root node Bridge Domani/EVI. 
+It is recommended to locate the L3 GW on the leaf device if possible.  
+
+### 
+
+
 
 
 # Cable Converged Interconnect Network (CIN)  
@@ -1265,6 +1278,16 @@ address-family ipv4
     allocate for no-unicast-ldp
 </pre> 
 </div> 
+
+## L3 Multicast using Segment Routing TreeSID w/Static S,G Mapping 
+Converged SDN Transport 3.5 introduces Segment Routing Tree SID across all IOS-XR nodes.  TreeSID utilizes the programmability of SR-PCE to create and maintain an optimized multicast tree from source 
+to receiver across an SR-only IPv4 network. In CST 3.5 TreeSID utilizes MPLS labels at each hop in the network.  Each node in the network maintains a session to the same set of SR-PCE controllers.  The SR-PCE
+creates the tree using PCE-initiated segments. TreeSID supports advanced functionality such as TI-LFA for fast protection and disjoint trees.  
+
+Traffic is forwarded across the tree in CST 3.5 using static S,G mappings at the head-end source nodes and tail-end receiver nodes. Providers needing a solution where dynamic joins and leaves are not common, such as broadcast 
+video deployments, can be benefit from the simplicity static TreeSID brings, eliminating the need for distributed BGP mVPN signaling. TreeSID is supported for both default VRF (Global Routing Table) and mVPN.  
+
+Please see the CST 3.5 Implementation Guide for TreeSID configuration guidelines and examples. 
 
 
 ## EVPN Multicast 
