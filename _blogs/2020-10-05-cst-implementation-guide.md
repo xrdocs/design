@@ -482,9 +482,6 @@ end
 router isis ACCESS
  mpls traffic-eng router-id Loopback0
  mpls traffic-eng level-2
-
-interface TenGigabitEthernet0/0/12
- mpls traffic-eng tunnels
 </pre> 
 </div> 
 
@@ -1713,11 +1710,17 @@ policy-map hqos-egress-child-shaping
 
 # Services
     
-## End-To-End VPN Services
+## End-To-End VPN Services 
 
 ![](http://xrdocs.io/design/images/cmfi/image6.png)
 
 _Figure 6: End-To-End Services Table_
+
+### End-To-End VPN Services Data Plane
+
+![](http://xrdocs.io/design/images/cmfi/image10.png)
+
+_Figure 10: End-To-End Services Data Plane_
 
 ### L3VPN MP-BGP VPNv4 On-Demand Next-Hop
 
@@ -1843,7 +1846,7 @@ end
 </pre> 
 </div> 
 
-**BGP VRF configuration Static & BGP neighbor **
+**BGP VRF configuration Static & BGP neighbor**
 
 **Static routing configuration**
 
@@ -2082,6 +2085,678 @@ pseudowire-class mpls
  preferred-path interface Tunnel1  
 </pre> 
 </div>
+
+### L2VPN EVPN E-Tree
+
+Note: ODN support for EVPN E-Tree is supported on ASR9K only in CST 3.5. Support for E-Tree 
+across all CST IOS-XR nodes will be covered in CST 4.0 based on IOS-XR 7.2.2. In CST 3.5, if using E-Tree 
+across multiple IGP domains, SR-TE Policies must be configured between all Root nodes and between all Root and Leaf nodes. 
+
+#### IOS-XR Root Node Configuraiton 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+evpn
+  evi 100 
+   etree 
+   leaf 
+   !
+  advertise-mac
+  !
+ ! 
+l2vpn
+ bridge group etree
+  bridge-domain etree-ftth 
+  interface TenGigE0/0/0/23.1098
+  routed interface BVI100 
+  ! 
+  evi 100 
+</pre>
+</div>
+
+
+## Hierarchical Services
+
+![](http://xrdocs.io/design/images/cmfi/image11.png)
+
+_Figure 11: Hierarchical Services Table_
+
+### L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Headend (PWHE)
+
+![](http://xrdocs.io/design/images/cmfi/image12.png)
+
+_Figure 12: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Headend (PWHE) Control Plane_
+
+**Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
+
+1.  **Operator:** New EVPN-VPWS instance via CLI or NSO
+
+2.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
+
+**Provider Edge Routers:** **Cisco ASR9000 IOS-XR**
+
+1.  **Operator:** New EVPN-VPWS instance via CLI or NSO
+
+2.  **Provider Edge Router:** Path to Access Router is known via
+    ACCESS-ISIS IGP.
+
+3.  **Operator:** New L3VPN instance (VPNv4/6) together with
+    Pseudowire-Headend (PWHE) via CLI or NSO
+
+4.  **Provider Edge Router:** Path to remote PE is known via CORE-ISIS
+    IGP.
+    
+#### Access Router Service Provisioning (IOS-XR):
+
+**VLAN based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ xconnect group evpn-vpws-l3vpn-PE1
+  p2p L3VPN-VRF1
+   interface TenGigE0/0/0/5.501
+   neighbor evpn evi 13 target 501 source 501
+   !
+  !
+ !
+interface TenGigE0/0/0/5.501 l2transport
+ encapsulation dot1q 501
+ rewrite ingress tag pop 1 symmetric
+</pre> 
+</div> 
+
+**Port based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn                                                                                                              
+ xconnect group evpn-vpws-l3vpn-PE1 
+ p2p odn-1
+   interface TenGigE0/0/0/5
+     neighbor evpn evi 13 target 502 source 502  
+   !
+  ! 
+ !
+! 
+interface TenGigE0/0/0/5 
+  l2transport
+</pre> 
+</div> 
+
+#### Access Router Service Provisioning (IOS-XE):
+
+**VLAN based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn evpn instance 14 point-to-point
+ vpws context evpn-pe4-pe1
+  service target 501 source 501
+  member GigabitEthernet0/0/1 service-instance 501
+ !
+interface GigabitEthernet0/0/1
+ service instance 501 ethernet
+  encapsulation dot1q 501
+  rewrite ingress tag pop 1 symmetric
+ !
+ </pre> 
+</div> 
+
+**Port based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn evpn instance 14 point-to-point
+ vpws context evpn-pe4-pe1
+  service target 501 source 501
+  member GigabitEthernet0/0/1 service-instance 501
+ !
+interface GigabitEthernet0/0/1
+ service instance 501 ethernet
+  encapsulation default
+</pre> 
+</div> 
+
+#### Provider Edge Router Service Provisioning (IOS-XR):
+
+**VRF configuration**  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf L3VPN-ODNTE-VRF1                                                                                                   
+ address-family ipv4 unicast                                                                                                  
+  import route-target                                                                                                  
+   100:501 
+  !                                                                                                                
+  export route-target                                                                                                     
+   100:501                                                                                                         
+  !                                                                                                                
+ !                                                                                                                 
+ address-family ipv6 unicast                                                                                                           
+  import 
+  route-target  
+   100:501                                                                                                         
+  !                                                                                                                
+  export 
+  route-target   
+   100:501 
+  !
+ !
+</pre> 
+</div> 
+
+**BGP configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100                                                                            
+ vrf L3VPN-ODNTE-VRF1
+  rd 100:501
+  address-family ipv4 unicast
+   redistribute connected
+  !
+  address-family ipv6 unicast
+   redistribute connected
+  !
+ !
+</pre> 
+</div> 
+
+**PWHE configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface PW-Ether1
+ vrf L3VPN-ODNTE-VRF1
+ ipv4 address 10.13.1.1 255.255.255.0
+ ipv6 address 1000:10:13::1/126
+ attach generic-interface-list PWHE
+!
+</pre> 
+</div> 
+
+**EVPN VPWS configuration towards Access PE**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ xconnect group evpn-vpws-l3vpn-A-PE3
+  p2p L3VPN-ODNTE-VRF1
+   interface PW-Ether1
+   neighbor evpn evi 13 target 501 source 501
+   !
+</pre> 
+</div> 
+
+![](http://xrdocs.io/design/images/cmfi/image13.png)
+
+_Figure 13: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with
+Pseudowire-Headend (PWHE) Data Plane_
+
+### L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4 with Anycast IRB
+
+![](http://xrdocs.io/design/images/cmfi/image14.png)
+
+_Figure 14: L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4 with
+Anycast IRB Control Plane_
+
+**Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
+
+3.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+
+4.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
+
+**Provider Edge Routers:** **Cisco ASR9000 IOS-XR (Same on both PE
+routers in same location PE1/2 and PE3/4)**
+
+5.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+
+6.  **Provider Edge Routers:** Path to Access Router is known via
+    ACCESS-ISIS IGP.
+
+7.  **Operator:** New L3VPN instance (VPNv4/6) together with Anycast IRB
+    via CLI or NSO
+
+8.  **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
+    IGP.
+    
+#### Access Router Service Provisioning (IOS-XR):
+
+**VLAN based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
+  p2p L3VPN-VRF1
+   interface TenGigE0/0/0/2.1
+   neighbor ipv4 100.100.100.12 pw-id 5001
+    mpls static label local 5001 remote 5001
+    pw-class static-pw-h-l3vpn-class
+   !
+  !
+interface TenGigE0/0/0/2.1 l2transport
+ encapsulation dot1q 1
+ rewrite ingress tag pop 1 symmetric
+ !
+! 
+l2vpn
+ pw-class static-pw-h-l3vpn-class
+  encapsulation mpls
+   control-word
+  !
+</pre> 
+</div> 
+
+**Port based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
+  p2p L3VPN-VRF1
+   interface TenGigE0/0/0/2
+   neighbor ipv4 100.100.100.12 pw-id 5001
+    mpls static label local 5001 remote 5001
+    pw-class static-pw-h-l3vpn-class
+   !
+  !
+interface TenGigE0/0/0/2 
+ l2transport
+ !
+! 
+l2vpn
+ pw-class static-pw-h-l3vpn-class
+  encapsulation mpls
+   control-word
+  !
+</pre> 
+</div> 
+
+#### Access Router Service Provisioning (IOS-XE):
+
+**VLAN based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface GigabitEthernet0/0/5
+ no ip address
+ media-type auto-select
+ negotiation auto
+ service instance 1 ethernet
+  encapsulation dot1q 1
+  rewrite ingress tag pop 1 symmetric
+  xconnect 100.100.100.12 4001 encapsulation mpls manual
+   mpls label 4001 4001
+   mpls control-word
+ !
+</pre> 
+</div> 
+
+**Port based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface GigabitEthernet0/0/5
+ no ip address
+ media-type auto-select
+ negotiation auto
+ service instance 1 ethernet
+  encapsulation default
+  xconnect 100.100.100.12 4001 encapsulation mpls manual
+   mpls label 4001 4001
+   mpls control-word
+ !
+</pre> 
+</div> 
+
+#### Provider Edge Routers Service Provisioning (IOS-XR):
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+cef adjacency route override rib
+</pre> 
+</div> 
+
+**AnyCast Loopback configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface Loopback100
+ description Anycast
+ ipv4 address 100.100.100.12 255.255.255.255
+!
+router isis ACCESS
+ interface Loopback100
+ address-family ipv4 unicast
+  prefix-sid index 1012 n-flag-clear 
+</pre> 
+</div> 
+
+**L2VPN configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn                                                             
+ bridge group Static-VPWS-H-L3VPN-IRB                             
+  bridge-domain VRF1                                              
+   neighbor 100.0.1.50 pw-id 5001                                 
+    mpls static label local 5001 remote 5001                      
+    pw-class static-pw-h-l3vpn-class                              
+   !                                                              
+   neighbor 100.0.1.51 pw-id 4001                                 
+    mpls static label local 4001 remote 4001                      
+    pw-class static-pw-h-l3vpn-class                              
+   !                                                              
+   routed interface BVI1                                          
+    split-horizon group core                                      
+   !                                                              
+   evi 12001
+   !
+  !
+</pre> 
+</div> 
+
+**EVPN configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+evpn
+ evi 12001
+ !
+  advertise-mac
+ !
+ virtual neighbor 100.0.1.50 pw-id 5001
+  ethernet-segment
+   identifier type 0 12.00.00.00.00.00.50.00.01
+</pre> 
+</div> 
+
+**Anycast IRB configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface BVI1
+ host-routing
+ vrf L3VPN-AnyCast-ODNTE-VRF1
+ ipv4 address 12.0.1.1 255.255.255.0
+ mac-address 12.0.1
+ load-interval 30
+</pre> 
+</div> 
+
+**VRF configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf L3VPN-AnyCast-ODNTE-VRF1
+ address-family ipv4 unicast
+  import route-target
+   100:10001
+  !
+  export route-target
+   100:10001
+  !
+ !
+!
+</pre> 
+</div> 
+
+**BGP configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ vrf L3VPN-AnyCast-ODNTE-VRF1
+  rd auto
+  address-family ipv4 unicast
+   redistribute connected
+  !
+ !
+</pre> 
+</div> 
+
+![](http://xrdocs.io/design/images/cmfi/image15.png)
+
+_Figure 15: L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4/6 with
+Anycast IRB Datal Plane_
+
+### L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN with Anycast IRB
+
+![](http://xrdocs.io/design/images/cmfi/image16.png)
+
+_Figure 16: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
+with Anycast IRB Control Plane_
+
+**Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
+
+5.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+
+6.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
+
+**Provider Edge Routers:** **Cisco ASR9000 IOS-XR (Same on both PE
+routers in same location PE1/2 and PE3/4)**
+
+7.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+
+8.  **Provider Edge Routers:** Path to Access Router is known via
+    ACCESS-ISIS IGP.
+
+
+9.  **Operator:** New L2VPN Multipoint EVPN instance together with
+    Anycast IRB via CLI or NSO (Anycast IRB is optional when L2 and L3
+    is required in same service instance)
+
+10. **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
+    IGP.
+
+**Please note that provisioning on Access and Provider Edge routers is
+same as in “L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4/6 with
+Anycast IRB”. In this use case there is BGP EVPN instead of MP-BGP
+VPNv4/6 in the core.**
+
+#### Access Router Service Provisioning (IOS-XR):
+
+**VLAN based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
+  p2p L3VPN-VRF1
+   interface TenGigE0/0/0/2.1
+   neighbor ipv4 100.100.100.12 pw-id 5001
+    mpls static label local 5001 remote 5001
+    pw-class static-pw-h-l3vpn-class
+   !
+  !
+interface TenGigE0/0/0/2.1 l2transport
+ encapsulation dot1q 1
+ rewrite ingress tag pop 1 symmetric
+!
+l2vpn
+ pw-class static-pw-h-l3vpn-class
+  encapsulation mpls
+   control-word
+  !
+</pre> 
+</div> 
+
+**Port based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
+  p2p L3VPN-VRF1
+   interface TenGigE0/0/0/2
+   neighbor ipv4 100.100.100.12 pw-id 5001
+    mpls static label local 5001 remote 5001
+    pw-class static-pw-h-l3vpn-class
+   !
+  !
+!
+interface TenGigE0/0/0/2 
+ l2transport
+!
+l2vpn
+ pw-class static-pw-h-l3vpn-class
+  encapsulation mpls
+   control-word
+</pre> 
+</div> 
+
+#### Access Router Service Provisioning (IOS-XE):
+
+**VLAN based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface GigabitEthernet0/0/5
+ no ip address
+ media-type auto-select
+ negotiation auto
+ service instance 1 ethernet
+  encapsulation dot1q 1
+  rewrite ingress tag pop 1 symmetric
+  xconnect 100.100.100.12 4001 encapsulation mpls manual
+   mpls label 4001 4001
+   mpls control-word
+ !
+</pre> 
+</div> 
+
+**Port based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface GigabitEthernet0/0/5
+ no ip address
+ media-type auto-select
+ negotiation auto
+ service instance 1 ethernet
+  encapsulation default
+  xconnect 100.100.100.12 4001 encapsulation mpls manual
+   mpls label 4001 4001
+   mpls control-word
+ !
+</pre> 
+</div> 
+
+#### Provider Edge Routers Service Provisioning (IOS-XR):
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+cef adjacency route override rib
+</pre> 
+</div> 
+
+**AnyCast Loopback configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface Loopback100
+ description Anycast
+ ipv4 address 100.100.100.12 255.255.255.255
+!
+router isis ACCESS
+ interface Loopback100
+  address-family ipv4 unicast
+   prefix-sid index 1012
+</pre> 
+</div> 
+
+**L2VPN Configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn                                                             
+ bridge group Static-VPWS-H-L3VPN-IRB                             
+  bridge-domain VRF1                                              
+   neighbor 100.0.1.50 pw-id 5001                                 
+    mpls static label local 5001 remote 5001                      
+    pw-class static-pw-h-l3vpn-class                              
+   !                                                              
+   neighbor 100.0.1.51 pw-id 4001                                 
+    mpls static label local 4001 remote 4001                      
+    pw-class static-pw-h-l3vpn-class                              
+   !                                                              
+   routed interface BVI1                                          
+    split-horizon group core                                      
+   !                                                              
+   evi 12001
+   !
+  !
+</pre> 
+</div> 
+
+**EVPN configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+evpn
+ evi 12001
+  !
+  advertise-mac
+  !
+ !
+ virtual neighbor 100.0.1.50 pw-id 5001
+  ethernet-segment
+   identifier type 0 12.00.00.00.00.00.50.00.01
+</pre> 
+</div> 
+
+**Anycast IRB configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface BVI1
+ host-routing
+ vrf L3VPN-AnyCast-ODNTE-VRF1
+ ipv4 address 12.0.1.1 255.255.255.0
+ mac-address 12.0.1
+ load-interval 30
+!
+</pre> 
+</div> 
+
+**VRF configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf L3VPN-AnyCast-ODNTE-VRF1
+ address-family ipv4 unicast
+  import route-target
+   100:10001
+  !
+  export route-target
+   100:10001
+  !
+ !
+!
+</pre> 
+</div> 
+
+**BGP configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ vrf L3VPN-AnyCast-ODNTE-VRF1
+  rd auto
+  address-family ipv4 unicast
+   redistribute connected
+  !
+ !
+ 
+</pre> 
+</div> 
+
+![](http://xrdocs.io/design/images/cmfi/image17.png)
+
+_Figure 17: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
+with Anycast IRB Data Plane_
 
 ## Ethernet CFM for L2VPN service assurance 
 Ethernet Connectivity Fault Management is an Ethernet OAM component used to validate end-to-end connectivity between service endpoints. Ethernet CFM is defined by two standards, 802.1ag and Y.1731. Within an SP network, Maintenance Domains are created based on service scope. Domains are typically separated by operator boundaries and may be nested but cannot overlap.  Within each service, maintenance points can be created to verify bi-directional end to end connectivity. These are known as MEPs (Maintenance End-Point) and MIPs (Maintenance Intermediate Points). These maintenance points process CFM messages. A MEP is configured at service endpoints and has directionality where an "up" MEP faces the core of the network and a "down" MEP faces a CE device or NNI port. MIPs are optional and are created dynamically. Detailed information on Ethernet CFM configuration and operation can be found at https://www.cisco.com/c/en/us/td/docs/routers/ncs5500/software/interfaces/configuration/guide/b-interfaces-hardware-component-cg-ncs5500-66x/b-interfaces-hardware-component-cg-ncs5500-66x_chapter_0101.html 
@@ -2432,21 +3107,23 @@ interface GigabitEthernet0/0/1
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-vrf L3VPN-ODNTE-VRF1                                                                                                          
+vrf L3VPN-ODNTE-VRF1                                                                                                   
  address-family ipv4 unicast                                                                                                  
-  import route-target                                                                                                                  
-   100:501                                                                                                                   
-  !                                                                                                                                    
-  export route-target                                                                                                                  
-   100:501                                                                                                                             
-  !                                                                                                                                    
- !                                                                                                                                     
+  import route-target                                                                                                  
+   100:501 
+  !                                                                                                                
+  export route-target                                                                                                     
+   100:501                                                                                                         
+  !                                                                                                                
+ !                                                                                                                 
  address-family ipv6 unicast                                                                                                           
-  import route-target                                                                                                                  
-   100:501                                                                                                                             
-  !                                                                                                                                    
-  export route-target                                                                                                                  
-   100:501                                                                                                                             
+  import 
+  route-target  
+   100:501                                                                                                         
+  !                                                                                                                
+  export 
+  route-target   
+   100:501 
   !
  !
 </pre> 
@@ -2456,7 +3133,7 @@ vrf L3VPN-ODNTE-VRF1
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-router bgp 100                                                                                                                         
+router bgp 100                                                                            
  vrf L3VPN-ODNTE-VRF1
   rd 100:501
   address-family ipv4 unicast
