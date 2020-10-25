@@ -117,8 +117,8 @@ _Figure 4: Testbed IGP Domains_
 
 
 # Role-Based Router Configuration
-    
-## IOS-XR Nodes - SR-MPLS Transport 
+
+## IOS-XR Router Configuration 
 
 ### Underlay physical interface configuration with BFD  
 
@@ -139,127 +139,7 @@ interface TenGigE0/0/0/10
 </pre>
 </div>
 
-### SRGB and SRLB Definition 
-It's recommended to first configure the Segment Routing Global Block (SRGB) across all nodes needing connectivity between each other. In most instances a single SRGB will be used across the entire network. In a SR MPLS deployment the SRGB and SRLB correspond to the label blocks allocated to SR. IOS-XR has a maximum configurable SRGB limit of 512,000 labels, however please consult platform-specific documentation for maximum values. The SRLB corresponds to the labels allocated for SIDs local to the node, such as Adjacency-SIDs. It is recommended to configure the same SRLB block across all nodes. The SRLB must not overlap with the SRGB.  The SRGB and SRLB are configured in IOS-XR with the following configuration:   
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-segment-routing
- global-block 16000 23999
- local-block 15000 15999
-</pre> 
-</div>
-
-### IGP protocol (ISIS) and Segment Routing MPLS configuration
-
-**Key chain global configuration for IS-IS authentication**
-<div class="highlighter-rouge">
-<pre class="highlight">
-key chain ISIS-KEY
- key 1
- accept-lifetime 00:00:00 january 01 2018 infinite
- key-string password 00071A150754
- send-lifetime 00:00:00 january 01 2018 infinite
- cryptographic-algorithm HMAC-MD5
-</pre> 
-</div>
-
-#### IS-IS router configuration
-
-All routers, except Area Border Routers (ABRs), are part of one IGP
-domain and L2 area (ISIS-ACCESS or ISIS-CORE). Area border routers  
-run two IGP IS-IS processes (ISIS-ACCESS and ISIS-CORE).  Note that Loopback0 is part of both IGP processes.
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-router isis ISIS-ACCESS
- set-overload-bit on-startup 360
- is-type level-2-only
- net 49.0001.0101.0000.0110.00
- nsr
- nsf cisco
- log adjacency changes
- lsp-gen-interval maximum-wait 5000 initial-wait 5 secondary-wait 100
- lsp-refresh-interval 65000
- max-lsp-lifetime 65535
- lsp-password keychain ISIS-KEY
- address-family ipv4 unicast
-  metric-style wide
-  advertise link attributes
-  spf-interval maximum-wait 1000 initial-wait 5 secondary-wait 100
-  segment-routing mpls
-  spf prefix-priority high tag 1000
-  maximum-redistributed-prefixes 100 level 2
- ! 
- address-family ipv6 unicast
-  metric-style wide
-  spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
-  maximum-redistributed-prefixes 100 level 2
-</pre>
-</div>
-
-**Note:** ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
-
-**Note:** The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
-
-#### IS-IS Loopback and node SID configuration
-<div class="highlighter-rouge">
-<pre class="highlight">
- interface Loopback0
-  ipv4 address 100.0.1.50 255.255.255.255
-  address-family ipv4 unicast
-   <b>prefix-sid absolute 16150</b>
-   tag 1000 
-</pre>
-</div>
-
-#### IS-IS interface configuration with TI-LFA
-
-It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible for backup path computation, meaning if a packet ingresses the node with the label a backup path will be provided in case of a link failure. In the case of having multiple adjacencies between the same two nodes, use the same adjacency-sid on each link. Unnumbered interfaces are configured using the same configuration.  
-
-<div class="highlighter-rouge">
-<pre class="highlight">
- interface TenGigE0/0/0/10
-  point-to-point
-  hello-password keychain ISIS-KEY
-  address-family ipv4 unicast
-   fast-reroute per-prefix
-   fast-reroute per-prefix ti-lfa
-   adjacency-sid absolute 15002 protected
-   metric 100
-  ! 
-  address-family ipv6 unicast
-   fast-reroute per-prefix 
-   fast-reroute per-prefix ti-lfa 
-   metric 100 
-</pre>
-</div>
-
-### MPLS Segment Routing Traffic Engineering (SRTE) configuration
-The following configuration is done at the global ISIS configuration level and should be performed for all IOS-XR nodes.   
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-router isis ACCESS
- address-family ipv4 unicast
-  mpls traffic-eng level-2-only
-  mpls traffic-eng router-id Loopback0
-</pre>
-</div>
-
-#### MPLS Segment Routing Traffic Engineering (SRTE) TE metric configuration  
-
-The TE metric is used when computing SR Policy paths with the "te" or "latency" constraint type.  The TE metric is carried as a TLV within the TE opaque LSA distributed across the IGP area and to the PCE via BGP-LS.  
-The TE metric is used in the CST 5G Transport use case.  If no TE metric is defined the local CSPF or PCE will utilize the IGP metric.   
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-segment-routing
- traffic-eng
-  interface TenGigE0/0/0/6
-   metric 1000
-</pre>
-</div>
+### MPLS Performance Measurement 
 
 #### Interface delay metric dynamic configuration 
 Starting with CST 3.5 we now support end to end dynamic link delay measurements across all IOS-XR nodes. The feature in IOS-XR is called Performance Measurement and all configuration is found under the performance-measurement configuration hierarchy.  There are a number of configuration options utilized when configuring performance measurement, but the below configuration will enable one-way delay 
@@ -324,6 +204,179 @@ performance-measurement
  interface TenGigE0/0/0/20
   delay-measurement
    advertise-delay 10000
+</pre>
+</div>
+
+### SR-MPLS Transport  
+
+#### Segment Routing SRGB and SRLB Definition 
+It's recommended to first configure the Segment Routing Global Block (SRGB) across all nodes needing connectivity between each other. In most instances a single SRGB will be used across the entire network. In a SR MPLS deployment the SRGB and SRLB correspond to the label blocks allocated to SR. IOS-XR has a maximum configurable SRGB limit of 512,000 labels, however please consult platform-specific documentation for maximum values. The SRLB corresponds to the labels allocated for SIDs local to the node, such as Adjacency-SIDs. It is recommended to configure the same SRLB block across all nodes. The SRLB must not overlap with the SRGB.  The SRGB and SRLB are configured in IOS-XR with the following configuration:   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ global-block 16000 23999
+ local-block 15000 15999
+</pre> 
+</div>
+
+#### IGP protocol (ISIS) and Segment Routing MPLS configuration
+
+**Key chain global configuration for IS-IS authentication**
+<div class="highlighter-rouge">
+<pre class="highlight">
+key chain ISIS-KEY
+ key 1
+ accept-lifetime 00:00:00 january 01 2018 infinite
+ key-string password 00071A150754
+ send-lifetime 00:00:00 january 01 2018 infinite
+ cryptographic-algorithm HMAC-MD5
+</pre> 
+</div>
+
+#### IS-IS router configuration
+
+All routers, except Area Border Routers (ABRs), are part of one IGP
+domain and L2 area (ISIS-ACCESS or ISIS-CORE). Area border routers  
+run two IGP IS-IS processes (ISIS-ACCESS and ISIS-CORE).  Note that Loopback0 is part of both IGP processes.
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ISIS-ACCESS
+ set-overload-bit on-startup 360
+ is-type level-2-only
+ net 49.0001.0101.0000.0110.00
+ nsr
+ nsf cisco
+ log adjacency changes
+ lsp-gen-interval maximum-wait 5000 initial-wait 5 secondary-wait 100
+ lsp-refresh-interval 65000
+ max-lsp-lifetime 65535
+ lsp-password keychain ISIS-KEY
+ address-family ipv4 unicast
+  metric-style wide
+  advertise link attributes
+  spf-interval maximum-wait 1000 initial-wait 5 secondary-wait 100
+  segment-routing mpls
+  spf prefix-priority high tag 1000
+  maximum-redistributed-prefixes 100 level 2
+ ! 
+ address-family ipv6 unicast
+  metric-style wide
+  spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+  maximum-redistributed-prefixes 100 level 2
+</pre>
+</div>
+
+**Note:** ABR Loopback 0 on domain boundary is part of both IGP processes together with same “prefix-sid absolute” value
+
+**Note:** The prefix SID can be configured as either _absolute_ or _index_.  The _index_ configuration is required for interop with nodes using a different SRGB. 
+
+#### IS-IS Loopback and node SID configuration
+<div class="highlighter-rouge">
+<pre class="highlight">
+ interface Loopback0
+  ipv4 address 100.0.1.50 255.255.255.255
+  address-family ipv4 unicast
+   <b>prefix-sid absolute 16150</b>
+   tag 1000 
+</pre>
+</div>
+
+#### Anycast SID ABR node configuration 
+
+Anycast SIDs are SIDs existing on two more ABR nodes to offer a redundant fault tolerant path for traffic between Access PEs and remote PE devices. 
+In CST 3.5 and above, anycast SID paths can either be manually configured on the head-end or computed by the SR-PCE. When SR-PCE computes a path it will 
+inspect the topology database to ensure the next SID in the computed segment list is reachable from all anycast nodes. If not, the anycast SID will not be 
+used. The same IP address and prefix-sid must be configured on all shared anycast nodes, with the n-flag clear option set.  Note when anycast SID path computation is 
+used with SR-PCE, only IGP metrics are supported.   
+
+**IS-IS Configuration for Anycast SID**
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS 
+ interface Loopback100
+  ipv4 address 100.100.100.1 255.255.255.255
+  address-family ipv4 unicast
+   <b>prefix-sid absolute 16150 n-flag clear</b>
+   tag 1000 
+</pre>
+</div>
+
+**Conditional IGP Loopback advertisement** 
+While not the only use case for conditional advertisement, it is a required component when using anycast SIDs with static segment list. Conditional advertisement will 
+not advertise the Loopback interface if certain routes are not found in the RIB. If the anycast Loopback is withdrawn, the segment list will be considered invalid on the 
+head-end node.  The conditional prefixes should be all or a subset of prefixes from the adjacent IGP domain.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+route-policy check
+ if rib-has-route in async remote-prefixes
+   pass 
+   endif 
+ end-policy
+
+prefix-set remote-prefixes 
+  100.0.2.52, 
+  100.0.2.53
+</pre>
+</div>
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS  
+ interface Loopback100 
+ address-family ipv4 unicast 
+ <b>advertise prefix route-policy check</b>
+</pre>
+</div>
+
+
+#### IS-IS logical interface configuration with TI-LFA
+
+It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible for backup path computation, meaning if a packet ingresses the node with the label a backup path will be provided in case of a link failure. In the case of having multiple adjacencies between the same two nodes, use the same adjacency-sid on each link. Unnumbered interfaces are configured using the same configuration.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+ interface TenGigE0/0/0/10
+  point-to-point
+  hello-password keychain ISIS-KEY
+  address-family ipv4 unicast
+   fast-reroute per-prefix
+   fast-reroute per-prefix ti-lfa
+   adjacency-sid absolute 15002 protected
+   metric 100
+  ! 
+  address-family ipv6 unicast
+   fast-reroute per-prefix 
+   fast-reroute per-prefix ti-lfa 
+   metric 100 
+</pre>
+</div>
+
+### MPLS Segment Routing Traffic Engineering (SRTE) configuration
+The following configuration is done at the global ISIS configuration level and should be performed for all IOS-XR nodes.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS
+ address-family ipv4 unicast
+  mpls traffic-eng level-2-only
+  mpls traffic-eng router-id Loopback0
+</pre>
+</div>
+
+#### MPLS Segment Routing Traffic Engineering (SRTE) TE metric configuration  
+
+The TE metric is used when computing SR Policy paths with the "te" or "latency" constraint type.  The TE metric is carried as a TLV within the TE opaque LSA distributed across the IGP area and to the PCE via BGP-LS.  
+The TE metric is used in the CST 5G Transport use case.  If no TE metric is defined the local CSPF or PCE will utilize the IGP metric.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  interface TenGigE0/0/0/6
+   metric 1000
 </pre>
 </div>
 
