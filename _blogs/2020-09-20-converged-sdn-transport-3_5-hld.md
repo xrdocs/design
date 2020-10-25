@@ -1016,6 +1016,29 @@ multicast traffic across the entire Ethernet VPN instance. When snooping is util
 ### Ease of Configuration
 Configuring a node as a leaf in an E-Tree EVI requires only a single command "etree" to be configured under the EVI in the global EVPN configuration. Please see the Implementation Guide for specific configuration examples.  
 
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ bridge group etree
+  bridge-domain etree-ftth 
+  interface TenGigE0/0/0/23.1098
+  routed interface BVI100 
+  ! 
+  evi 100 
+ !
+!
+evpn
+  evi 100
+<b>etree 
+   leaf</b> 
+   !
+  advertise-mac
+  !
+ ! 
+</pre>
+</div>
+
+
 # Cable Converged Interconnect Network (CIN)  
 
 ## Summary  
