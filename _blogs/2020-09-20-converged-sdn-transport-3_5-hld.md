@@ -1009,10 +1009,12 @@ BD/EVI is always considered a root endpoint. E-Tree operates at L2 so when a L3 
 a centralized IRB L3 GW on an E-Tree root node is not currently supported. In this type of deployment where the L3 GW is not located on the leaf the upstream L3 GW node must be attached via a L2 interface into the E-Tree root node Bridge Domani/EVI. 
 It is recommended to locate the L3 GW on the leaf device if possible.  
 
-### 
+### Multicast Traffic 
+Multicast traffic across the E-Tree L2/L3 network is performed using ingress replication from the source to the receiver nodes. It is important to use IGMP or MLDv2 snooping in order to minimize the flooding of 
+multicast traffic across the entire Ethernet VPN instance. When snooping is utilized, traffic is only sent to EVPN PE nodes with interested receivers instead of all PEs in the EVI.   
 
-
-
+### Ease of Configuration
+Configuring a node as a leaf in an E-Tree EVI requires only a single command "etree" to be configured under the EVI in the global EVPN configuration. Please see the Implementation Guide for specific configuration examples.  
 
 # Cable Converged Interconnect Network (CIN)  
 
@@ -1279,7 +1281,13 @@ address-family ipv4
 </pre> 
 </div> 
 
-## L3 Multicast using Segment Routing TreeSID w/Static S,G Mapping 
+## L3 Multicast using Segment Routing TreeSID w/Static S,G Mapping
+
+### TreeSID Diagram 
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-treesid.png)
+
+### TreeSID Overview 
 Converged SDN Transport 3.5 introduces Segment Routing Tree SID across all IOS-XR nodes.  TreeSID utilizes the programmability of SR-PCE to create and maintain an optimized multicast tree from source 
 to receiver across an SR-only IPv4 network. In CST 3.5 TreeSID utilizes MPLS labels at each hop in the network.  Each node in the network maintains a session to the same set of SR-PCE controllers.  The SR-PCE
 creates the tree using PCE-initiated segments. TreeSID supports advanced functionality such as TI-LFA for fast protection and disjoint trees.  
