@@ -1,9 +1,9 @@
 ---
 published: true
-date: '2020-01-15 15:22 -0600'
+date: '2020-11-01 15:22 -0600'
 title: Peering Fabric Design 
 author: Phil Bedard 
-excerpt: Peering Fabric Design - 3.0 
+excerpt: Peering Fabric Design - 3.5 
 tags:
   - iosxr
   - design
@@ -303,6 +303,8 @@ Netscout, a Cisco partner, has deployed its Arbor solution at SPs around the wor
 Arbor categorizes traffic based on user defined and learned criteria to quickly detect attacks. Once those attacks are detected SPs can mitigate those attacks using a combination of Route Triggered Blackhole, ACLs, and BGP Flowspec. Additionally, 
 SPs can deploy the Arbor TMS or vTMS scrubbing appliances on-net to separate and block malicious traffic from legitimate traffic. Now we walk through the various solution components used in the Netscout Arbor solution.   
 
+Information about all of Netscout's traffic visibility and security solutions can be found at https://www.netscout.com 
+
 #### Solution Diagram 
 ![](http://xrdocs.io/design/images/cpf-hld/pf-netscout-solution.png)
 
@@ -312,7 +314,7 @@ SPs can deploy the Arbor TMS or vTMS scrubbing appliances on-net to separate and
 Sightline comprises the scalable distributed services responsible for network data collection, attack analysis, and mitigation coordination across the network. Each Sightline virtual machine appliance can be configured in a specific 
 solution role. One of the deployed appliances is configured as the leader appliance maintaining the configuration for the entire Sightline cluster. In order to scale collection of network data, multiple collectors can be deployed 
 to collect Netflow, SNMP, and BGP data. This data is then aggregated and used for traffic analysis and attack detection. Sightline elements can be configured via CLI or via the web UI once the UI appliance is operational. The following lists the 
-different roles for Sightline VM appliances.     
+different roles for Sightline VM appliances:     
 
 Role | Description | Required
 -----|-------------|----------- 
@@ -324,12 +326,14 @@ Flow Sensor | Generates flow data from the network when router export of Netflow
 As seen in the table, UI and Traffic and Routing Analysis appliances are required.  
 
 #### Netscout Arbor Threat Management System (TMS) 
+
 The TMS or vTMS appliances provide deeper visibility into network traffic and acts as a scrubber as part of a holistic DDoS mitigation solution. 
 The TMS performs deep packet inspection to identify application layer attacks at a packet and payload level, performs granular mitigation of the attack traffic, 
 and provides reporting for the traffic.  The TMS is integrated with a Routing and Analytics appliance so when attacks are detected by the R&A appliance it can then 
 be redirected to a tethered TMS appliance for further inspection or mitigation.  
 
 #### Solution description 
+
 The following steps describe the analysis and mitigation of DDoS attacks using Netscout Arbor components.  
 
 1. Netscout Arbor Sightline UI leader virtual appliance
@@ -340,6 +344,10 @@ The following steps describe the analysis and mitigation of DDoS attacks using N
 6. If necessary, configure Netscout Arbor Managed Objects to collect and analyze specific traffic for anomalies and attacks  
 7. Configure mitigation components such as RTBH next-hops, TMS mitigation, and BGP Flowspec redirect and drop parameters 
 
+#### Traffic Redirection Options 
+It is recommended to use BGP Flowspec to redirect traffic on PFL nodes to TMS appliances. This can be done through traditional configuration with next-hop redirection 
+in the global routing table, redirection into a "dirty" VRF, or using static next-hops into SR-TE tunnels in the case where the scrubbing appliances are not connected 
+via a directly attached interface to the PFL or PFS nodes. 
 
 
 ## Internet and Peering in a VRF 
