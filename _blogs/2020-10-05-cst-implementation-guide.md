@@ -2114,6 +2114,10 @@ l2vpn
 </pre>
 </div>
 
+#### IOS-XR Leaf Node Configuration 
+
+
+
 
 ## Hierarchical Services
 
@@ -2982,15 +2986,310 @@ router igmp
 TreeSID utilizes only Segment Routing to create and forward multicast traffic across an optimized tree. The TreeSID tree is configured on the SR-PCE for deployment to the 
 network. PCEP is used to instantiate the correct computed segments end to end.  On the head-end source node, 
 
-**Note TreeSID requires all nodes in the multicast distribution network to have connections to the same SR-PCE instances, please see the PCEP configuration section of the Implmentation Guide**  
+**Note: TreeSID requires all nodes in the multicast distribution network to have connections to the same SR-PCE instances, please see the PCEP configuration section of the Implmentation Guide**  
 
 ### TreeSID SR-PCE Configuration 
 
-### TreeSID Source Node Configuration 
+#### Endpoint Set Configuration 
 
-### TreeSID Receiver Node Configuration 
+The P2MP endpoint sets are defined outside of the SR TreeSID Policy configuration in order to be reusaable across 
+multiple trees. This is a required step in the configuration of TreeSID.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+pce 
+ address ipv4 100.0.1.101  
+ timers  
+  reoptimization 600 
+ ! 
+ segment-routing  
+  traffic-eng 
+   p2mp    
+     endpoint-set APE7-APE8 
+       ipv4 100.0.2.57 
+       ipv4 100.0.2.58 
+       !    
+   timers reoptimization 120    
+   timers cleanup 30
+</pre>
+</div>
+
+#### P2MP TreeSID SR Policy Configuration 
+This configuration defines the TreeSID P2MP SR Policy to be used across the network. Note the name of the TreeSID must be unique across the netowrk and referenced explicitly on all source and receiver nodes. Within the policy configuration, supported constraints can be applied during path computation of the optimized P2MP tree. Note the source address must be specified and the MPLS label used must be within the SRLB for all nodes across the network.    
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+pce 
+ segment-routing 
+   traffic-eng 
+     policy treesid-1 
+       source ipv4 100.0.0.1  
+       color 100 endpoint-set APE7-APE8 
+       treesid mpls 18600  
+       candidate-paths   
+        constraints    
+         affinity  
+          include-any  
+           color1 
+           !
+          ! 
+         !       
+        preference 100        
+         dynamic         
+         metric         
+          type igp        
+          !       
+         !      
+        !
+</pre>
+</div>
+
+### TreeSID Common Config on All Nodes
+
+#### Segment Routing Local Block  
+While the SRLB config is covered elsewhere in this guide, it is recommended to set the values the same across the TreeSID domain.  The values shown are 
+for demonstration only.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing 
+ local-block 18000 19000
+ !
+!
+</pre>
+</div>
+
+#### PCEP Configuration 
+TreeSID relies on PCE initiated segments to the node, so a session to the PCE is required for all nodes in the domain.    
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  pcc
+   source-address ipv4 100.0.2.53
+   pce address ipv4 100.0.1.101
+    precedence 200
+   !
+   pce address ipv4 100.0.2.101
+    precedence 100
+   !
+   pce address ipv4 100.0.2.102
+    precedence 100
+   !
+   report-all
+   timers delegation-timeout 10
+   timers deadtimer 60
+   timers initiated state 15
+   timers initiated orphan 10
+  !
+ !
+!
+</pre>
+</div>
 
 
+### TreeSID Source Node Multicast Configuration 
+
+**PIM Configuration** 
+
+In this configuration a single S,G of 232.0.0.20 with a source of 104.14.1.2 is mapped to TreeSID 
+treesid-1 for distribution across the network. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router pim
+ address-family ipv4
+  interface Loopback0
+   enable
+  !
+  interface Bundle-Ether111
+   enable
+  !
+  interface Bundle-Ether112
+   enable
+  !
+  interface TenGigE0/0/0/16
+   enable
+  !
+  <b>sr-p2mp-policy treesid-1
+   static-group 232.0.0.20 104.14.1.2</b> 
+  !
+!
+</pre>
+</div>
+
+**Multicast Routing Configuration** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+  address-family ipv4
+   interface all enable
+   <b>mdt static segment-routing</b>
+  !
+  address-family ipv6
+   <b>mdt static segment-routing</b>
+  !
+ !
+</pre>
+</div>
+
+
+### TreeSID Receiver Node Multicast Configuration 
+
+##### Global Routing Table Multicast  
+ 
+ **PIM Configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router pim
+  address-family ipv4
+   rp-address 100.0.0.1
+  !
+ !
+!
+</pre>
+</div>
+
+On the router connected to the receivers, configure the address family to use the TreeSID for static S,G mapping. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+ address-family ipv4
+  mdt source Loopback0
+  rate-per-route
+  interface all enable
+  static sr-policy TreeSID-GRT
+  mdt static segment-routing 
+  accounting per-prefix
+ address-family ipv6 
+  mdt source Loopback0 
+  rate-per-route 
+  interface all enable 
+  static sr-policy TreeSID-GRT 
+  mdt static segment-routing 
+  account per-prefix 
+ !
+!
+</pre>
+</div>
+
+**Multicast Routing Configuration** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+  address-family ipv4
+   interface all enable
+   <b>static sr-policy treesid-1</b>
+  !
+  address-family ipv6
+   <b>static sr-policy treesid-1</b>
+  !
+ !
+</pre>
+</div>
+
+#### mVPN Multicast Configuration 
+
+ **PIM Configuration**
+
+ In this configuration, we are mapping the PIM RP to the TREESID source  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router pim
+ vrf TREESID
+  address-family ipv4
+   rp-address 100.0.0.1
+  !
+ !
+!
+</pre>
+</div>
+
+**Multicast Routing Configuration** 
+
+On the PE connected to the receivers, within the VRF associated with the TreeSID SR Policy, enable the TreeSID for static mapping of S,G multicast.     
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+multicast-routing
+ vrf TREESID
+  address-family ipv4
+   interface all enable
+   static sr-policy treesid-1
+  !
+  address-family ipv6
+   static sr-policy treesid-1
+  !
+ !
+</pre>
+</div>
+
+### TreeSID Verification on PCE 
+
+You can view the end to end path using the "show pce lsp p2mp" command.  
+
+<pre class="highlight">
+RP/0/RP0/CPU0:XTC-ACCESS1-PHY#show pce lsp p2mp
+Wed Sep 2 19:31:50.745 UTC
+
+Tree: treesid-1
+  Label: 18600 Operational: up Admin: up
+  Transition count: 1
+  Uptime: 00:06:39 (since Wed Sep 02 19:25:11 UTC 2020)
+  Source: 100.0.0.1
+  Destinations: 100.0.2.53, 100.0.2.52
+  Nodes:
+    Node[0]: 100.0.2.3 (AG3)
+    Role: Transit
+    Hops:
+      Incoming: 18600 CC-ID: 1
+      Outgoing: 18600 CC-ID: 1 (10.23.253.1)
+      Outgoing: 18600 CC-ID: 1 (10.23.252.0)
+    Node[1]: 100.0.2.1 (PA3)
+    Role: Transit
+      Hops:
+      Incoming: 18600 CC-ID: 2
+      Outgoing: 18600 CC-ID: 2 (10.21.23.1)
+    Node[2]: 100.0.0.3 (PE3)
+    Role: Transit
+    Hops:
+      Incoming: 18600 CC-ID: 3
+      Outgoing: 18600 CC-ID: 3 (10.3.21.1)
+    Node[3]: 100.0.0.5 (P1)
+    Role: Transit
+    Hops:
+      Incoming: 18600 CC-ID: 4
+      Outgoing: 18600 CC-ID: 4 (10.3.5.0)
+    Node[4]: 100.0.0.7 (P3)
+    Role: Transit
+    Hops:
+      Incoming: 18600 CC-ID: 5
+      Outgoing: 18600 CC-ID: 5 (10.5.7.0)
+    Node[5]: 100.0.1.1 (NCS540-PA1)
+    Role: Transit
+    Hops:
+      Incoming: 18600 CC-ID: 6
+      Outgoing: 18600 CC-ID: 6 (10.1.7.1)
+    Node[6]: 100.0.0.1 (PE1)
+    Role: Ingress
+    Hops:
+      Incoming: 18600 CC-ID: 7
+      Outgoing: 18600 CC-ID: 7 (10.1.11.1)
+    Node[7]: 100.0.2.53 (A-PE8)
+    Role: Egress
+    Hops:
+      Incoming: 18600 CC-ID: 8
+    Node[8]: 100.0.2.52 (A-PE7)
+    Role: Egress
+    Hops:
+      Incoming: 18600 CC-ID: 9
+</pre>
 
 ### End-To-End VPN Services Data Plane
 
