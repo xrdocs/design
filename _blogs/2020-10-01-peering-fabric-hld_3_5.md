@@ -234,26 +234,26 @@ QPPB is supported in the peering fabric for destination prefix BGP attribute mat
 a number of use cases when delivering traffic from external providers to specific 
 internal destinations.  
 
-### Radware validated DDoS solution 
+## Radware validated DDoS solution 
 Radware, a Cisco partner, provides a robust and intelligent DDoS detection and mitigation solution covering both volumetric and application-layer DDoS attacks. The validated solution includes the following elements:  
 
-#### Radware DefensePro 
+### Radware DefensePro 
 DefensePro is used for attack detection and traffic scrubbing. DefensePro can be deployed at the edge of the network or centralized as is the case with a centralized scrubbing center. DefensePro uses realtime traffic analysis through SPAN (monitor) sessions from the edge routers to the DefensePro virtual machine or hardware appliance. 
 
-#### Radware DefenseFlow
+### Radware DefenseFlow
 DefenseFlow can work in a variety of ways as part of a comprehensive DDoS mitigation solution. DefenseFlow performs $anomaly detection by using advanced network behavioral analysis to first baseline a network during peacetime and then evaluate anomalies to determine when an attack is occurring. DefenseFlow can also incorporate third party data such as flow data or other data to enhance its attack detection capability. DefenseFlow also coordinates the mitigation actions of other solution components such as DefensePro and initiates traffic redirection through the use of BGP and BGP Flowspec on edge routers.   
 
-#### Solution description 
+### Solution description 
 The following steps describe the analysis and mitigation of DDoS attacks using Radware components.  
 
 1. Radware DefenseFlow is deployed to orchestrate DDoS attack detection and mitigation.   
 2. Virtual or appliance version of Radware DefensePro is deployed to a peering fabric location or centralized location.   
 3. PFL nodes use interface monitoring sessions to mirror specific ingress traffic to an interface connected to the DefensePro element. The interface can be local to the PFL node or traffic or SPAN over Pseudowire can be used to tunnel traffic to an interface attached to a centralized DefensePro.   
 
-#### Solution diagram 
+### Solution diagram 
 ![](http://xrdocs.io/design/images/cpf-hld/cpf-radware.png)
 
-#### Router SPAN (monitor) to physical interface configuration 
+### Router SPAN (monitor) to physical interface configuration 
 The following is used to direct traffic to a DefensePro virtual machine or appliance. 
 
 <div class="highlighter-rouge">
@@ -276,7 +276,7 @@ end
 </pre> 
 </div>
 
-#### Router SPAN (monitor) to PWE  
+### Router SPAN (monitor) to PWE  
 The following is used to direct traffic to a DefensePro virtual machine or appliance at a remote location  
 
 <div class="highlighter-rouge">
@@ -298,19 +298,19 @@ end
 </pre> 
 </div>
 
-### Netscout Arbor validated DDoS Solution  
+## Netscout Arbor validated DDoS Solution  
 Netscout, a Cisco partner, has deployed its Arbor solution at SPs around the world for advanced DDoS detection and mitigation. Using network analysis at the flow and packet level along with BGP and network statistic data, 
 Arbor categorizes traffic based on user defined and learned criteria to quickly detect attacks. Once those attacks are detected SPs can mitigate those attacks using a combination of Route Triggered Blackhole, ACLs, and BGP Flowspec. Additionally, 
 SPs can deploy the Arbor TMS or vTMS scrubbing appliances on-net to separate and block malicious traffic from legitimate traffic. Now we walk through the various solution components used in the Netscout Arbor solution.   
 
 Information about all of Netscout's traffic visibility and security solutions can be found at https://www.netscout.com 
 
-#### Solution Diagram 
+### Solution Diagram 
 ![](http://xrdocs.io/design/images/cpf-hld/pf-netscout-solution.png)
 
-#### Netscout Arbor Sightline 
+### Netscout Arbor Sightline 
 
-##### Sightline Appliance Roles 
+#### Sightline Appliance Roles 
 Sightline comprises the scalable distributed services responsible for network data collection, attack analysis, and mitigation coordination across the network. Each Sightline virtual machine appliance can be configured in a specific 
 solution role. One of the deployed appliances is configured as the leader appliance maintaining the configuration for the entire Sightline cluster. In order to scale collection of network data, multiple collectors can be deployed 
 to collect Netflow, SNMP, and BGP data. This data is then aggregated and used for traffic analysis and attack detection. Sightline elements can be configured via CLI or via the web UI once the UI appliance is operational. The following lists the 
@@ -325,14 +325,14 @@ Flow Sensor | Generates flow data from the network when router export of Netflow
 
 As seen in the table, UI and Traffic and Routing Analysis appliances are required.  
 
-#### Netscout Arbor Threat Management System (TMS) 
+### Netscout Arbor Threat Management System (TMS) 
 
 The TMS or vTMS appliances provide deeper visibility into network traffic and acts as a scrubber as part of a holistic DDoS mitigation solution. 
 The TMS performs deep packet inspection to identify application layer attacks at a packet and payload level, performs granular mitigation of the attack traffic, 
 and provides reporting for the traffic.  The TMS is integrated with a Routing and Analytics appliance so when attacks are detected by the R&A appliance it can then 
 be redirected to a tethered TMS appliance for further inspection or mitigation.  
 
-#### Solution description 
+### Solution description 
 
 The following steps describe the analysis and mitigation of DDoS attacks using Netscout Arbor components.  
 
@@ -345,7 +345,7 @@ The following steps describe the analysis and mitigation of DDoS attacks using N
 7. Configure mitigation components such as RTBH next-hops, TMS mitigation, and BGP Flowspec redirect and drop parameters 
 
 
-#### Edge Mitigation Options 
+### Edge Mitigation Options 
 The methods to either police or drop traffic at the edge of the network are:  
 
 - Route Triggered Blackhole 
@@ -355,18 +355,23 @@ The methods to either police or drop traffic at the edge of the network are:
 - BGP Flowspec 
   - BGP Flowspec mitigation allows the provider to distribute edge mitigation in a scalable way using BGP. In a typical BGP Flowspec deployment the Netscout Arbor R&A node will advertise the BGP Flowspec policy to a provider Route Reflector which then distributes the BGP FS routes to all edge routers. BGP Flowspec rules can match a variety of header criteria and perform drop, police, or redirect actions.   
 
-![](http://xrdocs.io/design/images/cpf-hld/pf-traffic-blackhole.png)
-
-#### Traffic Redirection Options
+### Traffic Redirection Options
 - BGP Flowspec
   - It is recommended to use BGP Flowspec to redirect traffic on PFL nodes to TMS appliances. This can be done through traditional configuration with next-hop redirection 
 in the global routing table, redirection into a "dirty" VRF, or using static next-hops into SR-TE tunnels in the case where the scrubbing appliances are not connected 
 via a directly attached interface to the PFL or PFS nodes. 
 
-#### Netscout Arbor TMS Blacklist Offloading 
-
+### Netscout Arbor TMS Blacklist Offloading 
 Blacklist offloading is a combination of traffic scrubbing using the TMS along with filtering/dropping traffic on 
 each edge router. The Netscout Arbor system identifies the top sources of attack traffic and automatically generates the BGP Flowspec rules to drop traffic on the edge router before it is redirected to the TMS. This makes the most efficient use of the TMS mitigation resources. 
+
+### Mitigation Example 
+
+The graphic below shows an example of traffic mitigation via RTBH. Netscout Arbor still receives flow information from the network edge for mitigated traffic, so Arbor is able to detect the amount of traffic which has been mitigates using the 
+appropriate mitigation method.  
+
+![](http://xrdocs.io/design/images/cpf-hld/pf-traffic-blackhole.png)
+
 
 ## Internet and Peering in a VRF 
 
@@ -387,7 +392,7 @@ in a VRF for IPv4 and IPv6 are compatible with most Peering Fabric features. Spe
 of the document.  
 
 
-## RPKI 
+## RPKI and Route Origin Validation  
 RPKI stands for Resource Public Key Infrastructure and is a repository for attaching a trust anchor to Internet routing resources such as Autonomous Systems and IP Prefixes.  Each RIR (Regional Internet Registry) houses the signed resource records it is responsible for, giving a trust anchor to those resources.  
 The RPKI contains a Route Origin Authorization object, used to uniquely identify the ASN originating a prefix and optionally, the 
 longer sub-prefixes covered by it. RPKI records are published by each Regional Internet Regitstry (RIR) adn consume by offline 
@@ -401,6 +406,8 @@ Route Origin Validation (ROV). ROV verifies the origin ASN in the AS_PATH of the
 The Peering Fabric design was validated using the Routinator RPKI validator.  Please see the security section for configuration of RPKI ROV in IOS-XR.  
 
 ![](http://xrdocs.io/design/images/cpf-hld/pf-rpki.png)
+
+For more information on RPKI and RPKI deployment with IOS-XR please see: https://xrdocs.io/design/blogs/routinator-hosted-on-xr
 
 
 ## Next-Generation IXP Fabric 
