@@ -344,11 +344,29 @@ The following steps describe the analysis and mitigation of DDoS attacks using N
 6. If necessary, configure Netscout Arbor Managed Objects to collect and analyze specific traffic for anomalies and attacks  
 7. Configure mitigation components such as RTBH next-hops, TMS mitigation, and BGP Flowspec redirect and drop parameters 
 
-#### Traffic Redirection Options 
-It is recommended to use BGP Flowspec to redirect traffic on PFL nodes to TMS appliances. This can be done through traditional configuration with next-hop redirection 
+
+#### Edge Mitigation Options 
+The methods to either police or drop traffic at the edge of the network are:  
+
+- Route Triggered Blackhole 
+  - The RTBH IPv4 or IPv6 BGP prefix is advertised from the Routing and Analytics node, directing edge routers to Null route a specific prefix being attackced. This will cause all traffic to the destination prefix to be dropped on the edge router.  
+- Access Control Lists 
+  - ACLs are generated and deployed on edge interfaces to mitigate attacks. In addition to matching either source or destination prefixes, ACLs can also match additional packet header information such as protocol and port. ACLs can be created to either drop all traffic matching the specific defined rules or rate-limit traffic to a configured policing rate. ACLs 
+- BGP Flowspec 
+  - BGP Flowspec mitigation allows the provider to distribute edge mitigation in a scalable way using BGP. In a typical BGP Flowspec deployment the Netscout Arbor R&A node will advertise the BGP Flowspec policy to a provider Route Reflector which then distributes the BGP FS routes to all edge routers. BGP Flowspec rules can match a variety of header criteria and perform drop, police, or redirect actions.   
+
+![](http://xrdocs.io/design/images/cpf-hld/pf-traffic-blackhole.png)
+
+#### Traffic Redirection Options
+- BGP Flowspec
+  - It is recommended to use BGP Flowspec to redirect traffic on PFL nodes to TMS appliances. This can be done through traditional configuration with next-hop redirection 
 in the global routing table, redirection into a "dirty" VRF, or using static next-hops into SR-TE tunnels in the case where the scrubbing appliances are not connected 
 via a directly attached interface to the PFL or PFS nodes. 
 
+#### Netscout Arbor TMS Blacklist Offloading 
+
+Blacklist offloading is a combination of traffic scrubbing using the TMS along with filtering/dropping traffic on 
+each edge router. The Netscout Arbor system identifies the top sources of attack traffic and automatically generates the BGP Flowspec rules to drop traffic on the edge router before it is redirected to the TMS. This makes the most efficient use of the TMS mitigation resources. 
 
 ## Internet and Peering in a VRF 
 
