@@ -24,7 +24,7 @@ position: hidden
 | 1.5          | 09/24/2018 |NCS540 Access, ZTP, NSO Services|
 | 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55A2-MOD, IPv4/IPv6/mLDP Multicast, LDP to SR Migration |  
 | 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
-| 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, SR Performance Measurement | 
+| 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, Performance Measurement | 
 
 # Minimum supported IOS-XR Release 
 
@@ -271,7 +271,11 @@ IS-IS and Segment Routing/SR-TE utilized in the Converged SDN Transport design s
 unnumbered interfaces. SR-PCE used to compute inter-domain SR-TE paths also supports the use of unnumbered interfaces. In the topology database each interface is 
 uniquely identified by a combination of router ID and SNMP IfIndex value. 
 
-Unnumbered interface configuration:  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hld-unnumbered.png)
+_Unnumbered node insertion_ 
+
+**Unnumbered interface configuration:**  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -294,7 +298,9 @@ interface TenGigE0/0/0/2
  !
 !
 </pre>
-</div> 
+</div>
+
+
 
 ## Intra-Domain  
     

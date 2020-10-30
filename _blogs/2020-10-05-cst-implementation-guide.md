@@ -283,6 +283,67 @@ router isis ISIS-ACCESS
 </pre>
 </div>
 
+### Unnumbered Interfaces  
+IS-IS and Segment Routing/SR-TE utilized in the Converged SDN Transport design supports using 
+unnumbered interfaces. SR-PCE used to compute inter-domain SR-TE paths also supports the use of unnumbered interfaces. In the topology database each interface is 
+uniquely identified by a combination of router ID and SNMP IfIndex value. 
+
+**Unnumbered interface configuration**  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/2
+ description to-AG2
+ mtu 9216
+ ptp
+  profile My-Slave
+  port state slave-only
+  local-priority 10
+ !
+ service-policy input core-ingress-classifier
+ service-policy output core-egress-exp-marking
+<b> ipv4 point-to-point
+ ipv4 unnumbered Loopback0 </b> 
+ frequency synchronization
+  selection input
+  priority 10
+  wait-to-restore 1
+ !
+!
+</pre>
+</div> 
+
+### Unnumbered Interface IS-IS Database 
+The IS-IS database will reference the node SNMP IfIndex value 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+Metric: 10         IS-Extended A-PE1.00
+   <b> Local Interface ID: 1075, Remote Interface ID: 40 </b> 
+    Affinity: 0x00000000
+    Physical BW: 10000000 kbits/sec
+    Reservable Global pool BW: 0 kbits/sec
+    Global Pool BW Unreserved:
+      [0]: 0        kbits/sec          [1]: 0        kbits/sec
+      [2]: 0        kbits/sec          [3]: 0        kbits/sec
+      [4]: 0        kbits/sec          [5]: 0        kbits/sec
+      [6]: 0        kbits/sec          [7]: 0        kbits/sec
+    Admin. Weight: 90
+    Ext Admin Group: Length: 32
+      0x00000000   0x00000000
+      0x00000000   0x00000000
+      0x00000000   0x00000000
+      0x00000000   0x00000000
+    Link Average Delay: 1 us
+    Link Min/Max Delay: 1/1 us
+    Link Delay Variation: 0 us
+    Link Maximum SID Depth:
+      Label Imposition: 12
+    ADJ-SID: F:0 B:1 V:1 L:1 S:0 P:0 weight:0 Adjacency-sid:24406
+    ADJ-SID: F:0 B:0 V:1 L:1 S:0 P:0 weight:0 Adjacency-sid:24407
+</pre>
+</div> 
+
 #### Anycast SID ABR node configuration 
 
 Anycast SIDs are SIDs existing on two more ABR nodes to offer a redundant fault tolerant path for traffic between Access PEs and remote PE devices. 
