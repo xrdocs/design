@@ -472,6 +472,11 @@ in case of ABR failure (because of Anycast-SID). This is not possible
 with BGP-LU/BGP-PIC, since BGP-LU/BGP-PIC have to wait for the IGP to
 converge first.
 
+SR Data Plane Monitoring provides proactive method to ensure 
+reachability between all SR enabled nodes in an IGP domain. SR DPM utilizes well known MPLS OAM 
+capabilities with crafted SID lists to ensure valid forwarding across the entire IGP domain. See the CST Implementation Guide for 
+more details on SR Data Plane monitoring.   
+
 ## Transport Programmability
 
 Figure 9 and Figure 10 show the design of Route-Reflectors (RR), Segment Routing 
@@ -594,7 +599,7 @@ _Figure 12: XR Transport Controller – Components_
 
 **Segment Routing Path Computation Element (SR-PCE):**
 
-  - Runs as a feature on a physicla or virtual IOS-XR node 
+  - Runs as a feature on a physical or virtual IOS-XR node 
   - Collects topology from BGP using BGP-LS, ISIS, or OSPF 
   - Deploys SR Policies based on client requests  
   - Computes Shortest, Disjoint, Low Latency, and Avoidance paths

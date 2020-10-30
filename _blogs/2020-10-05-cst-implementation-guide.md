@@ -415,6 +415,28 @@ It is recommended to use manual adjacency SIDs. A _protected_ SID is eligible fo
 </pre>
 </div>
 
+#### Segment Routing Dataplane Monitoring 
+
+In CST 3.5 we introduce SR DPM across all IOS-XR platforms. SR DPM uses MPLS OAM mechanisms along with specific SID lists in order to exercise the dataplane of the originating node, detecting blackholes typically difficult to diagnose. SR DPM ensures the nodes SR-MPLS forwarding plane is valid without a drop in traffic towards adjacent nodes and other nodes in the same IGP domain.  SR DPM is a proactive approach to blackhole detection and mitigation.   
+
+SR DPM first performs interface adjacency checks by sending an MPLS OAM packet to adjacent nodes using the interface adjacency SID and its own node SID in the SID list. This ensures the adjacent node is sending traffic back to the node correctly. 
+
+Once this connectivity is verified, SR DPM will then test forwarding to all other node SIDs in the IGP domain across each adjacency.  This is done by crafting a MPLS OAM packet with SID list {Adj-SID, Target Node SID} with TTL=2. The packet is sent to the adjacent node, back to the SR DPM testing node, and then onto the target node via SR-MPLS forwarding. The downstream node towards the target node will receive the packet with TTL=0 and send an MPLS OAM response to the SR DPM originating node. This communicates valid forwarding across the originating node towards the target node. 
+
+It is recommended to enable SR DPM on all CST IOS-XR nodes.  
+
+**SR Data Plane Monitoring Configuration** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+mpls oam 
+  dpm
+   pps 10 
+   interval 60 (minutes)   
+</pre>
+</div>
+
+
 ### MPLS Segment Routing Traffic Engineering (SRTE) configuration
 The following configuration is done at the global ISIS configuration level and should be performed for all IOS-XR nodes.   
 
