@@ -2184,7 +2184,30 @@ across multiple IGP domains, SR-TE Policies must be configured between all Root 
 <pre class="highlight">
 evpn
   evi 100 
-   etree 
+   advertise-mac
+  !
+ ! 
+l2vpn
+ bridge group etree
+  bridge-domain etree-ftth 
+  interface TenGigE0/0/0/14.100 
+  routed interface BVI100 
+  ! 
+  evi 100 
+</pre>
+</div>
+
+#### IOS-XR Leaf Node Configuration 
+A single command is needed to enable leaf function for an EVI. Configuring "etree leaf" will signal to other nodes this is a leaf node. In this case 
+we also have a L3 IRB configured within the EVI.  In order to isolate the two ACs, each AC is configured with the "split-horizon group" configuration command. The BVI interface
+is configured with "local-proxy-arp" to intercept ARP requests between hosts on each AC. This is needed if hosts in two different ACs are using the same IP address subnet, since ARP 
+traffic will be suppressed acrossed the ACs.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+evpn
+  evi 100 
+  <b>etree</b>  
    leaf 
    !
   advertise-mac
@@ -2194,16 +2217,21 @@ l2vpn
  bridge group etree
   bridge-domain etree-ftth 
   interface TenGigE0/0/0/23.1098
+    split-horizon-group 
+  interface TenGigE0/0/0/24.1098
+    split-horizon group 
   routed interface BVI100 
   ! 
   evi 100 
 </pre>
 </div>
 
-#### IOS-XR Leaf Node Configuration 
-
-
-
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface BVI11011
+ local-proxy-arp
+</pre>
+</div>
 
 ## Hierarchical Services
 

@@ -1313,7 +1313,12 @@ address-family ipv4
    local
     allocate for no-unicast-ldp
 </pre> 
-</div> 
+</div>
+
+### SmartPHY RPD Automation 
+SmartPHY is an automation solution for managing deployed RPDs across the SP network. In a non-SmartPHY deployment providers must manually assign RPHY cores via DHCP and manually configure the cBR8 by CLI SmartPHY provides a flexible either GUI or API driven way to eliminate manual configuration. SmartPHY is configured as the RPHY core in the DHCP server for all RPDs. When the RPD boots it will initiate a GCP session to SmartPHY.  SmartPHY identifies the RPD and if configured in SmartPHY, will redirect it to the proper RPHY core instance. When provisioning a new RPD, SmartPHY will also deploy the proper configuration to the RPHY core cBR8 node and verify the RPD is operational. The diagram below shows basic SmartPHY operation.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hld-smartphy.png)
 
 ## L3 Multicast using Segment Routing TreeSID w/Static S,G Mapping
 
