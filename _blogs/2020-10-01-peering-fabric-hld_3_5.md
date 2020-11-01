@@ -177,6 +177,15 @@ PFS is supported. We also introduce the abstract peering concept where
 PFS nodes utilize a next-hop address bound to an anycast SR SID to allow
 traffic engineering on a per-peering center basis.
 
+### Slow Peer Detection for BGP 
+
+In the Peering Fabric 3.5 design and IOS-XR 7.1.2 slow-peer detection is enabled 
+by default. Slow peers are those who are slow to receive and process inbound BGP
+updates and ack those to the sender. If the slow peer is participating in the 
+same update group as other peers, this can slow down the update process for all 
+peers. In this release when IOS-XR detects a slow peer, it will create a syslog
+mention with information about the specific peer.    
+
 ## Telemetry
 
 The Peering fabric design uses the rich telemetry available in IOS-XR
@@ -1037,6 +1046,32 @@ nodes.
 ```
 lldp
 ```
+
+### Type 6 Encryption Configuration 
+
+Type 6 encryption provides stronger on-box storage of control-plane secrets than
+legacy methods which use relatively weak encryption methods. Type 6 encryption 
+uses the onboard Trust Anchor Module, or TAM, to store the encrypted key outside
+of the device configuration, meaning simply having access to the config does not 
+expose the keys used in control-plane protocol security.  
+
+**Create key (exec mode, not config mode)** 
+```
+key config-key password-encryption  
+(enter key) 
+password6 encryption aes
+``` 
+
+**Key chain configuration** 
+```
+key chain bgp_type6
+ key 1
+  accept-lifetime 01:00:00 october 24 2005 infinite
+  key-string password6 634d695d4848565e5a5d49604741465566496568575046455a6265414142
+  send-lifetime 01:00:00 october 24 2005 infinite
+  cryptographic-algorithm HMAC-MD5
+```
+
 ## PFS Nodes
 
 As the PFS nodes will integrate into the core control-plane, only
@@ -1934,7 +1969,72 @@ traffic being prioritized on your network, leading to unexpected network
 behavior. An example PFL infrastructure ACL is given resetting incoming
 IPv4/IPv6 DSCP values to 0.
 
-## Per-Peer Control Plane Policers
+## BGP Control-Plane
+
+### Type 6 Encryption Configuration 
+
+Type 6 encryption provides stronger on-box storage of control-plane secrets than
+legacy methods which use relatively weak encryption methods. Type 6 encryption 
+uses the onboard Trust Anchor Module, or TAM, to store the encrypted key outside
+of the device configuration, meaning simply having access to the config does not 
+expose the keys used in control-plane protocol security.  
+
+**Create key (exec mode, not config mode)** 
+```
+key config-key password-encryption  
+(enter key) 
+password6 encryption aes
+``` 
+
+**Key chain configuration**
+At the "key-string" command simply enter the unencrypted string. If Type-6 
+encryption is enabled, the key will automatically use the "password6" encryption
+type.  
+
+```
+key chain bgp_type6
+ key 1
+  accept-lifetime 01:00:00 october 24 2005 infinite
+  key-string password6 634d695d4848565e5a5d49604741465566496568575046455a6265414142
+  send-lifetime 01:00:00 october 24 2005 infinite
+  cryptographic-algorithm HMAC-MD5
+```
+
+### TCP Authentication Option, MD5 Deprecation 
+
+TCP Authentication Option, commonly known as TCP-AO, is a modern way to 
+authenticate TCP sessions. TCP is defined in RFC 5925. TCP-AO replaces MD5 
+authentication, which has been deprecated for a number of years due to its weak 
+security. TCP-AO does NOT encrypt BGP session traffic, it authenticates the TCP 
+header to ensure the neighbor is the correct sender. 
+
+TCP-AO should be used along with Type 6 encryption to best secure BGP sessions. 
+
+```
+tcp ao
+ keychain TCP-AO-KEY
+  key 1 SendID 100 ReceiveID 100
+ !
+!
+key chain TCP-AO-KEY
+ key 1
+  accept-lifetime 00:00:00 january 01 2018 infinite
+  key-string password6 5d574a574d5b6657555c534c62485b51584b57655351495352564f55575060525a60504b
+  send-lifetime 00:00:00 january 01 2018 infinite
+  cryptographic-algorithm AES-128-CMAC-96
+  !
+!
+```
+
+**BGP Neighbor Configuration** 
+```
+router bgp 100
+ neighbor 1.2.3.4
+  remote-as 101
+  ao TCP-AO-KEY include-tcp-options enable
+```
+
+### Per-Peer Control Plane Policers
 
 BGP protocol packets are handled at the RP level, meaning each packet is
 handled by the router CPU with limited bandwidth and processing
