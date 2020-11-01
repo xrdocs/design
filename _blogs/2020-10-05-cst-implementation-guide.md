@@ -27,7 +27,7 @@ see the overview High Level Design document at https://xrdocs.io/design/blogs/la
   - Hardware:
     
       - ASR 9000 as Centralized Provider Edge (C-PE) router  
-      - NCS 5500 and NCS 55A2 as Aggregation and Pre-Aggregation router  
+      - NCS 5500, NCS 560, and NCS 55A2 as Aggregation and Pre-Aggregation router  
       - NCS 5500 as P core router  
       - ASR 920, NCS 540, and NCS 5500 as Access Provider Edge (A-PE) 
       - cBR-8 CMTS with 8x10GE DPIC for Remote PHY 
@@ -35,7 +35,7 @@ see the overview High Level Design document at https://xrdocs.io/design/blogs/la
 
   - Software:
     
-      - IOS-XR 7.1.2 on ASR 9000, NCS 540, NCS 5500, and NCS 55A2 routers  
+      - IOS-XR 7.1.2 on ASR 9000, NCS 560, NCS 540, NCS 5500, and NCS 55A2 routers  
       - IOS-XE 16.12.03 on ASR 920
       - IOS-XE 16.10.1f on cBR-8 
 
