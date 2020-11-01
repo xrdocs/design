@@ -19,7 +19,7 @@ date: null
             <img src="{{ base_path }}/images/design_lp/metro-design.png" alt="" />
           </div>
         <div class="archive__item-body">
-            <h2 class="archive__item-title">Converged SDN Transport 3.0 &nbsp; 
+            <h2 class="archive__item-title">Converged SDN Transport 3.5 &nbsp; 
             <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
               <p>Read about the goals of the Converged SDN Transport Design (formerly known as Metro Fabric)
@@ -49,7 +49,7 @@ date: null
             <img src="{{ base_path }}/images/design_lp/traffic_cloud.png" alt="" />
           </div>
         <div class="archive__item-body">
-            <h2 class="archive__item-title">Peering Fabric Design 3.0
+            <h2 class="archive__item-title">Peering Fabric Design 3.5
             &nbsp; <img src="{{ base_path }}/images/design_lp/updated.png" alt="" />
              </h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
