@@ -4,7 +4,6 @@ date: '2020-01-15 15:22 -0600'
 title: Peering Fabric Design 
 author: Phil Bedard 
 excerpt: Peering Fabric Design - 3.0 
-permalink: /blogs/latest-peering-fabric-hld 
 tags:
   - iosxr
   - design
