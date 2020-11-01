@@ -1048,31 +1048,6 @@ nodes.
 lldp
 ```
 
-### Type 6 Encryption Configuration 
-
-Type 6 encryption provides stronger on-box storage of control-plane secrets than
-legacy methods which use relatively weak encryption methods. Type 6 encryption 
-uses the onboard Trust Anchor Module, or TAM, to store the encrypted key outside
-of the device configuration, meaning simply having access to the config does not 
-expose the keys used in control-plane protocol security.  
-
-**Create key (exec mode, not config mode)** 
-```
-key config-key password-encryption  
-(enter key) 
-password6 encryption aes
-``` 
-
-**Key chain configuration** 
-```
-key chain bgp_type6
- key 1
-  accept-lifetime 01:00:00 october 24 2005 infinite
-  key-string password6 634d695d4848565e5a5d49604741465566496568575046455a6265414142
-  send-lifetime 01:00:00 october 24 2005 infinite
-  cryptographic-algorithm HMAC-MD5
-```
-
 ## PFS Nodes
 
 As the PFS nodes will integrate into the core control-plane, only
@@ -1988,6 +1963,7 @@ password6 encryption aes
 ``` 
 
 **Key chain configuration**
+
 At the "key-string" command simply enter the unencrypted string. If Type-6 
 encryption is enabled, the key will automatically use the "password6" encryption
 type.  
