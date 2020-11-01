@@ -18,6 +18,10 @@ tags:
 
 {% include toc %}
 
+# Version 
+The following aligns to and uses features from Converged SDN Transport 3.5, please
+see the overview High Level Design document at https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld
+
 # Targets
 
   - Hardware:
@@ -31,8 +35,8 @@ tags:
 
   - Software:
     
-      - IOS-XR 6.6.3 on ASR 9000, NCS 540, NCS 5500, and NCS 55A2 routers  
-      - IOS-XE 16.8.1 on ASR 920
+      - IOS-XR 7.1.2 on ASR 9000, NCS 540, NCS 5500, and NCS 55A2 routers  
+      - IOS-XE 16.12.03 on ASR 920
       - IOS-XE 16.10.1f on cBR-8 
 
   - Key technologies
