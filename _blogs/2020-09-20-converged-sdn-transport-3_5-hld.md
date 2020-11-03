@@ -757,7 +757,6 @@ class-map match-any match-qos-group-3
 #### Egress QoS queuing policy 
 <div class="highlighter-rouge">
 <pre class="highlight">
-
 policy-map egress-queuing
  class match-traffic-class-2
   priority level 2
