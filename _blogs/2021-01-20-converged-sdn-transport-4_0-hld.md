@@ -1,7 +1,7 @@
 ---
 published: true 
 date: '2019-11-01 11:00-0400'
-title: Converged SDN Transport High Level Design v3.5 
+title: Converged SDN Transport High Level Design v4.0 
 excerpt: Cisco Converged SDN Transport (CST) design introduces an SDN-ready architecture evolving network design towards an SDN enabled, programmable network capable of delivering all services.  
 author: Phil Bedard 
 permalink: /blogs/latest-converged-sdn-transport-hld
@@ -26,6 +26,7 @@ position: top
 | 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55A2-MOD, IPv4/IPv6/mLDP Multicast, LDP to SR Migration |  
 | 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
 | 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, Performance Measurement | 
+| 4.0        | 2/1/2020 | SR Flexible Algorithms inc. Inter-Domain, PTP multi-profile inc. G.82751<>G.8275.2 interworking, G.8275.2 on BVI, ODN support for EVPN ELAN, TI-LFA Open Ring support, NCS 520 | 
 
 # Minimum supported IOS-XR Release 
 
@@ -36,6 +37,7 @@ position: top
 | 2.0        | 6.5.3       |
 | 3.0        | 6.6.3 |
 | 3.5        | 7.1.2 |
+| 4.0        | 7.2.2 on NCS, 7.1.3 on ASR9K |
 
 # Value Proposition
 
@@ -185,19 +187,25 @@ configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55xx.png)
 
-
-## ASR-920 
+## ASR 920 
 The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. The Segment Routing data plane and supported service types are validated 
 on the ASR 920 within the CST design. <b>Please see the services support section for all service types supported on the ASR 920. </b>  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-asr920.png)
 
+## NCS 520 
+The IOS-XE based NCS 520 acts as an Ethernet demarcation device (NID) or carrier Ethernet switch in the Converged SDN Transport design. The MEF 3.0 certified device acts as a customer equipment termination point where QoS, OAM (Y.1731,802.3ah), and service validation/testing using Y.1564 can be performed. The NCS 520 is available in a variety of models covering different port requirements including industrial temp and conformal coated models for harsher environments.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs520.png)
 # Transport – Design Components  
     
 ## Network Domain Structure 
 
-To provide unlimited network scale, the  Converged SDN Transport is
-structured into multiple IGP Domains: Access, Aggregation, and Core.
+To provide unlimited network scale, the Converged SDN Transport is
+structured into multiple IGP Domains: Access, Aggregation, and Core. However as we will 
+illustrate in the next section, the number of domains is completely flexible based on 
+provider need. 
+
 Refer to the network topology in Figure 1.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-high-scale-distributed.png)
@@ -263,7 +271,7 @@ _Cisco 55A2 modular hardened router_
 _Cisco NCS 5500 chassis modular line card_ 
 
 ## Unnumbered Interface Support 
-In this release, starting at IOS-XR 7.1.1 we have added support for unnumbered interfaces. Using unnumbered interfaces in the network eases the burden of 
+In CST 3.5, starting at IOS-XR 7.1.1 we have added support for unnumbered interfaces. Using unnumbered interfaces in the network eases the burden of 
 deploying nodes by not requiring specific IPv4 or IPv6 interface addresses between adjacent node. When inserting a new node into an existing access ring the provider
 only needs to configure each interface to use a Loopback address on the East and West interfaces of the nodes. IGP adjacencies will be formed over the unnumbered 
 interfaces.   
@@ -301,10 +309,7 @@ interface TenGigE0/0/0/2
 </pre>
 </div>
 
-
-
 ## Intra-Domain  
-    
 ### Intra-Domain Routing and Forwarding
 
 The  Converged SDN Transport is based on a fully programmable transport that
@@ -336,7 +341,7 @@ to use LDP or RSVP protocol to exchange MPLS labels.
 
 The Converged SDN Transport design uses ISIS as the IGP protocol.
 
-### Intra-Domain Forwarding - Fast Re-Route
+### Intra-Domain Forwarding - Fast Re-Route using TI-LFA  
 
 Segment-Routing embeds a simple Fast Re-Route (FRR) mechanism known as
 Topology Independent Loop Free Alternate (TI-LFA).
@@ -476,8 +481,21 @@ converge first.
 SR Data Plane Monitoring provides proactive method to ensure 
 reachability between all SR enabled nodes in an IGP domain. SR DPM utilizes well known MPLS OAM 
 capabilities with crafted SID lists to ensure valid forwarding across the entire IGP domain. See the CST Implementation Guide for 
-more details on SR Data Plane monitoring.   
+more details on SR Data Plane monitoring.  
 
+### Inter-Domain Open Ring Support  
+Prior to CST 4.0 and XR 7.2.1, the use of TI-LFA within a ring topology required the ring be closed within the IGP domain. This 
+required an interconnect at the ASBR domain node for each IGP domain terminating on the ASBR.  This type of connectivity was not 
+always possible in an aggregation network due to fiber or geographic constraints. In CST 4.0 we have introduced support for 
+open rings by utilizing MPLSoGRE tunnels between terminating boundary nodes across the upstream IGP domain. The following picture 
+illustrates open ring support between an access and aggregation network.   
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hld-open-ring.png)
+
+In the absence of a physical link between the boundary nodes PA1 and PA2, GRE tunnels can be created to interconnect each domain 
+over its adjacent domain. During a protection event, such as the link failure between PA1 and GA1, traffic will enter the tunnel on the 
+protection node, in this case PA1 towards PA2. Keep in mind traffic will loop back through the domain until re-convergence occurs. In the case of a 
+core failure, bandwidth may not be available in an access ring to carry all core traffic, so care must be taken to determine traffic impact.     
 ## Transport Programmability
 
 Figure 9 and Figure 10 show the design of Route-Reflectors (RR), Segment Routing 
