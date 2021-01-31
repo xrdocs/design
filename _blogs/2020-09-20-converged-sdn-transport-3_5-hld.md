@@ -1,6 +1,6 @@
 ---
 published: true 
-date: '2021-01-20 11:00-0400'
+date: '2020-09-20 11:00-0400'
 title: Converged SDN Transport High Level Design v3.5 
 excerpt: Cisco Converged SDN Transport (CST) design introduces an SDN-ready architecture evolving network design towards an SDN enabled, programmable network capable of delivering all services.  
 author: Phil Bedard 
