@@ -1,9 +1,10 @@
 ---
 published: true 
 date: '2021-01-20 11:00-0400'
-title: Converged SDN Transport High Level Design v4.0 
+title: Converged SDN Transport High Level Design v3.5 
 excerpt: Cisco Converged SDN Transport (CST) design introduces an SDN-ready architecture evolving network design towards an SDN enabled, programmable network capable of delivering all services.  
 author: Phil Bedard 
+permalink: /blogs/latest-converged-sdn-transport-hld
 tags:
   - iosxr
   - Metro
@@ -25,7 +26,6 @@ position: hidden
 | 2.0        | 4/1/2019 | Non-inline PE Topology, NCS-55A2-MOD, IPv4/IPv6/mLDP Multicast, LDP to SR Migration |  
 | 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
 | 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, Performance Measurement |
-| 3.5        | 02/01/2021|  |
 
 
 # Minimum supported IOS-XR Release 
@@ -36,7 +36,7 @@ position: hidden
 | 1.5        | 6.5.1      |
 | 2.0        | 6.5.3       |
 | 3.0        | 6.6.3 |
-| 3.5        | 7.1.2 |
+| 3.5        | 7.1.2 | 
 
 # Value Proposition
 

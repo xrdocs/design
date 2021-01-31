@@ -1,11 +1,10 @@
 ---
 published: true
-date: '2020-10-05 16:54 -0500'
+date: '2020-01-20 16:54 -0500'
 title: Converged SDN Transport Implementation Guide
-position: top 
+position: hidden  
 author: Phil Bedard 
 excerpt: Converged SDN Transport Implementation Guide - 3.5 
-permalink: /blogs/latest-converged-sdn-transport-ig
 tags:
   - iosxr
   - cisco

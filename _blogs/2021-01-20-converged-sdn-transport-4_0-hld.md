@@ -4,7 +4,6 @@ date: '2019-11-01 11:00-0400'
 title: Converged SDN Transport High Level Design v4.0 
 excerpt: Cisco Converged SDN Transport (CST) design introduces an SDN-ready architecture evolving network design towards an SDN enabled, programmable network capable of delivering all services.  
 author: Phil Bedard 
-permalink: /blogs/latest-converged-sdn-transport-hld
 tags:
   - iosxr
   - Metro
@@ -12,7 +11,7 @@ tags:
   - 5G 
   - Cable
   - CIN
-position: top 
+position: hidden  
 ---
 
 {% include toc %}
@@ -829,8 +828,11 @@ The Converged SDN Transport design introduces initial support for 5G networks an
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-5g-services.png) 
 
 ## Key Validated Components 
-The following key features have been added to the CST validated design to support initial 5G deployments 
+The following key features have been added to the CST validated design to support 5G deployments
 
+### End to End Timing Validation 
+End to end timing using PTP with profiles G.8275.1 and G.8275.2 have been validated in the CST design. Best practice configurations are available in the online configurations and CST Implementation Guide. It is recommended to use G.8257.1 when possible to main the highest level of accuracy across the network. In CST 4.0+ we include validation for 
+G.8275.1 to G.8275.2 interworking, allowing the use of different profiles across the network. Synchronous Ethernet (SyncE) is also recommended across the network to maintain stability when timing to the PRC. All nodes used in the CST design support SyncE.  
 ### Low latency SR-TE path computation
 In this release of the CST design, we introduce a new validated constraint type for SR-TE paths used for carrying services across the network. The "latency" constraint used either with a configured SR Policy or ODN SR Policy specifies the computation engine to look for the lowest latency path across the network.  The latency computation algorithm can use different mechanisms for computing the end to end path.  The first and preferred mechanism is to use the realtime measured per-link one-way delay across the network. This measured information is distributed via IGP extensions across the IGP domain and then onto external PCEs using BGP-LS extensions for use in both intra-domain and inter-domain calculations. In version 3.0 of the CST this is supported on ASR9000 links using the Performance Measurement link delay feature. More detail on the configuration can be found at https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-0/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-70x/b-segment-routing-cg-asr9000-70x_chapter_010000.html#id_118505. In release 6.6.3 NCS 540 and NCS 5500 nodes support the configuration of static link-delay values which are distributed using the same method as the dynamic values. Two other metric types can also be utilized as part of the "latency" path computation. The TE metric, which can be defined on all SR IS-IS links and the regular IGP metric can be used in the absence of the link-delay metric.  
 
@@ -1127,6 +1129,9 @@ Due to the large number of elements and generally greenfield network builds, the
 Frequency and phase synchronization is required between the cBR-8 and RPD to properly handle upstream scheduling and downstream transmission. Remote PHY uses PTP (Precision Timing Protocol) for timing synchronization with the ITU-T G.8275.2 timing profile. This profile carries PTP traffic over IP/UDP and supports a network with partial timing support, meaning multi-hop sessions between Grandmaster, Boundary Clocks, and clients as shown in the diagram below. The cBR-8 and its client RPD require timing alignment to the same Primary Reference Clock (PRC). In order to scale, the network itself must support PTP G.8275.2 as a T-BC (Boundary Clock).  Synchronous Ethernet (SyncE) is also recommended across the CIN network to maintain stability when timing to the PRC. 
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-g82752.png)
+
+#### CST 4.0+ Update to CIN Timing Design 
+Starting in CST 4.0, NCS nodes support both G.8275.1 and G.8275.2 on the same node, and also support interworking between them.  If the network path between the PTP GM and client RPDs can support G.8275.1 on each hop, it should be used. G.8275.1 runs on physical interfaces and does not have limitations such as running over Bundle Ethernet interfaces.  The G.8275.1 to G.8275.2 interworking will take place on the RPD leaf node, with G.8275.2 being used to the RPDs.
 
 #### QoS
 Control plane functions of Remote PHY are critical to achieving proper operation and subscriber traffic throughput. QoS is required on all RPD-facing ports, the cBR-8 DPIC ports, and all core interfaces in between. Additional QoS may be necessary between the cBR-8, RPD, and any PTP timing elements. See the design section for further details on QoS components.   
