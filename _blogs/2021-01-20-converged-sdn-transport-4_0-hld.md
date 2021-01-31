@@ -573,93 +573,6 @@ request, the SR-PCE controller calculates the path based on the requested
 SLA, and uses PCEP to dynamically program the ingress node
 with a specific SR-TE Policy.
 
-### Traffic Engineering - Segment Routing Flexible Algorithms 
-
-A powerful tool used to create traffic engineered Segment Routing paths is SR Flexible Algorithms, better known as 
-SR Flex-Algo.  Flex-Algo assigns a specific set of "algorithms" to a Segment. The algorithm identifies a specific 
-computation constraint the segment supports. There are standards based algorithm definitions such as least cost IGP path and latency, or providers 
-can define their own algorithms to satisfy their business needs.  CST 4.0 supports computation of Flex-Algo paths in intra-domain and inter-domain 
-deployments. In CST 4.0 (IOS-XR 7.2.2) inter-domain Flex-Algo using SR-PCE is limited to IGP lowest metric path computation.  
-
-Flex-Algo limits the computation of a path to only those nodes participating in that algorithm. This gives a powerful way to create multiple network 
-domains within a single larger network, constraining an SR path computation to segments satisfying the metrics defined by the algorithm. As you will see, 
-we can now use a single node SID to reach a node via a path satisfying an advanced constraint such as delay.  
-#### Flex-Algo Node SID Assignment
-Nodes participating in a specific algorithm must have a unique node SID prefix assigned to the algorithm. In a typical deployment, the same Loopback address is 
-used for multiple algorithms. IGP extensions advertise algorithm membership throughout the network. Below is an example of a node with multiple algorithms and node SID 
-assignments. By default, the basic IGP path computation is assigned to algorithm "0".  Algorithm "1" is also reserved. Algorithms 128-255 are user-definable. All Flex-Algo 
-SIDs belong to the same global SRGB so providers deploying SR should take this into account. Each algorithm should be assigned its own block of SIDs within 
-the SRGB, in the case below the SRGB is 16000-32000, each algorithm is assigned 1000 SIDs.   
-
-<div class="highlighter-rouge">
-<pre class="highlight">
- interface Loopback0
-  address-family ipv4 unicast
-   prefix-sid index 150
-   prefix-sid algorithm 128 absolute 18003
-   prefix-sid algorithm 129 absolute 19003
-   prefix-sid algorithm 130 absolute 20003
-</pre>
-</div>
-
-#### Flex-Algo IGP Definition 
-Flexible algorithms being used within a network must be defined in the IGP domains in the network The configuration is typically 
-done on at least one node under the IGP configuration for domain. Under the definition the metric type used for computation is 
-defined along with any link affinities. Link affinities are used to constrain the algorithm to not only specific nodes, but 
-also specific links. These affinities are the same previously used by RSVP-TE.  
-
-**Note: Inter-domain Flex-Algo path computation requires synchronized Flex-Algo definitions across the end-to-end path** 
-
-<div class="highlighter-rouge">
-<pre class="highlight">
- flex-algo 130
-  metric-type delay
-  advertise-definition
- !
- flex-algo 131
-  advertise-definition
-  affinity exclude-any red
-</pre>
-</div>
-
-#### Path Computation across SR Flex-Algo Network 
-Flex-Algo works by creating a separate topology for each algorithm. By default, all links interconnecting nodes participating 
-in the same algorithm can be used for those paths. If the algorithm is defined to include or exclude specific link affinities, the 
-topology will reflect it. A SR-TE path computation using a specific Flex-Algo will use the Algo's topology for end the end path computation. It will 
-also look at the metric type defined for the Algo and use it for the path computation.  Even with a complex topology, a single SID is used for the 
-end to end path, as opposed to using a series of node and adjacency SIDs to steer traffic across a shared topology. Each node participating in the algorithm has adjacencies to other nodes utilizing the same 
-algorithm, so when a incoming MPLS label matching the algo SID enters, it will utilize the path specific to the algo.  A Flex-Algo can also be used as a constraint in an ODN policy.   
-#### Flex-Algo Dual-Plane Example 
-A very simple use case for Flex-Algo is to easily define a dual-plane network topology where algorithm 129 red and algorithm 
-130 is green. Nodes A1 and A6 participate in both algorithms. When a path request is made for algorithm 129, the head-end nodes A1 and A6 
-will only use paths specific to the algorithm.  The SR-TE Policy does not need to reference the specific SID, only the Algo being used as the 
-constraints. The local node or SR-PCE will utilize the Algo to compute the path dynamically.   
-
-![](http://xrdocs.io/design/images/cmf-hld/cst-hld-dual-plane.png)
-
-The following policy configuration is an example of constraining the path to the Algo 129 "Red" path.  
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-segment-routing
- traffic-eng
-  policy GREEN-PE8-128
-   color 1128 end-point ipv4 100.0.2.53
-   candidate-paths
-    preference 1
-     dynamic
-      pcep
-      !
-      metric
-       type igp
-      !
-     !
-<b>     constraints
-      segments
-       sid-algorithm 129</b> 
-</pre>
-</div>
-
 ### Traffic Engineering - Dynamic Anycast-SID Paths and Black Hole Avoidance 
 
 As shown in Figure 7, inter-domain resilience and load-balancing is satisfied 
@@ -746,8 +659,95 @@ _Figure 12: XR Transport Controller – Components_
 6.  Access Router acknowledges and installs the SR Policy as the forwarding path for the service.  
 
 
-## Segment Routing and Unified MPLS (BGP-LU) Co-existence 
+## Segment Routing Flexible Algorithms (Flex-Algo) 
 
+A powerful tool used to create traffic engineered Segment Routing paths is SR Flexible Algorithms, better known as 
+SR Flex-Algo.  Flex-Algo assigns a specific set of "algorithms" to a Segment. The algorithm identifies a specific 
+computation constraint the segment supports. There are standards based algorithm definitions such as least cost IGP path and latency, or providers 
+can define their own algorithms to satisfy their business needs.  CST 4.0 supports computation of Flex-Algo paths in intra-domain and inter-domain 
+deployments. In CST 4.0 (IOS-XR 7.2.2) inter-domain Flex-Algo using SR-PCE is limited to IGP lowest metric path computation.  
+
+Flex-Algo limits the computation of a path to only those nodes participating in that algorithm. This gives a powerful way to create multiple network 
+domains within a single larger network, constraining an SR path computation to segments satisfying the metrics defined by the algorithm. As you will see, 
+we can now use a single node SID to reach a node via a path satisfying an advanced constraint such as delay.  
+### Flex-Algo Node SID Assignment
+Nodes participating in a specific algorithm must have a unique node SID prefix assigned to the algorithm. In a typical deployment, the same Loopback address is 
+used for multiple algorithms. IGP extensions advertise algorithm membership throughout the network. Below is an example of a node with multiple algorithms and node SID 
+assignments. By default, the basic IGP path computation is assigned to algorithm "0".  Algorithm "1" is also reserved. Algorithms 128-255 are user-definable. All Flex-Algo 
+SIDs belong to the same global SRGB so providers deploying SR should take this into account. Each algorithm should be assigned its own block of SIDs within 
+the SRGB, in the case below the SRGB is 16000-32000, each algorithm is assigned 1000 SIDs.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+ interface Loopback0
+  address-family ipv4 unicast
+   prefix-sid index 150
+   prefix-sid algorithm 128 absolute 18003
+   prefix-sid algorithm 129 absolute 19003
+   prefix-sid algorithm 130 absolute 20003
+</pre>
+</div>
+
+### Flex-Algo IGP Definition 
+Flexible algorithms being used within a network must be defined in the IGP domains in the network The configuration is typically 
+done on at least one node under the IGP configuration for domain. Under the definition the metric type used for computation is 
+defined along with any link affinities. Link affinities are used to constrain the algorithm to not only specific nodes, but 
+also specific links. These affinities are the same previously used by RSVP-TE.  
+
+**Note: Inter-domain Flex-Algo path computation requires synchronized Flex-Algo definitions across the end-to-end path** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+ flex-algo 130
+  metric-type delay
+  advertise-definition
+ !
+ flex-algo 131
+  advertise-definition
+  affinity exclude-any red
+</pre>
+</div>
+
+### Path Computation across SR Flex-Algo Network 
+Flex-Algo works by creating a separate topology for each algorithm. By default, all links interconnecting nodes participating 
+in the same algorithm can be used for those paths. If the algorithm is defined to include or exclude specific link affinities, the 
+topology will reflect it. A SR-TE path computation using a specific Flex-Algo will use the Algo's topology for end the end path computation. It will 
+also look at the metric type defined for the Algo and use it for the path computation.  Even with a complex topology, a single SID is used for the 
+end to end path, as opposed to using a series of node and adjacency SIDs to steer traffic across a shared topology. Each node participating in the algorithm has adjacencies to other nodes utilizing the same 
+algorithm, so when a incoming MPLS label matching the algo SID enters, it will utilize the path specific to the algo.  A Flex-Algo can also be used as a constraint in an ODN policy.   
+### Flex-Algo Dual-Plane Example 
+A very simple use case for Flex-Algo is to easily define a dual-plane network topology where algorithm 129 red and algorithm 
+130 is green. Nodes A1 and A6 participate in both algorithms. When a path request is made for algorithm 129, the head-end nodes A1 and A6 
+will only use paths specific to the algorithm.  The SR-TE Policy does not need to reference the specific SID, only the Algo being used as the 
+constraints. The local node or SR-PCE will utilize the Algo to compute the path dynamically.   
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hld-dual-plane.png)
+
+The following policy configuration is an example of constraining the path to the Algo 129 "Red" path.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy GREEN-PE8-128
+   color 1128 end-point ipv4 100.0.2.53
+   candidate-paths
+    preference 1
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      !
+     !
+<b>     constraints
+      segments
+       sid-algorithm 129</b> 
+</pre>
+</div>
+
+
+## Segment Routing and Unified MPLS (BGP-LU) Co-existence 
 ### Summary 
 
 In the Converged SDN Transport 3.0 design we introduce validation for the co-existence of services using BGP Labeled Unicast transport for inter-domain forwarding and those using SR-TE. Many networks deployed today have an existing BGP-LU design which may not be easily migrated to SR, so graceful introduction between the two transport methods is required. In the case of a multipoint service such as EVPN ELAN or L3VPN, an endpoint may utilize BGP-LU to one endpoint and SR-TE to another.  
