@@ -1,11 +1,10 @@
 ---
 published: true
-date: '2020-01-20 16:54 -0500'
+date: '2021-02-01 16:54 -0500'
 title: Converged SDN Transport Implementation Guide
-position: top 
+position: hidden 
 author: Phil Bedard 
-excerpt: Converged SDN Transport Implementation Guide - 3.5 
-permalink: /blogs/latest-converged-sdn-transport-ig
+excerpt: Converged SDN Transport Implementation Guide - 4.0 
 tags:
   - iosxr
   - cisco
@@ -35,20 +34,22 @@ see the overview High Level Design document at https://xrdocs.io/design/blogs/la
 
   - Software:
     
-      - IOS-XR 7.1.2 on ASR 9000, NCS 560, NCS 540, NCS 5500, and NCS 55A2 routers  
+      - IOS-XR 7.2.2 on NCS 560, NCS 540, NCS 5500, and NCS 55A2 routers 
+      - IOS-XE 7.1.3 on ASR 9000 routers  
       - IOS-XE 16.12.03 on ASR 920
       - IOS-XE 16.10.1f on cBR-8 
 
   - Key technologies
     
       - Transport: End-To-End Segment-Routing
-      - Network Programmability: SR- TE Inter-Domain LSPs with On-Demand
+      - Network Programmability: SR-TE Inter-Domain LSPs with On-Demand
         Next Hop
       - Network Availability: TI-LFA/Anycast-SID
       - Services: BGP-based L2 and L3 Virtual Private Network services
         (EVPN and L3VPN/mVPN)
       - Network Timing: G.8275.1 and G.8275.2
-      - Network Assurance: 802.1ag  
+      - Network Assurance: 802.1ag 
+
 
 # Testbed Overview
 
@@ -1118,7 +1119,7 @@ router bgp 100
 </div> 
 
 ## BGP-LU co-existence BGP configuration 
-CST 3.0 introduced co-existence between services using BGP-LU and SR endpoints. If you are using SR and BGP-LU within the same domain it requires using BGP-SR in order to resolve prefixes correctly on the each ABR. BGP-SR uses a new BGP community attached to the BGP-LU prefix to convey the SR prefix-sid index end to end across the network. Using the same prefix-sid index both within the SR-MPLS IGP domain and across the BGP-LU network simplifies the network from an operational perspective since the path to an end node can always be identified by that SID.  
+CST 3.0 introduced co-existence between services using BGP-LU and SR endpoints. If you are using SR and BGP-LU within the same domain it requires using BGP-SR in order to resolve prefixes correctly on the each ABR. BGP-SR uses a new BGP attribute attached to the BGP-LU prefix to convey the SR prefix-sid index end to end across the network. Using the same prefix-sid index both within the SR-MPLS IGP domain and across the BGP-LU network simplifies the network from an operational perspective since the path to an end node can always be identified by that SID.  
 
 It is recommended to enable the BGP-SR configuration when enabling SR on the PE node. See the PE configuration below for an example of this configuration.   
 
