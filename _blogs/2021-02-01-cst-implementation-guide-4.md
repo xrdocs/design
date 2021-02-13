@@ -18,7 +18,7 @@ tags:
 {% include toc %}
 
 # Version 
-The following aligns to and uses features from Converged SDN Transport 3.5, please
+The following aligns to and uses features from Converged SDN Transport 4.0, please
 see the overview High Level Design document at https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld
 
 # Targets
@@ -213,7 +213,7 @@ performance-measurement
 </pre>
 </div>
 
-### SR-MPLS Transport  
+### IOS-XR SR-MPLS Transport  
 
 #### Segment Routing SRGB and SRLB Definition 
 It's recommended to first configure the Segment Routing Global Block (SRGB) across all nodes needing connectivity between each other. In most instances a single SRGB will be used across the entire network. In a SR MPLS deployment the SRGB and SRLB correspond to the label blocks allocated to SR. IOS-XR has a maximum configurable SRGB limit of 512,000 labels, however please consult platform-specific documentation for maximum values. The SRLB corresponds to the labels allocated for SIDs local to the node, such as Adjacency-SIDs. It is recommended to configure the same SRLB block across all nodes. The SRLB must not overlap with the SRGB.  The SRGB and SRLB are configured in IOS-XR with the following configuration:   
@@ -227,6 +227,8 @@ segment-routing
 </div>
 
 #### IGP protocol (ISIS) and Segment Routing MPLS configuration
+The following section documents the configuration without Flex-Algo, Flex-Algo configuration is found in the Flex-Algo 
+configuration section.  
 
 **Key chain global configuration for IS-IS authentication**
 <div class="highlighter-rouge">
@@ -253,6 +255,7 @@ router isis ISIS-ACCESS
  is-type level-2-only
  net 49.0001.0101.0000.0110.00
  nsr
+ distribute link-state 
  nsf cisco
  log adjacency changes
  lsp-gen-interval maximum-wait 5000 initial-wait 5 secondary-wait 100
@@ -288,6 +291,17 @@ router isis ISIS-ACCESS
    tag 1000 
 </pre>
 </div>
+
+#### MPLS-TE Configuration 
+
+Enabling the use of Segment Routing Traffic Engineering requires first configuring basic MPLS TE so the router Traffic Engineering Database (TED) 
+is populated with the proper TE attributes. The configuration requires no 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+mpls traffic-eng
+</pre> 
+</div> 
 
 ### Unnumbered Interfaces  
 IS-IS and Segment Routing/SR-TE utilized in the Converged SDN Transport design supports using 
@@ -446,7 +460,7 @@ mpls oam
 </div>
 
 
-### MPLS Segment Routing Traffic Engineering (SRTE) configuration
+### MPLS Segment Routing Traffic Engineering (SR-TE) configuration
 The following configuration is done at the global ISIS configuration level and should be performed for all IOS-XR nodes.   
 
 <div class="highlighter-rouge">
@@ -458,7 +472,7 @@ router isis ACCESS
 </pre>
 </div>
 
-#### MPLS Segment Routing Traffic Engineering (SRTE) TE metric configuration  
+#### MPLS Segment Routing Traffic Engineering (SR-TE) TE metric configuration  
 
 The TE metric is used when computing SR Policy paths with the "te" or "latency" constraint type.  The TE metric is carried as a TLV within the TE opaque LSA distributed across the IGP area and to the PCE via BGP-LS.  
 The TE metric is used in the CST 5G Transport use case.  If no TE metric is defined the local CSPF or PCE will utilize the IGP metric.   
@@ -471,6 +485,96 @@ segment-routing
    metric 1000
 </pre>
 </div>
+
+### IOS-XR SR Flexible Algorithm Configuration 
+
+Segment Routing Flexible Algorithm offers a way to to easily define multiple logical network topologies satisfying a specific network constraint. 
+Flex-Algo definitions must first be configured in each IGP domain on all nodes participating in Flex-Algo. By default, all nodes participate in Algorithm 0, mapping to "use lowest IGP metric" 
+path computation. In the CST design, ABR nodes must have Flex-Algo definitions in both IS-IS instances if an inter-domain path is required.  
+
+#### Flex-Algo IS-IS Definition
+Each Flex-Algo is defined on the nodes participating in the Flex-Algo. In this configuration IS-IS is configured to advertise the definition network wide.  This is not required on each node in the 
+domain, only a single node needs to advertise the definition, but there is no downside to having each node advertise the definition. In this case we are also defining a link affinity to be used in the 
+131 Flex-Algo. The same affinity-map must be used on all nodes in the IGP domain. The link affinity is configured under specific interfaces in the IS-IS interface configuration as shown with interface TenGigE0/0/0/20 below. The configuration for 131 is set to exclude links matching 
+the "red" affinity, so any path utilizing Flex-Algo 131 as a constraint will not utilize the TenGigE0/0/0/20 path.  The Flex-Algo link affinity is applied to both local and remote interfaces matching the affinity. 
+
+Also note non-Flex-Algo configuration can utilize link affinities, which are defined under segment-routing->traffic-engineering->interface->affinity.  
+
+As of CST 4.0, <b>delay</b> is the only metric-type supported. Utilizing the delay metric-type for a Flex-Algo will ensure a path will utilize only the lowest delay path, even if a single destination SID is referenced in the SR-TE path.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS 
+  affinity-map red bit-position 0
+  flex-algo 128
+    advertise-definition
+  !
+  flex-algo 129
+    advertise-definition
+  !
+  flex-algo 130
+    metric-type delay
+    advertise-definition
+  !
+  flex-algo 131
+    advertise-definition
+    affinity exclude-any red
+    !
+  !
+  interface TenGigE0/0/0/20
+    affinity flex-algo red
+</pre>
+</div>
+
+#### Flex-Algo Node SID Configuration
+Flex-Algo works by allocating a globally unique node SID referencing the algorithm on each node participating in the Flex-Algo topology. This requires additional Node SID configuration on the 
+Loopback0 interface for each router.  The following is an example for a node participating in four different Flex-Algo domains in addition to the default Algo 0 domain, covered by the base Node SID configuration. 
+Each SID belongs to the same global SRGB.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS
+ interface Loopback0
+  address-family ipv4 unicast
+   prefix-sid index 150
+   prefix-sid algorithm 128 absolute 18003
+   prefix-sid algorithm 129 absolute 19003
+   prefix-sid algorithm 130 absolute 20003
+   prefix-sid algorithm 131 absolute 21003
+</pre>
+</div>
+
+If one inspects the IS-IS database for the nodes, you will see the Flex-Algo SID entries.  
+
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:NCS540-A-PE3#show isis database NCS540-A-PE3.00-00 verbose
+  Router Cap:     100.0.1.50 D:0 S:0
+    Segment Routing: I:1 V:0, SRGB Base: 16000 Range: 8000
+    SR Local Block: Base: 15000 Range: 1000
+    Node Maximum SID Depth:
+      Label Imposition: 12
+    SR Algorithm:
+      Algorithm: 0
+      Algorithm: 1
+      Algorithm: 128
+      Algorithm: 129
+      Algorithm: 130
+      Algorithm: 131
+    Flex-Algo Definition:
+      Algorithm: 128 Metric-Type: 0 Alg-type: 0 Priority: 128
+    Flex-Algo Definition:
+      Algorithm: 129 Metric-Type: 0 Alg-type: 0 Priority: 128
+    Flex-Algo Definition:
+      Algorithm: 130 Metric-Type: 1 Alg-type: 0 Priority: 128
+    Flex-Algo Definition:
+      Algorithm: 131 Metric-Type: 0 Alg-type: 0 Priority: 128
+      Flex-Algo Exclude-Any Ext Admin Group:
+        0x00000001
+</pre>
+</div>
+
 
 
 ## IOS-XE Nodes - SR-MPLS Transport 
@@ -505,7 +609,7 @@ segment-routing mpls
 </pre> 
 </div> 
 
-### IGP protocol (ISIS) with Segment Routing MPLS configuration
+### Basic IGP protocol (ISIS) with Segment Routing MPLS configuration
 
 <div class="highlighter-rouge">
 <pre class="highlight">
