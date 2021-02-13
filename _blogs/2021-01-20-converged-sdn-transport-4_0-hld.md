@@ -1098,8 +1098,8 @@ segment-routing
 
 
 ### Segment Routing Flexible Algorithms for 5G Slicing 
-SR Flexible Algorithms, outlined earlier in the transport section, give providers a powerful mechanism to segment networks into topoligies defined by SLA requirements. These SLA-driven topologies solve the constraints of specific 5G service types such as Ulta-Reliable Low-Latency Services. Using SR with a packet dataplane ensures the most 
-efficient network possible, unlike slicing solutions using optical transport or OTN. Once the topology is defined, service providers can utilize features such as ODN and Per-Flow traffic steering to map inbound traffic to the correct slice.   
+SR Flexible Algorithms, outlined earlier in the transport section, give providers a powerful mechanism to segment networks into topoligies defined by SLA requirements. The SLA-driven topologies solve the constraints of specific 5G service types such as Ulta-Reliable Low-Latency Services. Using SR with a packet dataplane ensures the most 
+efficient network possible, unlike slicing solutions using optical transport or OTN.  
 
 ### End to end network QoS with H-QoS on Access PE 
 QoS is of utmost importance for ensuring the mobile control plane and critical user plane traffic meets SLA requirements. Overall network QoS is covered in the QoS section in this document, this section will focus on basic Hierarchical QoS to support 5G services. 
