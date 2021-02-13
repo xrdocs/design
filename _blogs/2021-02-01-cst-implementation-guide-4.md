@@ -4685,6 +4685,9 @@ l2vpn
 !
 interface BVI100
  description ... to downstream RPD hosts  
+ ptp
+  profile g82752_master_v4
+ ! 
  service-policy input rpd-dpic-ingress-classifier
  ipv4 address 192.168.2.1 255.255.255.0
  ipv6 address 2001:192:168:2::1/64
@@ -4756,8 +4759,97 @@ router bgp 100
 </pre> 
 </div>
 
-# Model-Driven Telemetry Configuration 
+### cBR-8 Segment Routing Configuration 
+In the CST 4.0 design we introduce Segment Routing on the cBR-8.  Configuration of SR on the cBR-8 follows the configuration on other IOS-XE devices. 
+This configuration guide covers only IGP SR-MPLS, and not SR-TE configuration. This allows the cBR-8 to send/receive traffic from other SR-MPLS nodes within the 
+same IGP domain. The cBR-8 can also utilize these paths for BGP next-hop resolution for Global Routing Table (GRT) and BSOD L2VPN/L3VPN services.  The following example configuration 
+is for the SUP connection via IS-IS to the provider network, SR is not supported on DPIC interfaces.  
 
+<b>IS-IS Configuration</b> 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis access
+ net 49.0001.0010.0000.0013.00
+ is-type level-2-only
+ router-id Loopback0
+ authentication mode md5 level-1
+ authentication mode md5 level-2
+ authentication key-chain ISIS-KEY level-1
+ authentication key-chain ISIS-KEY level-2
+ metric-style wide
+ fast-flood 10
+ set-overload-bit on-startup 120
+ max-lsp-lifetime 65535
+ lsp-refresh-interval 65000
+ spf-interval 5 50 200
+ prc-interval 5 50 200
+ lsp-gen-interval 5 5 200
+ log-adjacency-changes
+ segment-routing mpls
+ segment-routing prefix-sid-map advertise-local
+ fast-reroute per-prefix level-2 all
+ fast-reroute ti-lfa level-2
+ passive-interface Bundle1
+ passive-interface Loopback0
+ !
+ address-family ipv6
+  multi-topology
+ exit-address-family
+ mpls traffic-eng router-id Loopback0
+ mpls traffic-eng level-2
+</pre>
+</div>
+
+<b>Segment Routing Configuration</b> 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing mpls
+ !
+ set-attributes
+  address-family ipv4
+   sr-label-preferred
+  exit-address-family
+ !
+ global-block 16000 32000
+ !
+ connected-prefix-sid-map
+  address-family ipv4
+   1.0.0.13/32 index 213 range 1
+  exit-address-family
+ !
+!
+</pre>
+</div>
+
+<b>Interface Configuration</b> 
+
+The connected prefix map is used to advetise the Loopback0 interface as a SR Node SID.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigabitEthernet4/1/6
+ description "Connected to PE4  TenGigE 0/0/0/19"
+ ip address 4.1.6.1 255.255.255.0
+ ip router isis access
+ load-interval 30
+ cdp enable
+ ipv6 address 2001:4:1:6::1/64
+ ipv6 router isis access
+ mpls ip
+ mpls traffic-eng tunnels
+ isis circuit-type level-2-only
+ isis network point-to-point
+ isis authentication mode md5
+ isis authentication key-chain ISIS-NCS
+ isis csnp-interval 10 level-1
+ isis csnp-interval 10 level-2
+ hold-queue 400 in
+</pre>
+</div>
+
+# Model-Driven Telemetry Configuration 
 ## Summary 
 This is not an exhaustive list of IOS-XR model-driven telemetry sensor paths, but gives some basic paths used to monitor a Converged SDN Transport deployment. Each sensor path may have its own 
 cadence of collection and transmission, but it's recommended to not use values less than 60s when using many sensor paths.  
