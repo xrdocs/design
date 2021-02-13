@@ -37,7 +37,7 @@ see the overview High Level Design document at https://xrdocs.io/design/blogs/la
       - IOS-XR 7.2.2 on NCS 560, NCS 540, NCS 5500, and NCS 55A2 routers 
       - IOS-XE 7.1.3 on ASR 9000 routers  
       - IOS-XE 16.12.03 on ASR 920
-      - IOS-XE 16.10.1f on cBR-8 
+      - IOS-XE 17.03.01w on cBR-8 
 
   - Key technologies
     
@@ -544,7 +544,7 @@ router isis ACCESS
 </pre>
 </div>
 
-If one inspects the IS-IS database for the nodes, you will see the Flex-Algo SID entries.  
+<b>If one inspects the IS-IS database for the nodes, you will see the Flex-Algo SID entries. </b>
 
 
 <div class="highlighter-rouge">
@@ -574,7 +574,6 @@ RP/0/RP0/CPU0:NCS540-A-PE3#show isis database NCS540-A-PE3.00-00 verbose
         0x00000001
 </pre>
 </div>
-
 
 
 ## IOS-XE Nodes - SR-MPLS Transport 
@@ -790,7 +789,7 @@ router isis ACCESS
 ## G.8275.1 and G.8275.2 PTP (1588v2) timing configuration 
 
 ### Summary 
-This section contains the base configurations used for both G.8275.1 and G.8275.2 timing. Please see the CST 3.0 HLD for an overview on timing in general.  
+This section contains the base configurations used for both G.8275.1 and G.8275.2 timing. Please see the CST HLD for an overview on timing in general.  
 
 ![](http://xrdocs.io/design/images/cmfi/cmf-timing.png)
 
@@ -970,7 +969,7 @@ ptp
 </div>
 
 ### Application of PTP profile to physical interface 
-**Note:** In CST 3.0 PTP may only be enabled on physical interfaces. G.8275.1 operates at L2 and supports PTP across Bundle member links and interfaces part of a bridge domain. G.8275.2 operates at L3 and does not support Bundle interfaces or BVI interfaces.   
+**Note:** In CST 3.0 PTP may only be enabled on physical interfaces. G.8275.1 operates at L2 and supports PTP across Bundle member links and interfaces part of a bridge domain. G.8275.2 operates at L3 and does not support Bundle interfaces.   
 
 #### G.8275.2 interface configuration 
 This example is of a slave device using a master of 2405:10:23:253::0.  
@@ -995,6 +994,40 @@ interface TenGigE0/0/0/6
  !
 </pre> 
 </div>
+
+### G.8275.1 and G.8275.2 Multi-Profile and Interworking  
+In CST 4.0 and IOS-XR 7.2.2 PTP Multi-Profile is supported, along with the ability to interwork between G.8275.1 and G.8275.2 on the same router.  This allows a node to run one timing profile 
+to its upstream GM peer and supply a timing reference to downstream peers using different profiles. It is recommended to use G.8275.1 as the primary profile across the network, and G.8275.2 to 
+peers who only support the G.8275.2 profile, such as Remote PHY Devices.  
+
+The interworking feature is enabled on the client interface which has a different profile from the primary node profile.  The domain must be specified along with the interop mode.   
+
+#### G.8275.1 Primary to G.8275.2 Configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/5 
+  ptp  
+<b>   interop g.8275.2
+   domain 60 </b> 
+   ! 
+   transport ipv4  
+   port state master-only 
+</pre>
+</div>
+
+#### G.8275.2 Primary to G.8275.1 Configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/5 
+  ptp  
+<b>   interop g.8275.1
+   domain 24 </b> 
+   ! 
+   transport ethernet  
+   port state master-only 
+</pre>
+</div>
+
 
 ## Segment Routing Path Computation Element (SR-PCE) configuration
 
@@ -4167,7 +4200,7 @@ with Anycast IRB Data Plane_
 ## Remote PHY CIN Implementation 
 
 ### Summary 
-Detail can be found in the CST 3.0 high-level design guide for design decisions, this section will provide sample configurations. 
+Detail can be found in the CST high-level design guide for design decisions, this section will provide sample configurations. 
 
 ### Sample QoS Policies 
 The following are usable policies but policies should be tailored for specific network deployments.  
@@ -4307,7 +4340,13 @@ policy-map rpd-dpic-egress-queuing
 Please see the general QoS section for core-facing QoS configuration  
 
 ### CIN Timing Configuration 
-Please see the G.8275.2 timing configuration guide in this document for details on timing configuration. The following values should be used for PTP configuration attributes.  Please note in CST 3.0 the use of an IOS-XR router as a Boundary Clock is only supported on P2P L3 interfaces. The use of a BVI for RPD aggregation requires the BC used for RPD nodes be located upstream, or alternatively a physical loopback cable may be used to provide timing off the IOS-XR based RPD leaf device.   
+Please see the G.8275.1 and G.8275.2 timing configuration guides in this document for configuring G.8275.2 on downstream RPD interfaces.  Starting in CST 4.0, PTP can be enabled on either physical L3 interfaces or BVI interfaces. PTP is not supported on Bundle Ethernet interfaces.  
+Starting in CST 4.0 it is recommended to use G.8275.1 end to end across the timing domain, and utilize G.8275.2 on specific interfaces using the PTP Multi-Profile configuration outlined in this document. G.8275.1 allows the use of Bundle Ethernet interfaces within the CIN network.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hld-ptp-interworking.png)
+
+#### PTP Messaging Rates 
+The following are recommended rate values to be used for PTP messaging.   
 
 | PTP variable | IOS-XR configuration value | IOS-XE value | 
 | ---------- | --------- | -------------- | 
