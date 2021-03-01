@@ -23,7 +23,7 @@ position: hidden
 | 2.0       | 04/01/2019  |IXP Fabric, ODN and SR-PCE for Peering, RPKI |
 | 3.0       | 01/10/2020  |SR-TE steering for DDoS, BGP graceful shutdown, Radware DDoS validation | 
 | 3.5       | 11/01/2020  |BGP slow peer detection, Type-6 Password Encryption, Arbor DDoS validation | 
-| 3.5       | 11/01/2020  |SR Per-Flow Traffic Steering | 
+| 4.0       | 11/01/2020  |SR Per-Flow Traffic Steering | 
 
 # Key Drivers
 
