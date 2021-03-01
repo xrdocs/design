@@ -5,7 +5,6 @@ title: Converged SDN Transport Implementation Guide
 position: top 
 author: Phil Bedard 
 excerpt: Converged SDN Transport Implementation Guide - 3.5 
-permalink: /blogs/latest-converged-sdn-transport-ig
 tags:
   - iosxr
   - cisco
