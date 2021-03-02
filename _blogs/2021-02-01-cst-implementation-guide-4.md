@@ -5011,8 +5011,8 @@ cadence of collection and transmission, but it's recommended to not use values l
 
 <b>See sensor path name for detailed information on data leafs</b>  
 
-| Metricc | Sensor path | 
-|-----------------------|---------------------------------------------------------------------|
+| Metric | Sensor path | 
+|----------------------|----------------------------------------------------------|
 |Per-class matched data rate| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/match-data-rate|
 |Pre-policy Matched Bytes| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/pre-policy-matched-bytes|
 |Pre-policy Matched Packets| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/pre-policy-matched-packets|
@@ -5029,6 +5029,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |Tail dropped packets per class|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/tail-drop-bytes|
 |Tail dropped bytes per class|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/tail-drop-packets|
 |State per policy instance|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/shared-queue-id|
+
 <br> 
 
 ## L2VPN Information  
