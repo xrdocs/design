@@ -4620,6 +4620,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 <br> 
 
 ## Device inventory and monitoring
+
 | Metric | Sensor path | 
 |-----------------------| ---------------------------------------------------|
 | Full inventory via OpenConfig model| openconfig-platform:components|
@@ -4627,6 +4628,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 | Optics information |cisco-ios-xr-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info|
 | System uptime| cisco-ios-xr-shellutil-oper:system-time/uptime|
 | System CPU utilization| cisco-ios-xr-wdsysmon-fd-oper:system-monitoring/cpu-utilization|
+
 <br> 
 
 ## Interface Data
