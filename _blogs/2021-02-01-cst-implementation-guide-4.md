@@ -4872,7 +4872,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 
 | Metric | Sensor path | 
 -----------------------| ---------------------------------------------------|
-|Interface optics state:  Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
+|Interface optics state | Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
 |OpenConfig interface stats|openconfig-interfaces:interfaces|
 |Interface data rates, based on load-interval|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/data-rate| 
 |Interface counters similar to "show int"|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters|
