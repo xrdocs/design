@@ -5051,6 +5051,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |L2VPN bridge domain specific information, will have the BD name as a key|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-bridge-domains/l2fib-bridge-domain|
 |L2VPN EVPN IPv4 MAC/IP information|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip4macs|
 |L2VPN EVPN IPv6 MAC/IP information|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip6macs|
+
 <br> 
 
 ## SR-PCE PCC and SR Policy Information 
@@ -5064,6 +5065,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |Specific SR policy information| Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-summary/configured-up-policy-count|
 |SR policy information, key is SR policy name|  Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policies/policy|
 |SR policy forwarding info including packet and byte stats per candidate path, key is policy name and candidate path|  Cisco-IOS-XR-infra-xtc-agent-oper:xtc/policy-forwardings|
+
 <br> 
 
 ## MPLS performance measurement  
@@ -5079,6 +5081,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |Delay values aggregated at computation interval| Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-aggregations|
 |Delay values aggregated at advertisement interval| Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-advertisements|
 |SR Policy measurement information|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies|
+
 <br> 
 
 ## mLDP Information 
@@ -5088,6 +5091,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |mLDP LSP count|  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/context/lsp-count|
 |mLDP peer count|  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/context/peer-count|
 |mLDP database info, where specific LSP information is stored|  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/databases/database|
+
 <br> 
 
 ## ACL Information
@@ -5096,6 +5100,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |-----------------------| ---------------------------------------------------|
 |Details on ACL resource consumption|  Cisco-IOS-XR-ipv4-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details/current-configured-ac-es|
 |OpenConfig full ACL information | openconfig-acl:acl|
+
 <br> 
 
 
