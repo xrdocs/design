@@ -4865,6 +4865,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 | Optics information |cisco-ios-xr-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info|
 | System uptime| cisco-ios-xr-shellutil-oper:system-time/uptime|
 | System CPU utilization| cisco-ios-xr-wdsysmon-fd-oper:system-monitoring/cpu-utilization|
+
 <br> 
 
 ## Interface Data
@@ -4878,6 +4879,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |Full interface information|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface|
 |Interface stats|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics|
 |Subset of interface stats|Cisco-IOS-XR-pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-statistics/basic-interface-stats|
+
 <br> 
 
 ## LLDP Monitoring 
@@ -4886,6 +4888,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 -----------------------| ---------------------------------------------------|
 |All LLDP Info| Cisco-IOS-XR-ethernet-lldp-oper:lldp|
 |LLDP neighbor info|Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/neighbors|
+
 <br> 
 
 ## Aggregate bundle information (use interface models for interface counters)
@@ -4897,6 +4900,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |OpenConfig LACP information|sensor-group openconfig-lacp:lacp|
 |Cisco full bundle information|sensor-group Cisco-IOS-XR-bundlemgr-oper:bundles|
 |Cisco BFD over Bundle stats|sensor-group Cisco-IOS-XR-bundlemgr-oper:bundle-information/bfd-counters|
+
 <br> 
 
 ## PTP and SyncE Information 
@@ -4909,6 +4913,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |PTP interface counters, key is interface name | Cisco-IOS-XR-ptp-oper:ptp/interface-packet-counters | 
 |Frequency sync info |  Cisco-IOS-XR-freqsync-oper:frequency-synchronization/summary/frequency-summary |
 |SyncE interface information, key is interface name | Cisco-IOS-XR-freqsync-oper:frequency-synchronization/interface-datas/interface-data |
+
 <br> 
 
 ## BGP Information  
@@ -4923,6 +4928,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |BGP IPv4 route count| Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext/active-routes-count|
 |OpenConfig BGP information|openconfig-bgp:bgp|
 |OpenConfig BGP neighbor info only| openconfig-bgp:bgp/neighbors|
+
 <br> 
 
 ## IS-IS Information
@@ -4937,6 +4943,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |IS-IS adj state| Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/levels/level/adjacencies/adjacency/adjacency-state|
 |IS-IS neighbor count|  Cisco-IOS-XR-clns-isis-oper:isis/instances/instance/neighbor-summaries/neighbor-summary/level2-neighbors/neighbor-up-count|
 |IS-IS total route count|  Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2/active-routes-count|
+
 <br> 
 
 ## Routing protocol RIB information 
@@ -4951,10 +4958,12 @@ cadence of collection and transmission, but it's recommended to not use values l
 |IPv6 IS-IS L2 info|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-l2|
 |IPv6 IS-IS summary|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-isis-sum|
 |IPv6 total route count per protocol|Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/proto-route-count|
+
 <br> 
 
 ## BGP RIB information
-<b>It is not recommended to monitor these paths using MDT with large tables<b> 
+
+<b>It is not recommended to monitor these paths using MDT with large tables</b> 
 
 | Metric | Sensor path | 
 |-----------------------| ---------------------------------------------------|
@@ -4963,6 +4972,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |Cisco-IOS-XR-ip-rib-ipv6-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int|
 |Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-ext|
 |Cisco-IOS-XR-ip-rib-ipv4-oper:rib/rib-table-ids/rib-table-id/summary-protos/summary-proto/rtype-bgp-int|
+
 <br>
 
 ## Routing policy Information 
@@ -4970,6 +4980,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 | Metric | Sensor path | 
 |-----------------------| ---------------------------------------------------|
 |Routing policy information | Cisco-IOS-XR-policy-repository-oper:routing-policy/policies|
+
 <br>
 
 ## EVPN Information 
@@ -4981,6 +4992,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |EVPN total ES entries| Cisco-IOS-XR-evpn-oper:evpn/active/summary/es-entries|
 |EVPN local Eth Auto Discovery routes| Cisco-IOS-XR-evpn-oper:evpn/active/summary/local-ead-routes|
 |EVPN remote Eth Auto Discovery routes| Cisco-IOS-XR-evpn-oper:evpn/active/summary/remote-ead-routes|
+
 <br> 
 
 ## Per-Interface QoS Statistics Information 
@@ -4991,6 +5003,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 |General QoS Stats | Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/general-stats|
 |Per-queue stats | Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/statistics/class-stats/queue-stats-array|
 |General service policy information, keys are policy name and interface applied|  Cisco-IOS-XR-qos-ma-oper:qos/interface-table/interface/input/service-policy-names|
+
 <br> 
 
 ## Per-Policy, Per-Interface, Per-Class statistics 
@@ -5081,5 +5094,3 @@ cadence of collection and transmission, but it's recommended to not use values l
 <br> 
 
 
-
-```
