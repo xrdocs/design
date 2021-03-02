@@ -4858,6 +4858,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 <br> 
 
 ## Device inventory and monitoring
+
 | Metric | Sensor path | 
 |-----------------------|---------------------------------------------------|
 | Full inventory via OpenConfig model | openconfig-platform:components|
