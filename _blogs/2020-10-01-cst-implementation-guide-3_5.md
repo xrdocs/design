@@ -4621,7 +4621,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 
 ## Device inventory and monitoring
 
-| Metric | Sensor path | 
+| Metric | Sensor path  |
 |-----------------------| ---------------------------------------------------|
 | Full inventory via OpenConfig model| openconfig-platform:components|
 | NCS 540/5500 NPU resources |cisco-ios-xr-fretta-bcm-dpa-hw-resources-oper/dpa/stats/nodes/node/hw-resources-datas/hw-resources-data|
@@ -4635,7 +4635,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 
 | Metric | Sensor path | 
 -----------------------| ---------------------------------------------------|
-|Interface optics state:  Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
+|Interface optics state |  Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
 |OpenConfig interface stats|openconfig-interfaces:interfaces|
 |Interface data rates, based on load-interval|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/data-rate| 
 |Interface counters similar to "show int"|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters|
@@ -4761,7 +4761,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 
 <b>See sensor path name for detailed information on data leafs</b>  
 
-|  Sensor path | 
+| Sensor path | 
 |-----------------------| 
 |Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/match-data-rate|
 |Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/pre-policy-matched-bytes|
