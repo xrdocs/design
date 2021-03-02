@@ -5011,19 +5011,19 @@ cadence of collection and transmission, but it's recommended to not use values l
 
 <b>See sensor path name for detailed information on data leafs</b>  
 
-|  Sensor path | 
-|-----------------------| 
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/match-data-rate|
+| Metricc | Sensor path | 
+|-----------------------|---------------------------------------------------------------------|
+|Per-class matched data rate| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/match-data-rate|
 |Pre-policy Matched Bytes| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/pre-policy-matched-bytes|
 |Pre-policy Matched Packets| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/pre-policy-matched-packets|
 |Dropped bytes per class| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-drop-bytes|
 |Total dropped packets|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-drop-packets|
 |Drop rate|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-drop-rate|
 |Transmit rate|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/total-transmit-rate|
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/transmit-bytes|
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-instance-length/value|
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-max-length/unit|
-|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-max-length/value|
+|Per-class transmitted bytes| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/general-stats/transmit-bytes|
+|Queue current length| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-instance-length/value|
+|Queue max length units| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-max-length/unit|
+|Queue max length value| Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/queue-max-length/value|
 |WRED dropped bytes|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/random-drop-bytes|
 |WRED dropped packets|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/random-drop-packets|
 |Tail dropped packets per class|Cisco-IOS-XR-qos-ma-oper:qos/nodes/node/policy-map/interface-table/interface/input/service-policy-names/service-policy-instance/statistics/class-stats/queue-stats-array/tail-drop-bytes|
@@ -5066,6 +5066,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 <br> 
 
 ## MPLS performance measurement  
+
 | Metric | Sensor path | 
 |-----------------------| ---------------------------------------------------|
 |Summary info|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary|
@@ -5080,6 +5081,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 <br> 
 
 ## mLDP Information 
+
 | Metric | Sensor path | 
 |-----------------------| ---------------------------------------------------|
 |mLDP LSP count|  Cisco-IOS-XR-mpls-ldp-mldp-oper:mpls-mldp/active/default-context/context/lsp-count|
@@ -5088,6 +5090,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 <br> 
 
 ## ACL Information
+
 | Metric | Sensor path | 
 |-----------------------| ---------------------------------------------------|
 |Details on ACL resource consumption|  Cisco-IOS-XR-ipv4-acl-oper:ipv4-acl-and-prefix-list/oor/access-list-summary/details/current-configured-ac-es|
