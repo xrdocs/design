@@ -4859,8 +4859,8 @@ cadence of collection and transmission, but it's recommended to not use values l
 
 ## Device inventory and monitoring
 | Metric | Sensor path | 
-|-----------------------| ---------------------------------------------------|
-| Full inventory via OpenConfig model| openconfig-platform:components|
+|-----------------------|---------------------------------------------------|
+| Full inventory via OpenConfig model | openconfig-platform:components|
 | NCS 540/5500 NPU resources |cisco-ios-xr-fretta-bcm-dpa-hw-resources-oper/dpa/stats/nodes/node/hw-resources-datas/hw-resources-data|
 | Optics information |cisco-ios-xr-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info|
 | System uptime| cisco-ios-xr-shellutil-oper:system-time/uptime|
@@ -4871,8 +4871,8 @@ cadence of collection and transmission, but it's recommended to not use values l
 ## Interface Data
 
 | Metric | Sensor path | 
------------------------| ---------------------------------------------------|
-|Interface optics state | Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
+-----------------------|---------------------------------------------------|
+|Interface optics state |Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info/transport-admin-state|
 |OpenConfig interface stats|openconfig-interfaces:interfaces|
 |Interface data rates, based on load-interval|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/data-rate| 
 |Interface counters similar to "show int"|Cisco-IOS-XR-infra-statsd-oper:infra-statistics/interfaces/interface/latest/generic-counters|
@@ -4885,7 +4885,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 ## LLDP Monitoring 
 
 | Metric | Sensor path | 
------------------------| ---------------------------------------------------|
+-----------------------|---------------------------------------------------|
 |All LLDP Info| Cisco-IOS-XR-ethernet-lldp-oper:lldp|
 |LLDP neighbor info|Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/neighbors|
 
