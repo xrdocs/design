@@ -36,7 +36,7 @@ see the overview High Level Design document at https://xrdocs.io/design/blogs/la
   - Software:
     
       - IOS-XR 7.2.2 on NCS 560, NCS 540, NCS 5500, and NCS 55A2 routers 
-      - IOS-XE 7.1.3 on ASR 9000 routers  
+      - IOS-XR 7.1.3 on ASR 9000 routers  
       - IOS-XE 16.12.03 on ASR 920
       - IOS-XE 17.03.01w on cBR-8 
 
