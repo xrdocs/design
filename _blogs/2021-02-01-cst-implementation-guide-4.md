@@ -127,17 +127,30 @@ _Figure 4: Testbed IGP Domains_
 
 ## IOS-XR Router Configuration 
 
-### Underlay physical interface configuration with BFD  
+### Underlay Bundle interface configuration with BFD  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-interface TenGigE0/0/0/10
+interface Bundle-Ether100 
  bfd mode ietf
  bfd address-family ipv4 timers start 180
  bfd address-family ipv4 multiplier 3
  bfd address-family ipv4 destination 10.1.2.1
  bfd address-family ipv4 fast-detect
  bfd address-family ipv4 minimum-interval 50
+ mtu 9216
+ ipv4 address 10.15.150.1 255.255.255.254
+ ipv4 unreachables disable
+ load-interval 30
+ dampening
+</pre>
+</div>
+
+### Underlay physical interface configuration 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface HundredGigE0/0/0/24 
  mtu 9216
  ipv4 address 10.15.150.1 255.255.255.254
  ipv4 unreachables disable
@@ -292,6 +305,23 @@ router isis ISIS-ACCESS
    tag 1000 
 </pre>
 </div>
+
+#### IS-IS Physical and Bundle interface configuration with BFD 
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface HundredGigE0/0/0/20/0
+  circuit-type level-2-only
+  bfd minimum-interval 5
+  bfd multiplier 5
+  bfd fast-detect ipv4
+  point-to-point
+  address-family ipv4 unicast
+   fast-reroute per-prefix
+   fast-reroute per-prefix ti-lfa
+   metric 10
+</pre>
+</div>
+
 
 #### MPLS-TE Configuration 
 
