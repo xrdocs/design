@@ -595,7 +595,7 @@ frequency and transmit power can be manually defined or optionally provided by
 Cisco ONC when end to end provisioning is performed.   
 
 ### RON-ML API Provisioning
-Use the following URL for NSO provisioning: <http://<nso host>/restconf/data> 
+Use the following URL for NSO provisioning: ```http://<nso host>/restconf/data``` 
 
 **Inter-Layer Link Service** 
 
