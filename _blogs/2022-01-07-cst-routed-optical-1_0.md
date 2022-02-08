@@ -62,7 +62,7 @@ layer. 400G Ethernet is the next evolution for SP IP network infrastructure, and
 we must make that as efficient as possible.  
 ## Network Complexity  
 
-Computer networks at their base are a set of interconnected nodes to delivery
+Computer networks at their base are a set of interconnected nodes to deliver
 data between two endpoints. In the very beginning, these networks were designed
 using a layered approach to separate functions. The OSI model is an example of
 how functional separation has led to innovation by allowing different standards
@@ -168,7 +168,8 @@ specialized hardware and the ability to use the highest capacity routers
 available today.  ZR/OpenZR+ DD optics can be used in the same ports as the
 highest speed 400G non-DCO transceivers. 
 
-[insert picture of transceiver]
+![](http://xrdocs.io/design/images/ron-hld/ron-design-zrp.png)
+
 
 Two industry optical standards have emerged to cover a variety of use cases. The
 OIF created the 400ZR specification,
