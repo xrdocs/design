@@ -697,7 +697,7 @@ Use the following URL for NSO provisioning: ```http://<nso host>/restconf/data``
 ## IOS-XR CLI Configuration
 Configuring the router portion of the Routed Optical Networking link is very
 simple.  All optical configuration related to the ZR/ZR+ optics configuration is
-located under the optics cotroller relevent to the faceplate port. Default
+located under the optics controller relevent to the faceplate port. Default
 configuration the optics will be in an up/up state using a frequency of
 193.10Thz.
 
