@@ -165,7 +165,7 @@ As mentioned, the industry saw a point to improve network efficiency by shifting
 coherent DWDM functions to router pluggables. Technology advancements have
 shrunk the DCO components into the standard QSFP-DD form factor, meaning no
 specialized hardware and the ability to use the highest capacity routers
-available today.  ZR/OpenZR+ DD optics can be used in the same ports as the
+available today.  ZR/OpenZR+ QSFP-DD optics can be used in the same ports as the
 highest speed 400G non-DCO transceivers. 
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-design-zrp.png)
