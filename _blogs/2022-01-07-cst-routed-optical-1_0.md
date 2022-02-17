@@ -580,7 +580,7 @@ provisioning.
 
 Please see the Cisco Routed Optical Networking RON-ML CFP documentation located at 
 
-### RON Inter-Layer Links 
+### Routed Optical Networking Inter-Layer Links 
 Similar to the use case with CW HCO provisioning, before end to end provisioning
 can be performed, inter-layer links must be provisioned between the optical
 ZR/ZR+ port and the optical line system add/drop port.  This is done using the
