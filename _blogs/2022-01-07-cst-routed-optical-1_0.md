@@ -448,8 +448,8 @@ multi-layer/multi-domain controller likewise uses the same standard interfaces.
 
 ![](http://xrdocs.io/design/images/ron-hld/open-automation.png){:height="90%" width="90%"}
 
-## Crosswork Hierarchical Controller (HCO)
-Responsible for Multi-Layer Automation is the Crosswork Hierarchical Controller. CW HCO is responsible for the following network functions: 
+## Crosswork Hierarchical Controller 
+Responsible for Multi-Layer Automation is the Crosswork Hierarchical Controller. Crosswork Hierarchical Controller is responsible for the following network functions: 
 
 * CW HCO unifies data from the IP and optical networks into a single network
   model. HCO utilizes industry standard IETF topology models for IP and TAPI for
@@ -468,8 +468,8 @@ Please see the following resources for more information on Crosswork HCO. <https
 ![](http://xrdocs.io/design/images/ron-hld/hco-multi-layer-circuit.png){:height="100%" width="100%"}
 
 ## Crosswork Network Controller 
-Crosswork Network Controller (CNC) is a multi-vendor IP domain controller. CNC
-is responsible for the following IP network functions. 
+Crosswork Network Controller is a multi-vendor IP domain controller. Crosswork
+Network Controller is responsible for the following IP network functions. 
 
 * Collecting Ethernet, IP, RSVP-TE, and SR network information for internal
   applications and exposing northbound via IETF RFC 8345 topology models 
@@ -478,10 +478,10 @@ is responsible for the following IP network functions.
 * Perform provisioning of SR-TE, RSVP-TE, L2VPN, and L3VPN using standard
   industry models (IETF TEAS-TE, L2NM, L3NM) via UI or northbound API 
 * Visualization and assurance of SR-TE, RSVP-TE, and xVPN services 
-* Use additional CW applications to perform telemetry collection/alerting,
+* Use additional Crosswork applications to perform telemetry collection/alerting,
   zero-touch provisioning, and automated and assurance network changes  
 
-More information on Crosswork and CNC can be found at <https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/crosswork-network-automation/datasheet-c78-743456.html>
+More information on Crosswork and Crosswork Network Controller can be found at <https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/crosswork-network-automation/datasheet-c78-743456.html>
 
 ## Cisco Optical Network Controller 
 Cisco Optical Network Controller (Cisco ONC) is responsible for managing Cisco 
@@ -539,11 +539,11 @@ platform documentation for supported rates. The modulation is determined by the
 line side rate.  400G will utilize 16QAM, 300G 8QAM, and 200G/100G rates will
 utilize QPSK.  
 
-## Crosswork HCO UI Provisioning 
+## Crosswork Hierarchical Controller UI Provisioning 
 
-End-to-End IP+Optical provisioning can be done using HCO GUI IP Link
+End-to-End IP+Optical provisioning can be done using Crosswork Hierarchical Controller's GUI IP Link
 provisioning. Those familiar with traditional GUI EMS/NMS systems for service
-management will have a very familiar experience. HCO provisioning will provision
+management will have a very familiar experience. Crosswork Hierarchical Controller provisioning will provision
 both the router optics as well as the underlying optical network to support the
 ZR/ZR+ wavelength.   
 
@@ -551,7 +551,7 @@ ZR/ZR+ wavelength.
 
 End to end provisioning requires first defining the Inter-Layer link between the
 router ZR/ZR+ optics and the optical line system add/drop ports. This is done
-using a GUI based NMC (Network Media Channel) Cross-Link application in CW HCO.
+using a GUI based NMC (Network Media Channel) Cross-Link application in Crosswork HCO.
 The below screenshot shows defined NMC cross-links.   
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-nmc-xconnects.png)
@@ -567,7 +567,7 @@ port and returned as a parameter to be used in router optics provisioning.
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-ip-link-provisioning.png)
 
 ### Operational Discovery 
-The HCO provisioning process also performs a discovery phase to ensure the
+The Crosswork Hierarchical Controller provisioning process also performs a discovery phase to ensure the
 service is operational before considering the provisioning complete. If
 operational discovery fails, the end to end service will be rolled back.  
 ## NSO RON-ML CFP Provisioning
@@ -575,7 +575,7 @@ Providers familiar with using Cisco Network Service Orchestrator have an option
 to utilize NSO to perform IP+Optical provisioning of Routed Optical Networking
 services. Cisco has created the Routed Optical Network Multi-Layer Core Function
 Pack, RON-ML CFP to perform end to end provisioning of services. The
-aforementioned CW HCO provisioning utilizes the RON-ML CFP to perform end device
+aforementioned Crosswork HCO provisioning utilizes the RON-ML CFP to perform end device
 provisioning.  
 
 Please see the Cisco Routed Optical Networking RON-ML CFP documentation located at 
@@ -748,7 +748,7 @@ and line side rate (200G) configuration.
 
 # Routed Optical Networking Assurance 
 
-## Crosswork HCO 
+## Crosswork Hierarchical Controller
 ### Multi-Layer Path Trace 
 Using topology and service data from both the IP and Optical network CW HCO can
 display the full service from IP services layer to the physical fiber.  Below is
