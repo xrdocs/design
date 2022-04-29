@@ -163,7 +163,7 @@ interface HundredGigE0/0/0/24
 
 #### Interface delay metric dynamic configuration 
 Starting with CST 3.5 we now support end to end dynamic link delay measurements across all IOS-XR nodes. The feature in IOS-XR is called Performance Measurement and all configuration is found under the performance-measurement configuration hierarchy.  There are a number of configuration options utilized when configuring performance measurement, but the below configuration will enable one-way delay 
-measurements on physical links.  The probe measurement-mode options are either <b>one-way</b> or <b>two-way</b>  One-way mode requires nodes be time synchronized to a common PTP clock, and should be used if available.  In the absence of a common PTP clock, two-mode can be used which calculates the one-way delay using multiple timestamps at the querier and responder.  
+measurements on physical links.  The probe measurement-mode options are either <b>one-way</b> or <b>two-way</b>. One-way mode requires nodes be time synchronized to a common PTP clock, and should be used if available.  In the absence of a common PTP clock source, two-way mode can be used which calculates the one-way delay using multiple timestamps at the querier and responder.  
 
 The advertisement options specify when the advertisements are made into the IGP. The periodic interval sets the minimum interval, with the threshold setting the difference required to advertise a new delay value.  The accelerated threshold option sets a percentage change required to trigger and advertisement prior to the periodic interval timer expiring.  Performance measurement takes a series of measurements within each computation interval and uses this information to derive the min, max, and average link delay.  
 
