@@ -44,7 +44,8 @@ position: hidden
 
 | CST Version          | XR version |  
 | ---------------- | ---------------------- |
-| 4.0        | 16.12.03 on NCS 520, ASR920; 17.03.01w |
+| 4.0        | 16.12.03 on NCS 520, ASR920; 17.03.01w on cBR-8 |
+| 5.0        | 16.12.03 on NCS 520, ASR920; 17.03.01w on cBR-8 |
 
 # Value Proposition
 
@@ -319,7 +320,7 @@ interface TenGigE0/0/0/2
 ## Intra-Domain  
 ### Intra-Domain Routing and Forwarding
 
-The  Converged SDN Transport is based on a fully programmable transport that
+The Converged SDN Transport is based on a fully programmable transport that
 satisfies the requirements described earlier. The foundation technology
 used in the transport design is Segment Routing (SR) with a MPLS based
 Data Plane in Phase 1 and a IPv6 based Data Plane (SRv6) in future.
@@ -429,7 +430,7 @@ Inter-Domain LSPs without requiring additional protocols such as BGP-LU
 
 Please refer to Section: "Transport Programmability" for additional details.
 
-### Area Border Routers – Prefix-SID vs Anycast-SID
+### Area Border Routers – Prefix-SID and Anycast-SID
 
 Section: "Inter-Domain Forwarding" showed the use of Anycast-SID at the ABRs for the
 provisioning of an Access to Access End-To-End LSP. When the LSP is set
@@ -444,7 +445,6 @@ service and inclusion of Anycast SIDs in the SR-TE Policy. Please refer to Secti
 of ODN SR-TE paths, the inclusion of Anycast SIDs is done via configuration.   
 
 Note that both options can be combined on the same network.
-
 
 ### Inter-Domain Forwarding - High Availability and Fast Re-Route
 
@@ -673,7 +673,8 @@ A powerful tool used to create traffic engineered Segment Routing paths is SR Fl
 SR Flex-Algo.  Flex-Algo assigns a specific set of "algorithms" to a Segment. The algorithm identifies a specific 
 computation constraint the segment supports. There are standards based algorithm definitions such as least cost IGP path and latency, or providers 
 can define their own algorithms to satisfy their business needs.  CST 4.0 supports computation of Flex-Algo paths in intra-domain and inter-domain 
-deployments. In CST 4.0 (IOS-XR 7.2.2) inter-domain Flex-Algo using SR-PCE is limited to IGP lowest metric path computation.  
+deployments. In CST 4.0 (IOS-XR 7.2.2) inter-domain Flex-Algo using SR-PCE is limited to IGP lowest metric path computation.  CST 5.0 (IOS-XR 7.5.2) 
+enhances the inter-domain capabilities and can now compute inter-domain paths using additional metric types such as a latency.  
 
 Flex-Algo limits the computation of a path to only those nodes participating in that algorithm. This gives a powerful way to create multiple network 
 domains within a single larger network, constraining an SR path computation to segments satisfying the metrics defined by the algorithm. As you will see, 
@@ -898,6 +899,119 @@ policy-map core-egress-exp-marking
 </pre>
 </div> 
 
+## L3 Multicast using Segment Routing Tree-SID
+### TreeSID Diagram 
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-treesid.png)
+
+### Tree-SID Overview 
+Converged SDN Transport 3.5 introduces Segment Routing Tree-SID across all
+IOS-XR nodes.  TreeSID utilizes the programmability of SR-PCE to create and
+maintain an optimized multicast tree from source to receiver across an SR-only
+IPv4 network. In CST 3.5 Tree-SID utilizes MPLS labels at each hop in the
+network.  Each node in the network maintains a session to the same set of SR-PCE
+controllers.  The SR-PCE creates the tree using PCE-initiated segments. TreeSID
+supports advanced functionality such as TI-LFA for fast protection and disjoint
+trees.  
+### Static Tree-SID 
+
+Multicast traffic is forwarded across the tree using static S,G mappings at the
+head-end source nodes and tail-end receiver nodes. Providers needing a solution
+where dynamic joins and leaves are not common, such as broadcast video
+deployments, can be benefit from the simplicity static Tree-SID brings,
+eliminating the need for distributed BGP mVPN signaling. Static Tree-SID is
+supported for both default VRF (Global Routing Table) and mVPN.  
+
+Please see the CST 3.5+ Implementation Guide for static Tree-SID configuration
+guidelines and examples. 
+
+### Dynamic Tree-SID using BGP mVPN Control-Plane 
+
+In CST 5.0+, we now support using fully dynamic signaling to create multicast
+distribution trees using Tree-SID. Sources and receivers are discovered using
+BGP auto-discovery (BGP-AD), advertised throughout the mVPN using the IPv4 or
+IPv6 mVPN AFI/SAFI. Once the source head-end node learns of receivers, the
+head-end will create a PCEP request to the configured primary PCE. The PCE then
+computes the optimal multicast distribution tree based on the metric-type and
+constraints specified in the request. Once the Tree-SID policy is up, multicast
+traffic will be forwarded using the tree by the head-end node.  
+
+{: .notice--warning}
+All routers across the network needing to participate in the tree, including
+core nodes, must be configured as a PCC to the primary PCE being used by the
+head-end node.  
+
+Please see the CST 5.0+ Implementation Guide for dynamic Tree-SID configuration 
+guidelines and examples.  
+
+## L3 IP Multicast and mVPN using mLDP  
+IP multicast continues to be an optimization method for delivering content
+traffic to many endpoints, especially traditional broadcast video. Unicast
+content dominates the traffic patterns of most networks today, but multicast
+carries critical high value services, so proper design and implementation is
+required. In Converged SDN Transport 2.0 we introduced multicast edge and core
+validation for native IPv4/IPv6 multicast using PIM, global multicast using
+in-band mLDP (profile 7), and mVPN using mLDP with in-band signaling (profile
+6). Converged SDN Transport 3.0 extends this functionality by adding support for
+mLDP LSM with the NG-MVPN BGP control plane (profile 14). Using BGP signaling
+adds additional scale to the network over in-band mLDP signaling and fits with
+the overall design goals of CST. More information about deployment of profile 14
+can be found in the Converged SDN Transport implementation guide. Converged SDN
+Transport 3.0 supports mLDP-based label switched multicast within a single doman
+and across IGP domain boundaries. In the case of the Converged SDN Transport
+design multicast has been tested with the source and receivers on both access
+and ABR PE devices.   
+
+| Supported Multicast Profiles | Description |  
+| ----------------------- | ---------------- | 
+| Profile 6 | mLDP VRF using in-band signaling | 
+| Profile 7 | mLDP global routing table using in-band signaling | 
+| Profile 14 | Partitioned MDT using BGP-AD and BGP c-multicast signaling |  
+
+Profile 14 is recommended for all service use cases and supports both
+intra-domain and inter-domain transport use cases.  
+
+### LDP Auto-configuration 
+LDP can automatically be enabled on all IS-IS interfaces with the following configuration in the IS-IS configuration 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS
+ address-family ipv4 unicast
+  mpls ldp auto-config
+</pre> 
+</div> 
+
+### LDP mLDP-only Session Capability (RFC 7473)  
+In Converged SDN Transport 3.0 we introduce the ability to only advertise mLDP state on each router adjacency, eliminating the need to filter LDP unicast FECs from advertisement into the network. This is done using the SAC (State Advertisement Control) TLV in the LDP initialization messages to advertise which LDP FEC classes to receive from an adjacent peer.  We can restrict the capabilities to mLDP only using the following configuration.  Please see the implementation guide and configurations for the full LDP configuration.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+mpls ldp
+ capabilities sac mldp-only
+</pre> 
+</div> 
+
+### LDP Unicast FEC Filtering for SR Unicast with mLDP Multicast  
+The following is for historical context, please see the above section regarding disabling LDP unicast FECs using session capability advertisements. 
+
+The Converged SDN Transport design utilized Segment Routing with the MPLS dataplane for all unicast traffic. The first phase of multicast support in Converged SDN Transport 2.0 will use mLDP for use with existing mLDP based networks and new networks wishing to utilize label switcched multicast across the core. LDP is enabled on an interface for both unicast and multicast by default. Since SR is being used for unicast, one must filtering out all LDP unicast FECs to ensure they are not distributed across the network. SR is used for all unicast traffic in the presence of an LDP FEC for the same prefix, but filtering them reduces control-plane activity, may aid in re-convergence, and simplifies troubleshooting.  The following should be applied to all interfaces which have mLDP enabled:  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+ipv4 access-list no-unicast-ldp 
+10 deny ipv4 any any
+!
+RP/0/RSP0/CPU0:Node-6#show run mpls ldp
+mpls ldp
+log
+  neighbor
+address-family ipv4
+  label
+   local
+    allocate for no-unicast-ldp
+</pre> 
+</div>
+
 # Converged SDN Transport Use Cases
 
 Service Provider networks must adopt a very flexible design that satisfy
@@ -915,10 +1029,10 @@ design used in building those solutions.
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-multi-service-network.png) 
 
 
-# 5G Mobile Networks  
+# 4G and 5G Mobile Networks  
 
 ## Summary and 5G Service Types  
-The Converged SDN Transport design introduces initial support for 5G networks and 5G services. There are a variety of new service use cases being defined by 3GPP for use on 5G networks, illustrated by the figure below. Networks must now be built to support the stringent SLA requirements of Ultra-Reliable Low-Latency services while also being able to cope with the massive bandwidth introduced by Enhanced Mobile Broadband services. The initial support for 5G in the Converged SDN Transport design focuses on the backhaul and midhaul portions of the network utilizing end to end Segment Routing. The design introduces no new service types, the existing scalable L3VPN and EVPN based services using BGP are sufficient for carrying 5G control-plane and user-plane traffic.   
+The Converged SDN Transport design introduces support for 5G networks and 5G services. There are a variety of new service use cases being defined by 3GPP for use on 5G networks, illustrated by the figure below. Networks must now be built to support the stringent SLA requirements of Ultra-Reliable Low-Latency services while also being able to cope with the massive bandwidth introduced by Enhanced Mobile Broadband services. The initial support for 5G in the Converged SDN Transport design focuses on the backhaul and midhaul portions of the network utilizing end to end Segment Routing. The design introduces no new service types, the existing scalable L3VPN and EVPN based services using BGP are sufficient for carrying 5G control-plane and user-plane traffic.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-5g-services.png) 
 
@@ -1122,7 +1236,7 @@ H-QoS enables a provider to set an overall traffic rate across all services, and
 # FTTH Design using EVPN E-Tree 
 
 ## Summary 
-Many providers today are migrating from L2 access networks to more flexible L3 underlay networks using xVPN overlays to support a variety of network services. L3 networks offer more flexibility in terms of topology, resiliency, and support of both L2VPN and L3VPN services. Using a converged aggregation and access network simplifies networks and reduced both capex and opex spend by eliminating duplicate networks. Fiber to the home networks using active Ethernet have typically used L2 designs using proprietary methods like Private VLANs for subscriber isolation. EVPN E-Tree gives us a modern alternative to provide these services across a converged L3 Segment Routing network. 
+Many providers today are migrating from L2 access networks to more flexible L3 underlay networks using xVPN overlays to support a variety of network services. L3 networks offer more flexibility in terms of topology, resiliency, and support of both L2VPN and L3VPN services. Using a converged aggregation and access network simplifies networks and reduced both capex and opex spend by eliminating duplicate networks. Fiber to the home networks using active Ethernet have typically used L2 designs using proprietary methods like Private VLANs for subscriber isolation. EVPN E-Tree gives us a modern alternative to provide these services across a converged L3 Segment Routing network. This use case highlights one specific use case for E-Tree, however there are a number of other business and subscriber service use cases benefitting from EVPN E-Tree.   
 
 ## E-Tree Diagram 
 <img src="http://xrdocs.io/design/images/cmf-hld/cst-etree.png" width="500"/>
@@ -1390,80 +1504,22 @@ in Converged SDN Transport 2.0 follows work done in EPN 4.0 located here:  https
 
 The CST 4G Transport modernization covers only MPLS-based access and not L2 access scenarios.  
 
-## L3 IP Multicast and mVPN  
-IP multicast continues to be an optimization method for delivering content traffic to many endpoints,
-especially traditional broadcast video. Unicast content dominates the traffic patterns of most networks today, but 
-multicast carries critical high value services, so proper design and implementation is required. In Converged SDN Transport 2.0 we introduced multicast edge and core validation for native IPv4/IPv6 multicast using PIM, global multicast using in-band mLDP (profile 7), and mVPN using mLDP with in-band signaling (profile 6). Converged SDN Transport 3.0 extends this functionality by adding support for mLDP LSM with the NG-MVPN BGP control plane (profile 14). Using BGP signaling adds additional scale to the network over in-band mLDP signaling and fits with the overall design goals of CST. More information about deployment of profile 14 can be found in the Converged SDN Transport implementation guide. Converged SDN Transport 3.0 supports mLDP-based label switched multicast within a single doman and across IGP domain boundaries. In the case of the Converged SDN Transport design multicast has been tested with the source and receivers on both access and ABR PE devices.   
-
-| Supported Multicast Profiles | Description |  
-| ----------------------- | ---------------- | 
-| Profile 6 | mLDP VRF using in-band signaling | 
-| Profile 7 | mLDP global routing table using in-band signaling | 
-| Profile 14 | Partitioned MDT using BGP-AD and BGP c-multicast signaling |  
-
-
-### LDP Auto-configuration 
-LDP can automatically be enabled on all IS-IS interfaces with the following configuration in the IS-IS configuration 
-<div class="highlighter-rouge">
-<pre class="highlight">
-router isis ACCESS
- address-family ipv4 unicast
-  mpls ldp auto-config
-</pre> 
-</div> 
-
-### LDP mLDP-only Session Capability (RFC 7473)  
-In Converged SDN Transport 3.0 we introduce the ability to only advertise mLDP state on each router adjacency, eliminating the need to filter LDP unicast FECs from advertisement into the network. This is done using the SAC (State Advertisement Control) TLV in the LDP initialization messages to advertise which LDP FEC classes to receive from an adjacent peer.  We can restrict the capabilities to mLDP only using the following configuration.  Please see the implementation guide and configurations for the full LDP configuration.   
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-mpls ldp
- capabilities sac mldp-only
-</pre> 
-</div> 
-
-### LDP Unicast FEC Filtering for SR Unicast with mLDP Multicast  
-The following is for historical context, please see the above section regarding disabling LDP unicast FECs using session capability advertisements. 
-
-The Converged SDN Transport design utilized Segment Routing with the MPLS dataplane for all unicast traffic. The first phase of multicast support in Converged SDN Transport 2.0 will use mLDP for use with existing mLDP based networks and new networks wishing to utilize label switcched multicast across the core. LDP is enabled on an interface for both unicast and multicast by default. Since SR is being used for unicast, one must filtering out all LDP unicast FECs to ensure they are not distributed across the network. SR is used for all unicast traffic in the presence of an LDP FEC for the same prefix, but filtering them reduces control-plane activity, may aid in re-convergence, and simplifies troubleshooting.  The following should be applied to all interfaces which have mLDP enabled:  
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-ipv4 access-list no-unicast-ldp 
-10 deny ipv4 any any
-!
-RP/0/RSP0/CPU0:Node-6#show run mpls ldp
-mpls ldp
-log
-  neighbor
-address-family ipv4
-  label
-   local
-    allocate for no-unicast-ldp
-</pre> 
-</div>
-
-
-## L3 Multicast using Segment Routing TreeSID w/Static S,G Mapping
-
-### TreeSID Diagram 
-
-![](http://xrdocs.io/design/images/cmf-hld/cst-treesid.png)
-
-### TreeSID Overview 
-Converged SDN Transport 3.5 introduces Segment Routing Tree SID across all IOS-XR nodes.  TreeSID utilizes the programmability of SR-PCE to create and maintain an optimized multicast tree from source 
-to receiver across an SR-only IPv4 network. In CST 3.5 TreeSID utilizes MPLS labels at each hop in the network.  Each node in the network maintains a session to the same set of SR-PCE controllers.  The SR-PCE
-creates the tree using PCE-initiated segments. TreeSID supports advanced functionality such as TI-LFA for fast protection and disjoint trees.  
-
-Traffic is forwarded across the tree in CST 3.5 using static S,G mappings at the head-end source nodes and tail-end receiver nodes. Providers needing a solution where dynamic joins and leaves are not common, such as broadcast 
-video deployments, can be benefit from the simplicity static TreeSID brings, eliminating the need for distributed BGP mVPN signaling. TreeSID is supported for both default VRF (Global Routing Table) and mVPN.  
-
-Please see the CST 3.5 Implementation Guide for TreeSID configuration guidelines and examples. 
+# Business and Infrastructure Services using L3VPN and EVPN 
 
 
 ## EVPN Multicast 
 Multicast within a L2VPN EVPN has been supported since Converged SDN Transport 1.0. Multicast traffic within an EVPN is replicated to the endpoints interested in a specific group via EVPN signaling. EVPN utilizes ingress replication for all multicast traffic, meaning multicast is encapsulated with a specific EVPN label and unicast to each PE router with interested listeners for each multicast group. Ingress replication may add additional traffic to the network, but simplifies the core and data plane by eliminating multicast signaling, state, and hardware replication.  EVPN multicast is also not subject to domain boundary restrictions.
-    
+
+### EVPN Centralized Gateway Multicast 
+In CGW deployments, EVPN multicast is enhanced with support for EVPN Route Type
+6 (RT-6), the Selective Multicast Ethernet Tag Route. RT-6 or SMET routes are
+used to distribute a leaf node's interest in a specific multicast S,G. This
+allows the sender node to only transmit the multicast traffic to an EVPN router
+with an interested receiver instead of sending unwanted traffic dropped on the
+remote router. In release 5.0 CGW is supported on ASR 9000 routers only.  CGW
+selective multicast is supported for IPv4 and *,G multicast.   
+
+
 ## LDP to Converged SDN Transport Migration  
 Very few networks today are built as greenfield networks, most new designs are migrated 
 from existing ones and must support some level of interop during migration. In the Converged SDN Transport 
@@ -1501,6 +1557,23 @@ SRMS nodes until full migratino to SR is complete.
 
 # Automation 
 
+## Network Management using Cisco Crosswork Network Controller 
+
+Crosswork Network Controller provides a platform for UI and API based network 
+management. CNC supports RSVP-TE, SR-TE Policy, L2VPN, and L3VPN provisioning 
+using standards based IETF models. 
+
+### Crosswork Automated Assurance 
+
+In addition to provisioning, monitoring of all 
+transport infrastructure is also supported including advanced service assurance for 
+xVPN services. Service assurance checks all aspects of the network making up the service 
+along with realtime Y.1731 measurements to ensure the defined SLA for the service is met.  
+
+
+
+
+
 ## Zero Touch Provisioning
 
 In addition to model-driven configuration and operation, Converged SDN Transport 1.5 
@@ -1515,11 +1588,20 @@ can be part of an ecosystem of automated device and service provisioning via Cis
 
 ![](http://xrdocs.io/design/images/cmf-hld/ztp-metro-fabric.png)
 
+### Zero Touch Provisioning using Crosswork Network Controller 
+
+Crosswork Network Controller now includes a ZTP application used to onboard network 
+devices with the proper IOS-XR software and base configuration. Crosswork ZTP 
+supports both traditional unsecure as well as fully secure ZTP operation as outlined 
+in RFC 8572. More information on Crosswork ZTP can be found at 
+https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/crosswork-network-automation/datasheet-c78-743677.html
+
 ## Model-Driven Telemetry 
 
 In the 3.0 release the implementation guide includes a table of model-driven telemetry paths applicable to different components within the design.  More information on Cisco model-driven telemetry can be found at https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/telemetry/66x/b-telemetry-cg-ncs5500-66x.html. Additional information about how to consume and visualize telemetry data can be found at https://xrdocs.io/telemetry. We also introduce integration with Cisco Crosswork Health Insights, a telemetry and automated remediation platform, and sensor packs correspondding to Converged SDN Transport components. More information on Crosswork Health Insights can be found at https://www.cisco.com/c/en/us/support/cloud-systems-management/crosswork-health-insights/model.html.  
 
-## Network Services Orchestrator (NSO)
+## Transport and Service Management using Crosswork Network Controller
+!!!!! Fix this section 
 
 The NSO is a management and orchestration (MANO) solution for network
 services and Network Functions Virtualization (NFV). The NSO includes
@@ -1571,7 +1653,7 @@ configuration. These service templates enable NSO to operate in a
 multi-vendor environment.
 
 ### Converged SDN Transport Supported Service Models
-
+!!!! Fix this, point to T-SDN 
 Converged SDN Transport 1.5 and later supports the following NSO service models for provisioning both 
 hierarchical and flat services across the fabric. All NSO service modules in 1.5 
 utilize the IOS-XR and IOS-XE CLI NEDs for configuration. 
