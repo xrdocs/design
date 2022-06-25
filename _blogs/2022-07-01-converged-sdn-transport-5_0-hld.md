@@ -230,6 +230,7 @@ NCS-57C3 is available in both standard (NCS-57C3-MOD-SYS) and scale
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs57c3.png)
 
+
 ## ASR 920 
 The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. The Segment Routing data plane and supported service types are validated 
 on the ASR 920 within the CST design. <b>Please see the services support section for all service types supported on the ASR 920. </b>  
