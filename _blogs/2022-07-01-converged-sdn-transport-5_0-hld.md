@@ -229,7 +229,7 @@ expansion modules support additional 1/10/25G, 100G, and 400G interfaces.  The
 NCS-57C3 is available in both standard (NCS-57C3-MOD-SYS) and scale
 (NCS-57C3-MOD-SE-SYS) varieties.  
 
-![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs57c3.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-57c3.png)
 
 ## ASR 920 
 The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. The Segment Routing data plane and supported service types are validated 
