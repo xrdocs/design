@@ -194,7 +194,7 @@ N540-ACC-SYS is a next-generation access node with 24x10G SFP+, 8x25G SFP28, and
 2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with
 a conformal coating for deployment deep into access networks.
 
-# NCS 540 Small, Medium, Large Density, and Fronthaul routers  
+## NCS 540 Small, Medium, Large Density, and Fronthaul routers  
 The NCS 540 family of routers supports mobile and business services across a wide
 variety of service provier and enterprise applications, including support for
 Routed Optical Networking in the QSFP-DD enabled NCS-540 Large Density router.
@@ -220,11 +220,13 @@ configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55xx.png)
 ## NCS-57C3-MOD
-The Converged SDN Transport design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
-router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
-per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
-100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
-configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
+The NCS-57C3-MOD is the next-generation 300mm modular router supporting the
+Converged SDN Transport design. The NCS-57C3-MOD is a 3.2Tbps platform with the
+following fixed interfaces:  8xQSFP28 100G, 48 SFP28 1/10/25G. The 57C3 also
+includes two 800G MPA slots, and one 400G MPA slot for port expansion. These
+expansion modules support additional 1/10/25G, 100G, and 400G interfaces.  The
+NCS-57C3 is available in both standard (NCS-57C3-MOD-SYS) and scale
+(NCS-57C3-MOD-SE-SYS) varieties.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55xx.png)
 
