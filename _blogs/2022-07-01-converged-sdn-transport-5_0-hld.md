@@ -165,12 +165,14 @@ blocks:**
 # Hardware Components in Design 
 
 ## Cisco 8000 
-The Converged SDN Transport design now includes the Cisco 8000 family. Cisco 8000 routers provide the lowest power consumption in the industry, all while supporting systems over 200Tbps and features service providers require.  Starting in CST 5.0 the Cisco 8000 fulfills the role of core and aggregation router in the design. The 8000 provides transit for end to end unicast and multicast services. Service termination is not supported on the 8000 in CST 5.0.  
+The Converged SDN Transport design now includes the Cisco 8000 family. Cisco 8000 routers provide the lowest power consumption in the industry, all while supporting systems over 200Tbps and features service providers require.  Starting in CST 5.0 the Cisco 8000 fulfills the role of core and aggregation router in the design. The 8000 provides transit for end to end unicast and multicast services including those using SR-TE and advanced capabilities such as SR Flexible Algorithms.  Service termination is not supported on the 8000 in CST 5.0.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-8000.png)
 
 ## ASR 9000 
 The ASR 9000 is the router of choice for high scale edge services.  The Converged SDN Transport utilizes the ASR 9000 in a PE function role, performing high scale 
 L2VPN, L3VPN, and Pseudowire headend termination. All testing up to CST 3.0 has been performed using Tomahawk series line cards on the ASR 9000. Starting in CST 5.0 we introduce 
-ASR 9000 Lightspeed+ high capacity line cards to the design.  
+ASR 9000 Lightspeed+ high capacity line cards to the design.  The ASR 9000 also serves as the user plane for Cisco's distributed BNG architecture.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-asr9000.png)
 
