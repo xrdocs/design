@@ -219,6 +219,7 @@ per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/1
 configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55xx.png)
+
 ## NCS-57C3-MOD
 The NCS-57C3-MOD is the next-generation 300mm modular router supporting the
 Converged SDN Transport design. The NCS-57C3-MOD is a 3.2Tbps platform with the
@@ -229,7 +230,6 @@ NCS-57C3 is available in both standard (NCS-57C3-MOD-SYS) and scale
 (NCS-57C3-MOD-SE-SYS) varieties.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs57c3.png)
-
 
 ## ASR 920 
 The IOS-XE based ASR 920 is tested within the Converged SDN Transport as an access node. The Segment Routing data plane and supported service types are validated 
