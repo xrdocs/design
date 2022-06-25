@@ -164,9 +164,13 @@ blocks:**
 
 # Hardware Components in Design 
 
+## Cisco 8000 
+The Converged SDN Transport design now includes the Cisco 8000 family. Cisco 8000 routers provide the lowest power consumption in the industry, all while supporting systems over 200Tbps and features service providers require.  Starting in CST 5.0 the Cisco 8000 fulfills the role of core and aggregation router in the design. The 8000 provides transit for end to end unicast and multicast services. Service termination is not supported on the 8000 in CST 5.0.  
+
 ## ASR 9000 
 The ASR 9000 is the router of choice for high scale edge services.  The Converged SDN Transport utilizes the ASR 9000 in a PE function role, performing high scale 
-L2VPN, L3VPN, and Pseudowire headend termination. All testing up to 3.0 has been performed using Tomahawk series line cards on the ASR 9000.  
+L2VPN, L3VPN, and Pseudowire headend termination. All testing up to CST 3.0 has been performed using Tomahawk series line cards on the ASR 9000. Starting in CST 5.0 we introduce 
+ASR 9000 Lightspeed+ high capacity line cards to the design.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-asr9000.png)
 
@@ -180,13 +184,40 @@ The modular chassis version of the NCS 5500 is available in 4, 8, and 16 slot ve
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs5500.png)
 
-## NCS-5501, NCS-5501-SE, and N540-ACC-SYS 
-The NCS 5501, 5501-SE, and 540 hardware is validated in both an access and aggregation role in the Converged SDN Transport. The 5501 
-has 48x1G/10G SFP+ and 6x100G QSFP28 interfaces, the SE adds higher route scale via an external TCAM.  The N540-ACC-SYS is a next-generation 
-access node with 24x10G SFP+, 8x25G SFP28, and 2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with a conformal 
-coating for deployment deep into access networks.
+## NCS-5501 and NCS-5501-SE
+The NCS 5501 and 5501-SE is validated in both an access and aggregation role in
+the Converged SDN Transport. The 5501 has 48x1G/10G SFP+ and 6x100G QSFP28
+interfaces, the SE adds higher route scale via an external TCAM.  The
+N540-ACC-SYS is a next-generation access node with 24x10G SFP+, 8x25G SFP28, and
+2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with
+a conformal coating for deployment deep into access networks.
+
+# NCS 540 Small, Medium, Large Density, and Fronthaul routers  
+The NCS 540 family of routers supports mobile and business services across a wide
+variety of service provier and enterprise applications, including support for
+Routed Optical Networking in the QSFP-DD enabled NCS-540 Large Density router.
+
+More information on the NCS 540 router line can be found at: 
+
+https://www.cisco.com/c/en/us/products/routers/network-convergence-system-540-series-routers/index.html
+
+The N540-FH-CSR-SYS and N540-FH-AGG-SYS Fronthaul routers introduced in CST 5.0 can be
+utilized for ultra low latency mobile fronthaul, midhaul, or backhaul networks.
+These fronthaul routers support native CPRI interfaces and special processing
+for eCPRI and ROE (Radio over Ethernet) traffic guaranteeing low latency.  These
+devices also support stringent class C timing.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs540.png)
 
 ## NCS-55A2-MOD 
+The Converged SDN Transport design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
+router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
+per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
+100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
+configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55xx.png)
+## NCS-57C3-MOD
 The Converged SDN Transport design now supports the NCS-55A2-MOD access and aggregation router. The 55A2-MOD is a modular 2RU 
 router with 24 1G/10G SFP+, 16 1G/10G/25G SFP28 onboard interfaces, and two modular slots capable of 400G of throughput 
 per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/10G SFP+, 100G QSFP28, or 
@@ -1282,56 +1313,177 @@ evpn
 </pre>
 </div>
 
+# Cisco Cloud Native Broadband Network Gateway 
+
+cnBNG represents a fundamental shift in how providers build converged access
+networks by separating the subscriber BNG control-plane functions from
+user-plane functions. CUPS (Control/User-Plane Separation) allows the use of
+scale-out x86 compute for subscriber control-plane functions, allowing providers
+to place these network functions at an optimal place in the network, and also
+allows simplification of user-plane elements. This simplification enables
+providers to distribute user-plane elements closer to end users, optimizing
+traffic efficiency to and from subscribers. In the CST 5.0 design we include
+both traditional physical BNG (pBNG) and the newer cnBNG architecture.  
+
+## Cisco cnBNG Architecture
+
+Cisco's cnBNG supports the BBF TR-459 standards for control and user plane
+communication. The State Control Interface (SCi) is used for programming and
+management of dynamic subscriber interfaces including accounting information.
+The Control Packet Redirect Interface (CPRi) as its name implies redirects user
+packets destined for control-plane functions from the user plane to control
+plane. These include: DHCP DORA, DHCPv6, PPPoE, and L2TP. More information on 
+TR-459 can be found at https://www.broadband-forum.org/marketing/download/TR-459.pdf
+### cnBNG Control Plane 
+The cloud native BNG control plane is a highly resilient scale out architecture.
+Traditional physical BNGs embedded in router software often scale poorly,
+require complex HA mechnaisms for resiliency, and are relatively painful to
+upgrade. Moving these network functions to a modern Kubernetes based
+cloud-native infrastructure reduces operator complexity providing native
+scale-out capacity growth, in-service software upgrades, and faster feature
+delivery.  Cisco cnBNG control plane supports deployment on VMWare ESXi,  
+
+### cnBNG User Plane 
+The cnBNG user plane is provided by Cisco ASR 9000 routers. The routers are
+responsible for terminating subscriber sessions (IPoE/PPPoE), communicating with
+the cnBNG control plane for user authentication and policy, applying
+subscriber policy elements such as QoS and security policies, and performs 
+subscriber routing.  
+
+ 
 
 # Cable Converged Interconnect Network (CIN)  
 
 ## Summary  
-The Converged SDN Transport Design enables a multi-service CIN by adding support for the features and functions required to build a scalable next-generation Ethernet/IP cable access network. Differentiated from simple switch or L3 aggregation designs is the ability to support NG cable transport over the same common infrastructure already supporting other services like mobile backhaul and business VPN services. Cable Remote PHY is simply another service overlayed onto the existing Converged SDN Transport network architecture. We will cover all aspects of connectivity between the Cisco cBR-8 and the RPD device.  
+The Converged SDN Transport Design enables a multi-service CIN by adding support
+for the features and functions required to build a scalable next-generation
+Ethernet/IP cable access network. Differentiated from simple switch or L3
+aggregation designs is the ability to support NG cable transport over the same
+common infrastructure already supporting other services like mobile backhaul and
+business VPN services. Cable Remote PHY is simply another service overlayed onto
+the existing Converged SDN Transport network architecture. We will cover all
+aspects of connectivity between the Cisco cBR-8 and the RPD device.  
 
 ## Distributed Access Architecture  
-The cable Converged Interconnect Network is part of a next-generation Distributed Access Architecture (DAA), an architecture unlocking higher subscriber bandwidth by moving traditional cable functions deeper into the network closer to end users. R-PHY or Remote PHY, places the analog to digital conversion much closer to users, reducing the cable distance and thus enabling denser and higher order modulation used to achieve Gbps speeds over existing cable infrastructure. This reference design will cover the CIN design to support Remote PHY deployments.  
+The cable Converged Interconnect Network is part of a next-generation
+Distributed Access Architecture (DAA), an architecture unlocking higher
+subscriber bandwidth by moving traditional cable functions deeper into the
+network closer to end users. R-PHY or Remote PHY, places the analog to digital
+conversion much closer to users, reducing the cable distance and thus enabling
+denser and higher order modulation used to achieve Gbps speeds over existing
+cable infrastructure. This reference design will cover the CIN design to support
+Remote PHY deployments.  
 
 ## Remote PHY Components and Requirements 
-This section will list some of the components of an R-PHY network and the network requirements driven by those components. It is not considered to be an exhaustive list of all R-PHY components, please see the CableLabs specification document, the latest which can be access via the following URL:  https://specification-search.cablelabs.com/CM-SP-R-PHY 
+This section will list some of the components of an R-PHY network and the
+network requirements driven by those components. It is not considered to be an
+exhaustive list of all R-PHY components, please see the CableLabs specification
+document, the latest which can be access via the following URL:
+https://specification-search.cablelabs.com/CM-SP-R-PHY 
 
 ### Remote PHY Device (RPD) 
-The RPD unlocks the benefits of DAA by integrating the physical analog to digital conversions in a device deployed either in the field or located in a shelf in a facility. The uplink side of the RPD or RPHY shelf is simply IP/Ethernet, allowing transport across widely deployed IP infrastructure. The RPD-enabled node puts the PHY function much closer to an end user, allowing higher end-user speeds. The shelf allows cable operators to terminate only the PHY function in a hub and place the CMTS/MAC function in a more centralized facility, driving efficiency in the hub and overall network. The following diagram shows various options for how RPDs or an RPD shelf can be deployed. Since the PHY function is split from the MAC it allows independent placement of those functions.  
+The RPD unlocks the benefits of DAA by integrating the physical analog to
+digital conversions in a device deployed either in the field or located in a
+shelf in a facility. The uplink side of the RPD or RPHY shelf is simply
+IP/Ethernet, allowing transport across widely deployed IP infrastructure. The
+RPD-enabled node puts the PHY function much closer to an end user, allowing
+higher end-user speeds. The shelf allows cable operators to terminate only the
+PHY function in a hub and place the CMTS/MAC function in a more centralized
+facility, driving efficiency in the hub and overall network. The following
+diagram shows various options for how RPDs or an RPD shelf can be deployed.
+Since the PHY function is split from the MAC it allows independent placement of
+those functions.  
 
 #### RPD Network Connections  
-Each RPD is typically deployed with a single 10GE uplink connection. The compact RPD shelf uses a single 10GE uplink for each RPD.  
+Each RPD is typically deployed with a single 10GE uplink connection. The compact
+RPD shelf uses a single 10GE uplink for each RPD.  
 
 ### Cisco cBR-8 and cnBR 
-The Cisco Converged Broadband Router performs many functions as part of a Remote PHY solution. The cBR-8 provisions RPDs, originates L2TPv3 tunnels to RPDs, provisions cable modems, performs cable subscriber aggregation functions, and acts as the uplink L3 router to the rest of the service provider network. In the Remote PHY architecture the cBR-8 acts as the DOCSIS core and can also serve as a GCP server and video core. The cBR-8 runs IOS-XE. The cnBR, cloud native Broadband Router, provides DOCSIS core functionality in a server-based software platform deployable anywhere in the SP network. CST 3.0 has been validated using the cBR-8, the cnBR will be validated in an upcoming release. 
+The Cisco Converged Broadband Router performs many functions as part of a Remote
+PHY solution. The cBR-8 provisions RPDs, originates L2TPv3 tunnels to RPDs,
+provisions cable modems, performs cable subscriber aggregation functions, and
+acts as the uplink L3 router to the rest of the service provider network. In the
+Remote PHY architecture the cBR-8 acts as the DOCSIS core and can also serve as
+a GCP server and video core. The cBR-8 runs IOS-XE. The cnBR, cloud native
+Broadband Router, provides DOCSIS core functionality in a server-based software
+platform deployable anywhere in the SP network. CST 3.0 has been validated using
+the cBR-8, the cnBR will be validated in an upcoming release. 
 
 #### cBR-8 Network Connections 
-The cBR-8 is best represented as having "upstream" and "downstream" connectivity. 
+The cBR-8 is best represented as having "upstream" and "downstream"
+connectivity. 
 
-The upstream connections are from the cBR8 Supervisor module to the SP network. Subscriber data traffic and video ingress these uplink connections for delivery to the cable access network. The cBR-8 SUP-160 has 8x10GE SFP+ physical connections, the SUP-250 has 2xQSFP28/QSFP+ interfaces for 40G/100G upstream connections.   
+The upstream connections are from the cBR8 Supervisor module to the SP network.
+Subscriber data traffic and video ingress these uplink connections for delivery
+to the cable access network. The cBR-8 SUP-160 has 8x10GE SFP+ physical
+connections, the SUP-250 has 2xQSFP28/QSFP+ interfaces for 40G/100G upstream
+connections.   
 
-In a remote PHY deployment the downstream connections to the CIN are via the Digital PIC (DPIC-8X10G) providing 40G of R-PHY throughput with 8 SFP+ network interfaces.  
+In a remote PHY deployment the downstream connections to the CIN are via the
+Digital PIC (DPIC-8X10G) providing 40G of R-PHY throughput with 8 SFP+ network
+interfaces.  
 
 #### cBR-8 Redundancy 
-The cBR-8 supports both upstream and downstream redundancy. Supervisor redundancy uses active/standby connections to the SP network. Downstream redundancy can be configured at both the line card and port level. Line card redundancy uses an active/active mechanism where each RPD connects to the DOCSIS core function on both the active and hot standby Digital PIC line card. Port redundancy uses the concept of "port pairs" on each Digital PIC, with ports 0/1, 2/3, 4/6, and 6/7 using either an active/active (L2) or active/standby (L3) mechanism. In the CST design we utilize a L3 design with the active/standby mechanism. The mechanism uses the same IP address on both ports, with the standby port kept in a physical down state until switchover occurs.   
+The cBR-8 supports both upstream and downstream redundancy. Supervisor
+redundancy uses active/standby connections to the SP network. Downstream
+redundancy can be configured at both the line card and port level. Line card
+redundancy uses an active/active mechanism where each RPD connects to the DOCSIS
+core function on both the active and hot standby Digital PIC line card. Port
+redundancy uses the concept of "port pairs" on each Digital PIC, with ports 0/1,
+2/3, 4/6, and 6/7 using either an active/active (L2) or active/standby (L3)
+mechanism. In the CST design we utilize a L3 design with the active/standby
+mechanism. The mechanism uses the same IP address on both ports, with the
+standby port kept in a physical down state until switchover occurs.   
 
 ## Remote PHY Communication 
 
 ### DHCP 
-The RPD is provisioned using ZTP (Zero Touch Provisioning). DHCPv4 and DHCPv6 are used along with CableLabs DHCP options in order to attach the RPD to the correct GCP server for further provisioning.   
+The RPD is provisioned using ZTP (Zero Touch Provisioning). DHCPv4 and DHCPv6
+are used along with CableLabs DHCP options in order to attach the RPD to the
+correct GCP server for further provisioning.   
 
 ### Remote PHY Standard Flows 
-The following diagram shows the different core functions of a Remote PHY solution and the communication between those elements. 
+The following diagram shows the different core functions of a Remote PHY
+solution and the communication between those elements. 
 
-<img src="http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png" width="500"/>
+<img src="http://xrdocs.io/design/images/cmf-hld/cmf-docsis-communication.png"
+width="500"/>
 
 
 ### GCP 
-Generic Communications Protocol is used for the initial provisioning of the RPD. When the RPD boots and received its configuration via DHCP, one of the DHCP options will direct the RPD to a GCP server which can be the cBR-8 or Cisco Smart PHY. GCP runs over TCP typically on port 8190.    
+Generic Communications Protocol is used for the initial provisioning of the RPD.
+When the RPD boots and received its configuration via DHCP, one of the DHCP
+options will direct the RPD to a GCP server which can be the cBR-8 or Cisco
+Smart PHY. GCP runs over TCP typically on port 8190.    
 ### UEPI and DEPI L2TPv3 Tunnels 
-The upstream output from an RPD is IP/Ethernet, enabling the simplification of the cable access network. Tunnels are used between the RPD PHY functions and DOCSIS core components to transport signals from the RPD to the core elements, whether it be a hardware device like the Cisco cBR-8 or a virtual network function provided by the Cisco cnBR (cloud native Broadband Router).  
+The upstream output from an RPD is IP/Ethernet, enabling the simplification of
+the cable access network. Tunnels are used between the RPD PHY functions and
+DOCSIS core components to transport signals from the RPD to the core elements,
+whether it be a hardware device like the Cisco cBR-8 or a virtual network
+function provided by the Cisco cnBR (cloud native Broadband Router).  
 
-DEPI (Downstream External PHY Interface) comes from the M-CMTS architecture, where a distributed architecture was used to scale CMTS functions. In the Remote PHY architecture DEPI represents a tunnel used to encapsulate and transport from the DOCSIS MAC function to the RPD. UEPI (Upstream External PHY Interface) is new to Remote PHY, and is used to encode and transport analog signals from the RPD to the MAC function.   
+DEPI (Downstream External PHY Interface) comes from the M-CMTS architecture,
+where a distributed architecture was used to scale CMTS functions. In the Remote
+PHY architecture DEPI represents a tunnel used to encapsulate and transport from
+the DOCSIS MAC function to the RPD. UEPI (Upstream External PHY Interface) is
+new to Remote PHY, and is used to encode and transport analog signals from the
+RPD to the MAC function.   
 
-In Remote PHY both DEPI and UEPI tunnels use L2TPv3, defined in RFC 3931, to transport frames over an IP infrastructure. Please see the following Cisco white paper for more information on how tunnels are created specific to upstream/downstream channels and how data is encoded in the specific tunnel sessions.  https://www.cisco.com/c/en/us/solutions/collateral/service-provider/converged-cable-access-platform-ccap-solution/white-paper-c11-732260.html. In general there will be one or two (standby configuration) UEPI and DEPI L2TPv3 tunnels to each RPD, with each tunnel having many L2TPv3 sessions for individual RF channels identified by a unique session ID in the L2TPv3 header. Since L2TPv3 is its own protocol, no port number is used between endpoints, the endpoint IP addresses are used to identify each tunnel. Unicast DOCSIS data traffic can utilize either or multicast L2TPv3 tunnels. Multicast tunnels are used with downstream virtual splitting configurations. Multicast video is encoded and delivered using DEPI tunnels as well, using a multipoint L2TPv3 tunnel to multiple RPDs to optimize video delivery.    
+In Remote PHY both DEPI and UEPI tunnels use L2TPv3, defined in RFC 3931, to
+transport frames over an IP infrastructure. Please see the following Cisco white
+paper for more information on how tunnels are created specific to
+upstream/downstream channels and how data is encoded in the specific tunnel
+sessions.
+https://www.cisco.com/c/en/us/solutions/collateral/service-provider/converged-cable-access-platform-ccap-solution/white-paper-c11-732260.html.
+In general there will be one or two (standby configuration) UEPI and DEPI L2TPv3
+tunnels to each RPD, with each tunnel having many L2TPv3 sessions for individual
+RF channels identified by a unique session ID in the L2TPv3 header. Since L2TPv3
+is its own protocol, no port number is used between endpoints, the endpoint IP
+addresses are used to identify each tunnel. Unicast DOCSIS data traffic can
+utilize either or multicast L2TPv3 tunnels. Multicast tunnels are used with
+downstream virtual splitting configurations. Multicast video is encoded and
+delivered using DEPI tunnels as well, using a multipoint L2TPv3 tunnel to
+multiple RPDs to optimize video delivery.    
 
 ### CIN Network Requirements 
 
@@ -1561,7 +1713,11 @@ SRMS nodes until full migratino to SR is complete.
 
 Crosswork Network Controller provides a platform for UI and API based network 
 management. CNC supports RSVP-TE, SR-TE Policy, L2VPN, and L3VPN provisioning 
-using standards based IETF models. 
+using standards based IETF models.
+
+### L2VPN Service Provisioning and Visualization
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-5-cnc-l2vpn.png)
 
 ### Crosswork Automated Assurance 
 
@@ -1570,8 +1726,9 @@ transport infrastructure is also supported including advanced service assurance 
 xVPN services. Service assurance checks all aspects of the network making up the service 
 along with realtime Y.1731 measurements to ensure the defined SLA for the service is met.  
 
+![](http://xrdocs.io/design/images/cmf-hld/cst-5-cnc-service-assurance-sla.png)
 
-
+![](http://xrdocs.io/design/images/cmf-hld/cst-5-cnc-assurance.png)
 
 
 ## Zero Touch Provisioning
@@ -2046,7 +2203,7 @@ _Figure 40: PCE Path Computation – Phase 1_
 
 **Delegated Computation to SR-PCE**
 
-1.  NSO provisions the service – Service can also be provisioned via CLI
+1.  CNC provisions the service – Service can also be provisioned via CLI
 
 2.  Access Router requests a path
 
@@ -2056,10 +2213,11 @@ _Figure 40: PCE Path Computation – Phase 1_
 
 5.  Access Router confirms
     
-## Services
+## Supported Services
 
-This section describes the Services used in the  Converged SDN Transport
-Phase 1.
+This section describes the base xVPN Services used in Converged SDN Transport. 
+
+!!!! Update with EVPN-HE and CGW 
 
 The table in Figure 41 describes the End-To-End services, while the
 network diagram in Figure 42 shows how services are deployed in the
@@ -2128,6 +2286,13 @@ CIN and Remote PHY validation.
 ![](http://xrdocs.io/design/images/cmf-hld/cst-rphy-validation-topology.png)
 
 _Figure 49: Remote PHY/CIN Validation Testbed_
+
+Figure 50 shows the detailed topology of the testbed used for 
+validation.
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-topology.png)
+
+_Figure 50: Cloud-Native BNG Testbed_  
 
 # The Converged SDN Transport Design - Summary
 
