@@ -218,7 +218,7 @@ per slot using Cisco NCS Modular Port Adapters or MPAs. MPAs add additional 1G/1
 100G/200G CFP2 interfaces. The 55A2-MOD is available in an extended temperature version with a conformal coating as well as a high scale 
 configuration (NCS-55A2-MOD-SE-S) scaling to millions of IPv4 and IPv6 routes.   
 
-![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs55xx.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs-55a2-mod.png)
 
 ## NCS-57C3-MOD
 The NCS-57C3-MOD is the next-generation 300mm modular router supporting the
