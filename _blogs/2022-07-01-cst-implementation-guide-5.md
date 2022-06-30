@@ -100,6 +100,11 @@ _Figure 4: Testbed IGP Domains_
   - Cisco 55A2-MOD-SE - PA2 
   - Cisco NCS540 - PA1 
 
+**Core Routers**
+
+  - Cisco 55A1-36H (36x100G) - P1,P2 
+  - Cisco 8201-32FH - P3,P4  
+
 **Service and Transport Route Reflectors (RRs)**
 
   - Cisco IOS XRv 9000 – tRR1-A, tRR1-B, sRR1-A, sRR1-B, sRR2-A, sRR2-B,
