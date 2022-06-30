@@ -134,28 +134,54 @@ increase resiliency and limit traffic-affecting network events.
 
 ## Platforms
 
-The Cisco NCS5500 platform is ideal for edge peer termination, given its
-high-density, large RIB and FIB scale, buffering capability, and IOS-XR
-software feature set. The NCS5500 is also space and power efficient with
-36x100GE supporting up to 4M IPv4 routes in a 1RU fixed form factor or
-single modular line card. The Peering fabric can provide
-36x100GE, 144x10GE, or a mix of non-blocking peering connections with
-full resiliency in 4RU. The fabric can also scale to support 10s of
-terabits of capacity in a single rack for large peering deployments.
-Fixed chassis are ideal for incrementally building a peering edge
-fabric, the NCS NC55-36X100GE-A-SE and NC55A1-24H are efficient high
-density building blocks which can be rapidly deployed as needed without
-installing a large footprint of devices day one. Deployments needing
-more capacity or interface flexibility such as IPoDWDM to extend peering
-can utilize the NCS5504 4-slot or NCS5508 8-slot modular chassis. If the
-peering location has a need for services termination the ASR9000 family
-or XRv-9000 virtual edge node can be incorporated into the fabric.
+### Cisco NCS 5500 / NCS 5700
 
-All NCS5500 routers also contain powerful Route Processors to unlock
-powerful telemetry and programmability. The  Peering Fabric fixed
-chassis contain 1.6Ghz 8-core processors and 32GB of RAM. The latest
-NC55-RP-E for the modular NCS5500 chassis has a 1.9Ghz 6-core processor
-and 32G of RAM.
+The Cisco NCS 5500 and NCS 57000 platforms is ideal for edge peer termination,
+given their high port density, large RIB and FIB scale, buffering capability,
+and IOS-XR software feature set. The NCS 5500 and 5700 series is also space and
+power efficient, while not sacrificing capabilities. Using these components a
+peering fabric can also scale to support 100s of terabits of capacity in a
+single rack for large peering deployments. Fixed chassis are ideal for
+incrementally building a peering edge fabric. The NCS NC5-55A1-36X100GE-A-SE,
+NC5-5A1-24H, and NCS-57B1-5D-SE are efficient high density building blocks which
+can be rapidly deployed as needed without installing a large footprint of
+devices day one. The next-generation NCS 5700 devices support a mix of 100G and
+400G for high capacity deployments.  
+
+Deployments needing more capacity or interface flexibility such as can utilize
+the family of modular chassis available. The NCS 5504 4-slot or NCS 5508 8-slot
+modular chassis is ideal for high port density needs, supporting a variety of
+line cards such as the 36x100GE NC57-36H-SE and 18x400G (72x100GE) NC57-18DD-SE.
+Smaller deployments needing interface flexibility can utilize the NC5-57C3-MOD-S
+platform, with 48 1/10/25G + 8x100G onboard ports, plus 3 modular port adapter
+slots supporting 1/10/25/100/400G interfaces, all in a 3RU platform with 300mm depth.     
+
+All NCS 5500 and 5700 routers also contain powerful Route Processors to unlock
+powerful telemetry and programmability. The  Peering Fabric fixed chassis
+contain 1.6Ghz 8-core processors and 32GB of RAM. The latest NC55-RP-E and NC55-RP2-E (Class C Timing) for the
+modular NCS5500 chassis has a 1.9Ghz 6-core processor and 32G of RAM.
+
+More information on the NCS 5500 and NCS 5700 platforms can be round at: 
+
+https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/ind
+https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5700-series/index.html
+
+### Cisco 8000 
+
+The Cisco 8000 series represents the next-generation in router technology,
+featuring Cisco's Silicon One ASICs to deliver unmatched density and power
+efficiency, while support the features and resiliency service providers require.
+In 5.0 the Q200 series routers are supporting in the Peering Fabric Design.
+This includes the 8201-32FH fixed system and the 88-LC0-36FH 36x400G line card
+for the 8804, 8808, 8812, and 8818 modular chassis. The 88-LC0-34H14FH (34x100G,
+14x400G) is also ideal for deployments requiring a mix of 100G and 400G
+interfaces.      
+
+The Peering Fabric design supports using the Cisco 8000 series in a peering
+fabric leaf, peering fabric spine, combined PFL/PFS, or core router. The Peering
+Fabric IX design is not applicable to the Cisco 8000 in version 5.0.   
+
+https://www.cisco.com/c/en/us/products/routers/8000-series-routers/index.html
 
 ## Control-Plane
 
@@ -976,6 +1002,79 @@ segment-routing
       forward-class 2 color 30
       forward-class 3 color 40
       forward-class 4 color 50
+```
+
+## SR-TE Egress Peer Engineering 
+SR-TE EPE is used to steer traffic out a specific egress interface, set of
+interfaces, or set of neighbors. This path or set of paths will override the
+router's normal best path selection process.  
+
+### EPE SID Types 
+The following EPE SID types were created to address different network use cases.
+The figure below highlights a set of specific links and nodes as an example of
+when each SID type is created.  IOS-XR allows users to use either dynamic or
+explicit persistent definitions for PeerAdj SIDs corresponding to a logical
+interface. PeerNode and PeerSet SIDs are always defined explictly by the
+persistent configuration.   
+
+EPE SID Name | Purpose  
+---- | ---- 
+PeerAdj | Used to steer traffic out a specific adjacent single interface  
+PeerNode | Used to steer traffic out multiple interfaces to the same EBGP peer (typically requires the use of eBGP Multi-Hop)
+PeerSet | Used to steer traffic out a set of interfaces or nodes by grouping PeerAdj and PeerNode SIDs into a set addressable by the PeerSet SID
+
+![](http://xrdocs.io/design/images/cpf-hld/pf-hld-epe-overview.png)
+
+### EPE PeerSet Use Case 
+In the following example we would like to balance traffic to 10.0.0.0/24 across three egress interface to three different ASNs. In typical networks, 
+the BGP best path selection algorithm will select the best egress path based on its selection criteria. EBGP Multipath may select all three paths if 
+the proper criteria is met, but it can not be guaranteed.  EPE will override this process and balance traffic out the three interfaces despite the BGP 
+path selection process. 
+
+![](http://xrdocs.io/design/images/cpf-hld/pf-hld-epe-usecase.png)
+
+### IOS-XR Configuration 
+The following configuration is used for the above example. Peer-set 1 groups the 
+three external neighbors into a single peer-set, allowing traffic to balanced across all three 
+neighbors by referencing the PeerSet SID 15001.  In addition a second PeerSet 2 is used to balance
+traffic across two specific logical interfaces.  
+
+```
+segment-routing
+   local-block 15000 15999
+
+router bgp 10
+  address-family ipv4 unicast
+   peer-set-id 1
+      peer-set-sid index 1
+   peer-set-id 2
+      peer-set-sid index 2 
+   adjacencies
+    10.10.10.2
+     adjacency-sid index 500
+     peer-set 2
+    30.10.10.2 
+     adjacency-sid index 501 
+     peer-set 2
+     
+   
+neighbor 10.10.10.2
+     remote-as 20
+     egress-engineering
+     peer-node-sid index 600
+     peer-set 1
+   
+neighbor 20.10.10.2
+      remote-as 20
+      egress-engineering
+      peer-node-sid index 700
+      peer-set 1
+
+neighbor 30.10.10.2
+      remote-as 30
+      egress-engineering
+      peer-node-sid index 800
+      peer-set 1
 ```
 
 # IXP Fabric Low Level Design 
