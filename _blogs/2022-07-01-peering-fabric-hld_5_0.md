@@ -1059,23 +1059,25 @@ router bgp 10
      
    
 neighbor 10.10.10.2
-     remote-as 20
+     remote-as 1001
      egress-engineering
      peer-node-sid index 600
      peer-set 1
    
 neighbor 20.10.10.2
-      remote-as 20
+      remote-as 1002
       egress-engineering
       peer-node-sid index 700
       peer-set 1
 
 neighbor 30.10.10.2
-      remote-as 30
+      remote-as 1003 
       egress-engineering
       peer-node-sid index 800
       peer-set 1
 ```
+
+
 
 # IXP Fabric Low Level Design 
 
@@ -1090,6 +1092,7 @@ document, please consult the Converged SDN Transport design guide or associated 
 documentation for low level details on configuring EVPN VPWS and EVPN ELAN services. 
 The Converged SDN Transport design guide can be found at the following URL: 
 https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld 
+
 
 # Peering Fabric Telemetry
 
@@ -1186,6 +1189,100 @@ IPFIX should work with Cisco to fine tune parameters for optimal data
 fidelity and performance.
 
 # Automation and Programmability
+
+## Crosswork Cloud Network Insights 
+Crosswork Cloud Network Insights is a cloud based service providing BGP network
+analytics for provider networks. CCNI uses an extensive set of worldwide BGP
+probes to continuously collect routing updates and check for prefix routing
+anomalies. CCNI also provides advanced BGP looking glass capabilities from the
+perspective of its worldwide visibility endpoints. Integration with the
+worldwide RPKI ROA infrastructure also gives users an instant way to view ROA
+validity for your own prefixes as well as other prefixes on the Internet. The
+PeerMon feature of CCNI also allows monitoring for prefixes coming into your
+network, any advertisement changes are historically logged and can be alerted
+upon. The tools provided detect BGP Prefix hijack scenarios quickly so providers 
+can remediate them as quickly as possible.   
+
+Being a cloud based application there is no on-premise software or server
+resources to manage, and continuous updates are added to CCNI without
+disruption.  More information on CCNI can be found at https://crosswork.cisco.com/
+
+### Looking Glass and AS Path Trace 
+
+The figure below shows the ability to graphically trace the AS path of a prefix 
+from its origin through a specified ASN, in this case 3356. The visibility of the 
+prefix at CCNIs end probes on the left show the prefix is correctly being propagated 
+through 3356.  
+
+![](http://xrdocs.io/design/images/cpf-hld/pf-hld-ccni-path-trace.png)
+
+### AS Path and Prefix Alarm Capabilities 
+CCNI can alarm and send notifications on a wide variety of prefix anomaly
+behavior. The following anomalies can trigger alarms via policy: 
+
+- AS Path Length Violation 
+- New AS Path Edge 
+- Parent Aggregate Change 
+- ROA Expiry 
+- ROA Failure 
+- ROA Not Found 
+- Subprefix Advertisement 
+- Upstream AS Change 
+- Valid AS Path Violation 
+- Unexpected AS Prefix 
+
+
+## Crosswork Cloud Traffic Analysis 
+Crosswork Cloud Traffic Analysis (CCTA) collects network traffic data and
+provides both historical statistics as well as advanced traffic analysis
+applications so providers can better understand their traffic patterns and make
+intelligent changes to optimie their networks. CCTA uses a lightweight
+on-premise collector (Crosswork Data Gateway) to collect SNMP, Netflow, and BGP
+information from the network routers and a secure tether to the Cisco cloud
+where data is ingested, processed, and analyzed. The on-premise component can
+also replicate Netflow data to other Netflow tools, eliminating the need to
+export flows to multiple destinations from the routers. The flexible tagging
+architecture also makes grouping sets of prefixes or devices very easy and
+allows users to view aggregate data across those tagged elements.   
+
+![](http://xrdocs.io/design/images/cpf-hld/pf-hld-ccta-traffic.png)
+
+CCTA allows users to drill down into per-prefix data and provides advanced
+aplications such as Peer Prospecting and Traffic Balancing recommendations. The
+traffic comparison application allows one to quickly see the balance of traffic
+on a specific prefix or set of prefixes between different routers. The example
+below shows a traffic inbalance for a set of prefixes on two separate edge
+peering routers.     
+
+![](http://xrdocs.io/design/images/cpf-hld/pf-hld-ccta-inbalance.png)
+
+
+More information on CCTA can be found at https://crosswork.cisco.com/
+
+### Looking Glass and AS Path Trace 
+
+The figure below shows the ability to graphically trace the AS path of a prefix 
+from its origin through a specified ASN, in this case 3356. The visibility of the 
+prefix at CCNIs end probes on the left show the prefix is correctly being propagated 
+through 3356.  
+
+![](http://xrdocs.io/design/images/cpf-hld/pf-hld-ccni-path-trace.png)
+
+### AS Path and Prefix Alarm Capabilities 
+CCNI can alarm and send notifications on a wide variety of prefix anomaly
+behavior. The following anomalies can trigger alarms via policy: 
+
+- AS Path Length Violation 
+- New AS Path Edge 
+- Parent Aggregate Change 
+- ROA Expiry 
+- ROA Failure 
+- ROA Not Found 
+- Subprefix Advertisement 
+- Upstream AS Change 
+- Valid AS Path Violation 
+- Unexpected AS Prefix 
+
 
 ## Cisco NSO Modules
 
