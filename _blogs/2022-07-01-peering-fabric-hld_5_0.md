@@ -24,7 +24,7 @@ position: hidden
 | 3.0       | 01/10/2020  |SR-TE steering for DDoS, BGP graceful shutdown, Radware DDoS validation | 
 | 3.5       | 11/01/2020  |BGP slow peer detection, Type-6 Password Encryption, Arbor DDoS validation | 
 | 4.0       | 03/01/2021  |SR Per-Flow Traffic Steering |
-| 5.0       | 07/01/2022  | Cisco 8000 as Peering Edge, Cisco Crosswork Network Insights and Traffic Analysis | 
+| 5.0       | 07/01/2022  | Cisco 8000 as Peering Edge, Cisco Crosswork Cloud Network Insights, Traffic Analysis, and Trust Insights | 
 
 # Key Drivers
 
@@ -133,6 +133,24 @@ connections, even to the same peer, across multiple edge nodes helps
 increase resiliency and limit traffic-affecting network events.
 
 ## Platforms
+### Cisco 8000 
+
+The Cisco 8000 series represents the next-generation in router technology,
+featuring Cisco's Silicon One ASICs to deliver unmatched density and power
+efficiency, while support the features and resiliency service providers require.
+In 5.0 the Q200 series routers are supporting in the Peering Fabric Design. This
+includes the 8201-32FH fixed system and the 88-LC0-36FH 36x400G line card for
+the 8804, 8808, 8812, and 8818 modular chassis. The 88-LC0-34H14FH (34x100G,
+14x400G) is also ideal for deployments requiring a mix of 100G and 400G
+interfaces.  All Cisco 8000 routers running the next-gernation XR7 operating
+system with advanced management and programmability capabilities.       
+
+The Peering Fabric design supports using the Cisco 8000 series in a peering
+fabric leaf, peering fabric spine, combined PFL/PFS, or core router. The Peering
+Fabric IX design is not applicable to the Cisco 8000 in version 5.0.   
+
+https://www.cisco.com/c/en/us/products/routers/8000-series-routers/index.html
+
 
 ### Cisco NCS 5500 / NCS 5700
 
@@ -166,26 +184,19 @@ More information on the NCS 5500 and NCS 5700 platforms can be round at:
 https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/ind
 https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5700-series/index.html
 
-### Cisco 8000 
+### Cisco NCS 540, ASR 9000 
 
-The Cisco 8000 series represents the next-generation in router technology,
-featuring Cisco's Silicon One ASICs to deliver unmatched density and power
-efficiency, while support the features and resiliency service providers require.
-In 5.0 the Q200 series routers are supporting in the Peering Fabric Design.
-This includes the 8201-32FH fixed system and the 88-LC0-36FH 36x400G line card
-for the 8804, 8808, 8812, and 8818 modular chassis. The 88-LC0-34H14FH (34x100G,
-14x400G) is also ideal for deployments requiring a mix of 100G and 400G
-interfaces.      
+Today's networks may consume or deliver traffic to external peers at different
+places in the network, traditional IX peering locations, far edge datacenters,
+or even localized to a cell tower location are all locations we find edge
+peering or CDN today. All Cisco routers running IOS-XR have the feature set to
+fulfill edge peering or content delivery at any point in the network. The
+smallest NCS 540 routers to the high-scale service edge and BNG capable ASR 9000
+support the security and traffic engineering capabilities to optimize edge
+traffic delivery of both enterprise and service provider networks.   
+## Control Plane
 
-The Peering Fabric design supports using the Cisco 8000 series in a peering
-fabric leaf, peering fabric spine, combined PFL/PFS, or core router. The Peering
-Fabric IX design is not applicable to the Cisco 8000 in version 5.0.   
-
-https://www.cisco.com/c/en/us/products/routers/8000-series-routers/index.html
-
-## Control-Plane
-
-The peering fabric design introduces a simplified control-plane built
+The peering fabric design introduces a simplified control plane built
 upon IPv4/IPv6 with Segment Routing. In the collapsed design, each
 peering node is connected to EBGP peers and upstream to the core via
 standard IS-IS, OSPF, and TE protocols, acting as a PE or LER in a
@@ -217,12 +228,14 @@ mention with information about the specific peer.
 ## Telemetry
 
 The Peering fabric design uses the rich telemetry available in IOS-XR
-and the NCS5500 platform to enable an unprecedented level of insight
+and all Cisco platforms to enable an unprecedented level of insight
 into network and device behavior. The Peering Fabric leverages Model-Driven
 Telemetry and NETCONF along with both standard and native YANG models
 for metric statistics collection. Telemetry configuration and applicable
 sensor paths have been identified to assist providers in knowing what to
-monitor and how to monitor it.
+monitor and how to monitor it. All configuration in Cisco routers can be 
+represented by a YANG model and all operational data can be consumed using 
+network models over either Cisco MDT or standards-based gNMI.  
 
 ## Automation
 
@@ -230,7 +243,9 @@ NETCONF and YANG using OpenConfig and native IOS-XR models are used to
 help automate peer configuration and validation. Cisco has developed 
 specific Peering Fabric NSO service models to help automate common tasks such
 as peer interface configuration, peer BGP configuration, and adding
-physical interfaces to an existing peer bundle.
+physical interfaces to an existing peer bundle. In addition to the device-level 
+capabilities, the Cisco Crosswork family of automation provides deeper insights 
+into network behavior.  
 
 ### Zero Touch Provisioning
 
