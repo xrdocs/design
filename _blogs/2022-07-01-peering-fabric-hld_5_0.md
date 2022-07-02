@@ -870,8 +870,18 @@ policy corresponding to a specific Forwarding Class. When an incoming BGP prefix
 
 ![](http://xrdocs.io/design/images/cpf-hld/pf-per-flow-policy.png)
 
+### Per-Flow Segment Routing Configuration (NCS Platforms)
+The following configuration is required on the NCS 5500 / 5700 platforms to
+allocate the PFP Binding SID (BSID) from a specific label block.  
+
+```
+mpls label blocks              
+  block name sample-pfp-bsid-block type pfp start 40000 end 41000 client any
+```
+
 ### Per-Flow QoS Configuration 
-The Forward Class must be set in the ingress QoS policy so traffic is steered into the correct child Per-Destination Policy.  
+The Forward Class must be set in the ingress QoS policy so traffic is steered
+into the correct child Per-Destination Policy.  
 
 ```
 policy-map per-flow-steering
