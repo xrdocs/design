@@ -1317,6 +1317,34 @@ behavior. The following anomalies can trigger alarms via policy:
 - Valid AS Path Violation 
 - Unexpected AS Prefix 
 
+## Crosswork Cloud Trust Insights 
+Trust Insights is a cloud based application allowing providers to easily monitor
+and report on the security of their network devices. Trust Insights utilizes the
+same on-premise Data Gateway to securely send network to Cisco's secure cloud 
+for additional analysis and reporting. Just some of the capabilities of Trust 
+Insights are highlighted below.   
+### Visualize Trust
+- Report on unique trust data from Cisco IOS XR devices 
+- Verify HW/SW running on production systems with cryptographic proof
+- Review security capabilities for IOS XR routing devices
+
+### Track & Verify Inventory
+- Streamline tracking and traceability of hardware, software, and patches 
+- Prove remediation of SW/HW issues for compliance & audit
+- Simplify forensics with extensive history of inventory changes
+
+The figure below shows tracking of both inventory and SW/HW changes over the 
+specified timeline.  
+
+![](http://xrdocs.io/design/images/cpf-hld/pf-hld-ccti.png)
+
+### Utilize Trusted Data for Automation
+- Use securely collected evidence of hardware and software inventory
+- Tie inventory change to trigger closed-loop automation workflow
+- Enable integration and data access via standards-based API 
+
+
+
 
 ## Cisco NSO Modules
 
