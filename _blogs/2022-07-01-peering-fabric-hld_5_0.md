@@ -61,6 +61,15 @@ environmental footprint devices are critical to handling more traffic
 without exceeding the capabilities of a facility. In cases where
 multiple facilities must be connected, a simple and efficient way to
 extend networks must exist.
+## Enhanced SLAs for Peering Traffic  
+
+Networks and their users are increasingly reliant on 3rd party services or 
+3rd party cloud providers for both internal and external applications. These 
+applications can be sensitive to jitter, latency, and bandwidth congestion. The
+Segment Routing enabled peering fabric allows providers to create end to end 
+paths satisfying metrics based on latency, IGP cost, secondary TE cost, or 
+overall hop count and use constraints such as SR flexible algorithms to ensure 
+traffic always stays on the optimal path.   
 
 # High-Level Design
 
