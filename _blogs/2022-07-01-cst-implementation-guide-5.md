@@ -1975,6 +1975,80 @@ policy-map hqos-egress-child-shaping
 </pre> 
 </div>
 
+## Support for Time Sensitive Networking in N540-FH-CSR-SYS and N540-FH-AGG-SYS 
+The Fronthaul family of NCS 540 routers support frame preemption based on the
+IEEE 802.1Qbu-2016 and Time Sensitive Networking (TSN) standards.  
+
+Time Sensitive Networking (TSN) is a set of IEEE standards that addresses the
+timing-critical aspect of signal flow in a packet switched Ethernet network to
+ensure deterministic operation. TSN operates at the Ethernet layer on physical
+interfaces. Frames are marked with a specific QoS class (typically 7 in a device
+with classes 0-7) qualify as express traffic, while other classes other than
+control plane traffic are marked as preemptable traffic.  
+
+This allows critical signaling traffic to traverse a device as quickly as
+possible without having to wait for lower priority frames before being
+transmitted on the wire.  
+
+Please see the TSN configuration guide for NCS 540 Fronthaul routers at
+<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5xx/fronthaul/b-fronthaul-config-guide-ncs540-fh/m-fh-tsn-ncs540.pdf></a>
+
+### Time Sensitive Networking Configuration 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+class-map match-any express-traffic 
+  match cos 7
+class-map match-any preemptable-traffic  
+  match cos 2
+class-map match-any express-class 
+  match traffic-class 7 
+class-map match-any preemptable-class 
+  match traffic-class 2 
+</pre> 
+</div>
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map mark-traffic  
+  class express-traffic  
+    set traffic-class 7
+  class preemptable-traffic  
+    set traffic-class 2
+</pre> 
+</div>
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map tsn-policy 
+  class express-class 
+    priority level 1
+  class preemptable-class 
+    priority level 2
+  class best-effort
+    bandwidth percent 50
+</pre> 
+</div>
+
+#### Ingress Interface
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigabitEthernet0/0/0/1
+  ip address 14.0.0.1 255.255.255.0
+  service-policy input mark-traffic 
+</pre> 
+</div>
+
+#### Egress Interface
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigabitEthernet0/0/0/0
+  ip address 12.0.0.1 255.255.255.0
+  service-policy output tsn-policy  
+  frame-preemption
+</pre> 
+</div>
+
 # Services
     
 ## End-To-End VPN Services 
