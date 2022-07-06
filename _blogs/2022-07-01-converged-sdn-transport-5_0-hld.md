@@ -26,7 +26,7 @@ position: hidden
 | 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
 | 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, Performance Measurement | 
 | 4.0        | 2/1/2020 | SR Flexible Algorithms inc. Inter-Domain, PTP multi-profile inc. G.82751<>G.8275.2 interworking, G.8275.2 on BVI, ODN support for EVPN ELAN, TI-LFA Open Ring support, NCS 520, SR on cBR8 | 
-| 5.0        | 7/1/2022 | Test |  
+| 5.0        | 7/1/2022 | |  
 
 # Minimum supported IOS-XR Release 
 
@@ -807,9 +807,9 @@ The BGP-LU design utilized in the Converged SDN Transport validation is based on
 ## Overview 
 Quality of Service is of utmost importance in today's multi-service converged networks. The Converged SDN Transport design has the ability to enforce end to end traffic path SLAs using Segment Routing Traffic Engineering. In addition to satisfying those path constraints, traditional QoS is used to make sure the PHB (Per-Hop Behavior) of each packet is enforced at each node across the converged network.  
 
-## NCS 540, 560, and 5500 QoS Primer 
+## NCS 540, 560, 5500, and 5700 QoS Primer 
 Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: 
-<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/66x/b-qos-cg-ncs5500-66x/b-qos-cg-ncs5500-66x_chapter_010.html></a> 
+<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/75x/b-qos-cg-ncs5500-75x.html></a> 
 
 The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR platforms but based on their hardware architecture use different elements for implementing end to end QoS. On these platforms ingress traffic is: 
 1. Matched using flexible criteria via Class Maps
@@ -822,6 +822,31 @@ The <code>priority-level</code> command used in an egress QoS policy specifies t
 
 Please note, multicast traffic does not follow the same constructs as unicast traffic for prioritization. All multicast traffic assigned to Traffic Classes 1-4 are treated as Low Priority and traffic assigned to 5-6 treated as high priority.     
 {: .notice--warning}
+
+## Cisco 8000 QoS  
+The QoS configuration of the Cisco 8000 follows similar configuration guidelines
+as the NCS 540, 5500, and NCS 5700 series devices. Detailed documentation of
+8000 series QoS including platform dependencies can be found at:  
+
+<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/cisco8000/qos/75x/b-qos-cg-8k-75x.html></a> 
+
+## Support for Time Sensitive Networking in N540-FH-CSR-SYS and N540-FH-AGG-SYS 
+The Fronthaul family of NCS 540 routers support frame preemption based on the
+IEEE 802.1Qbu-2016 and Time Sensitive Networking (TSN) standards.  
+
+Time Sensitive Networking (TSN) is a set of IEEE standards that addresses the
+timing-critical aspect of signal flow in a packet switched Ethernet network to
+ensure deterministic operation. TSN operates at the Ethernet layer on physical
+interfaces. Frames are marked with a specific QoS class (typically 7 in a device
+with classes 0-7) qualify as express traffic, while other classes other than
+control plane traffic are marked as preemptable traffic.  
+
+This allows critical signaling traffic to traverse a device as quickly as
+possible without having to wait for lower priority frames before being
+transmitted on the wire.  
+
+Please see the TSN configuration guide for NCS 540 Fronthaul routers at
+<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5xx/fronthaul/b-fronthaul-config-guide-ncs540-fh/m-fh-tsn-ncs540.pdf></a> 
 
 ## Hierarchical Edge QoS 
 Hierarchical QoS enables a provider to set an overall traffic rate across all services, and then configure parameters per-service via a child QoS policy where the percentages of guaranteed bandwidth are derived from the parent rate
