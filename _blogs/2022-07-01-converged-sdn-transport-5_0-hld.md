@@ -288,6 +288,25 @@ The non-inline PE topology, shown in the figure below, moves the services edge P
 ![](http://xrdocs.io/design/images/cmf-hld/non-inline-design.png)
 _Figure: Non-Inline Aggregation Topology_
 
+
+## Cisco Routed Optical Networking 
+Starting in CST 5.0, the CST design now supports and validates 400G ZR/ZR+
+tunable DWDM QSFP-DD transceivers. These transceivers are supported across the
+ASR 9000, Cisco 8000, NCS 5500/5700, and NCS 540 routers with QSFP-DD ports.
+Routed Optical Network as part of the Coverged SDN Transport design adds
+simplification of provider IP and Optical infrastructure to the control and data
+plane simplification introduced in previous CST designs. All CST capabilities are 
+supported over Cisco ZR and ZR+ enabled interfaces. 
+
+For more information on Cisco's Routed Optical Networkign design please see the 
+following high-level design:  
+
+<a href=https://xrdocs.io/design/blogs/latest-routed-optical-networking-hld></a>
+
+Note class C timing is currently not supported over ZR/ZR+ optics, ZR/ZR+ optics 
+in this release support class A or B timing depending on platform.   
+{: .notice--warning}
+
 ## Connectivity using 100G/200G coherent optics w/MACSec  
 
 In Converged SDN Transport 3.0 we add support for the use of pluggable CFP2-DCO transceivers to enable high speed aggregation and access network infrastructure. As endpoint bandwidth increases due to technology innovation such as 5G and Remote PHY, access and aggregation networks must grow from 1G and 10G to 100G and beyond. Coherent router optics simplify this evolution by allowing an upgrade path to increase ring bandwidth up to 400Gbps without deploying costly DWDM optical line systems.  
@@ -576,7 +595,7 @@ SR-PCE is capable of computing the Inter-Domain LSP path on-demand. The computed
 The Service End Points create a SR-TE Policy and use the SID list returned by SR-PCE as the primary 
 path.   
 
-Service End Points can be located on the Access Routers for Flat
+Service End Points can be located on the Access Routers for End-to-End 
 Services or at both the Access and domain PE routers for Hierarchical Services. The domain PE routers and ABRs may or may not be the same router. The SR-TE Policy Data
 Plane in the case of Service End Point co-located with the Access router
 was described in Figure 5.
@@ -1781,16 +1800,22 @@ Crosswork Network Controller now includes a ZTP application used to onboard netw
 devices with the proper IOS-XR software and base configuration. Crosswork ZTP 
 supports both traditional unsecure as well as fully secure ZTP operation as outlined 
 in RFC 8572. More information on Crosswork ZTP can be found at 
-https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/crosswork-network-automation/datasheet-c78-743677.html
+<a href=https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/crosswork-network-automation/datasheet-c78-743677.html></a> 
 
 ## Model-Driven Telemetry 
 
 In the 3.0 release the implementation guide includes a table of model-driven telemetry paths applicable to different components within the design.  More information on Cisco model-driven telemetry can be found at https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/telemetry/66x/b-telemetry-cg-ncs5500-66x.html. Additional information about how to consume and visualize telemetry data can be found at https://xrdocs.io/telemetry. We also introduce integration with Cisco Crosswork Health Insights, a telemetry and automated remediation platform, and sensor packs correspondding to Converged SDN Transport components. More information on Crosswork Health Insights can be found at https://www.cisco.com/c/en/us/support/cloud-systems-management/crosswork-health-insights/model.html.  
 
 ## Transport and Service Management using Crosswork Network Controller
-!!!!! Fix this section 
+Crosswork Network Controller provides support for provisioning SR-TE and RSVP-TE
+traffic engineering paths as well as managing the VPN services utilizing those
+paths or standard IGP based Segment Routing paths.   
 
-The NSO is a management and orchestration (MANO) solution for network
+
+
+## Network Services Orchestrator 
+
+NSO is a management and orchestration (MANO) solution for network
 services and Network Functions Virtualization (NFV). The NSO includes
 capabilities for describing, deploying, configuring, and managing
 network services and VNFs, as well as configuring the multi-vendor
@@ -1798,8 +1823,9 @@ physical underlay network elements with the help of standard open APIs
 such as NETCONF/YANG or a vendor-specific CLI using Network Element
 Drivers (NED).
 
-In the  Converged SDN Transport design, the NSO is used for Services
-Management, Service Provisioning, and Service Orchestration.
+In the  Converged SDN Transport design, NSO is used for Services
+Management, Service Provisioning, and Service Orchestration. Example or Core NSO 
+Function Packs are used for end-to-end provisioning of CST services.  
 
 **The NSO provides several options for service designing as shown in**
 **Figure 32**
@@ -1839,19 +1865,31 @@ can also directly use the device YANG models using NETCONF for device
 configuration. These service templates enable NSO to operate in a
 multi-vendor environment.
 
-### Converged SDN Transport Supported Service Models
-!!!! Fix this, point to T-SDN 
-Converged SDN Transport 1.5 and later supports the following NSO service models for provisioning both 
-hierarchical and flat services across the fabric. All NSO service modules in 1.5 
-utilize the IOS-XR and IOS-XE CLI NEDs for configuration. 
+## Converged SDN Transport Supported Service Models
+CST 5.0+ supports using NSO Transport SDN Function Packs. The T-SDN function 
+packs cover both Traffic Engineering and xVPN service provisioning.  CST 5.0 is 
+aligned with T-SDN FP Bundle version 3.0 which includes the following function packs.
 
-![](http://xrdocs.io/design/images/cmf-hld/cst-nso-flat.png)
+### Core Function Packs
+Core Function Packs are supported function packs meant to be used as-is without 
+modification. 
 
-_Figure 33: Automation – End-to-End Service Models_
+| CFP | Capabilities | 
+| ---------------- | ---------------------- |
+| SR-TE ODN | Configure SR-TE On-Demand Properties | 
+| SR-TE | Configured Segment Routing Traffic Engineered Policies | 
 
-![](http://xrdocs.io/design/images/cmf-hld/cst-nso-hierarchical.png)
+### Example Function Packs 
+Example function packs are meant to be used as-is or modified to fit specific network use cases.  
 
-_Figure 34: Automation – Hierarchical Service Models_
+| FP | Capabilities | 
+| ---------------- | ---------------------- |
+| IETF-TE | Provision RSVP-TE LSPs using IETF IETF-TE model | 
+| L2NM | Provision EVPN-VPWS service using IETF L2NM model | 
+| L3NM | Provision multi-point L3VPN service using IETF L3NM model | 
+| Y1731 | Provision Y.1731 CFM for L2VPN/L3VPN services | 
+
+<a href=https://www.cisco.com/c/dam/en/us/td/docs/cloud-systems-management/crosswork-network-automation/NSO_Reference_Docs/Cisco_NSO_Transport_SDN_Function_Pack_Bundle_User_Guide_3_0_0.pdf></a>
 
 # Base Services supporting Advanced Use Cases  
     
@@ -1892,7 +1930,7 @@ Service Provider Networks:
     
 ### Ethernet VPN Hardware Support 
 
-In CST 3.0 EVPN ELAN, ETREE, and VPWS services are supported on all IOS-XR devices. The ASR920 running IOS-XE does not support native EVPN services, but can integrate into an overall EVPN service by utilizing service hierarchy. Please see the tables under Flat and Hierarchical Services for supported service types.  Please note ODN is NOT supported for EVPN ELAN services in IOS-XR 6.6.3.   
+In CST 3.0+ EVPN ELAN, ETREE, and VPWS services are supported on all IOS-XR devices. The ASR920 running IOS-XE does not support native EVPN services, but can integrate into an overall EVPN service by utilizing service hierarchy. Please see the tables under End-to-End and Hierarchical Services for supported service types.  
 
 ### Multi-Homed & All-Active Ethernet Access
 
@@ -2090,6 +2128,35 @@ _Figure 30: Hierarchical – Services (H-EVPN and PWHE)_
 
 Refer also to the section: “Transport and Services Integration”.
 
+### EVPN Centralized Gateway
+Similar to the Hierarchical L2/L3 service with Anycast-IRB, EVPN Centralized 
+Gateway extends that service type by allowing the use of EVPN-ELAN services between 
+the access site and core location. In previous versions the Anycast-IRB L3 gateway needed 
+to be part of the access L2 domain and could not be placed elsewhere in the EVPN across
+the core network.  EVPN CGW relaxes the constraint and allows the L3 Anycast IRB gateway 
+to be located at any point in the EVPN ELAN. The IRB can be placed in either the global 
+routing table or within a VRF. 
+
+In CST 5.0 EVPN Centralized GW is supported on the ASR 9000 platform.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-5-evpn-cgw.png)
+
+### EVPN Head-End for L3 Services 
+CST 5.0 also introduces Cisco's EVPN Head-End solution for hierarchical
+services. EVPN Head-End is similar to the existing Hierarchical PWHE services,
+but allows the use of native EVPN-VPWS between the access PE node and
+centralized PE node. This simplifies deployments by allowing providers to use
+the fully dynamic EVPN control plane for signaling, including the ability to
+signal active/backup signaling between access PE and core PE nodes. In CST 5.0
+EVPN-HE is supported for L3 service termination, with the L3 gateway residing on
+either a PWHE P2P interface or BVI interface. The L3 GW can reside in the global 
+routing table or within a VRF.    
+
+In CST 5.0 EVPN-HE for L3 services is supported on the ASR 9000 platform.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-5-evpn-he.png)
+
+
 ## Services – Route-Reflector (S-RR)
 
 Figure 31 shows the design of Services Router-Reflectors
@@ -2246,8 +2313,6 @@ _Figure 40: PCE Path Computation – Phase 1_
 ## Supported Services
 
 This section describes the base xVPN Services used in Converged SDN Transport. 
-
-!!!! Update with EVPN-HE and CGW 
 
 The table in Figure 41 describes the End-To-End services, while the
 network diagram in Figure 42 shows how services are deployed in the
