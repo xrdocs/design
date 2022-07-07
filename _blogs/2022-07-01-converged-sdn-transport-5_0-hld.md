@@ -26,7 +26,7 @@ position: hidden
 | 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
 | 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, Performance Measurement | 
 | 4.0        | 2/1/2020 | SR Flexible Algorithms inc. Inter-Domain, PTP multi-profile inc. G.82751<>G.8275.2 interworking, G.8275.2 on BVI, ODN support for EVPN ELAN, TI-LFA Open Ring support, NCS 520, SR on cBR8 | 
-| 5.0        | 7/1/2022 | |  
+| 5.0        | 7/1/2022 | Cisco 8000, Cloud Native BNG, EVPN-HE/EVPN-CGW |  
 
 # Minimum supported IOS-XR Release 
 
@@ -2139,6 +2139,11 @@ routing table or within a VRF.
 
 In CST 5.0 EVPN Centralized GW is supported on the ASR 9000 platform.  
 
+The figure below shows an example EVPN CGW deployment. In this scenario 
+While not shown in
+this figure, the CE device could also be multi-homed to two separate A-PE nodes in 
+a all-active, single-active, or port-active configuration.     
+
 ![](http://xrdocs.io/design/images/cmf-hld/cst-5-evpn-cgw.png)
 
 ### EVPN Head-End for L3 Services 
@@ -2153,6 +2158,14 @@ either a PWHE P2P interface or BVI interface. The L3 GW can reside in the global
 routing table or within a VRF.    
 
 In CST 5.0 EVPN-HE for L3 services is supported on the ASR 9000 platform.  
+
+The figure below shows a typical EVPN Head-End deployment. A-PE3 is configured
+as an EVPN-VPWS endpoint, with PE1 and PE2 configured with the same EVPN-VPWS
+EVI, acting as All-Active or Single-Active gateways. PE1 and PE2 are configured
+with the same 10.1.0.1/24 address on the terminating L3 interface, providing a
+redundant gateway for the CE device with address 10.1.0.2/24. While not shown in
+this figure, the CE device could also be multi-homed to two separate A-PE nodes in 
+a all-active, single-active, or port-active configuration.       
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-5-evpn-he.png)
 
