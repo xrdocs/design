@@ -2139,10 +2139,16 @@ routing table or within a VRF.
 
 In CST 5.0 EVPN Centralized GW is supported on the ASR 9000 platform.  
 
-The figure below shows an example EVPN CGW deployment. In this scenario 
-While not shown in
-this figure, the CE device could also be multi-homed to two separate A-PE nodes in 
-a all-active, single-active, or port-active configuration.     
+The figure below shows an example EVPN CGW deployment. In this scenario A-PE3,
+A-PE4, A-PE5, PE1, and PE2 all belong to the same EVPN-ELAN EVI 100. The CE
+nodes connected to A-PE3, A-PE4, and A-PE5 can communicate at Layer 2 or Layer 3
+with eachother without having to traverse the core nodes.  This is one
+fundamental difference between EVPN-CGW and EVPN-HE. Traffic destined to another
+subnet, such as the 10.0.0.2 address is routed through the CGW core gateway. 
+
+Also in this example CE4 is an example of a multi-homed CE node, utilizing a LAG
+across A-PE4/A-PE3. This multi-homed connection can be configured in an
+all-active, single-active, or port-active configuration.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-5-evpn-cgw.png)
 
