@@ -1178,14 +1178,14 @@ router bgp 100
 </div> 
 
 ### Transport Route Reflector (tRR) configuration
+In CST 5.0 (XR 7.5.2) and higher versions we will utilize the BGP soft next-hop
+validation feature to accept On-Demand (ODN) service prefixes without a BGP
+next-hop residing in the RIB. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-router static
- address-family ipv4 unicast
-  0.0.0.0/1 Null0
-
 router bgp 100
+ nexthop validation color-extcomm disable 
  nsr
  bgp router-id 100.0.0.10
  bgp graceful-restart
@@ -1214,7 +1214,13 @@ router bgp 100
 ## BGP – Provider Edge Routers (A-PEx and PEx) to service RR 
 Each PE router is configured with BGP sessions to service route-reflectors for advertising VPN service routes across the inter-domain network.  
     
-### IOS-XR configuration 
+### IOS-XR configuration
+
+In CST 5.0 (XR 7.5.2) and higher versions we will utilize the BGP soft next-hop
+validation feature. PE nodes will use the computed ODN SR-TE Policy as a
+validation criteria for the BGP path. If a SR-TE Policy can be computed either
+locally or by SR-PCE, the path will be active, otherwise the path will not be 
+installed.   
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1223,6 +1229,7 @@ router bgp 100
  bgp router-id 100.0.1.50
  bgp graceful-restart graceful-reset
  bgp graceful-restart
+ <b>nexthop validation color-extcomm sr-policy</b>
  ibgp policy out enforce-modifications
  address-family vpnv4 unicast
  !
