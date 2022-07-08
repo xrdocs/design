@@ -26,7 +26,7 @@ position: hidden
 | 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
 | 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, Performance Measurement | 
 | 4.0        | 2/1/2020 | SR Flexible Algorithms inc. Inter-Domain, PTP multi-profile inc. G.82751<>G.8275.2 interworking, G.8275.2 on BVI, ODN support for EVPN ELAN, TI-LFA Open Ring support, NCS 520, SR on cBR8 | 
-| 5.0        | 7/1/2022 | Cisco 8000, Cloud Native BNG, EVPN-HE/EVPN-CGW |  
+| 5.0        | 7/1/2022 | Cisco 8000, Cloud Native BNG, EVPN-HE/EVPN-CGW, Dynamic Tree-SID |  
 
 # Minimum supported IOS-XR Release 
 
@@ -283,7 +283,13 @@ document, will cover in depth the scenario described in Figure 3.
 
 ## Topology options and PE placement - Inline and non-inline PE 
 
-The non-inline PE topology, shown in the figure below, moves the services edge PE device from the forwarding path between the access/aggregation networks and the core.  There are several factors which can drive providers to this design vs. one with an in-line PE, some of which are outlined in the table below. The control-plane configuration of the Converged SDN Transport does not change, all existing ABR configuration remains the same, but the device no longer acts as a high-scale PE.    
+The non-inline PE topology, shown in the figure below, moves the services edge
+PE device from the forwarding path between the access/aggregation networks and
+the core.  There are several factors which can drive providers to this design
+vs. one with an in-line PE, some of which are outlined in the table below. The
+control-plane configuration of the Converged SDN Transport does not change, all
+existing ABR configuration remains the same, but the device no longer acts as a
+high-scale PE.    
 
 ![](http://xrdocs.io/design/images/cmf-hld/non-inline-design.png)
 _Figure: Non-Inline Aggregation Topology_
@@ -298,8 +304,8 @@ simplification of provider IP and Optical infrastructure to the control and data
 plane simplification introduced in previous CST designs. All CST capabilities are 
 supported over Cisco ZR and ZR+ enabled interfaces. 
 
-For more information on Cisco's Routed Optical Networkign design please see the 
-following high-level design:  
+For more information on Cisco's Routed Optical Networking design please see the 
+following high-level design document:  
 
 <a href=https://xrdocs.io/design/blogs/latest-routed-optical-networking-hld></a>
 
@@ -307,31 +313,38 @@ Note class C timing is currently not supported over ZR/ZR+ optics, ZR/ZR+ optics
 in this release support class A or B timing depending on platform.   
 {: .notice--warning}
 
-## Connectivity using 100G/200G coherent optics w/MACSec  
+## Connectivity using 100G/200G digital coherent optics w/MACSec  
 
-In Converged SDN Transport 3.0 we add support for the use of pluggable CFP2-DCO transceivers to enable high speed aggregation and access network infrastructure. As endpoint bandwidth increases due to technology innovation such as 5G and Remote PHY, access and aggregation networks must grow from 1G and 10G to 100G and beyond. Coherent router optics simplify this evolution by allowing an upgrade path to increase ring bandwidth up to 400Gbps without deploying costly DWDM optical line systems.  
+Converged SDN Transport 3.0+ adds support for the use of pluggable CFP2-DCO
+transceivers to enable high speed aggregation and access network infrastructure.
+As endpoint bandwidth increases due to technology innovation such as 5G and
+Remote PHY, access and aggregation networks must grow from 1G and 10G to 100G
+and beyond. Coherent router optics simplify this evolution by allowing an
+upgrade path to increase ring bandwidth up to 400Gbps without deploying costly
+DWDM optical line systems. CFP2-DCO transceivers are supported using 400G
+Modular Port Adapters for the NCS-55A2-MOD-S/SE, NCS-57C3-MOD-S/SE chassis and
+NC55-MOD-A-S/SE line cards. The NC55-MPA-1TH2H-S MPA has two QSFP28 ports and
+one CFP2-DCO port. The NC55-MPA-2TH-HX-S is a temperature hardened version of
+this MPA. The NC55-MPA-2TH-S has two CFP2-DCO ports.  
 
-MACSec is an industry standard protocol running at L2 to provide encryption across Ethernet links. In CST 3.0 MACSec is enabled across CFP2-DCO access to aggregation links. MACSec support is hardware dependent, please consult individual hardware data sheets for MACSec support.   
+MACSec is an industry standard protocol running at L2 to provide encryption
+across Ethernet links. In CST 3.0 MACSec is enabled across CFP2-DCO access to
+aggregation links. MACSec support is hardware dependent, please consult
+individual hardware data sheets for MACSec support.   
 
-### Ring deployment without multiplexers 
-In the simplest deployment access rings are deployed over dark fiber, enabling plug and play operation up to 80km without amplification.
+### Routed Optical Networking ring deployment without multiplexers 
+In the simplest deployment access rings are deployed over dark fiber, enabling
+plug and play operation up to 80km without amplification.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-dwdm-ring.png)
-_CFP2-DCO DWDM ring deployment_ 
+_Routed Optical Networking DWDM ring deployment_ 
 
-### Ring deployment with multiplexer 
+### Routed Optical Networking deployment with multiplexer 
 In this option the nodes are deployed with active or passive multiplexers to maximize fiber utilization rings needing more bandwidth per ring site. While this example shows each site on the ring having direct DWDM links back to the aggregation nodes, a hybrid approach could also be supported targeting only high-bandwidth locations with direct links while leaving other sites on a an aggregation ring.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/cmf-dwdm-mux.png)
-_CFP2-DCO DWDM hub and spoke or partial mesh deployment_ 
+_Routed Optical Networking DWDM hub and spoke or partial mesh deployment_ 
 
-The Cisco NCS 55A2-MOD and 55A2-MOD-SE hardened modular platform has a mix of fixed SFP+ and SFP28 ports along with two MPA slots. The coherent aggregation and access solution can utilize either the 2xCFP2-DCO MPA or 2xQSFP28+1xCFP2-DCO MPA. The same MPA modules can be used in the 5504, 5508, and 5516 chassis using the NC55-MOD-A-S and NC55-MODD-A-SE line cards, with 12xSFP+ and 2xQSFP+ ports.  The NCS 560 also now supports a CFP2-DCO line card to support using DWDM links with the NCS 560.   
-
-![](http://xrdocs.io/design/images/cmf-hld/cmf-peyto-mpa.png)
-_Cisco 55A2 modular hardened router_ 
-
-![](http://xrdocs.io/design/images/cmf-hld/cmf-mod-linecard.png)
-_Cisco NCS 5500 chassis modular line card_ 
 
 ## Unnumbered Interface Support 
 In CST 3.5, starting at IOS-XR 7.1.1 we have added support for unnumbered interfaces. Using unnumbered interfaces in the network eases the burden of 
@@ -1009,12 +1022,14 @@ guidelines and examples.
 
 In CST 5.0+, we now support using fully dynamic signaling to create multicast
 distribution trees using Tree-SID. Sources and receivers are discovered using
-BGP auto-discovery (BGP-AD), advertised throughout the mVPN using the IPv4 or
+BGP auto-discovery (BGP-AD) and advertised throughout the mVPN using the IPv4 or
 IPv6 mVPN AFI/SAFI. Once the source head-end node learns of receivers, the
 head-end will create a PCEP request to the configured primary PCE. The PCE then
 computes the optimal multicast distribution tree based on the metric-type and
 constraints specified in the request. Once the Tree-SID policy is up, multicast
-traffic will be forwarded using the tree by the head-end node.  
+traffic will be forwarded using the tree by the head-end node. Tree-SID
+optionally supports TI-LFA for all segments, and the ability to create disjoint
+trees for high available applications.   
 
 {: .notice--warning}
 All routers across the network needing to participate in the tree, including
@@ -1383,6 +1398,7 @@ The Control Packet Redirect Interface (CPRi) as its name implies redirects user
 packets destined for control-plane functions from the user plane to control
 plane. These include: DHCP DORA, DHCPv6, PPPoE, and L2TP. More information on 
 TR-459 can be found at https://www.broadband-forum.org/marketing/download/TR-459.pdf
+
 ### cnBNG Control Plane 
 The cloud native BNG control plane is a highly resilient scale out architecture.
 Traditional physical BNGs embedded in router software often scale poorly,
@@ -1398,6 +1414,7 @@ responsible for terminating subscriber sessions (IPoE/PPPoE), communicating with
 the cnBNG control plane for user authentication and policy, applying
 subscriber policy elements such as QoS and security policies, and performs 
 subscriber routing.  
+
 
  
 
