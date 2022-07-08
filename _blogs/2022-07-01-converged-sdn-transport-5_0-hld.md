@@ -2409,7 +2409,7 @@ validation.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-topology.png)
 
-_Figure 48: Testbed_
+_Figure 48: CST Validation Testbed_
 
 Figure 49 shows the detailed topology of the testbed used for 
 CIN and Remote PHY validation.
