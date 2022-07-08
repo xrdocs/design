@@ -1791,6 +1791,9 @@ Crosswork Network Controller provides a platform for UI and API based network
 management. CNC supports RSVP-TE, SR-TE Policy, L2VPN, and L3VPN provisioning 
 using standards based IETF models.
 
+More information on Crosswork Network Controller can be found at: 
+<a href=https://www.cisco.com/c/en/us/products/cloud-systems-management/crosswork-network-controller/index.html></a>
+
 ### L2VPN Service Provisioning and Visualization
 Crosswork Network Controller supports UI and API based provisioning of EVPN-VPWS 
 services using the IETF L2NM standard model. Once services are provisionined they 
