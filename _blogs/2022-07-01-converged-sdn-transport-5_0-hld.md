@@ -26,7 +26,7 @@ position: hidden
 | 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
 | 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, Performance Measurement | 
 | 4.0        | 2/1/2020 | SR Flexible Algorithms inc. Inter-Domain, PTP multi-profile inc. G.82751<>G.8275.2 interworking, G.8275.2 on BVI, ODN support for EVPN ELAN, TI-LFA Open Ring support, NCS 520, SR on cBR8 | 
-| 5.0        | 7/1/2022 | Cisco 8000, Cloud Native BNG, EVPN-HE/EVPN-CGW, Dynamic Tree-SID |  
+| 5.0        | 7/1/2022 | Cisco 8000, Cloud Native BNG, EVPN-HE/EVPN-CGW, Dynamic Tree-SID, Routed Optical Networking|  
 
 # Minimum supported IOS-XR Release 
 
@@ -2419,9 +2419,9 @@ CIN and Remote PHY validation.
 _Figure 49: Remote PHY/CIN Validation Testbed_
 
 Figure 50 shows the detailed topology of the testbed used for 
-validation.
+cnBNG validation.
 
-![](http://xrdocs.io/design/images/cmf-hld/cst-topology.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-cnbng-topology.png)
 
 _Figure 50: Cloud-Native BNG Testbed_  
 
