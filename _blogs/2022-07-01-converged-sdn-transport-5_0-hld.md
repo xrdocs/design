@@ -201,7 +201,7 @@ Routed Optical Networking in the QSFP-DD enabled NCS-540 Large Density router.
 
 More information on the NCS 540 router line can be found at: 
 
-https://www.cisco.com/c/en/us/products/routers/network-convergence-system-540-series-routers/index.html
+<https://www.cisco.com/c/en/us/products/routers/network-convergence-system-540-series-routers/index.html>
 
 The N540-FH-CSR-SYS and N540-FH-AGG-SYS Fronthaul routers introduced in CST 5.0 can be
 utilized for ultra low latency mobile fronthaul, midhaul, or backhaul networks.
@@ -307,7 +307,7 @@ supported over Cisco ZR and ZR+ enabled interfaces.
 For more information on Cisco's Routed Optical Networking design please see the 
 following high-level design document:  
 
-<a href=https://xrdocs.io/design/blogs/latest-routed-optical-networking-hld></a>
+<https://xrdocs.io/design/blogs/latest-routed-optical-networking-hld> 
 
 Note class C timing is currently not supported over ZR/ZR+ optics, ZR/ZR+ optics 
 in this release support class A or B timing depending on platform.   
@@ -842,7 +842,7 @@ In the Converged SDN Transport 3.0 design we introduce validation for the co-exi
 ### ABR BGP-LU design  
 In a BGP-LU design each IGP domain or ASBR boundary node will exchange BGP labeled prefixes between domains while resetting the BGP next-hop to its own loopback address. The labeled unicast label will change at each domain boundary across the end to end network. Within each IGP domain, a label distribution protocol is used to supply MPLS connectivity between the domain boundary and interior nodes. In the Converged SDN Transport design, IS-IS with SR-MPLS extensions is used to provide intra-domain MPLS transport. This ensures within each domain BGP-LU prefixes are protected using TI-LFA.  
 
-The BGP-LU design utilized in the Converged SDN Transport validation is based on Cisco's Unified MPLS design used in EPN 4.0. More information can be found at: <a href=https://www.cisco.com/c/dam/en/us/td/docs/solutions/Enterprise/Mobility/EPN/4_0/EPN_4_Transport_Infrastructure_DIG.pdf></a> 
+The BGP-LU design utilized in the Converged SDN Transport validation is based on Cisco's Unified MPLS design used in EPN 4.0. 
 
 # Quality of Service and Assurance 
 
@@ -851,7 +851,7 @@ Quality of Service is of utmost importance in today's multi-service converged ne
 
 ## NCS 540, 560, 5500, and 5700 QoS Primer 
 Full details of the NCS 540 and 5500 QoS capabilities and configuration can be found at: 
-<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/75x/b-qos-cg-ncs5500-75x.html></a> 
+<https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/qos/75x/b-qos-cg-ncs5500-75x.html>
 
 The NCS platforms utilize the same MQC configuration for QoS as other IOS-XR platforms but based on their hardware architecture use different elements for implementing end to end QoS. On these platforms ingress traffic is: 
 1. Matched using flexible criteria via Class Maps
@@ -870,7 +870,7 @@ The QoS configuration of the Cisco 8000 follows similar configuration guidelines
 as the NCS 540, 5500, and NCS 5700 series devices. Detailed documentation of
 8000 series QoS including platform dependencies can be found at:  
 
-<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/cisco8000/qos/75x/b-qos-cg-8k-75x.html></a> 
+<https://www.cisco.com/c/en/us/td/docs/iosxr/cisco8000/qos/75x/b-qos-cg-8k-75x.html> 
 
 ## Support for Time Sensitive Networking in N540-FH-CSR-SYS and N540-FH-AGG-SYS 
 The Fronthaul family of NCS 540 routers support frame preemption based on the
@@ -888,7 +888,7 @@ possible without having to wait for lower priority frames before being
 transmitted on the wire.  
 
 Please see the TSN configuration guide for NCS 540 Fronthaul routers at
-<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5xx/fronthaul/b-fronthaul-config-guide-ncs540-fh/m-fh-tsn-ncs540.pdf></a> 
+<https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5xx/fronthaul/b-fronthaul-config-guide-ncs540-fh/m-fh-tsn-ncs540.pdf>
 
 ## Hierarchical Edge QoS 
 Hierarchical QoS enables a provider to set an overall traffic rate across all services, and then configure parameters per-service via a child QoS policy where the percentages of guaranteed bandwidth are derived from the parent rate
@@ -1148,7 +1148,7 @@ The following key features have been added to the CST validated design to suppor
 End to end timing using PTP with profiles G.8275.1 and G.8275.2 have been validated in the CST design. Best practice configurations are available in the online configurations and CST Implementation Guide. It is recommended to use G.8257.1 when possible to main the highest level of accuracy across the network. In CST 4.0+ we include validation for 
 G.8275.1 to G.8275.2 interworking, allowing the use of different profiles across the network. Synchronous Ethernet (SyncE) is also recommended across the network to maintain stability when timing to the PRC. All nodes used in the CST design support SyncE.  
 ### Low latency SR-TE path computation
-In this release of the CST design, we introduce a new validated constraint type for SR-TE paths used for carrying services across the network. The "latency" constraint used either with a configured SR Policy or ODN SR Policy specifies the computation engine to look for the lowest latency path across the network.  The latency computation algorithm can use different mechanisms for computing the end to end path.  The first and preferred mechanism is to use the realtime measured per-link one-way delay across the network. This measured information is distributed via IGP extensions across the IGP domain and then onto external PCEs using BGP-LS extensions for use in both intra-domain and inter-domain calculations. In version 3.0 of the CST this is supported on ASR9000 links using the Performance Measurement link delay feature. More detail on the configuration can be found at https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-0/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-70x/b-segment-routing-cg-asr9000-70x_chapter_010000.html#id_118505. In release 6.6.3 NCS 540 and NCS 5500 nodes support the configuration of static link-delay values which are distributed using the same method as the dynamic values. Two other metric types can also be utilized as part of the "latency" path computation. The TE metric, which can be defined on all SR IS-IS links and the regular IGP metric can be used in the absence of the link-delay metric.  
+In this release of the CST design, we introduce a new validated constraint type for SR-TE paths used for carrying services across the network. The "latency" constraint used either with a configured SR Policy or ODN SR Policy specifies the computation engine to look for the lowest latency path across the network.  The latency computation algorithm can use different mechanisms for computing the end to end path.  The first and preferred mechanism is to use the realtime measured per-link one-way delay across the network. This measured information is distributed via IGP extensions across the IGP domain and then onto external PCEs using BGP-LS extensions for use in both intra-domain and inter-domain calculations. In version 3.0 of the CST this is supported on ASR9000 links using the Performance Measurement link delay feature. More detail on the configuration can be found at <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-0/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-70x/b-segment-routing-cg-asr9000-70x_chapter_010000.html#id_118505>. In release 6.6.3 NCS 540 and NCS 5500 nodes support the configuration of static link-delay values which are distributed using the same method as the dynamic values. Two other metric types can also be utilized as part of the "latency" path computation. The TE metric, which can be defined on all SR IS-IS links and the regular IGP metric can be used in the absence of the link-delay metric.  
 
 #### <b>Dynamic Link Performance Measurement</b>  
 Starting in version 3.5 of the CST, dynamic measurement of one-way and two-way latency on logical links is fully supported across all devices. The delay measurement feature utilizes TWAMP-Lite as the transport mechanism for probes and responses. PTP is a requirement for accurate measurement of one-way latency across links and is recommended for all nodes.  In the absence of PTP a "two-way" delay mode is supported to calculate the one-way link delay. It is recommended to configure one-way delay on all IS-IS core links within the CST network. A sample configuration can be found below and detailed configuration information can be found in the implementation guide. 
@@ -1407,7 +1407,7 @@ management of dynamic subscriber interfaces including accounting information.
 The Control Packet Redirect Interface (CPRi) as its name implies redirects user
 packets destined for control-plane functions from the user plane to control
 plane. These include: DHCP DORA, DHCPv6, PPPoE, and L2TP. More information on 
-TR-459 can be found at https://www.broadband-forum.org/marketing/download/TR-459.pdf
+TR-459 can be found at <https://www.broadband-forum.org/marketing/download/TR-459.pdf> 
 
 ### cnBNG Control Plane 
 The cloud native BNG control plane is a highly resilient scale out architecture.
@@ -1455,7 +1455,7 @@ This section will list some of the components of an R-PHY network and the
 network requirements driven by those components. It is not considered to be an
 exhaustive list of all R-PHY components, please see the CableLabs specification
 document, the latest which can be access via the following URL:
-https://specification-search.cablelabs.com/CM-SP-R-PHY 
+<https://specification-search.cablelabs.com/CM-SP-R-PHY> 
 
 ### Remote PHY Device (RPD) 
 The RPD unlocks the benefits of DAA by integrating the physical analog to
@@ -1550,7 +1550,7 @@ transport frames over an IP infrastructure. Please see the following Cisco white
 paper for more information on how tunnels are created specific to
 upstream/downstream channels and how data is encoded in the specific tunnel
 sessions.
-https://www.cisco.com/c/en/us/solutions/collateral/service-provider/converged-cable-access-platform-ccap-solution/white-paper-c11-732260.html.
+<https://www.cisco.com/c/en/us/solutions/collateral/service-provider/converged-cable-access-platform-ccap-solution/white-paper-c11-732260.html>.
 In general there will be one or two (standby configuration) UEPI and DEPI L2TPv3
 tunnels to each RPD, with each tunnel having many L2TPv3 sessions for individual
 RF channels identified by a unique session ID in the L2TPv3 header. Since L2TPv3
@@ -1720,7 +1720,7 @@ SmartPHY is an automation solution for managing deployed RPDs across the SP netw
 ## 4G Transport and Services Modernization 
 
 While talk about deploying 5G services has reached a fever pitch, many providers are continuing to build and evolve their 4G networks. New services require more agile and scalable networks, satisfied by Cisco's Converged SDN Transport. The services modernization found 
-in Converged SDN Transport 2.0 follows work done in EPN 4.0 located here:  https://www.cisco.com/c/dam/en/us/td/docs/solutions/Enterprise/Mobility/EPN/4_0/EPN_4_Transport_Infrastructure_DIG.pdf.  Transport modernization requires simplification and new abilities. We evolve the EPN 4.0 design based on LDP and hierarchical BGP-LU to one using Segment Routing with an MPLS data plane and the SR-PCE to add inter-domain path computation, scale, and programmability.  L3VPN based 4G services remain, but are modernized to utilize SR-TE On-Demand Next-Hop, reducing provisioning complexity, increasing scale, and adding advanced path computation constraints. 4G services utilizing L3VPN remain the same, but those utilizing L2VPN such as VPWS and VPLS transition to EVPN services. EVPN is the modern replacement for legacy LDP signalled L2VPN services, reducing complexity and adding advanced multi-homing functionality.   The following table highlights the legacy and new way of delivering services for 4G.  
+in Converged SDN Transport 2.0 follows work done in EPN 4.0. Transport modernization requires simplification and new abilities. We evolve the EPN 4.0 design based on LDP and hierarchical BGP-LU to one using Segment Routing with an MPLS data plane and the SR-PCE to add inter-domain path computation, scale, and programmability.  L3VPN based 4G services remain, but are modernized to utilize SR-TE On-Demand Next-Hop, reducing provisioning complexity, increasing scale, and adding advanced path computation constraints. 4G services utilizing L3VPN remain the same, but those utilizing L2VPN such as VPWS and VPLS transition to EVPN services. EVPN is the modern replacement for legacy LDP signalled L2VPN services, reducing complexity and adding advanced multi-homing functionality.   The following table highlights the legacy and new way of delivering services for 4G.  
 
 | Element | EPN 4.0 | Converged SDN Transport | 
 | ---------------- | ---------------------- |-----|
@@ -1733,7 +1733,6 @@ in Converged SDN Transport 2.0 follows work done in EPN 4.0 located here:  https
 The CST 4G Transport modernization covers only MPLS-based access and not L2 access scenarios.  
 
 # Business and Infrastructure Services using L3VPN and EVPN 
-
 
 ## EVPN Multicast 
 Multicast within a L2VPN EVPN has been supported since Converged SDN Transport 1.0. Multicast traffic within an EVPN is replicated to the endpoints interested in a specific group via EVPN signaling. EVPN utilizes ingress replication for all multicast traffic, meaning multicast is encapsulated with a specific EVPN label and unicast to each PE router with interested listeners for each multicast group. Ingress replication may add additional traffic to the network, but simplifies the core and data plane by eliminating multicast signaling, state, and hardware replication.  EVPN multicast is also not subject to domain boundary restrictions.
@@ -1792,7 +1791,7 @@ management. CNC supports RSVP-TE, SR-TE Policy, L2VPN, and L3VPN provisioning
 using standards based IETF models.
 
 More information on Crosswork Network Controller can be found at: 
-<a href=https://www.cisco.com/c/en/us/products/cloud-systems-management/crosswork-network-controller/index.html></a>
+<https://www.cisco.com/c/en/us/products/cloud-systems-management/crosswork-network-controller/index.html>
 
 ### L2VPN Service Provisioning and Visualization
 Crosswork Network Controller supports UI and API based provisioning of EVPN-VPWS 
@@ -1846,11 +1845,11 @@ Crosswork Network Controller now includes a ZTP application used to onboard netw
 devices with the proper IOS-XR software and base configuration. Crosswork ZTP 
 supports both traditional unsecure as well as fully secure ZTP operation as outlined 
 in RFC 8572. More information on Crosswork ZTP can be found at 
-<a href=https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/crosswork-network-automation/datasheet-c78-743677.html></a> 
+<https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/crosswork-network-automation/datasheet-c78-743677.html> 
 
 ## Model-Driven Telemetry 
 
-In the 3.0 release the implementation guide includes a table of model-driven telemetry paths applicable to different components within the design.  More information on Cisco model-driven telemetry can be found at https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/telemetry/66x/b-telemetry-cg-ncs5500-66x.html. Additional information about how to consume and visualize telemetry data can be found at https://xrdocs.io/telemetry. We also introduce integration with Cisco Crosswork Health Insights, a telemetry and automated remediation platform, and sensor packs correspondding to Converged SDN Transport components. More information on Crosswork Health Insights can be found at https://www.cisco.com/c/en/us/support/cloud-systems-management/crosswork-health-insights/model.html.  
+In the 3.0 release the implementation guide includes a table of model-driven telemetry paths applicable to different components within the design.  More information on Cisco model-driven telemetry can be found at <https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/telemetry/66x/b-telemetry-cg-ncs5500-66x.html>. Additional information about how to consume and visualize telemetry data can be found at <https://xrdocs.io/telemetry>. We also introduce integration with Cisco Crosswork Health Insights, a telemetry and automated remediation platform, and sensor packs correspondding to Converged SDN Transport components. More information on Crosswork Health Insights can be found at <https://www.cisco.com/c/en/us/support/cloud-systems-management/crosswork-health-insights/model.html>  
 
 ## Transport and Service Management using Crosswork Network Controller
 Crosswork Network Controller provides support for provisioning SR-TE and RSVP-TE
@@ -1935,7 +1934,7 @@ Example function packs are meant to be used as-is or modified to fit specific ne
 | L3NM | Provision multi-point L3VPN service using IETF L3NM model | 
 | Y1731 | Provision Y.1731 CFM for L2VPN/L3VPN services | 
 
-<a href=https://www.cisco.com/c/dam/en/us/td/docs/cloud-systems-management/crosswork-network-automation/NSO_Reference_Docs/Cisco_NSO_Transport_SDN_Function_Pack_Bundle_User_Guide_3_0_0.pdf></a>
+<https://www.cisco.com/c/dam/en/us/td/docs/cloud-systems-management/crosswork-network-automation/NSO_Reference_Docs/Cisco_NSO_Transport_SDN_Function_Pack_Bundle_User_Guide_3_0_0.pdf>
 
 # Base Services supporting Advanced Use Cases  
     
@@ -2260,7 +2259,7 @@ forwarding path as service traffic. Ethernet CFM also enables the transmission
 of Alarm Indication Signal (AIS) messages to alert remote endpoints of local
 faults. Additional information on Ethernet CFM can be found in the CST
 Implementation Guide at: 
-<https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide 
+<https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide> 
 
 # Transport and Services Integration
 
