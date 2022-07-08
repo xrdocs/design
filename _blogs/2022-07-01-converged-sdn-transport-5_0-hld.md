@@ -26,7 +26,7 @@ position: hidden
 | 3.0        | 1/20/2020 | Converged Transport for Cable CIN, Multi-domain Multicast, Qos w/H-QoS access, MACSEC, Coherent Optic connectivity | 
 | 3.5        | 10/15/2020| Unnumbered access rings, Anycast SID ABR Resiliency, E-Tree for FTTH deployments, SR Multicast using Tree-SID, NCS 560, SmartPHY for R-PHY, Performance Measurement | 
 | 4.0        | 2/1/2020 | SR Flexible Algorithms inc. Inter-Domain, PTP multi-profile inc. G.82751<>G.8275.2 interworking, G.8275.2 on BVI, ODN support for EVPN ELAN, TI-LFA Open Ring support, NCS 520, SR on cBR8 | 
-| 5.0        | 7/1/2022 | Cisco 8000, Cloud Native BNG, EVPN-HE/EVPN-CGW, Dynamic Tree-SID, Routed Optical Networking|  
+| 5.0        | 7/1/2022 | Cisco 8000, Cloud Native BNG, EVPN-HE/EVPN-CGW, Dynamic Tree-SID, Routed Optical Networking, Crosswork Automation|  
 
 # Minimum supported IOS-XR Release 
 
@@ -117,7 +117,7 @@ The  Converged SDN Transport design satisfies the following criteria for scalabl
 
   - **Automated :** Service provisioning is fully automated using NSO
     and YANG models; Analytics with model driven telemetry in
-    conjunction with Crosswork Network Insights to  
+    conjunction with Crosswork Network Controller to  
     enhance operations and network visibility  
 
 
@@ -1792,8 +1792,20 @@ management. CNC supports RSVP-TE, SR-TE Policy, L2VPN, and L3VPN provisioning
 using standards based IETF models.
 
 ### L2VPN Service Provisioning and Visualization
+Crosswork Network Controller supports UI and API based provisioning of EVPN-VPWS 
+services using the IETF L2NM standard model. Once services are provisionined they 
+are visualized using the CNC topology UI along with their underlying SR-TE policies, 
+if applicable.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-5-cnc-l2vpn.png)
+
+### L3VPN Service Provisioning and Visualization
+Crosswork Network Controller supports UI and API based provisioning of L3VPN  
+services using the IETF L3NM standard model. Once services are provisionined they 
+are visualized using the CNC service topology UI along with their underlying SR-TE policies, 
+if applicable.  
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-5-cnc-l3vpn.png)
 
 ### Crosswork Automated Assurance 
 
@@ -1806,6 +1818,9 @@ along with realtime Y.1731 measurements to ensure the defined SLA for the servic
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-5-cnc-assurance.png)
 
+The figure below whos an example of a degraded service where the measured latency on the end to end path has exceeded the SLA of 500ms. 
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-5-cnc-l2vpn-degraded.png)
 
 ## Zero Touch Provisioning
 
