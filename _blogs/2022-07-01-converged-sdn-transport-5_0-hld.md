@@ -2260,7 +2260,7 @@ forwarding path as service traffic. Ethernet CFM also enables the transmission
 of Alarm Indication Signal (AIS) messages to alert remote endpoints of local
 faults. Additional information on Ethernet CFM can be found in the CST
 Implementation Guide at: 
-https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide
+<https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide 
 
 # Transport and Services Integration
 
