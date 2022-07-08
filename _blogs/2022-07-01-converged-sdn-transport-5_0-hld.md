@@ -165,7 +165,7 @@ blocks:**
 # Hardware Components in Design 
 
 ## Cisco 8000 
-The Converged SDN Transport design now includes the Cisco 8000 family. Cisco 8000 routers provide the lowest power consumption in the industry, all while supporting systems over 200Tbps and features service providers require.  Starting in CST 5.0 the Cisco 8000 fulfills the role of core and aggregation router in the design. The 8000 provides transit for end to end unicast and multicast services including those using SR-TE and advanced capabilities such as SR Flexible Algorithms.  Service termination is not supported on the 8000 in CST 5.0.  
+The Converged SDN Transport design now includes the Cisco 8000 family. Cisco 8000 routers provide the lowest power consumption in the industry, all while supporting systems over 200 Tbps and features service providers require.  Starting in CST 5.0 the Cisco 8000 fulfills the role of core and aggregation router in the design. The 8000 provides transit for end to end unicast and multicast services including those using SR-TE and advanced capabilities such as SR Flexible Algorithms.  Service termination is not supported on the 8000 in CST 5.0.  
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-8000.png)
 
@@ -2223,7 +2223,15 @@ scale to higher numbers of BGP sessions by adding another pair of S-RRs
 in the Access Domain.
 
 ## Ethernet Services OAM using Ethernet CFM 
-Ethernet CFM using 802.1ag/Y.1731 has been added in the CST 3.0 design. Ethernet CFM provides end-to-end continuity monitoring and alerting on a per-service basis. Maintenance End Points (MEPs) are configured on PE-CE interfaces with periodic Continuity Check Messages (CCMs) sent between them utilizing the same forwarding path as service traffic. Ethernet CFM also enables the transmission of Alarm Indication Signal (AIS) messages to alert remote endpoints of local faults. Additional information on Ethernet CFM can be found in the CST Implementation Guide at https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide  
+Ethernet CFM using 802.1ag/Y.1731 has been added in the CST 3.0 design. Ethernet
+CFM provides end-to-end continuity monitoring and alerting on a per-service
+basis. Maintenance End Points (MEPs) are configured on PE-CE interfaces with
+periodic Continuity Check Messages (CCMs) sent between them utilizing the same
+forwarding path as service traffic. Ethernet CFM also enables the transmission
+of Alarm Indication Signal (AIS) messages to alert remote endpoints of local
+faults. Additional information on Ethernet CFM can be found in the CST
+Implementation Guide at
+<a href=https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide></a> 
 
 # Transport and Services Integration
 
@@ -2256,8 +2264,7 @@ monitor link delay/jitter/drop (RFC6374) to be able to create a Low
 Latency topology dynamically.
 
 Figure 36 shows a consolidated view of  the Converged SDN Transport network from
-a Data Plane
-standpoint.
+a Data Plane standpoint.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image35.png)
 
@@ -2319,20 +2326,18 @@ on PCEP. Figure 39 shows the design when SR-PCE uses PCEP.
 
 _Figure 39: SR-PCE – PCEP_
 
-SR-PCE in the Access domain is responsible for Inter-Domain LSPs and
-provides the SID-list. PE ABRs are represented by Prefix-SID.
+SR-PCE in the Access domain is responsible for Inter-Domain LSPs and provides
+the SID-list. PE ABRs are represented by Prefix-SID.
 
 SR-PCE in the Core domain is responsible for On-Demand Nexthop (ODN) for
-hierarchical services. Refer to the table in Figure 41 to see what
-services use ODN. Refer to Section: "Transport Controller - Path Computation Engine (PCE)" to see more details about XR
-Transport Controller (SR-PCE). Note that Phase 1 uses the “Delegated
-Computation to SR-PCE” mode described in Section: "Path Computation Engine - Workflow" without WAE as shown
-in Figure
-38.
+hierarchical services and programming Tree-SID multicast trees across the
+network. Refer to the table in Figure 41 to see what services use ODN. Refer to
+Section: "Transport Controller - Path Computation Engine (PCE)" to see more
+details about SR-PCE.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image39.png)
 
-_Figure 40: PCE Path Computation – Phase 1_
+_Figure 40: PCE Path Computation_
 
 **Delegated Computation to SR-PCE**
 
@@ -2378,7 +2383,8 @@ _Figure 43: Hierarchical Services table_
 _Figure 44: Hierarchical Services_
 
 The  Converged SDN Transport uses the hierarchical Services Route-Reflectors
-(S-RRs) design described in Section: "Services - Route-Reflector (S-RR)". Figure 45 shows in detail the S-RRs design used for Phase 1.
+(S-RRs) design described in Section: "Services - Route-Reflector (S-RR)". Figure
+45 shows in detail the S-RRs design used for Phase 1.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image44.png)
 
@@ -2390,8 +2396,9 @@ Refer to Section: "Network Services Orchestrator (NSO)".
 
 ## Transport and Services Integration 
 
-Transport and Services integration is described in Section: "Transport and Services Integration" of this document. Figure 46 shows an example of End-To-End LSP and services
-integration.   
+Transport and Services integration is described in Section: "Transport and
+Services Integration" of this document. Figure 46 shows an example of End-To-End
+LSP and services integration.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/image45.png)
 
