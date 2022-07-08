@@ -1818,7 +1818,8 @@ along with realtime Y.1731 measurements to ensure the defined SLA for the servic
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-5-cnc-assurance.png)
 
-The figure below whos an example of a degraded service where the measured latency on the end to end path has exceeded the SLA of 500ms. 
+The figure below shows an example of a degraded service where the measured
+one-way latency on the end to end path of 1680uS has exceeded the SLA of 500uS. 
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-5-cnc-l2vpn-degraded.png)
 
