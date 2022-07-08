@@ -2421,7 +2421,8 @@ _Figure 49: Remote PHY/CIN Validation Testbed_
 Figure 50 shows the detailed topology of the testbed used for 
 cnBNG validation.
 
-![](http://xrdocs.io/design/images/cmf-hld/cst-cnbng-topology.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-cnbng-validation-topology.png)
+
 
 _Figure 50: Cloud-Native BNG Testbed_  
 
