@@ -786,17 +786,27 @@ also specific links. These affinities are the same previously used by RSVP-TE.
 </div>
 
 ### Path Computation across SR Flex-Algo Network 
-Flex-Algo works by creating a separate topology for each algorithm. By default, all links interconnecting nodes participating 
-in the same algorithm can be used for those paths. If the algorithm is defined to include or exclude specific link affinities, the 
-topology will reflect it. A SR-TE path computation using a specific Flex-Algo will use the Algo's topology for end the end path computation. It will 
-also look at the metric type defined for the Algo and use it for the path computation.  Even with a complex topology, a single SID is used for the 
-end to end path, as opposed to using a series of node and adjacency SIDs to steer traffic across a shared topology. Each node participating in the algorithm has adjacencies to other nodes utilizing the same 
-algorithm, so when a incoming MPLS label matching the algo SID enters, it will utilize the path specific to the algo.  A Flex-Algo can also be used as a constraint in an ODN policy.   
+Flex-Algo works by creating a separate topology for each algorithm. By default,
+all links interconnecting nodes participating in the same algorithm can be used
+for those paths. If the algorithm is defined to include or exclude specific link
+affinities, the topology will reflect it. A SR-TE path computation using a
+specific Flex-Algo will use the Algo's topology for end the end path
+computation. It will also look at the metric type defined for the Algo and use
+it for the path computation.  Even with a complex topology, a single SID is used
+for the end to end path, as opposed to using a series of node and adjacency SIDs
+to steer traffic across a shared topology. Each node participating in the
+algorithm has adjacencies to other nodes utilizing the same algorithm, so when a
+incoming MPLS label matching the algo SID enters, it will utilize the path
+specific to the algorithm.  A Flex-Algo can also be used as a constraint in an
+ODN policy.   
 ### Flex-Algo Dual-Plane Example 
-A very simple use case for Flex-Algo is to easily define a dual-plane network topology where algorithm 129 red and algorithm 
-130 is green. Nodes A1 and A6 participate in both algorithms. When a path request is made for algorithm 129, the head-end nodes A1 and A6 
-will only use paths specific to the algorithm.  The SR-TE Policy does not need to reference the specific SID, only the Algo being used as the 
-constraints. The local node or SR-PCE will utilize the Algo to compute the path dynamically.   
+A very simple use case for Flex-Algo is to easily define a dual-plane network
+topology where algorithm 129 red and algorithm 130 is green. Nodes A1 and A6
+participate in both algorithms. When a path request is made for algorithm 129,
+the head-end nodes A1 and A6 will only use paths specific to the algorithm.  The
+SR-TE Policy does not need to reference the specific SID, only the Algo being
+used as the constraints. The local node or SR-PCE will utilize the Algo to
+compute the path dynamically.   
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hld-dual-plane.png)
 
