@@ -1000,7 +1000,12 @@ router isis ACCESS
 ## G.8275.1 and G.8275.2 PTP (1588v2) timing configuration 
 
 ### Summary 
-This section contains the base configurations used for both G.8275.1 and G.8275.2 timing. Please see the CST HLD for an overview on timing in general.  
+This section contains the base configurations used for both G.8275.1 and
+G.8275.2 timing. Please see the CST HLD for an overview on timing in general.
+G.8275.1 is the preferred method for end to end timing if possible since it
+provides the most accurate clock and has no limitations on interface type used
+for PTP peers.  G.8275.1 to G.8275.2 interworking can be used on edge nodes to
+provide timing to devices requiring G.8275.2.   
 
 ![](http://xrdocs.io/design/images/cmfi/cmf-timing.png)
 
@@ -1286,18 +1291,18 @@ pce
 ## BGP - Services (sRR) and Transport (tRR) route reflector configuration 
 
 ### Services Route Reflector (sRR) configuration 
-In the CST validation a sRR is used to reflect all service routes. In a production network each service could be allocated its own sRR based on resiliency and scale demands.  
+In the CST validation a sRR is used to reflect all service routes. In a production network each service could be allocated its own sRR based on resiliency and scale demands. 
+In CST 5.0 (XR 7.5.2) and higher versions we will utilize the BGP soft next-hop
+validation feature to accept service prefixes without a BGP
+next-hop residing in the RIB.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-router static
- address-family ipv4 unicast
-  0.0.0.0/1 Null0
-
 router bgp 100
  nsr
  bgp router-id 100.0.0.200
  bgp graceful-restart
+ nexthop validation color-extcomm disable 
  ibgp policy out enforce-modifications
  address-family vpnv4 unicast
   nexthop trigger-delay critical 10
@@ -1352,16 +1357,18 @@ router bgp 100
 
 ### Transport Route Reflector (tRR) configuration
 In CST 5.0 (XR 7.5.2) and higher versions we will utilize the BGP soft next-hop
-validation feature to accept On-Demand (ODN) service prefixes without a BGP
-next-hop residing in the RIB. 
+validation feature to accept BGP-LS prefixes without a BGP
+next-hop residing in the RIB. This enables the advertisement of BGP-LS across
+domains without having to redistribute IP routing information or using static 
+hold-down routes to resolve the BGP next-hop.   
 
 <div class="highlighter-rouge">
 <pre class="highlight">
 router bgp 100
- nexthop validation color-extcomm disable 
  nsr
  bgp router-id 100.0.0.10
  bgp graceful-restart
+ nexthop validation color-extcomm disable 
  ibgp policy out enforce-modifications
  address-family link-state link-state
   additional-paths receive
