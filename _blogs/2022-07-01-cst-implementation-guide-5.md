@@ -807,13 +807,34 @@ router bgp 100
 </pre> 
 </div> 
 
-#### ABR BGP Redistribution Configuration 
-
+#### ABR BGP Configuration 
+In this example the ABR node advertises the aggregate 100.0.1.0/24 covering 
+A-PE loopback addresses in the Access-1 IGP domain to the core SR-PCE node. It uses the IPv4 unicast 
+AFI to advertise the SR-PCE Loopback prefix to the A-PE nodes. Route policies are 
+used to restrict the prefixes advertised in both directions.    
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-route-policy access1-out 
-  if destination in (101.0.1.0/24) then
+router static
+address-family ipv4 unicast
+  100.0.1.0/24 Null0
+prefix-set ACCESS-PE-PREFIX
+  100.0.1.0/24
+end-set
+prefix-set SRPCE-PREFIX
+  100.0.0.100/32
+end-set
+
+route-policy ABR-to-SRPCE
+  if destination in ACCESS-PE-PREFIX then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy ABR-to-APE 
+  if destination in SRPCE-PREFIX then
     pass
   else
     drop
@@ -830,18 +851,17 @@ router bgp 100
  nexthop validation color-extcomm disable
  ibgp policy out enforce-modifications
  address-family ipv4 unicast
+ network 100.0.1.0/24 
  !
  address-family ipv6 unicast
  !
  neighbor-group BGP-APE
   remote-as 100
   update-source Loopback0
-  address-family ipv4 multicast
-   route-reflector-client
-   next-hop-self
   !
-  address-family ipv4 labeled-unicast
+  address-family ipv4 unicast
    route-reflector-client
+   route-policy ABR-to-APE out 
    next-hop-self
   !
   address-family ipv6 unicast
@@ -860,6 +880,7 @@ router bgp 100
   remote-as 100
   update-source Loopback0
   address-family ipv4 unicast
+   route-policy ABR-to-SRPCE out 
    next-hop-self
   !
  !
