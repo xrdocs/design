@@ -4,7 +4,7 @@ date: '2022-07-01 16:54 -0500'
 title: Converged SDN Transport Implementation Guide
 position: hidden 
 author: Phil Bedard 
-excerpt: Converged SDN Transport Implementation Guide - 4.0 
+excerpt: Converged SDN Transport Implementation Guide - 5.0 
 tags:
   - iosxr
   - cisco
@@ -708,7 +708,7 @@ end
 </pre> 
 </div> 
 
-### MPLS Segment Routing Traffic Engineering (SRTE)
+### MPLS Segment Routing Traffic Engineering (SR-TE)
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -718,7 +718,159 @@ router isis ACCESS
 </pre> 
 </div> 
 
-### Area Border Routers (ABRs) IGP-ISIS Redistribution configuration (IOS-XR)
+
+### Area Border Routers (ABRs) IPv4/IPv6 route distribution using BGP 
+
+The ABR nodes must provide IP reachability for RRs, SR-PCEs and NSO between 
+ISIS-ACCESS and ISIS-CORE IGP domains.  One use case is SR Tree-SID, which requires 
+all nodes have a PCEP session to a single SR-PCE. 
+
+The recommended method to achieve reachability to nodes in the Core
+domain from access domain routers is to utilize BGP to advertise the Loopback
+addresses of specific nodes to the ABR nodes, and use either BGP to IGP
+redistribution or IPv4/IPv6 Unicast BGP between ABR and access nodes to
+distribute those routes. If unicast BGP is used, the ABR nodes will act as
+inline Route Reflectors. 
+
+Reachability to the access routers from the core routes is provided by advertising 
+access domain aggregate routes from each access domain via BGP to core nodes requiring them. If the core element 
+such as SR-PCE is a router, SR-MPLS and BGP can enabled, with the ABRs advertising the
+aggregates directly. If the element is not a router, then the router it is connected to will receive and advertise 
+BGP prefixes to establish end to end connectivity.  
+
+The following is an example from one ABR node and one SR-PCE node. 
+
+#### Core SR-PCE BGP Configuration 
+The following configuration is for SR-PCE with Loopback 101.0.0.100. 101.0.0.3
+and 101.0.0.4 are ABRs for one access domain, 101.0.1.1 and 101.0.1.2 the other.
+The optional route policies are used as a strict check to make sure only the
+proper routes are being received.  
+
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+route-policy access1-in
+  if destination in (101.0.1.0/24) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy access2-in
+  if destination in (101.0.2.0/24) then
+    pass
+  else
+    drop
+  endif
+end-policy
+
+router bgp 100
+ nsr
+ bgp router-id 101.0.0.100
+ bgp redistribute-internal
+ bgp graceful-restart
+ nexthop validation color-extcomm sr-policy
+ nexthop validation color-extcomm disable
+ ibgp policy out enforce-modifications
+ address-family ipv4 unicast
+  network 101.0.0.100/32
+ !
+ neighbor 101.0.0.3
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 unicast
+   route-policy access1-in in
+  !
+ !
+ neighbor 101.0.0.4
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 unicast
+   route-policy access1-in in
+  !
+ !
+ neighbor 101.0.1.1
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 unicast
+   route-policy access2-in in
+  !
+ !
+ neighbor 101.0.1.2
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 unicast
+   route-policy access2-in in
+  !
+ !
+</pre> 
+</div> 
+
+#### ABR BGP Redistribution Configuration 
+
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+route-policy access1-out 
+  if destination in (101.0.1.0/24) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+
+router bgp 100
+ nsr
+ bgp router-id 101.0.0.3
+ bgp redistribute-internal
+ bgp graceful-restart
+ nexthop validation color-extcomm sr-policy
+ nexthop validation color-extcomm disable
+ ibgp policy out enforce-modifications
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+ neighbor-group BGP-APE
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 multicast
+   route-reflector-client
+   next-hop-self
+  !
+  address-family ipv4 labeled-unicast
+   route-reflector-client
+   next-hop-self
+  !
+  address-family ipv6 unicast
+   route-reflector-client 
+   next-hop-self
+  !
+ !
+ neighbor 101.0.2.52
+  use neighbor-group BGP-APE
+ !
+ neighbor 101.0.2.53
+  use neighbor-group BGP-APE
+ !
+ neighbor 101.0.0.100
+  description SR-PCE 
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+ !
+
+</pre> 
+</div> 
+
+### *Deprecated* Area Border Routers (ABRs) IGP-ISIS Redistribution configuration (IOS-XR) 
+
+_Note the following is for historical reference and has been deprecated, IGP redistribution is not recommended 
+for production deployments_  
 
 The ABR nodes must provide IP reachability for RRs, SR-PCEs and NSO between 
 ISIS-ACCESS and ISIS-CORE IGP domains. This is done by IP
@@ -1437,10 +1589,12 @@ router bgp 100
 </div> 
 
 
-## Segment Routing Traffic Engineering (SRTE) and Services Integration
+## Segment Routing Traffic Engineering (SR-TE) and Services Integration
 
-This section shows how to integrate Traffic Engineering (SRTE) with
-services. ODN is configured by first defining a global ODN color associated with specific SR Policy constraints. The color and BGP next-hop address on the service route will be used to dynamically instantiate a SR Policy to the remote VPN endpoint.   
+This section shows how to integrate Traffic Engineering (SR-TE) with services.
+ODN is configured by first defining a global ODN color associated with specific
+SR Policy constraints. The color and BGP next-hop address on the service route
+will be used to dynamically instantiate a SR Policy to the remote VPN endpoint.   
 
 ### On Demand Next-Hop (ODN) configuration – IOS-XR
 
@@ -1527,8 +1681,16 @@ segment-routing
   pcc
    source-address ipv4 100.0.1.50
    pce address ipv4 100.0.1.101
+     precedence 100 
    !
    pce address ipv4 100.1.1.101
+     precedence 200 
+   ! 
+   report-all
+   timers delegation-timeout 10
+   timers deadtimer 60
+   timers initiated state 15
+   timers initiated orphan 10
    !
   !
 </pre> 
@@ -1568,13 +1730,17 @@ the additional constraints placed on the path (link affinities, flex-algo constr
 * There is a default candidate path with a preference of 200 using head-end IGP path computation 
 * Each candidate path can have multiple explicit segment lists defined with a bandwidth weight value to load balance traffic across multiple explicit paths 
 
-### Service to SR-TE Policy Forwarding 
-Service traffic is forwarded over SR-TE Policies in the CST design using per-destination automated steering. 
-* Per-destination steering utilizes two BGP components of the service route to forward traffic to a matching SR Policy 
+### Service to SR-TE Policy Forwarding - Per-Destination 
+Service traffic can be forwarded over SR-TE Policies in the CST design using per-destination automated steering. 
+Per-destination steering utilizes two BGP components of the service route to forward traffic to a matching SR Policy 
   * A color extended community attached to the service route matching the SR Policy color 
   * The BGP next-hop address of the service route to match the endpoint of the SR Policy   
 
-### SR-TE Configuration Examples 
+### Service to SR-TE Policy Forwarding - Per-Flow 
+Service traffic can also be forwarded over SR-TE Policies in the CST design using per-flow automated steering.  
+Per-flow automated steering uses the same BGP criteria as per-destination steering but also uses the CoS of the 
+ingress packet to determine the proper SR Policy to steer traffic over. 
+### SR-TE Configuration Examples
 
 #### SR Policy using IGP computation, head-end computation  
 The local PE device will compute a path using the lowest cumulative path to 100.0.1.50.  Note in the multi-domain CST design, this computation will fail to nodes not found within the same IS-IS domain as the PE.  
@@ -1634,10 +1800,40 @@ segment-routing
 </pre>
 </div>
 
+#### SR Policy using specific Flexible Algorithm 
+Please see the Flex-Algo section for more details on SR Flexible Algorithms. The
+following SR-TE policy will restrict path computation to links and nodes belonging to algo
+128, using the lowest IGP metric to compute the path.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy FA128-APE3-1
+   color 77801 end-point ipv4 101.0.1.50
+   candidate-paths
+    preference 1
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      !
+     !
+     constraints
+      segments
+       sid-algorithm 128
+</pre>
+</div>
+
 #### SR Policy using explicit segment list  
-This policy does not perform any path computation, it will utilize the statically defined segment lists as the forwarding path across the network. The node does however check the validity of the node segments in the list. 
-Each node SID in the segment list can be defined by either IP address or SID.  The full path to the egress node must be defined in the list, but you do not need to define every node explicitly in the path. If you want the 
-path to take a specific link the correct node and adjacency SID must be defined in the list.   
+This policy does not perform any path computation, it will utilize the
+statically defined segment lists as the forwarding path across the network. The
+node does however check the validity of the node segments in the list. Each node
+SID in the segment list can be defined by either IP address or SID.  The full
+path to the egress node must be defined in the list, but you do not need to
+define every node explicitly in the path. If you want the path to take a
+specific link the correct node and adjacency SID must be defined in the list.
+Multiple explicit paths can be defined with a weight assigned, the ratio of
+weights is used to balance traffic across each explicit path.    
 
 <div class="highlighter-rouge">
 <pre class="highlight">
