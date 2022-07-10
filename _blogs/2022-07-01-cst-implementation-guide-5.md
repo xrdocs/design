@@ -1358,9 +1358,7 @@ router bgp 100
 ### Transport Route Reflector (tRR) configuration
 In CST 5.0 (XR 7.5.2) and higher versions we will utilize the BGP soft next-hop
 validation feature to accept BGP-LS prefixes without a BGP
-next-hop residing in the RIB. This enables the advertisement of BGP-LS across
-domains without having to redistribute IP routing information or using static 
-hold-down routes to resolve the BGP next-hop.   
+next-hop residing in the RIB. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1625,6 +1623,10 @@ SR Policy constraints. The color and BGP next-hop address on the service route
 will be used to dynamically instantiate a SR Policy to the remote VPN endpoint.   
 
 ### On Demand Next-Hop (ODN) configuration – IOS-XR
+The following is an example of the elements needed in addition to the base SR
+configuration. An on-demand policy must be created matching the a color to set 
+the attributes of the SR-TE Policy. ODN does not require PCEP, but for inter-domain
+path computation is required.   
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1768,10 +1770,48 @@ Per-destination steering utilizes two BGP components of the service route to for
 Service traffic can also be forwarded over SR-TE Policies in the CST design using per-flow automated steering.  
 Per-flow automated steering uses the same BGP criteria as per-destination steering but also uses the CoS of the 
 ingress packet to determine the proper SR Policy to steer traffic over. 
-### SR-TE Configuration Examples
+### SR-TE and ODN Configuration Examples
+The following examples show SR-TE policies using persistent device configuration and 
+the ODN policies to dynamic create the same SR Policies.   
 
-#### SR Policy using IGP computation, head-end computation  
-The local PE device will compute a path using the lowest cumulative path to 100.0.1.50.  Note in the multi-domain CST design, this computation will fail to nodes not found within the same IS-IS domain as the PE.  
+#### SR Policy using IGP metric, head-end computation  
+The local PE device will compute a path using the lowest cumulative IGP metric
+path to 100.0.1.50.  Note in the multi-domain CST design, this computation will
+fail to nodes not found within the same IS-IS domain as the PE.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy GREEN-PE3-24
+   color 1024 end-point ipv4 100.0.1.50
+   candidate-paths
+    preference 1
+     dynamic
+      !
+      metric
+       type igp
+</pre>
+</div>
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  on-demand color 1024 
+    dynamic
+      pcep
+      !
+      anycast-sid-inclusion
+      !
+      sid-algorithm 128
+    !
+</pre>
+</div>
+
+#### PCE delegated SR Policy using lowest IGP metric 
+This policy will request a path from the configured primary PCE with the lowest
+cumulative IGP metric to the endpoint 100.0.1.50 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1789,26 +1829,7 @@ segment-routing
 </pre>
 </div>
 
-#### SR Policy using lowest IGP metric computation and PCEP
-This policy will request a path from the configured primary PCE with the lowest cumulative IGP metric to the endpoint 100.0.1.50 
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-segment-routing
- traffic-eng
-  policy GREEN-PE3-24
-   color 1024 end-point ipv4 100.0.1.50
-   candidate-paths
-    preference 1
-     dynamic
-      pcep
-      !
-      metric
-       type igp
-</pre>
-</div>
-
-#### SR Policy using lowest latency metric and PCEP
+#### PCE delegated SR Policy using lowest latency metric 
 This policy will request a path from the configured primary PCE with the lowest cumulative latency to the endpoint 100.0.1.50.  As covered in the performance-measurement section, 
 the per-link latency metric value used will be the dynamic/static PM value, a configured TE metric value, or the IGP metric.   
 
@@ -1828,7 +1849,57 @@ segment-routing
 </pre>
 </div>
 
-#### SR Policy using specific Flexible Algorithm 
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  on-demand color 1024 
+    dynamic
+      pcep
+      !
+      metric 
+        type latency 
+    !
+</pre>
+</div>
+
+#### PCE delegated SR Policy including Anycast SIDs  
+Anycast SIDs provide redundancy to hops in the SR-TE path. 1+N nodes share the
+same Loopback address and Node-SID. Traffic with the Anycast SID in the SID list
+will route to the closest node with the SID assigned based on IGP cost. The
+"anycast-sid-inclusion" command is required for the PCE or local computation to
+prefer Anycast SIDs when computing the end to end path.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy Anycast-APE3-1
+   color 30001 end-point ipv4 101.0.1.50
+   candidate-paths
+    preference 1
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      ! 
+    anycast-sid-inclusion
+</pre>
+</div>
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  on-demand color 30001 
+    dynamic
+      pcep
+      !
+      anycast-sid-inclusion
+    !
+</pre>
+</div>
+
+#### PCE delegated SR Policy using specific Flexible Algorithm 
 Please see the Flex-Algo section for more details on SR Flexible Algorithms. The
 following SR-TE policy will restrict path computation to links and nodes belonging to algo
 128, using the lowest IGP metric to compute the path.  
@@ -1851,6 +1922,23 @@ policy FA128-APE3-1
        sid-algorithm 128
 </pre>
 </div>
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+on-demand color 77801 
+   dynamic
+    pcep
+    !
+    metric
+     type igp
+    !
+   !
+   constraints
+    segments
+     sid-algorithm 128
+</pre>
+</div>
+
 
 #### SR Policy using explicit segment list  
 This policy does not perform any path computation, it will utilize the
@@ -3362,6 +3450,242 @@ router bgp 100
 _Figure 17: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
 with Anycast IRB Data Plane_
 
+
+### L2/L3VPN – EVPN Head-End Configuration  
+
+![](http://xrdocs.io/design/images/cmfi/image16.png)
+
+_Figure 16: L2/L3VPN – EVPN Head-End_
+
+**Access Routers:** **Cisco NCS 540, 5500, 560 IOS-XR**
+
+1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+
+2.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
+
+**Provider Edge Routers:** **Cisco ASR9000 IOS-XR (Same on both PE
+routers in same location PE1/2 and PE3/4)**
+
+1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+
+2.  **Provider Edge Routers:** Path to Access Router is known via
+    ACCESS-ISIS IGP.
+
+
+3.  **Operator:** New L2VPN Multipoint EVPN instance together with
+    Anycast IRB via CLI or NSO (Anycast IRB is optional when L2 and L3
+    is required in same service instance)
+
+4. **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
+    IGP.
+
+**Please note that provisioning on Access and Provider Edge routers is
+same as in “L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4/6 with
+Anycast IRB”. In this use case there is BGP EVPN instead of MP-BGP
+VPNv4/6 in the core.**
+
+#### Access Router Service Provisioning (IOS-XR):
+
+**VLAN based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
+  p2p L3VPN-VRF1
+   interface TenGigE0/0/0/2.1
+   neighbor ipv4 100.100.100.12 pw-id 5001
+    mpls static label local 5001 remote 5001
+    pw-class static-pw-h-l3vpn-class
+   !
+  !
+interface TenGigE0/0/0/2.1 l2transport
+ encapsulation dot1q 1
+ rewrite ingress tag pop 1 symmetric
+!
+l2vpn
+ pw-class static-pw-h-l3vpn-class
+  encapsulation mpls
+   control-word
+  !
+</pre> 
+</div> 
+
+**Port based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
+  p2p L3VPN-VRF1
+   interface TenGigE0/0/0/2
+   neighbor ipv4 100.100.100.12 pw-id 5001
+    mpls static label local 5001 remote 5001
+    pw-class static-pw-h-l3vpn-class
+   !
+  !
+!
+interface TenGigE0/0/0/2 
+ l2transport
+!
+l2vpn
+ pw-class static-pw-h-l3vpn-class
+  encapsulation mpls
+   control-word
+</pre> 
+</div> 
+
+#### Access Router Service Provisioning (IOS-XE):
+
+**VLAN based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface GigabitEthernet0/0/5
+ no ip address
+ media-type auto-select
+ negotiation auto
+ service instance 1 ethernet
+  encapsulation dot1q 1
+  rewrite ingress tag pop 1 symmetric
+  xconnect 100.100.100.12 4001 encapsulation mpls manual
+   mpls label 4001 4001
+   mpls control-word
+ !
+</pre> 
+</div> 
+
+**Port based service configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface GigabitEthernet0/0/5
+ no ip address
+ media-type auto-select
+ negotiation auto
+ service instance 1 ethernet
+  encapsulation default
+  xconnect 100.100.100.12 4001 encapsulation mpls manual
+   mpls label 4001 4001
+   mpls control-word
+ !
+</pre> 
+</div> 
+
+#### Provider Edge Routers Service Provisioning (IOS-XR):
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+cef adjacency route override rib
+</pre> 
+</div> 
+
+**AnyCast Loopback configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface Loopback100
+ description Anycast
+ ipv4 address 100.100.100.12 255.255.255.255
+!
+router isis ACCESS
+ interface Loopback100
+  address-family ipv4 unicast
+   prefix-sid index 1012
+</pre> 
+</div> 
+
+**L2VPN Configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn                                                             
+ bridge group Static-VPWS-H-L3VPN-IRB                             
+  bridge-domain VRF1                                              
+   neighbor 100.0.1.50 pw-id 5001                                 
+    mpls static label local 5001 remote 5001                      
+    pw-class static-pw-h-l3vpn-class                              
+   !                                                              
+   neighbor 100.0.1.51 pw-id 4001                                 
+    mpls static label local 4001 remote 4001                      
+    pw-class static-pw-h-l3vpn-class                              
+   !                                                              
+   routed interface BVI1                                          
+    split-horizon group core                                      
+   !                                                              
+   evi 12001
+   !
+  !
+</pre> 
+</div> 
+
+**EVPN configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+evpn
+ evi 12001
+  !
+  advertise-mac
+  !
+ !
+ virtual neighbor 100.0.1.50 pw-id 5001
+  ethernet-segment
+   identifier type 0 12.00.00.00.00.00.50.00.01
+</pre> 
+</div> 
+
+**Anycast IRB configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface BVI1
+ host-routing
+ vrf L3VPN-AnyCast-ODNTE-VRF1
+ ipv4 address 12.0.1.1 255.255.255.0
+ mac-address 12.0.1
+ load-interval 30
+!
+</pre> 
+</div> 
+
+**VRF configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf L3VPN-AnyCast-ODNTE-VRF1
+ address-family ipv4 unicast
+  import route-target
+   100:10001
+  !
+  export route-target
+   100:10001
+  !
+ !
+!
+</pre> 
+</div> 
+
+**BGP configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ vrf L3VPN-AnyCast-ODNTE-VRF1
+  rd auto
+  address-family ipv4 unicast
+   redistribute connected
+  !
+ !
+ 
+</pre> 
+</div> 
+
+![](http://xrdocs.io/design/images/cmfi/image17.png)
+
+_Figure 17: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
+with Anycast IRB Data Plane_
+
 ## Ethernet CFM for L2VPN service assurance 
 Ethernet Connectivity Fault Management is an Ethernet OAM component used to validate end-to-end connectivity between service endpoints. Ethernet CFM is defined by two standards, 802.1ag and Y.1731. Within an SP network, Maintenance Domains are created based on service scope. Domains are typically separated by operator boundaries and may be nested but cannot overlap.  Within each service, maintenance points can be created to verify bi-directional end to end connectivity. These are known as MEPs (Maintenance End-Point) and MIPs (Maintenance Intermediate Points). These maintenance points process CFM messages. A MEP is configured at service endpoints and has directionality where an "up" MEP faces the core of the network and a "down" MEP faces a CE device or NNI port. MIPs are optional and are created dynamically. Detailed information on Ethernet CFM configuration and operation can be found at https://www.cisco.com/c/en/us/td/docs/routers/ncs5500/software/interfaces/configuration/guide/b-interfaces-hardware-component-cg-ncs5500-66x/b-interfaces-hardware-component-cg-ncs5500-66x_chapter_0101.html 
 
@@ -3909,7 +4233,7 @@ _Figure 11: Hierarchical Services Table_
 
 _Figure 12: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Headend (PWHE) Control Plane_
 
-**Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
+**Access Routers:** **Cisco NCS 540, 5500, 560 IOS-XR, ASR 920 IOS-XE**
 
 1.  **Operator:** New EVPN-VPWS instance via CLI or NSO
 
@@ -4085,22 +4409,22 @@ Anycast IRB Control Plane_
 
 **Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
 
-3.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
 
-4.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
+2.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
 
 **Provider Edge Routers:** **Cisco ASR9000 IOS-XR (Same on both PE
 routers in same location PE1/2 and PE3/4)**
 
-5.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
 
-6.  **Provider Edge Routers:** Path to Access Router is known via
+2.  **Provider Edge Routers:** Path to Access Router is known via
     ACCESS-ISIS IGP.
 
-7.  **Operator:** New L3VPN instance (VPNv4/6) together with Anycast IRB
+3.  **Operator:** New L3VPN instance (VPNv4/6) together with Anycast IRB
     via CLI or NSO
 
-8.  **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
+4.  **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
     IGP.
     
 #### Access Router Service Provisioning (IOS-XR):
