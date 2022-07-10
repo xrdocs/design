@@ -3504,201 +3504,126 @@ with Anycast IRB Data Plane_
 
 ### L2/L3VPN – EVPN Head-End Configuration  
 
-![](http://xrdocs.io/design/images/cmfi/image16.png)
-
+![](http://xrdocs.io/design/images/cmf-hld/cst-5-evpn-he.png)
 _Figure 16: L2/L3VPN – EVPN Head-End_
 
 **Access Routers:** **Cisco NCS 540, 5500, 560 IOS-XR**
 
-1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+1.  **Operator:** New EVPN-VPWS Pseudowire (PW) instance via CLI or NSO
 
 2.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
 
 **Provider Edge Routers:** **Cisco ASR9000 IOS-XR (Same on both PE
 routers in same location PE1/2 and PE3/4)**
 
-1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+1.  **Operator:** New EVPN-VPWS Pseudowire (PW) instance via CLI or NSO
 
 2.  **Provider Edge Routers:** Path to Access Router is known via
     ACCESS-ISIS IGP.
 
 
 3.  **Operator:** New L2VPN Multipoint EVPN instance together with
-    Anycast IRB via CLI or NSO (Anycast IRB is optional when L2 and L3
-    is required in same service instance)
+    L3 PWHE interface via CLI or NSO 
 
 4. **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
     IGP.
 
-**Please note that provisioning on Access and Provider Edge routers is
-same as in “L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4/6 with
-Anycast IRB”. In this use case there is BGP EVPN instead of MP-BGP
-VPNv4/6 in the core.**
-
 #### Access Router Service Provisioning (IOS-XR):
 
-**VLAN based service configuration**
+**Interface Configuration**
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-l2vpn
- xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
-  p2p L3VPN-VRF1
-   interface TenGigE0/0/0/2.1
-   neighbor ipv4 100.100.100.12 pw-id 5001
-    mpls static label local 5001 remote 5001
-    pw-class static-pw-h-l3vpn-class
-   !
-  !
-interface TenGigE0/0/0/2.1 l2transport
- encapsulation dot1q 1
- rewrite ingress tag pop 1 symmetric
+interface TenGigE0/0/0/5.2002 l2transport
+ description EVPN-VPWS-PWHE-HEADEND
+ encapsulation dot1q 2002
 !
-l2vpn
- pw-class static-pw-h-l3vpn-class
-  encapsulation mpls
-   control-word
-  !
+interface TenGigE0/0/0/5.2003 l2transport
+ description EVPN-VPWS-PWHE-HEADEND
+ encapsulation dot1q 2003
+!
+interface TenGigE0/0/0/5.2022 l2transport
+ description EVPN-VPWS-PWHE-HEADEND
+ encapsulation dot1q 2022
 </pre> 
 </div> 
 
-**Port based service configuration**
+**L2VPN Configuration** 
+In this example we use the NCS 540/5500 flexible xconnect service type to bundle
+multiple downstream interfaces into a single EVPN-VPWS to the EVPN Head End as a
+trunk.  FXC can bundle VLANs from the same physical interface or different
+physical interfaces.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
 l2vpn
- xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
-  p2p L3VPN-VRF1
-   interface TenGigE0/0/0/2
-   neighbor ipv4 100.100.100.12 pw-id 5001
-    mpls static label local 5001 remote 5001
-    pw-class static-pw-h-l3vpn-class
-   !
-  !
-!
-interface TenGigE0/0/0/2 
- l2transport
-!
-l2vpn
- pw-class static-pw-h-l3vpn-class
-  encapsulation mpls
-   control-word
-</pre> 
-</div> 
-
-#### Access Router Service Provisioning (IOS-XE):
-
-**VLAN based service configuration**
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface GigabitEthernet0/0/5
- no ip address
- media-type auto-select
- negotiation auto
- service instance 1 ethernet
-  encapsulation dot1q 1
-  rewrite ingress tag pop 1 symmetric
-  xconnect 100.100.100.12 4001 encapsulation mpls manual
-   mpls label 4001 4001
-   mpls control-word
- !
-</pre> 
-</div> 
-
-**Port based service configuration**
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface GigabitEthernet0/0/5
- no ip address
- media-type auto-select
- negotiation auto
- service instance 1 ethernet
-  encapsulation default
-  xconnect 100.100.100.12 4001 encapsulation mpls manual
-   mpls label 4001 4001
-   mpls control-word
- !
+ flexible-xconnect-service vlan-unaware PWHE-Headend
+  interface TenGigE0/0/0/5.2002
+  interface TenGigE0/0/0/5.2003
+  interface TenGigE0/0/0/5.2022
+  neighbor evpn evi 2002 target 2002
 </pre> 
 </div> 
 
 #### Provider Edge Routers Service Provisioning (IOS-XR):
 
+A similar configuration is found on all PE routers.  Each pair of EVPN-HE 
+routers share the same IP addresses and EVPN ESI on their PW-Ether2002 interfaces.  
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 cef adjacency route override rib
 </pre> 
-</div> 
+</div>
 
-**AnyCast Loopback configuration**
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface Loopback100
- description Anycast
- ipv4 address 100.100.100.12 255.255.255.255
-!
-router isis ACCESS
- interface Loopback100
-  address-family ipv4 unicast
-   prefix-sid index 1012
-</pre> 
-</div> 
-
-**L2VPN Configuration**
+**EVPN-HE L3 Interface Configuration**
+The following shows an example of both untagged and taggged interfaces. The same 
+EVPN-VPWS is used as a trunk to carry traffic between Access and Head-End PE.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-l2vpn                                                             
- bridge group Static-VPWS-H-L3VPN-IRB                             
-  bridge-domain VRF1                                              
-   neighbor 100.0.1.50 pw-id 5001                                 
-    mpls static label local 5001 remote 5001                      
-    pw-class static-pw-h-l3vpn-class                              
-   !                                                              
-   neighbor 100.0.1.51 pw-id 4001                                 
-    mpls static label local 4001 remote 4001                      
-    pw-class static-pw-h-l3vpn-class                              
-   !                                                              
-   routed interface BVI1                                          
-    split-horizon group core                                      
-   !                                                              
-   evi 12001
-   !
-  !
-</pre> 
-</div> 
-
-**EVPN configuration**
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-evpn
- evi 12001
-  !
-  advertise-mac
-  !
- !
- virtual neighbor 100.0.1.50 pw-id 5001
-  ethernet-segment
-   identifier type 0 12.00.00.00.00.00.50.00.01
-</pre> 
-</div> 
-
-**Anycast IRB configuration**
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-interface BVI1
- host-routing
- vrf L3VPN-AnyCast-ODNTE-VRF1
- ipv4 address 12.0.1.1 255.255.255.0
- mac-address 12.0.1
+interface PW-Ether2002
+ mtu 1518
+ ipv4 address 100.9.2.1 255.255.255.252
+ vrf L3VPN-AnyCast-ODNTE-VRF1 
+ mac-address 0.1111.1
  load-interval 30
+ attach generic-interface-list PWHE
 !
+interface PW-Ether2002.2002
+ vrf L3VPN-ODNTE-VRF1
+ ipv4 address 11.4.1.1 255.255.255.0
+ encapsulation dot1q 2002
+!
+interface PW-Ether2002.2003
+ ipv4 address 11.5.1.1 255.255.255.0
+ encapsulation dot1q 2003
 </pre> 
-</div> 
+</div>
+
+**EVPN Configuration** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+evpn 
+  interface PW-Ether2002
+    ethernet-segment
+    identifier type 0 99.99.99.99.99.01.00.00.00
+    convergence
+      nexthop-tracking
+</pre> 
+</div>
+
+**EVPN-VPWS to Access PE**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+xconnect group EVPN-HeadEnd
+  p2p L3VPN-ODNTE-VRF11
+   interface PW-Ether2002
+   neighbor evpn evi 2002 target 2002 source 2002
+</pre> 
+</div>
 
 **VRF configuration**
 
@@ -3712,30 +3637,8 @@ vrf L3VPN-AnyCast-ODNTE-VRF1
   export route-target
    100:10001
   !
- !
-!
 </pre> 
 </div> 
-
-**BGP configuration**
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-router bgp 100
- vrf L3VPN-AnyCast-ODNTE-VRF1
-  rd auto
-  address-family ipv4 unicast
-   redistribute connected
-  !
- !
- 
-</pre> 
-</div> 
-
-![](http://xrdocs.io/design/images/cmfi/image17.png)
-
-_Figure 17: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
-with Anycast IRB Data Plane_
 
 ## Ethernet CFM for L2VPN service assurance 
 Ethernet Connectivity Fault Management is an Ethernet OAM component used to validate end-to-end connectivity between service endpoints. Ethernet CFM is defined by two standards, 802.1ag and Y.1731. Within an SP network, Maintenance Domains are created based on service scope. Domains are typically separated by operator boundaries and may be nested but cannot overlap.  Within each service, maintenance points can be created to verify bi-directional end to end connectivity. These are known as MEPs (Maintenance End-Point) and MIPs (Maintenance Intermediate Points). These maintenance points process CFM messages. A MEP is configured at service endpoints and has directionality where an "up" MEP faces the core of the network and a "down" MEP faces a CE device or NNI port. MIPs are optional and are created dynamically. Detailed information on Ethernet CFM configuration and operation can be found at https://www.cisco.com/c/en/us/td/docs/routers/ncs5500/software/interfaces/configuration/guide/b-interfaces-hardware-component-cg-ncs5500-66x/b-interfaces-hardware-component-cg-ncs5500-66x_chapter_0101.html 
