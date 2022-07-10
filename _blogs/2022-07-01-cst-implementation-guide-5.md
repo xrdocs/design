@@ -3638,6 +3638,143 @@ vrf L3VPN-AnyCast-ODNTE-VRF1
    100:10001
   !
 </pre> 
+</div>
+
+
+### L2/L3VPN – EVPN Centralized Gateway 
+![](http://xrdocs.io/design/images/cmf-hld/cst-5-evpn-cgw.png)
+
+_Figure 16: L2/L3VPN – EVPN Centralized Gateway_
+
+**Access Routers:** **Cisco NCS 540, 5500, 560 IOS-XR**
+
+1.  **Operator:** New EVPN-ELAN or ETREE instance via CLI or NSO
+
+2.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
+
+**Provider Edge Routers:** **Cisco ASR9000 IOS-XR (Same on both PE
+routers in same location PE1/2 and PE3/4)**
+
+1.  **Operator:** New EVPN-ELAN or ETREE instance via CLI or NSO
+
+2.  **Provider Edge Routers:** Path to Access Router is known via
+    ACCESS-ISIS IGP.
+
+3.  **Operator:** New L3VPN Multipoint EVPN instance together with
+    Anycast IRB interface via CLI or NSO 
+
+4. **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
+    IGP.
+
+#### Access Router Service Provisioning (IOS-XR):
+
+**Interface Configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface TenGigE0/0/0/5.2300 l2transport
+ description EVPN-ELAN-CGW1-PE1/PE2
+ encapsulation dot1q 2300
+ rewrite ingress tag pop 1 symmetric
+</pre> 
+</div> 
+
+**L2VPN and EVPN Configuration** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ bridge group EVPN-ELAN-CGW1
+  bridge-domain ELAN-CGW1
+   interface TenGigE0/0/0/5.2300
+   !
+   evi 2400
+   !
+  !
+evpn
+ evi 2400
+  advertise-mac
+</pre> 
+</div> 
+
+
+#### Provider Edge Routers Service Provisioning (IOS-XR):
+
+A similar configuration is found on all PE routers.  Each pair of EVPN-HE 
+routers share the same IP addresses and MAC address providing a redundant 
+Anycast IRB L3 gateway to L2 connected access devices.   
+
+**EVPN CGW L3 BVI Interface Configuration**
+In this example the interface is part of a core L3VPN, but the interface could 
+reside in the global routing table (default VRF).  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface BVI100
+ vrf cgw
+ ipv4 address 100.10.1.1 255.255.0.0
+ ipv6 address 100:10::1/64
+ mac-address 0.dc1.dc2
+</pre> 
+</div>
+
+**L2VPN Configuration** 
+Note the access-evi configuration used for the EVI connected to the A-PE access
+routers.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ bridge group EVPN-ELAN-CGW1
+  bridge-domain ELAN-CGW1
+   access-evi 2400
+   routed interface BVI100
+</pre> 
+</div>
+
+
+**EVPN Configuration** 
+In this case we are using ODN to create on-demand SR-TE policies between 
+the core CGW PEs and access PEs.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+evpn 
+ evi 2400
+  bgp
+   route-policy export cgw_srte_odn
+   route-policy import cgw_srte_odn
+  !
+  advertise-mac
+   bvi-mac
+  !
+ virtual access-evi
+  ethernet-segment
+   identifier type 0 00.00.ac.ce.55.00.e1.00.00
+  !
+  core-isolation-group 1
+ !
+!
+</pre> 
+</div>
+
+**VRF configuration**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf cgw
+ address-family ipv4 unicast
+  import route-target
+   10:10
+  !
+  export route-policy C1234
+  export route-target
+   10:10
+  !
+ !
+ address-family ipv6 unicast
+  export route-policy C1234
+</pre> 
 </div> 
 
 ## Ethernet CFM for L2VPN service assurance 
