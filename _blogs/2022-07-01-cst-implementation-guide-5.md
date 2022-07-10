@@ -3841,7 +3841,33 @@ ethernet cfm
 </pre> 
 </div>
 
-## Multicast NG-MVPN Profile 14 using mLDP and ODN L3VPN
+## Multicast Source Distribution using BGP Multicast AFI/SAFI 
+The Converged SDN Transport is inherently multi-domain to increase scalability.
+Multicast distribution trees built across the network using either native PIM,
+mLDP, or SR Tree-SID require the source be known to the receiver nodes to
+satisfy multicast's RPF (Reverse Path Forwarding) check. The recommended way to
+distribute source addresses across the network is use the BGP IPv4/IPv6
+multicast address family, utilizing the ABR nodes as inline RRs. 
+
+In the case of MVPN the sources are distributed inside the L3VPN as VPNV4 and
+VPNV6 prefixes.  
+### Multicast BGP Configuration
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ !
+ address-family ipv4 multicast
+  redistribute connected route-policy mcast-sources 
+ !
+ address-family ipv6 multicast
+  redistribute connected route-policy mcast-sources 
+</pre> 
+</div>
+
+
+
+## Multicast Profile 14 using mLDP and ODN L3VPN
 In ths service example we will implement multicast delivery across the CST network using mLDP transport for multicast and SR-MPLS for unicast traffic. L3VPN SR paths will be dynamically created using ODN. Multicast profile 14 is the "Partitioned MDT - MLDP P2MP - BGP-AD - BGP C-Mcast Signaling"  Using this profile each mVPN will use a dedicated P2MP tree, endpoints will be auto-discovered using NG-MVPN BGP NLRI, and customer multicast state such as source streams, PIM, and IGMP membership data will be signaled using BGP. Profile 14 is the recommended profile for high scale and utilizing label-switched multicast (LSM) across the core.      
 
 **Please note that mLDP requires an IGP path to the source PE loopback address.  The CST design utilizes a multi-domain approach which normally does not advertise IGP routes across domain boundaries. If mLDP is being utilized across domains, controlled redistribution should be used to advertise the source PE loopback addresses to receiver PEs**  
@@ -3997,18 +4023,18 @@ router igmp
 </pre> 
 </div>
 
-## Multicast distribution using TreeSID with static S,G Mapping 
-TreeSID utilizes only Segment Routing to create and forward multicast traffic across an optimized tree. The TreeSID tree is configured on the SR-PCE for deployment to the 
+## Multicast distribution using Tree-SID with static S,G Mapping 
+Tree-SID utilizes only Segment Routing to create and forward multicast traffic across an optimized tree. The Tree-SID tree is configured on the SR-PCE for deployment to the 
 network. PCEP is used to instantiate the correct computed segments end to end.  On the head-end source node, 
 
-**Note: TreeSID requires all nodes in the multicast distribution network to have connections to the same SR-PCE instances, please see the PCEP configuration section of the Implmentation Guide**  
+**Note: Tree-SID requires all nodes in the multicast distribution network to have connections to the same SR-PCE instances, please see the PCEP configuration section of the Implmentation Guide**  
 
-### TreeSID SR-PCE Configuration 
+### Tree-SID SR-PCE Configuration 
 
 #### Endpoint Set Configuration 
 
-The P2MP endpoint sets are defined outside of the SR TreeSID Policy configuration in order to be reusaable across 
-multiple trees. This is a required step in the configuration of TreeSID.  
+The P2MP endpoint sets are defined outside of the SR Tree-SID Policy configuration in order to be reusaable across 
+multiple trees. This is a required step in the configuration of Tree-SID.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -4029,8 +4055,13 @@ pce
 </pre>
 </div>
 
-#### P2MP TreeSID SR Policy Configuration 
-This configuration defines the TreeSID P2MP SR Policy to be used across the network. Note the name of the TreeSID must be unique across the netowrk and referenced explicitly on all source and receiver nodes. Within the policy configuration, supported constraints can be applied during path computation of the optimized P2MP tree. Note the source address must be specified and the MPLS label used must be within the SRLB for all nodes across the network.    
+#### P2MP Tree-SID SR Policy Configuration 
+This configuration defines the Tree-SID P2MP SR Policy to be used across the
+network. Note the name of the Tree-SID must be unique across the netowrk and
+referenced explicitly on all source and receiver nodes. Within the policy
+configuration, supported constraints can be applied during path computation of
+the optimized P2MP tree. Note the source address must be specified and the MPLS
+label used must be within the SRLB for all nodes across the network.    
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -4059,10 +4090,10 @@ pce
 </pre>
 </div>
 
-### TreeSID Common Config on All Nodes
+### Tree-SID Common Config on All Nodes
 
 #### Segment Routing Local Block  
-While the SRLB config is covered elsewhere in this guide, it is recommended to set the values the same across the TreeSID domain.  The values shown are 
+While the SRLB config is covered elsewhere in this guide, it is recommended to set the values the same across the Tree-SID domain.  The values shown are 
 for demonstration only.  
 
 <div class="highlighter-rouge">
@@ -4075,7 +4106,7 @@ segment-routing
 </div>
 
 #### PCEP Configuration 
-TreeSID relies on PCE initiated segments to the node, so a session to the PCE is required for all nodes in the domain.    
+Tree-SID relies on PCE initiated segments to the node, so a session to the PCE is required for all nodes in the domain.    
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -4104,11 +4135,11 @@ segment-routing
 </div>
 
 
-### TreeSID Source Node Multicast Configuration 
+### Static Tree-SID Source Node Multicast Configuration 
 
 **PIM Configuration** 
 
-In this configuration a single S,G of 232.0.0.20 with a source of 104.14.1.2 is mapped to TreeSID 
+In this configuration a single S,G of 232.0.0.20 with a source of 104.14.1.2 is mapped to Tree-SID 
 treesid-1 for distribution across the network. 
 
 <div class="highlighter-rouge">
@@ -4151,9 +4182,9 @@ multicast-routing
 </div>
 
 
-### TreeSID Receiver Node Multicast Configuration 
+### Static Tree-SID Receiver Node Multicast Configuration 
 
-##### Global Routing Table Multicast  
+#### Global Routing Table Multicast  
  
  **PIM Configuration**
 
@@ -4168,7 +4199,7 @@ router pim
 </pre>
 </div>
 
-On the router connected to the receivers, configure the address family to use the TreeSID for static S,G mapping. 
+On the router connected to the receivers, configure the address family to use the Tree-SID for static S,G mapping. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -4177,14 +4208,14 @@ multicast-routing
   mdt source Loopback0
   rate-per-route
   interface all enable
-  static sr-policy TreeSID-GRT
+  static sr-policy Tree-SID-GRT
   mdt static segment-routing 
   accounting per-prefix
  address-family ipv6 
   mdt source Loopback0 
   rate-per-route 
   interface all enable 
-  static sr-policy TreeSID-GRT 
+  static sr-policy Tree-SID-GRT 
   mdt static segment-routing 
   account per-prefix 
  !
@@ -4228,7 +4259,7 @@ router pim
 
 **Multicast Routing Configuration** 
 
-On the PE connected to the receivers, within the VRF associated with the TreeSID SR Policy, enable the TreeSID for static mapping of S,G multicast.     
+On the PE connected to the receivers, within the VRF associated with the Tree-SID SR Policy, enable the Tree-SID for static mapping of S,G multicast.     
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -4245,11 +4276,12 @@ multicast-routing
 </pre>
 </div>
 
-### TreeSID Verification on PCE 
+### Tree-SID Verification on PCE 
 
 You can view the end to end path using the "show pce lsp p2mp" command.  
 
 <pre class="highlight">
+<div class="highlighter-rouge">
 RP/0/RP0/CPU0:XTC-ACCESS1-PHY#show pce lsp p2mp
 Wed Sep 2 19:31:50.745 UTC
 
@@ -4305,12 +4337,109 @@ Tree: treesid-1
     Hops:
       Incoming: 18600 CC-ID: 9
 </pre>
+</div>
 
-### End-To-End VPN Services Data Plane
+## Multicast distribution using fully dynamic Tree-SID
+In this example we will use dynamic source/receiver discovery using BGP and PCEP
+signaling to create the SR Tree-SID multicast distribution trees. 
 
-![](http://xrdocs.io/design/images/cmfi/image10.png)
+Please see <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-5/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-75x/configure-sr-tree-sid.html> for 
+for full descriptions of configuration and optional parameters.  
 
-_Figure 10: End-To-End Services Data Plane_
+### PE BGP Configuration
+The following is used to enable the IPv4/IPV6 MVPN AFI/SAFI globally. They 
+address families are also added to the SvRR neighbor group.  
+
+<pre class="highlight">
+<div class="highlighter-rouge">
+router bgp 100 
+ address-family ipv4 mvpn
+ !
+ address-family ipv6 mvpn
+ !
+neighbor-group SvRR
+  remote-as 100
+  update-source Loopback0
+  address-family ipv4 unicast
+  !
+  address-family vpnv4 unicast
+   soft-reconfiguration inbound always
+  !
+  address-family vpnv6 unicast
+   soft-reconfiguration inbound always
+  !
+  address-family ipv4 mvpn
+   soft-reconfiguration inbound always
+  !
+  address-family ipv6 mvpn
+   soft-reconfiguration inbound always
+  !
+  address-family l2vpn evpn
+   soft-reconfiguration inbound always
+  !
+ !
+</pre>
+</div>
+
+### PE Multicast Routing Configuration 
+Note the new configuration specific to SR auto-discovery and the color specified 
+for the default MDT. The same configuration is used on both source and receiver 
+PE routers.   
+
+
+<pre class="highlight">
+<div class="highlighter-rouge">
+multicast-routing
+ address-family ipv4
+  interface Loopback0
+   enable
+  !
+  mdt source Loopback0
+  interface all enable
+ !
+ address-family ipv6
+  interface all enable
+ !
+ vrf tree-sid
+  address-family ipv4
+   mdt source Loopback0
+   interface all enable
+   bgp auto-discovery segment-routing
+   !
+   mdt default segment-routing mpls color 80
+  !
+ !
+</pre>
+</div>
+
+### PE PIM Configuration  
+The PIM configuration requires the following route-policy be defined.  
+
+<pre class="highlight">
+<div class="highlighter-rouge">
+route-policy sr-p2mp-core-tree
+  set core-tree sr-p2mp
+end-policy
+</pre>
+</div>
+
+<pre class="highlight">
+<div class="highlighter-rouge">
+router pim
+ address-family ipv4
+  interface Loopback0
+   enable
+  !
+ !
+ vrf tree-sid
+  address-family ipv4
+   rpf topology route-policy sr-p2mp-core-tree
+   mdt c-multicast-routing bgp
+   !
+   multipath
+   ssm range ssm
+</pre>
+</div>
 
 ## Hierarchical Services
 
