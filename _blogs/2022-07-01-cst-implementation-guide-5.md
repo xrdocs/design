@@ -1626,7 +1626,74 @@ will be used to dynamically instantiate a SR Policy to the remote VPN endpoint.
 The following is an example of the elements needed in addition to the base SR
 configuration. An on-demand policy must be created matching the a color to set 
 the attributes of the SR-TE Policy. ODN does not require PCEP, but for inter-domain
-path computation is required.   
+path computation is required. 
+
+#### On-Demand Route Policies 
+Coloring service routes requires routing policies to set a specific extended 
+community on those routes and apply the policy during the import and export 
+of the routes. Coloring can be performed in a policy at the BGP neighbor level 
+or at the individual service level. The following example shows global level 
+coloring, however it is recommended for granularity and ease of management to color 
+routes at the service level.    
+
+In CST 5.0 (XR 7.5.2) or higher ODN policies can be applied on import 
+or export for L3VPN prefixes. EVPN Type1/3 prefixes must be applied on export.  
+
+**Community Set and Routing Policy Definition** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+extcommunity-set opaque BLUE
+  100
+end-set
+
+route-policy ODN
+  set extcommunity color BLUE
+end-policy
+
+route-policy c2001
+  if evpn-route-type is 1 then
+    set extcommunity color c2001
+  elseif evpn-route-type is 3 then
+    set extcommunity color c2002
+  endif
+end-policy
+
+</pre> 
+</div> 
+
+**Neighbor level application** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+  neighbor-group SVRR-EVPN 
+    address-family l2vpn evpn
+      route-policy ODN_EVPN out
+</pre> 
+</div> 
+
+**Service level application** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+vrf ODN-L3VPN
+ rd 100:1
+ address-family ipv4 unicast
+  import route-target
+   100:1
+  !
+  export route-target
+  export route-policy ODN-L3VPN-OUT
+   100:1
+!
+evpn
+ evi 2001
+  bgp
+   route-policy export c2001
+</pre> 
+</div> 
+
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1649,22 +1716,6 @@ segment-routing
    pce address ipv4 100.0.1.101
    !
    pce address ipv4 100.1.1.101
-   !
-  !
-
-extcommunity-set opaque BLUE
-  100
-end-set
-
-route-policy ODN_EVPN
-  set extcommunity color BLUE
-end-policy
-
-router bgp 100
-  address-family l2vpn evpn
-   route-policy ODN_EVPN out
-  !
-!
 </pre> 
 </div> 
 
@@ -4635,26 +4686,26 @@ Anycast IRB Datal Plane_
 _Figure 16: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
 with Anycast IRB Control Plane_
 
-**Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
+**Access Routers:** **Cisco NCS 540, 560, 5500 IOS-XR or Cisco ASR920 IOS-XE**
 
-5.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
 
-6.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
+2.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
 
 **Provider Edge Routers:** **Cisco ASR9000 IOS-XR (Same on both PE
 routers in same location PE1/2 and PE3/4)**
 
-7.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
+1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
 
-8.  **Provider Edge Routers:** Path to Access Router is known via
+2.  **Provider Edge Routers:** Path to Access Router is known via
     ACCESS-ISIS IGP.
 
 
-9.  **Operator:** New L2VPN Multipoint EVPN instance together with
+3.  **Operator:** New L2VPN Multipoint EVPN instance together with
     Anycast IRB via CLI or NSO (Anycast IRB is optional when L2 and L3
     is required in same service instance)
 
-10. **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
+4. **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
     IGP.
 
 **Please note that provisioning on Access and Provider Edge routers is
