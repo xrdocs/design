@@ -5736,6 +5736,107 @@ interface TenGigabitEthernet4/1/6
 </pre>
 </div>
 
+## Cloud Native Broadband Network Gateway (cnBNG)
+See the high level design for more information on Cisco cnBNG solution.  The
+following covers the configuration of the User Plane router, in this case an ASR
+9000 router. 
+
+The following configuring is used for a deployment using IPoE subscriber
+sessions. The configuration of some external elements such as the RADIUS
+authentication server are outside the scope of this document. The cnBNG control plane 
+software deployment is also out of scope for this document, please see the cnBNG documentation located at: 
+
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface Loopback10
+ ipv6 enable 
+!
+cnbng-nal location 0/RSP0/CPU0
+ hostidentifier ASR9k-1
+ !! up-server ip should be the ip of UP interface which will be used as source for SCi communication
+ up-server ipv4 113.1.1.1 vrf default
+ !! cp-server ip is the IP of UDP Proxy configuration
+ cp-server primary ipv4 113.1.1.2
+ auto-loopback vrf default
+  interface Loopback10
+   primary-address 1.1.1.1
+  !
+ !
+ !! retry-count specifies how many times UP should retry the connection with CP before declaring CP as dead
+ cp-association retry-count 10
+ secondary-address-update enable
+!
+dhcp ipv4
+ profile cnbng_v4 cnbng
+ !
+ interface Bundle-Ether12.101 cnbng profile cnbng_v4
+!
+dhcp ipv6
+ profile cnbng_v6 cnbng
+ !
+ interface Bundle-Ether12.101 cnbng profile cnbng_v6
+! 
+interface Bundle-Ether12.101
+ ipv4 point-to-point
+ ipv4 unnumbered Loopback10 
+ ipv6 address 2001::1/64
+ ipv6 enable
+ load-interval 30
+ encapsulation dot1q 101
+ ipsubscriber
+  ipv4 l2-connected
+   initiator dhcp
+  !
+  ipv6 l2-connected
+   initiator dhcp
+</pre>
+</div>
+
+**Pseudowire Headend Configuration** 
+In this use case subscribers are tunneled to the User Plane using EVPN-VPWS from 
+a remote access node.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+interface PW-Ether2000
+ mtu 1518
+ ipv4 address 17.1.1.1 255.255.255.0
+ attach generic-interface-list PWHE
+!
+interface PW-Ether2000.2000
+ ipv4 address 182.168.10.1 255.255.255.252
+ ipv6 address 2000:111:1::1:1/64
+ ipv6 enable
+ service-policy type control subscriber IPoE_PWHE1
+ encapsulation dot1q 2000
+ ipsubscriber ipv4 l2-connected
+  initiator dhcp
+ !
+ ipsubscriber ipv6 l2-connected
+  initiator dhcp
+ !
+!
+dhcp ipv6
+ profile ipoev6_proxy proxy
+  helper-address vrf default 2001:12:3::2
+  source-interface Loopback0
+ !
+ interface PW-Ether2000.2000 proxy profile ipoev6_proxy
+ !
+!
+l2vpn
+ logging
+  pseudowire
+ !
+ xconnect group pwhe-bng
+  p2p pwhe-bng1
+   interface PW-Ether2000
+   neighbor evpn evi 40 target 900 source 900
+</pre>
+</div>
+
+
 # Model-Driven Telemetry Configuration 
 ## Summary 
 This is not an exhaustive list of IOS-XR model-driven telemetry sensor paths, but gives some basic paths used to monitor a Converged SDN Transport deployment. Each sensor path may have its own 
