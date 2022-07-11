@@ -186,13 +186,33 @@ The modular chassis version of the NCS 5500 is available in 4, 8, and 16 slot ve
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-hw-ncs5500.png)
 
-## NCS-5501 and NCS-5501-SE
-The NCS 5501 and 5501-SE is validated in both an access and aggregation role in
-the Converged SDN Transport. The 5501 has 48x1G/10G SFP+ and 6x100G QSFP28
-interfaces, the SE adds higher route scale via an external TCAM.  The
-N540-ACC-SYS is a next-generation access node with 24x10G SFP+, 8x25G SFP28, and
-2x100G QSFP28 interfaces.  The NCS540 is available in extended temperature with
-a conformal coating for deployment deep into access networks.
+## NCS 5500 / 5700 Fixed Chassis 
+The NCS 5500 / 5700 fixed series devices are validated in access, 
+aggregation, and core role in the Converged SDN Transport design.   
+
+The NCS-55A1-48Q6H has 48x1GE/10GE/25GE interfaces and 6x40GE/100GE interfaces,
+supporting high density mobile and subscriber access aggregation applications.  
+The NCS-55A1-24Q6H-S and NCS-55A1-24Q6H-SS have 24x1GE/10GE, 24x1GE/10GE/25GE,
+and 6x40GE/100GE interfaces. The 24Q6H-SS provides MACSEC support on all
+interfaces. The NCS-55A1-24Q6H series also supports 10GE/25GE DWDM optics on all
+relevant ports.   
+
+The NCS-55A1-36H and NCS-55A1-36H-SE provide 36x100GE in 1RU for dense
+aggregation and core needs. The NCS-57B1-6D24 and NCS-57B1-5DSE provide
+24xQSFP28 and either 5 or 6 QSFP-DD ports capable of 400GE with support for ZR
+and ZR+ optics.    
+
+
+More information on the NCS 5500 fixed routers can be found at: 
+
+<https://www.cisco.com/c/en/us/products/routers/network-convergence-system-5500-series/index.html>
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-55a1-48q6h.png)
+_NCS-55A1-48Q6H_ 
+
+![](http://xrdocs.io/design/images/cmf-hld/cst-hw-55a1-24q6h.png)
+_NCS-55A1-24Q6H_ 
+
 
 ## NCS 540 Small, Medium, Large Density, and Fronthaul routers  
 The NCS 540 family of routers supports mobile and business services across a wide
