@@ -2015,6 +2015,160 @@ segment-routing
 </pre>
 </div>
 
+
+### Per-Flow Segment Routing Configuration (NCS Platforms)
+The following configuration is required on the NCS 5500 / 5700 platforms to
+allocate the PFP Binding SID (BSID) from a specific label block.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+mpls label blocks              
+  block name sample-pfp-bsid-block type pfp start 40000 end 41000 client any
+</pre> 
+</div> 
+
+#### Per-Flow QoS Configuration 
+The Forward Class must be set in the ingress QoS policy so traffic is steered
+into the correct child Per-Destination Policy.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy-map per-flow-steering
+ class MatchIPP1
+ set forward-class 1
+!
+ class MatchIPP2
+ set forward-class 2
+!
+ class MatchIPv4_SRC 
+ set forward-class 3 
+!
+ class MatchIPv6_SRC 
+ set forward-class 4 
+end-policy-map
+!
+
+class-map match-any MatchIPP1
+ match precedence 1
+end-class-map
+!
+class-map match-any MatchIPP2
+ match precedence 2
+end-class-map
+!
+class-map match-any MatchIPv4_SRC 
+  match access-group ipv4 ipv4_sources
+end-class-map
+!
+class-map match-any MatchIPv6_SRC 
+  match access-group ipv4 ipv6_sources
+end-class-map
+
+ipv4 access-list ipv4_sources
+  10 permit ipv4 100.0.0.0/24 any
+  20 permit ipv4 100.0.1.0/24 any
+ !
+ipv6 access-list ipv6_sources 
+ 10 permit ipv6 2001:100::/64 any
+ 20 permit ipv6 2001:200::/64 any
+</pre> 
+</div> 
+
+#### Per-Flow Policy Configuration 
+This example shows both the child Per-Destination Policies as well as the parent Per-Flow Policy.  Each Forward-Class is mapped 
+to the color of the child policy. The default Forward Class is meant to catch traffic not matching a configured Forward Class.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing 
+  traffic-eng 
+    policy PERFLOW
+     color 100 endpoint 1.1.1.4
+      candidate-paths
+       preference 100
+        per-flow
+         forward-class 0 color 10 
+         forward-class 1 color 20
+         forward-class 2 color 30
+         forward-class 3 color 40
+         forward-class 4 color 50
+         forward-class default 0
+     !
+     policy pe1_fc0 
+      color 10 end-point ipv4 192.168.11.1
+      candidate-paths
+        preference 150
+        explicit segment-list PFL4-PE1-FC1
+     !
+     policy pe1_fc1
+      color 20 end-point ipv4 192.168.11.1
+      candidate-paths
+        preference 150
+        dynamic
+     !     
+     policy pe1_fc2 
+      color 30 end-point ipv4 192.168.11.1
+      candidate-paths
+        preference 150
+        explicit segment-list PFL4-PE1-FC2
+     ! 
+     policy pe1_fc3
+      color 40 end-point ipv4 192.168.11.1
+      candidate-paths
+        preference 150
+        dynamic  
+</pre> 
+</div> 
+
+### On-Demand Next-Hop Per-Flow Configuration 
+The creation of the SR-TE Policies can be fully automated using ODN. ODN is used to create the child Per-Destination Policies as 
+well as the Per-Flow Policy.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+  traffic-eng
+    on-demand color 10
+     dynamic
+     metric
+       type igp
+      !
+     !
+    !
+    on-demand color 20
+     dynamic
+      sid-algorithm 128
+      !
+    ! 
+    on-demand color 30
+     dynamic
+      metric 
+       type te 
+      !
+    ! 
+    on-demand color 30
+     dynamic
+       metric 
+        type igp
+      !
+    ! 
+    on-demand color 50
+     dynamic
+       metric 
+        type latency 
+      !
+    ! 
+    on-demand color 100
+     per-flow
+      forward-class 0 color 10
+      forward-class 1 color 20
+      forward-class 2 color 30
+      forward-class 3 color 40
+      forward-class 4 color 50
+</pre> 
+</div> 
+
+
 ## QoS Implementation 
 
 ### Summary 
