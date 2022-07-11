@@ -2108,7 +2108,7 @@ Moreover, EVPNs can replace existing proprietary Ethernet
 Multi-Homed/All-Active solutions with a standard BGP-based Control
 Plane.
 
-## End-To-End (Flat) – Services
+## End-To-End (Flat) Services
 
 The End-To-End Services use cases are summarized in the table in Figure
 24 and shown in the network diagram in Figure 25.
@@ -2125,7 +2125,7 @@ All services use cases are based on BGP Control Plane.
 
 Refer also to Section: "Transport and Services Integration".
 
-## Hierarchical – Services
+## Hierarchical Services
 
 Hierarchical Services Use Cases are summarized in the table of Figure 26
 and shown in the network diagram of Figure 27.
@@ -2172,7 +2172,7 @@ integration.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image29.png)
 
-_Figure 28: Hierarchical – Services (Anycast-PW)_
+_Figure 28: Hierarchical Services (Anycast-PW)_
 
 Access Router A1 establishes a Single-Active static pseudowire
 (Anycast-Static-PW) to the Anycast IP address of PE1/PE2. PEs anycast IP
@@ -2198,7 +2198,7 @@ hierarchy.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image30.png)
 
-_Figure 29: Hierarchical – Services (H-EVPN)_
+_Figure 29: Hierarchical Services (H-EVPN)_
 
 Optionally, Anycast-IRB can be used to enable Hierarchical L2/L3
 Multi/Single-Home, All/Single-Active service and to provide optimal L3
@@ -2217,7 +2217,7 @@ service.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image31.png)
 
-_Figure 30: Hierarchical – Services (H-EVPN and PWHE)_
+_Figure 30: Hierarchical Services (H-EVPN and PWHE)_
 
 Refer also to the section: “Transport and Services Integration”.
 
@@ -2245,6 +2245,8 @@ all-active, single-active, or port-active configuration.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-5-evpn-cgw.png)
 
+_Figure 31: Hierarchical Services EVPN Centralized GW_ 
+
 ### EVPN Head-End for L3 Services 
 CST 5.0 also introduces Cisco's EVPN Head-End solution for hierarchical
 services. EVPN Head-End is similar to the existing Hierarchical PWHE services,
@@ -2268,15 +2270,17 @@ a all-active, single-active, or port-active configuration.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-5-evpn-he.png)
 
+_Figure 32: Hierarchical Services EVPN Centralized GW_ 
+
 
 ## Services – Route-Reflector (S-RR)
 
-Figure 31 shows the design of Services Router-Reflectors
+Figure 33 shows the design of Services Router-Reflectors
 (S-RRs).
 
 ![](http://xrdocs.io/design/images/cmf-hld/image32.png)
 
-_Figure 31: Services – Route-Reflectors_
+_Figure 33: Services – Route-Reflectors_
 
 The  Converged SDN Transport Design focuses mainly on BGP-based services,
 therefore it is important to provide a robust and scalable Services
@@ -2316,14 +2320,14 @@ Any-To-Any Highly-Available transport together with Fast Re-Route. A
 converged BGP Control Plane provides a scalable and flexible solution
 also at the services layer.
 
-Figure 35 shows a consolidated view of the  Converged SDN Transport network
+Figure 34 shows a consolidated view of the  Converged SDN Transport network
 from a Control-Plane standpoint. Note that while network operators could
 use both PCEP and BGR-SR-TE at the same time, it is not
 typical.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image34.png)
 
-_Figure 35:  Converged SDN Transport – Control-Plane_
+_Figure 34:  Converged SDN Transport – Control-Plane_
 
 As mentioned, service provisioning is independent of the transport
 layer. However, transport is responsible for providing the path based on
@@ -2339,12 +2343,12 @@ The  Converged SDN Transport design also use MPLS Performance Management to
 monitor link delay/jitter/drop (RFC6374) to be able to create a Low
 Latency topology dynamically.
 
-Figure 36 shows a consolidated view of  the Converged SDN Transport network from
+Figure 35 shows a consolidated view of  the Converged SDN Transport network from
 a Data Plane standpoint.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image35.png)
 
-_Figure 36:  Converged SDN Transport – Data-Plane_
+_Figure 35:  Converged SDN Transport – Data-Plane_
 
 # The Converged SDN Transport Design 
     
@@ -2354,7 +2358,7 @@ This section describes in detail the Converged SDN Transport
 design. This Converged SDN Transport design focuses on transport programmability using Segment Routing and BGP-based
 services adoption.
 
-Figure 35 and Figure 36 show the network topology and transport Data
+Figure 36 and Figure 37 show the network topology and transport Data
 Plane details for Phase 1. Refer also to the Access domain extension use
 case in Section: "Use Cases".
 
@@ -2368,7 +2372,7 @@ interoperability.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image36.png)
 
-_Figure 37: Access Domain Extension – End-To-End Transport_
+_Figure 36: Access Domain Extension – End-To-End Transport_
 
 For the End-To-End LSP shown in Figure 35, the Access Router imposes 3
 transport labels (SID-list) An additional label, the TI-LFA label, can
@@ -2437,7 +2441,7 @@ network. Refer also to Section: "Services - Design" of this document.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-services-flat.png)
 
-_Figure 41: End-To-End Services table_
+_Figure 41: End-To-End Services Table_
 
 ![](http://xrdocs.io/design/images/cmf-hld/image41.png)
 
@@ -2506,7 +2510,6 @@ cnBNG validation.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-cnbng-validation-topology.png)
 
-
 _Figure 50: Cloud-Native BNG Testbed_  
 
 # The Converged SDN Transport Design - Summary
@@ -2527,7 +2530,7 @@ centralized path computation.
 
 ![](http://xrdocs.io/design/images/cmf-hld/image48.png)
 
-_Figure 50: Converged SDN Transport – Evolution_
+_Figure 51: Converged SDN Transport – Evolution_
 
 The transport layer requires only IGP protocols with Segment Routing
 extensions for Intra and Inter Domain forwarding. Fast recovery for node
