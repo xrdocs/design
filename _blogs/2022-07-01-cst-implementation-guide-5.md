@@ -4277,8 +4277,8 @@ multicast-routing
 
 You can view the end to end path using the "show pce lsp p2mp" command.  
 
-<pre class="highlight">
 <div class="highlighter-rouge">
+<pre class="highlight">
 RP/0/RP0/CPU0:XTC-ACCESS1-PHY#show pce lsp p2mp
 Wed Sep 2 19:31:50.745 UTC
 
@@ -4347,8 +4347,8 @@ for full descriptions of configuration and optional parameters.
 The following is used to enable the IPv4/IPV6 MVPN AFI/SAFI globally. They 
 address families are also added to the SvRR neighbor group.  
 
-<pre class="highlight">
 <div class="highlighter-rouge">
+<pre class="highlight">
 router bgp 100 
  address-family ipv4 mvpn
  !
@@ -4384,8 +4384,8 @@ for the default MDT. The same configuration is used on both source and receiver
 PE routers.   
 
 
-<pre class="highlight">
 <div class="highlighter-rouge">
+<pre class="highlight">div class="highlighter-rouge">
 multicast-routing
  address-family ipv4
   interface Loopback0
@@ -4412,16 +4412,16 @@ multicast-routing
 ### PE PIM Configuration  
 The PIM configuration requires the following route-policy be defined.  
 
-<pre class="highlight">
 <div class="highlighter-rouge">
+<pre class="highlight">
 route-policy sr-p2mp-core-tree
   set core-tree sr-p2mp
 end-policy
 </pre>
 </div>
 
-<pre class="highlight">
 <div class="highlighter-rouge">
+<pre class="highlight">
 router pim
  address-family ipv4
   interface Loopback0
