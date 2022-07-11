@@ -5876,6 +5876,7 @@ cadence of collection and transmission, but it's recommended to not use values l
 -----------------------|---------------------------------------------------|
 |All LLDP Info| Cisco-IOS-XR-ethernet-lldp-oper:lldp|
 |LLDP neighbor info|Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/neighbors|
+|LLDP statistics|Cisco-IOS-XR-ethernet-lldp-oper:lldp/nodes/node/statistics|
 
 <br> 
 
@@ -5883,11 +5884,13 @@ cadence of collection and transmission, but it's recommended to not use values l
 
 | Metric | Sensor path | 
 -----------------------| ---------------------------------------------------|
-|OpenConfig LAG information|sensor-group openconfig-if-aggregate:aggregate|
-|OpenConfig LAG state only|sensor-group openconfig-if-aggregate:aggregate/state|
-|OpenConfig LACP information|sensor-group openconfig-lacp:lacp|
-|Cisco full bundle information|sensor-group Cisco-IOS-XR-bundlemgr-oper:bundles|
-|Cisco BFD over Bundle stats|sensor-group Cisco-IOS-XR-bundlemgr-oper:bundle-information/bfd-counters|
+|OpenConfig LAG information|openconfig-if-aggregate:aggregate|
+|OpenConfig LAG state only|openconfig-if-aggregate:aggregate/state|
+|OpenConfig LACP information|openconfig-lacp:lacp|
+|Cisco full bundle information|Cisco-IOS-XR-bundlemgr-oper:bundles|
+|Cisco BFD over Bundle stats|Cisco-IOS-XR-bundlemgr-oper:bundle-information/bfd-counters|
+|Cisco Bundle data|Cisco-IOS-XR-bundlemgr-oper:lacp-bundles/bundles/bundle/data|
+|Cisco Bundle member data|Cisco-IOS-XR-bundlemgr-oper:lacp-bundles/bundles/bundle/members|
 
 <br> 
 
@@ -5971,6 +5974,13 @@ cadence of collection and transmission, but it's recommended to not use values l
 
 <br>
 
+## Ethernet CFM  
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------|
+|Ethernet CFM MA/MEP information|Cisco-IOS-XR-ethernet-cfm-oper:cfm/global/maintenance-points/maintenance-point|
+
+
 ## EVPN Information 
 
 | Metric | Sensor path | 
@@ -5980,6 +5990,9 @@ cadence of collection and transmission, but it's recommended to not use values l
 |EVPN total ES entries| Cisco-IOS-XR-evpn-oper:evpn/active/summary/es-entries|
 |EVPN local Eth Auto Discovery routes| Cisco-IOS-XR-evpn-oper:evpn/active/summary/local-ead-routes|
 |EVPN remote Eth Auto Discovery routes| Cisco-IOS-XR-evpn-oper:evpn/active/summary/remote-ead-routes|
+|EVPN summary|Cisco-IOS-XR-evpn-oper:evpn/nodes/node/summary| 
+|EVPN neighbor information|Cisco-IOS-XR-evpn-oper:evpn/nodes/node/evi-detail/evi-children/neighbors/neighbor| 
+|EVPN EAD information|Cisco-IOS-XR-evpn-oper:evpn/nodes/node/evi-detail/evi-children/ethernet-auto-discoveries/ethernet-auto-discovery| 
 
 <br> 
 
@@ -6038,6 +6051,13 @@ cadence of collection and transmission, but it's recommended to not use values l
 |L2VPN bridge domain specific information, will have the BD name as a key|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-bridge-domains/l2fib-bridge-domain|
 |L2VPN EVPN IPv4 MAC/IP information|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip4macs|
 |L2VPN EVPN IPv6 MAC/IP information|  Cisco-IOS-XR-l2vpn-oper:l2vpn-forwarding/nodes/node/l2fib-evpn-ip6macs|
+
+## L3VPN Information 
+
+| Metric | Sensor path | 
+|-----------------------| ---------------------------------------------------| 
+| Per-VRF detailed information | Cisco-IOS-XR-mpls-vpn-oper:l3vpn/vrfs/vrf | 
+
 
 <br> 
 
