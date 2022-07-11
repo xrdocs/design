@@ -19,7 +19,7 @@ tags:
 
 # Version 
 The following aligns to and uses features from Converged SDN Transport 5.0, please
-see the overview High Level Design document at https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld
+see the overview High Level Design document at <https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld> 
 
 # Targets
 
