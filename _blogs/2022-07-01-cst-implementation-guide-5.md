@@ -4438,9 +4438,9 @@ router pim
 </pre>
 </div>
 
-## Hierarchical Services
+## Hierarchical Services Examples
 
-![](http://xrdocs.io/design/images/cmfi/image11.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-services-hierarchical-5.png)
 
 _Figure 11: Hierarchical Services Table_
 
