@@ -174,10 +174,7 @@ measurements on physical links.  The probe measurement-mode options are either <
 
 The advertisement options specify when the advertisements are made into the IGP. The periodic interval sets the minimum interval, with the threshold setting the difference required to advertise a new delay value.  The accelerated threshold option sets a percentage change required to trigger and advertisement prior to the periodic interval timer expiring.  Performance measurement takes a series of measurements within each computation interval and uses this information to derive the min, max, and average link delay.  
 
-Full documentation on Performance Measurement can be found at:  https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/segment-routing/72x/b-segment-routing-cg-ncs5500-72x/configure-performance-measurement.html
-
-Please note while this is the IOS-XR 7.2.1 documentation it also applies to IOS-XR 7.1.2.  
-
+Full documentation on Performance Measurement can be found at:  <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-5/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-75x/configure-performance-measurement.html> 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -2361,7 +2358,7 @@ possible without having to wait for lower priority frames before being
 transmitted on the wire.  
 
 Please see the TSN configuration guide for NCS 540 Fronthaul routers at
-<a href=https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5xx/fronthaul/b-fronthaul-config-guide-ncs540-fh/m-fh-tsn-ncs540.pdf></a>
+<https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5xx/fronthaul/b-fronthaul-config-guide-ncs540-fh/m-fh-tsn-ncs540.pdf>
 
 ### Time Sensitive Networking Configuration 
 
@@ -3778,7 +3775,7 @@ vrf cgw
 </div> 
 
 ## Ethernet CFM for L2VPN service assurance 
-Ethernet Connectivity Fault Management is an Ethernet OAM component used to validate end-to-end connectivity between service endpoints. Ethernet CFM is defined by two standards, 802.1ag and Y.1731. Within an SP network, Maintenance Domains are created based on service scope. Domains are typically separated by operator boundaries and may be nested but cannot overlap.  Within each service, maintenance points can be created to verify bi-directional end to end connectivity. These are known as MEPs (Maintenance End-Point) and MIPs (Maintenance Intermediate Points). These maintenance points process CFM messages. A MEP is configured at service endpoints and has directionality where an "up" MEP faces the core of the network and a "down" MEP faces a CE device or NNI port. MIPs are optional and are created dynamically. Detailed information on Ethernet CFM configuration and operation can be found at https://www.cisco.com/c/en/us/td/docs/routers/ncs5500/software/interfaces/configuration/guide/b-interfaces-hardware-component-cg-ncs5500-66x/b-interfaces-hardware-component-cg-ncs5500-66x_chapter_0101.html 
+Ethernet Connectivity Fault Management is an Ethernet OAM component used to validate end-to-end connectivity between service endpoints. Ethernet CFM is defined by two standards, 802.1ag and Y.1731. Within an SP network, Maintenance Domains are created based on service scope. Domains are typically separated by operator boundaries and may be nested but cannot overlap.  Within each service, maintenance points can be created to verify bi-directional end to end connectivity. These are known as MEPs (Maintenance End-Point) and MIPs (Maintenance Intermediate Points). These maintenance points process CFM messages. A MEP is configured at service endpoints and has directionality where an "up" MEP faces the core of the network and a "down" MEP faces a CE device or NNI port. MIPs are optional and are created dynamically. Detailed information on Ethernet CFM configuration and operation can be found at <https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/interfaces/75x/configuration/guide/b-interfaces-hardware-component-cg-ncs5500-75x/m-configuring-ethernet-oam.html> 
 
 ### Maintenance Domain configuration 
 A Maintenance Domain is defined by a unique name and associated level. The level can be 0-7. The numerical identifier usually corresponds to the scope of the MD, where 7 is associated with CE endpoints, 6 associated with PE devices connected to a CE. Additional levels may be required based on the topology and service boundaries which occur along the end-to-end service.  In this example we only a single domain and utilize level 0 for all MEPs.   
