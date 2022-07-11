@@ -440,7 +440,7 @@ and Adjacency-SID are represented by the MPLS label and both are
 advertised by the IGP protocol. This IGP extension eliminates the need
 to use LDP or RSVP protocol to exchange MPLS labels.
 
-The Converged SDN Transport design uses ISIS as the IGP protocol.
+The Converged SDN Transport design uses IS-IS as the IGP protocol.
 
 ### Intra-Domain Forwarding - Fast Re-Route using TI-LFA  
 
@@ -674,27 +674,50 @@ request, the SR-PCE controller calculates the path based on the requested
 SLA, and uses PCEP to dynamically program the ingress node
 with a specific SR-TE Policy.
 
+### Traffic Engineering (Tactical Steering)  - Per-Flow SR-TE Policy 
+
+SR-TE and On-Demand Next-Hop have been enhanced to support per-flow traffic
+steering. Per-flow traffic steering is accomplished by using ingress QoS
+policies to mark traffic with a traffic class which is mapped to a SR-TE Policy
+supporting that traffic class.  A variety of IP header match criteria can be
+used in the QoS policy to classify traffic, giving operators flexibility to
+carry a specific traffic flow in a SR-TE Policy matching the SLA of the traffic.  
+
 ### Traffic Engineering - Dynamic Anycast-SID Paths and Black Hole Avoidance 
 
-As shown in Figure 7, inter-domain resilience and load-balancing is satisfied 
-by using the same Anycast SID on each boundary node. Starting in CST 3.5 Anycast SIDs are used by a centralized SR-PCE without having to define 
-an explicit SID list. Anycast SIDs are learned via the topology information distributed to the SR-PCE using BGP-LS. Once the SR-PCE knows the location of a set of Anycast SIDs, it will utilize the SID in the path computation to an egress node. The SR-PCE will only utilize the Anycast SID if it has a valid path to the next SID in the computed path, meaning if one ABR loses it's path to the adjacent domain, the SR-PCE will update the head-end path with one utilizing a normal node SID to ensure traffic is not blackhole. 
+As shown in Figure 7, inter-domain resilience and load-balancing is satisfied by
+using the same Anycast SID on each boundary node. Starting in CST 3.5 Anycast
+SIDs are used by a centralized SR-PCE without having to define an explicit SID
+list. Anycast SIDs are learned via the topology information distributed to the
+SR-PCE using BGP-LS. Once the SR-PCE knows the location of a set of Anycast
+SIDs, it will utilize the SID in the path computation to an egress node. The
+SR-PCE will only utilize the Anycast SID if it has a valid path to the next SID
+in the computed path, meaning if one ABR loses it's path to the adjacent domain,
+the SR-PCE will update the head-end path with one utilizing a normal node SID to
+ensure traffic is not dropped.   
 
-It is also possible to withdraw an anycast SID from the topology by using the conditional route advertisement feature for IS-IS, new in 3.5. Once the anycast SID Loopback has been withdrawn, it will no longer be used in a SR Policy path. Conditional route advertisement can be used for SR-TE Policies with Anycast SIDs in either dynamic or static SID candidate paths. Conditional route advertisement is implemented by supplying the router with a list of remote prefixes to monitor for reachability in the RIB. If those routes disappear from the RIB, the interface route will be withdrawn. Please see the CST Implementation Guide for instructions on configuring anycast SID inclusion and blackhole avoidance.   
+It is also possible to withdraw an anycast SID from the topology by using the
+conditional route advertisement feature for IS-IS, new in 3.5. Once the anycast
+SID Loopback has been withdrawn, it will no longer be used in a SR Policy path.
+Conditional route advertisement can be used for SR-TE Policies with Anycast SIDs
+in either dynamic or static SID candidate paths. Conditional route advertisement
+is implemented by supplying the router with a list of remote prefixes to monitor
+for reachability in the RIB. If those routes disappear from the RIB, the
+interface route will be withdrawn. Please see the CST Implementation Guide for
+instructions on configuring anycast SID inclusion and blackhole avoidance.   
 
 ## Transport Controller Path Computation Engine (PCE)
     
 ### Segment Routing Path Computation Element (SR-PCE)
 
-Segment Routing Path Computation Element, or SR-PCE, is a Cisco Path Computation Engine
-(PCE) and is implemented as a feature included as part of Cisco
-IOS-XR operating system. The function is typically deployed on a Cisco
-IOS-XR cloud appliance XRv-9000, as it involves control plane operations
-only. The SR-PCE gains network topology awareness from BGP-LS
-advertisements received from the underlying network. Such knowledge is
-leveraged by the embedded multi-domain computation engine to provide
-optimal path information to Path Computation Element Clients (PCCs) using the Path
-Computation Element Protocol (PCEP).  
+Segment Routing Path Computation Element, or SR-PCE, is a Cisco Path Computation
+Engine (PCE) and is implemented as a feature included as part of Cisco IOS-XR
+operating system. The function is typically deployed on a Cisco IOS-XR cloud
+appliance XRv-9000, as it involves control plane operations only. The SR-PCE
+gains network topology awareness from BGP-LS advertisements received from the
+underlying network. Such knowledge is leveraged by the embedded multi-domain
+computation engine to provide optimal path information to Path Computation
+Element Clients (PCCs) using the Path Computation Element Protocol (PCEP).  
 
 The PCC is the device where the service originates (PE) and therefore it
 requires end-to-end connectivity over the segment routing enabled
