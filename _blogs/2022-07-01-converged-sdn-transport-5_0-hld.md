@@ -1194,15 +1194,44 @@ The Converged SDN Transport design introduces support for 5G networks and 5G ser
 The following key features have been added to the CST validated design to support 5G deployments
 
 ### End to End Timing Validation 
-End to end timing using PTP with profiles G.8275.1 and G.8275.2 have been validated in the CST design. Best practice configurations are available in the online configurations and CST Implementation Guide. It is recommended to use G.8257.1 when possible to main the highest level of accuracy across the network. In CST 4.0+ we include validation for 
-G.8275.1 to G.8275.2 interworking, allowing the use of different profiles across the network. Synchronous Ethernet (SyncE) is also recommended across the network to maintain stability when timing to the PRC. All nodes used in the CST design support SyncE.  
+End to end timing using PTP with profiles G.8275.1 and G.8275.2 have been
+validated in the CST design. Best practice configurations are available in the
+online configurations and CST Implementation Guide. It is recommended to use
+G.8257.1 when possible to main the highest level of accuracy across the network.
+In CST 4.0+ we include validation for G.8275.1 to G.8275.2 interworking,
+allowing the use of different profiles across the network. Synchronous Ethernet
+(SyncE) is also recommended across the network to maintain stability when timing
+to the PRC. All nodes used in the CST design support SyncE.  
 ### Low latency SR-TE path computation
-In this release of the CST design, we introduce a new validated constraint type for SR-TE paths used for carrying services across the network. The "latency" constraint used either with a configured SR Policy or ODN SR Policy specifies the computation engine to look for the lowest latency path across the network.  The latency computation algorithm can use different mechanisms for computing the end to end path.  The first and preferred mechanism is to use the realtime measured per-link one-way delay across the network. This measured information is distributed via IGP extensions across the IGP domain and then onto external PCEs using BGP-LS extensions for use in both intra-domain and inter-domain calculations. In version 3.0 of the CST this is supported on ASR9000 links using the Performance Measurement link delay feature. More detail on the configuration can be found at <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-0/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-70x/b-segment-routing-cg-asr9000-70x_chapter_010000.html#id_118505>. In release 6.6.3 NCS 540 and NCS 5500 nodes support the configuration of static link-delay values which are distributed using the same method as the dynamic values. Two other metric types can also be utilized as part of the "latency" path computation. The TE metric, which can be defined on all SR IS-IS links and the regular IGP metric can be used in the absence of the link-delay metric.  
-
+The "latency" constraint type is used either with a configured SR Policy or ODN
+SR Policy specifies the computation engine to compute the lowest latency path
+across the network. The latency computation algorithm can use different
+mechanisms for computing the end to end path. The first and preferred mechanism
+is to use the realtime measured per-link one-way delay across the network. This
+measured information is distributed via IGP extensions across the IGP domain and
+to external PCEs using BGP-LS extensions for use in both intra-domain and
+inter-domain calculations. Two other metric types can also be utilized as part
+of the "latency" path computation. The TE metric, which can be defined on all SR
+IS-IS links and the regular IGP metric can be used in the absence of the
+link-delay metric. More information on Performance Measurement for link delay can 
+be found at <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-5/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-75x/configure-performance-measurement.html> 
+Performance Measurement is supported on all hardware used in the CST design.  
 #### <b>Dynamic Link Performance Measurement</b>  
-Starting in version 3.5 of the CST, dynamic measurement of one-way and two-way latency on logical links is fully supported across all devices. The delay measurement feature utilizes TWAMP-Lite as the transport mechanism for probes and responses. PTP is a requirement for accurate measurement of one-way latency across links and is recommended for all nodes.  In the absence of PTP a "two-way" delay mode is supported to calculate the one-way link delay. It is recommended to configure one-way delay on all IS-IS core links within the CST network. A sample configuration can be found below and detailed configuration information can be found in the implementation guide. 
+Starting in version 3.5 of the CST, dynamic measurement of one-way and two-way
+latency on logical links is fully supported across all devices. The delay
+measurement feature utilizes TWAMP-Lite as the transport mechanism for probes
+and responses. PTP is a requirement for accurate measurement of one-way latency
+across links and is recommended for all nodes.  In the absence of PTP a
+"two-way" delay mode is supported to calculate the one-way link delay. It is
+recommended to configure one-way delay on all IS-IS core links within the CST
+network. A sample configuration can be found below and detailed configuration
+information can be found in the implementation guide. 
 
-One way delay measurement is also available for SR-TE Policy paths to give the provider an accurate latency measurement for all services utilizing the SR-TE Policy. This information is available through SR Policy statistics using the CLI or model-driven telemetry. The latency measurement is done for all active candidate paths.   
+One way delay measurement is also available for SR-TE Policy paths to give the
+provider an accurate latency measurement for all services utilizing the SR-TE
+Policy. This information is available through SR Policy statistics using the CLI
+or model-driven telemetry. The latency measurement is done for all active
+candidate paths.   
 
 {: .notice--warning}
 Dynamic one-way link delay measurements using PTP are not currently supported on unnumbered interfaces. In the case of unnumbered interfaces, static link delay values must be used.    
@@ -1305,12 +1334,20 @@ segment-routing
 </pre>
 </div>
 
-The link-delay metrics are quantified in the unit of microseconds.  On most networks this can be quite large and may be out of range from normal IGP metrics, so care must be taken to ensure proper compatibility when mixing metric types. The largest possible IS-IS metric is 16777214 which is equivalent to 16.77 seconds.    
+The link-delay metrics are quantified in the unit of microseconds.  On most
+networks this can be quite large and may be out of range from normal IGP
+metrics, so care must be taken to ensure proper compatibility when mixing metric
+types. The largest possible IS-IS metric is 16777214 which is equivalent to
+16.77 seconds.    
 {: .notice--warning}
 
 ### SR Policy one-way delay measurement 
-In addition to the measurement of delay on physical links, the end to end one-way delay can also be measured across a SR Policy. This allows a provider to monitor the traffic path for increases in delay and log/alarm when thresholds are exceeded. Please note 
-SR Policy latency measurements are not supported for PCE-computed paths, only those using head-end computation or configured static segment lists.  The basic configuration for SR Policy measurement follows:  
+In addition to the measurement of delay on physical links, the end to end
+one-way delay can also be measured across a SR Policy. This allows a provider to
+monitor the traffic path for increases in delay and log/alarm when thresholds
+are exceeded. Please note SR Policy latency measurements are not supported for
+PCE-computed paths, only those using head-end computation or configured static
+segment lists.  The basic configuration for SR Policy measurement follows:  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1368,13 +1405,25 @@ segment-routing
 
 
 ### Segment Routing Flexible Algorithms for 5G Slicing 
-SR Flexible Algorithms, outlined earlier in the transport section, give providers a powerful mechanism to segment networks into topoligies defined by SLA requirements. The SLA-driven topologies solve the constraints of specific 5G service types such as Ulta-Reliable Low-Latency Services. Using SR with a packet dataplane ensures the most 
-efficient network possible, unlike slicing solutions using optical transport or OTN.  
+SR Flexible Algorithms, outlined earlier in the transport section, give
+providers a powerful mechanism to segment networks into topoligies defined by
+SLA requirements. The SLA-driven topologies solve the constraints of specific 5G
+service types such as Ulta-Reliable Low-Latency Services. Using SR with a packet
+dataplane ensures the most efficient network possible, unlike slicing solutions
+using optical transport or OTN.  
 
 ### End to end network QoS with H-QoS on Access PE 
-QoS is of utmost importance for ensuring the mobile control plane and critical user plane traffic meets SLA requirements. Overall network QoS is covered in the QoS section in this document, this section will focus on basic Hierarchical QoS to support 5G services. 
+QoS is of utmost importance for ensuring the mobile control plane and critical
+user plane traffic meets SLA requirements. Overall network QoS is covered in the
+QoS section in this document, this section will focus on basic Hierarchical QoS
+to support 5G services. 
 
-H-QoS enables a provider to set an overall traffic rate across all services, and then configure parameters per-service via a child QoS policy where the percentages of guaranteed bandwidth are derived from the parent rate. NCS platforms support 2-level and 3-level H-QoS. 3-level H-QoS applies a policer (ingress) or shaper (egress) to a physical interface, with each sub-interface having a 2-level H-QoS policy applied.  
+H-QoS enables a provider to set an overall traffic rate across all services, and
+then configure parameters per-service via a child QoS policy where the
+percentages of guaranteed bandwidth are derived from the parent rate. NCS
+platforms support 2-level and 3-level H-QoS. 3-level H-QoS applies a policer
+(ingress) or shaper (egress) to a physical interface, with each sub-interface
+having a 2-level H-QoS policy applied.  
 
 
 #### CST QoS mapping with 5 classes 
