@@ -1403,6 +1403,41 @@ segment-routing
 </pre>
 </div>
 
+### IP Endpoint Delay Measurement 
+In CST 5.0+ IOS-XR's Performance Measurement is extended to perform SLA 
+measurements between IP endpoints across multi-hop paths. Delay measurements 
+as well as liveness detection are supported. Model-driven telemetry as well as 
+CLI commands can be used to monitor the path delay.  
+
+#### Global Routing Table IP Endpoint Delay Measurement 
+<div class="highlighter-rouge">
+<pre class="highlight">
+performance-measurement
+ endpoint ipv4 1.1.1.5
+  source-address ipv4 1.1.1.1
+  delay-measurement
+  !
+ !
+ delay-profile endpoint default
+  probe
+   measurement-mode one-way
+</pre>
+</div>
+
+#### VRF IP Endpoint Delay Measurement 
+<div class="highlighter-rouge">
+<pre class="highlight">
+performance-measurement
+ endpoint ipv4 10.10.10.100 vrf green
+  source-address ipv4 1.1.1.1
+  delay-measurement
+  !
+ !
+ delay-profile endpoint default
+  probe
+   measurement-mode one-way
+</pre>
+</div>
 
 ### Segment Routing Flexible Algorithms for 5G Slicing 
 SR Flexible Algorithms, outlined earlier in the transport section, give
