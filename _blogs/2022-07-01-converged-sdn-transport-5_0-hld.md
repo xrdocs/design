@@ -410,7 +410,7 @@ interface TenGigE0/0/0/2
 </pre>
 </div>
 
-## Intra-Domain  
+## Intra-Domain Operation 
 ### Intra-Domain Routing and Forwarding
 
 The Converged SDN Transport is based on a fully programmable transport that
@@ -460,7 +460,7 @@ design.
 Please refer also to the Area Border Router Fast Re-Route covered in
 Section: "Inter-Domain Forwarding - High Availability and Fast Re-Route" for additional details.
 
-## Inter-Domain
+## Inter-Domain Operation
     
 ### Inter-Domain Forwarding
 
@@ -533,11 +533,12 @@ up between the Access Router and the AG/PE ABRs, there are two options:
 
 2.  Each ABR is represented by a unique Prefix-SID.
 
-Choosing between Anycast-SID or Prefix-SID depends on the requested
-service and inclusion of Anycast SIDs in the SR-TE Policy. Please refer to Section: "Services - Design". If one is using the SR-PCE, such as the case 
-of ODN SR-TE paths, the inclusion of Anycast SIDs is done via configuration.   
+Choosing between Anycast-SID or Prefix-SID depends on the requested service and
+inclusion of Anycast SIDs in the SR-TE Policy.  If one is using the SR-PCE, such
+as the case of ODN SR-TE paths, the inclusion of Anycast SIDs is done via
+configuration.   
 
-Note that both options can be combined on the same network.
+Note both options can be combined on the same network.
 
 ### Inter-Domain Forwarding - High Availability and Fast Re-Route
 
@@ -1051,7 +1052,7 @@ policy-map core-egress-exp-marking
 </div> 
 
 ## L3 Multicast using Segment Routing Tree-SID
-### TreeSID Diagram 
+### Tree SID Diagram 
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-treesid.png)
 
@@ -1984,11 +1985,10 @@ Example function packs are meant to be used as-is or modified to fit specific ne
 
 <https://www.cisco.com/c/dam/en/us/td/docs/cloud-systems-management/crosswork-network-automation/NSO_Reference_Docs/Cisco_NSO_Transport_SDN_Function_Pack_Bundle_User_Guide_3_0_0.pdf>
 
-# Base Services supporting Advanced Use Cases  
-    
+# Base Services Supporting Advanced Use Cases  
 ## Overview
 
-The  Converged SDN Transport Design aims to enable simplification across all
+The Converged SDN Transport Design aims to enable simplification across all
 layers of a Service Provider network. Thus, the  Converged SDN Transport
 services layer focuses on a converged Control Plane based on BGP.
 
@@ -2023,7 +2023,11 @@ Service Provider Networks:
     
 ### Ethernet VPN Hardware Support 
 
-In CST 3.0+ EVPN ELAN, ETREE, and VPWS services are supported on all IOS-XR devices. The ASR920 running IOS-XE does not support native EVPN services, but can integrate into an overall EVPN service by utilizing service hierarchy. Please see the tables under End-to-End and Hierarchical Services for supported service types.  
+In CST 3.0+ EVPN ELAN, ETREE, and VPWS services are supported on all IOS-XR
+devices. The ASR920 running IOS-XE does not support native EVPN services in the
+CST design, but can integrate into an overall EVPN service by utilizing service
+hierarchy. Please see the tables under End-to-End and Hierarchical Services for
+supported service types.  
 
 ### Multi-Homed & All-Active Ethernet Access
 
@@ -2132,11 +2136,11 @@ and shown in the network diagram of Figure 27.
 
 ![](http://xrdocs.io/design/images/cmf-hld/cst-services-hierarchical-5.png)
 
-_Figure 26: Hierarchical – Services table_
+_Figure 26: Supported Hierarchical Services_ 
 
 ![](http://xrdocs.io/design/images/cmf-hld/image28.png)
 
-_Figure 27: Hierarchical - Services_
+_Figure 27: Hierarchical Services Control Plane_
 
 Hierarchical services designs are critical for Service Providers looking
 for limiting requirements on the access platforms and deploying more
@@ -2272,246 +2276,7 @@ a all-active, single-active, or port-active configuration.
 
 _Figure 32: Hierarchical Services EVPN Centralized GW_ 
 
-
-## Services – Route-Reflector (S-RR)
-
-Figure 33 shows the design of Services Router-Reflectors
-(S-RRs).
-
-![](http://xrdocs.io/design/images/cmf-hld/image32.png)
-
-_Figure 33: Services – Route-Reflectors_
-
-The  Converged SDN Transport Design focuses mainly on BGP-based services,
-therefore it is important to provide a robust and scalable Services
-Route-Reflector (S-RR) design.
-
-For Redundancy reasons, there are at least 2 S-RRs in any given IGP
-Domain, although Access and Aggregation are supported by the same pair
-of S-RRs.
-
-Each node participating in BGP-based service termination has two BGP
-sessions with Domain Specific S-RRs and supports multiple
-address-Families: VPNv4, VPNv6, EVPN.
-
-Core Domain S-RRs cover the core Domain. Aggregation Domain S-RRs cover
-Access and Aggregation Domains. Aggregation Domain S-RRs and Core S-RRs
-have BGP sessions among each other.
-
-The described solution is very scalable and can be easily extended to
-scale to higher numbers of BGP sessions by adding another pair of S-RRs
-in the Access Domain.
-
-## Ethernet Services OAM using Ethernet CFM 
-Ethernet CFM using 802.1ag/Y.1731 has been added in the CST 3.0 design. Ethernet
-CFM provides end-to-end continuity monitoring and alerting on a per-service
-basis. Maintenance End Points (MEPs) are configured on PE-CE interfaces with
-periodic Continuity Check Messages (CCMs) sent between them utilizing the same
-forwarding path as service traffic. Ethernet CFM also enables the transmission
-of Alarm Indication Signal (AIS) messages to alert remote endpoints of local
-faults. Additional information on Ethernet CFM can be found in the CST
-Implementation Guide at: 
-<https://xrdocs.io/design/blogs/latest-converged-sdn-transport-implementation-guide> 
-
-# Transport and Services Integration
-
-Section: "Transport - Design" described how Segment Routing provides flexible End-To-End and
-Any-To-Any Highly-Available transport together with Fast Re-Route. A
-converged BGP Control Plane provides a scalable and flexible solution
-also at the services layer.
-
-Figure 34 shows a consolidated view of the  Converged SDN Transport network
-from a Control-Plane standpoint. Note that while network operators could
-use both PCEP and BGR-SR-TE at the same time, it is not
-typical.
-
-![](http://xrdocs.io/design/images/cmf-hld/image34.png)
-
-_Figure 34:  Converged SDN Transport – Control-Plane_
-
-As mentioned, service provisioning is independent of the transport
-layer. However, transport is responsible for providing the path based on
-service requirements (SLA). The component that enables such integration
-is On-Demand Next Hop (ODN). ODN is the capability of requesting to a
-controller a path that satisfies specific constraints (such as low
-latency). This is achieved by associating an SLA tag/attribute to the
-path request. Upon receiving the request, the SR-PCE controller calculates
-the path based on the requested SLA and use PCEP or BGP-SR-TE to
-dynamically program the Service End Point with a specific SR-TE Policy.
-
-The  Converged SDN Transport design also use MPLS Performance Management to
-monitor link delay/jitter/drop (RFC6374) to be able to create a Low
-Latency topology dynamically.
-
-Figure 35 shows a consolidated view of  the Converged SDN Transport network from
-a Data Plane standpoint.
-
-![](http://xrdocs.io/design/images/cmf-hld/image35.png)
-
-_Figure 35:  Converged SDN Transport – Data-Plane_
-
-# The Converged SDN Transport Design 
     
-## Transport 
-
-This section describes in detail the Converged SDN Transport
-design. This Converged SDN Transport design focuses on transport programmability using Segment Routing and BGP-based
-services adoption.
-
-Figure 36 and Figure 37 show the network topology and transport Data
-Plane details for Phase 1. Refer also to the Access domain extension use
-case in Section: "Use Cases".
-
-The network is split into Access and Core IGP domains. Each IGP domain
-is represented by separate IGP processes. The  Converged SDN Transport
-design uses ISIS IGP protocol for validation.
-
-Validation will be done on two types of access platforms, IOS-XR and
-IOS-XE, to prove
-interoperability.
-
-![](http://xrdocs.io/design/images/cmf-hld/image36.png)
-
-_Figure 36: Access Domain Extension – End-To-End Transport_
-
-For the End-To-End LSP shown in Figure 35, the Access Router imposes 3
-transport labels (SID-list) An additional label, the TI-LFA label, can
-be also added for FRR (node and link protection). In the Core and in the
-remote Access IGP Domain, 2 additional TI-LFA labels can be used for FRR
-(node and link protection). In Phase 1 PE ABRs are represented by
-Prefix-SID. Refer also to Section: "Transport Programmability - Phase 1".
-
-![](http://xrdocs.io/design/images/cmf-hld/image37.png)
-
-_Figure 38: Access Domain Extension – Hierarchical Transport_
-
-Figure 38 shows how the Access Router imposes a single transport label
-to reach local PE ABRs, where the hierarchical service is terminated.
-Similarly, in the Core and in the remote Access IGP domain, the
-transport LSP is contained within the same IGP domain (Intra-Domain
-LSP). Routers in each IGP domain can also impose two additional TI-LFA
-labels for FRR (to provide node and link protection).
-
-In the Hierarchical transport use case, PE ABRs are represented by
-Anycast-SID or Prefix-SID. Depending on the type of service, Anycast-SID
-or Prefix-SID is used for the transport LSP.
-
-## Transport Programmability 
-
-The  Converged SDN Transport employs a distributed and highly available SR-PCE
-design as described in Section: "Transport Programmability". Transport programmability is based
-on PCEP. Figure 39 shows the design when SR-PCE uses PCEP.
-
-![](http://xrdocs.io/design/images/cmf-hld/image38.png)
-
-_Figure 39: SR-PCE – PCEP_
-
-SR-PCE in the Access domain is responsible for Inter-Domain LSPs and provides
-the SID-list. PE ABRs are represented by Prefix-SID.
-
-SR-PCE in the Core domain is responsible for On-Demand Nexthop (ODN) for
-hierarchical services and programming Tree-SID multicast trees across the
-network. Refer to the table in Figure 41 to see what services use ODN. Refer to
-Section: "Transport Controller - Path Computation Engine (PCE)" to see more
-details about SR-PCE.
-
-![](http://xrdocs.io/design/images/cmf-hld/image39.png)
-
-_Figure 40: PCE Path Computation_
-
-**Delegated Computation to SR-PCE**
-
-1.  CNC provisions the service – Service can also be provisioned via CLI
-
-2.  Access Router requests a path
-
-3.  SR-PCE computes the path
-
-4.  SR-PCE provides the path to Access Router
-
-5.  Access Router confirms
-    
-## Supported Services
-
-This section describes the base xVPN Services used in Converged SDN Transport. 
-
-The table in Figure 41 describes the End-To-End services, while the
-network diagram in Figure 42 shows how services are deployed in the
-network. Refer also to Section: "Services - Design" of this document.
-
-![](http://xrdocs.io/design/images/cmf-hld/cst-services-flat.png)
-
-_Figure 41: End-To-End Services Table_
-
-![](http://xrdocs.io/design/images/cmf-hld/image41.png)
-
-_Figure 42: End-To-End Services_
-
-The table in Figure 43 describes the hierarchical services, while the
-network diagram in Figure 44 shows how services are deployed in the
-network. Refer also to Section: "Services - Design" of this document.
-
-In addition, the table in Figure 44 shows where PE ABRs Anycast-SID is
-required and where ODN in the Core IGP domain is used.
-
-![](http://xrdocs.io/design/images/cmf-hld/cst-services-hierarchical.png)
-
-_Figure 43: Hierarchical Services table_
-
-![](http://xrdocs.io/design/images/cmf-hld/image43.png)
-
-_Figure 44: Hierarchical Services_
-
-The  Converged SDN Transport uses the hierarchical Services Route-Reflectors
-(S-RRs) design described in Section: "Services - Route-Reflector (S-RR)". Figure
-45 shows in detail the S-RRs design used for Phase 1.
-
-![](http://xrdocs.io/design/images/cmf-hld/image44.png)
-
-_Figure 45: Services Route-Reflectors (S-RRs)_
-
-Network Services Orchestrator (NSO) is used for service provisioning.
-Refer to Section: "Network Services Orchestrator (NSO)".
-
-
-## Transport and Services Integration 
-
-Transport and Services integration is described in Section: "Transport and
-Services Integration" of this document. Figure 46 shows an example of End-To-End
-LSP and services integration.   
-
-![](http://xrdocs.io/design/images/cmf-hld/image45.png)
-
-_Figure 46: Transport and Services Data-Plane_
-
-Figure 47 shows a consolidated view of the Transport and Services
-Control-Plane.
-
-![](http://xrdocs.io/design/images/cmf-hld/image46.png)
-
-_Figure 47: Transport and Services Control-Plane_
-
-Figure 48 shows the detailed topology of the testbed used for 
-validation.
-
-![](http://xrdocs.io/design/images/cmf-hld/cst-topology.png)
-
-_Figure 48: CST Validation Testbed_
-
-Figure 49 shows the detailed topology of the testbed used for 
-CIN and Remote PHY validation.
-
-![](http://xrdocs.io/design/images/cmf-hld/cst-rphy-validation-topology.png)
-
-_Figure 49: Remote PHY/CIN Validation Testbed_
-
-Figure 50 shows the detailed topology of the testbed used for 
-cnBNG validation.
-
-![](http://xrdocs.io/design/images/cmf-hld/cst-cnbng-validation-topology.png)
-
-_Figure 50: Cloud-Native BNG Testbed_  
-
 # The Converged SDN Transport Design - Summary
 
 The Converged SDN Transport brings huge simplification at the Transport as
