@@ -4495,7 +4495,10 @@ In this example we will use dynamic source/receiver discovery using BGP and PCEP
 signaling to create the SR Tree-SID multicast distribution trees. 
 
 Please see <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-5/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-75x/configure-sr-tree-sid.html> for 
-for full descriptions of configuration and optional parameters.  
+for full descriptions of configuration and optional parameters. 
+
+Note: There MUST be a BGP route to the source PE to satisfy the Tree-SID RPF check on receiver nodes. It is recommended for multicast to use 
+the IPv4/IPv6 Multicast address family to distribute source information.  Please see the section [Multicast Source Distribution using BGP Multicast AFI/SAFI](#multicast-source-distribution-using-bgp-multicast-afisafi) 
 
 ### PE BGP Configuration
 The following is used to enable the IPv4/IPV6 MVPN AFI/SAFI globally. They 
