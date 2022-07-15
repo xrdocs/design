@@ -6236,12 +6236,15 @@ cadence of collection and transmission, but it's recommended to not use values l
 |Summary info|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary|
 |Interface stats for delay measurements|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary/delay-summary/interface-delay-summary/delay-transport-counters/generic-counters|
 |Interface stats for loss measurement|   Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/summary/loss-summary/interface-loss-summary|
-|SR policy PM statistics|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies/sr-policy-delay |
 |Parent interface oper data sensor path|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces |
 |Delay values for each probe measurement| Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-probes|
 |Delay values aggregated at computation interval| Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-aggregations|
 |Delay values aggregated at advertisement interval| Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/interfaces/delay/interface-last-advertisements|
-|SR Policy measurement information|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies|
+|SR Policy measurement for delay and liveness|  Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies|
+|SR Policy delay|Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies/sr-policy-delay|
+|SR Policy liveness detection|Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies/sr-policy-liveness|
+|SR Policy PM Details|Cisco-IOS-XR-perf-meas-oper:performance-measurement/nodes/node/sr-policies/sr-policy-details| 
+
 
 <br> 
 
