@@ -166,7 +166,7 @@ interface HundredGigE0/0/0/24
 </pre>
 </div>
 
-### MPLS Performance Measurement 
+### Performance Measurement 
 
 #### Interface delay metric dynamic configuration 
 Starting with CST 3.5 we now support end to end dynamic link delay measurements across all IOS-XR nodes. The feature in IOS-XR is called Performance Measurement and all configuration is found under the performance-measurement configuration hierarchy.  There are a number of configuration options utilized when configuring performance measurement, but the below configuration will enable one-way delay 
@@ -230,6 +230,114 @@ performance-measurement
    advertise-delay 10000
 </pre>
 </div>
+
+#### SR Policy Delay Measurement Profile  
+Properties for SR Policy end to end measurement can be customized to set specific 
+intervals, logging, delay thresholds, and protocol. The "default" profile will be 
+used for all SR Policies with delay measurement enabled unless a specific profile is 
+specified.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+delay-profile sr-policy default
+  advertisement
+   accelerated
+    threshold 25
+   !
+   periodic
+    interval 120
+    threshold 10
+   !
+   threshold-check
+    average-delay
+   !
+  !
+  probe
+   tos
+    dscp 46
+   !
+   measurement-mode two-way
+   protocol twamp-light
+   computation-interval 60
+   burst-interval 60
+  !
+ !
+ protocol twamp-light
+  measurement delay
+   unauthenticated
+    querier-dst-port 12345
+</pre>
+</div>
+
+#### Enabling SR Policy Delay Measurement 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy srte_c_5227_ep_100.0.0.27
+   color 5227 end-point ipv4 100.0.0.27
+   candidate-paths
+    preference 100
+     dynamic
+      metric
+       type igp
+      !
+     !
+    !
+   !
+   performance-measurement
+    delay-measurement
+</pre>
+</div>
+
+#### SR Policy Liveness Detection Profile  
+Note on platforms with HW enabled probe generation, the minimum interval is 3.3ms, 
+on platforms with CPU probe generation, the minimum interval is 30ms (30000us).   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+performance-measurement
+ liveness-profile name cst
+  liveness-detection
+   multiplier 3
+  !
+  probe
+   tx-interval 30000
+</pre>
+</div>
+
+#### SR Policy with Liveness Detection Enabled 
+This example uses the default liveness detection profile. In this case when 
+three probes are missed, the SR Policy will transition to a "down" state due to 
+the "invalidation-action down" command. If this is omitted, path changes will 
+be logged but no action will be taken.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy sr-policy-liveness
+   color 5000 end-point ipv4 100.0.0.25
+   candidate-paths
+    preference 200
+     dynamic
+      pcep
+      !
+      anycast-sid-inclusion
+      !
+     !
+     constraints
+      segments
+       sid-algorithm 130
+      !
+     !
+    !
+   !
+   performance-measurement
+    liveness-detection
+     invalidation-action down
+</pre>
+</div>
+
 
 ### IOS-XR SR-MPLS Transport  
 
