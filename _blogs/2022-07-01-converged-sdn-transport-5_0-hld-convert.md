@@ -2371,7 +2371,7 @@ Converged SDN Transport provides another huge leap forward in simplification and
 programmability adding Services Control Plane unification and
 centralized path computation.
 
-![](http://xrdocs.io/design/images/cmf-hld/cst-summary.png)
+![](http://xrdocs.io/design/images/cmf-hld/cst-overview.png)
 
 _Figure 51: Converged SDN Transport – Evolution_
 
