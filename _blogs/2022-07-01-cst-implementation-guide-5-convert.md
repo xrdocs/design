@@ -53,7 +53,7 @@ see the overview High Level Design document at <https://xrdocs.io/design/blogs/l
 
 # Testbed Overview
 
-[](https://xrdocs.io/design/images/cmf-hld/cst-topology.png)
+![](http://xrdocs.io/design/images/cmfi/cst-topology.png)
 
 _Figure 1: Compass Converged SDN Transport High Level Topology_
 
