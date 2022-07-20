@@ -54,21 +54,7 @@ see the overview High Level Design document at <https://xrdocs.io/design/blogs/l
 
 # Testbed Overview
 
-[](https://xrdocs.io/design/images/cmfi/image1.png)
-
-_Figure 1: Compass Converged SDN Transport High Level Topology_
-
-![](https://xrdocs.io/design/images/cmfi/cst-topology.png)
-
-_Figure 2: Testbed Physical Topology_
-
-![](https://xrdocs.io/design/images/cmfi/image3.png)
-
-_Figure 3: Testbed Route-Reflector and SR-PCE physical connectivity_
-
-![](https://xrdocs.io/design/images/cmfi/image4.png)
-
-_Figure 4: Testbed IGP Domains_
+[](https://xrdocs.io/design/images/cmf-hld/cst-topology.png)
 
 ## Devices
 
