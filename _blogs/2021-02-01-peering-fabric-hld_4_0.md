@@ -4,14 +4,13 @@ date: '2021-02-01 15:22 -0600'
 title: Peering Fabric Design 
 author: Phil Bedard 
 excerpt: Peering Fabric Design - 4.0
-permalink: /blogs/latest-peering-fabric-hld 
 tags:
   - iosxr
   - design
   - peering
   - ddos
   - ixp 
-position: top 
+position: hidden 
 ---
 {% include toc %}
 
@@ -20,7 +19,7 @@ position: top
 | Version          |Date                    |Comments| 
 | ---------------- | ---------------------- |-----|
 | 1.0       | 05/08/2018 | Initial Peering Fabric publication| 
-| 1.5          | 07/31/2018 |BGP-FS, QPPB, ZTP, Internet/Peering in a VRF, NSO Services|
+| 1.5       | 07/31/2018 |BGP-FS, QPPB, ZTP, Internet/Peering in a VRF, NSO Services|
 | 2.0       | 04/01/2019  |IXP Fabric, ODN and SR-PCE for Peering, RPKI |
 | 3.0       | 01/10/2020  |SR-TE steering for DDoS, BGP graceful shutdown, Radware DDoS validation | 
 | 3.5       | 11/01/2020  |BGP slow peer detection, Type-6 Password Encryption, Arbor DDoS validation | 

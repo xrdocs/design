@@ -4,13 +4,14 @@ date: '2022-07-01 15:22 -0600'
 title: Peering Fabric Design 
 author: Phil Bedard 
 excerpt: Peering Fabric Design - 5.0
+permalink: /blogs/latest-peering-fabric-hld 
 tags:
   - iosxr
   - design
   - peering
   - ddos
   - ixp 
-position: hidden 
+position: top 
 ---
 {% include toc %}
 
