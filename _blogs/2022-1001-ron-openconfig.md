@@ -390,45 +390,45 @@ Here we create the first logical channel, associated with the host Ethernet inte
 Next we must map this logical-channel to either a parent logical-channel or output OpticalChannel. Cisco uses a specific "CoherentDSP" interface to represent the framing layer of the DCO transceiver, so there is a parent logical channel representing that layer of the connection. In this case I have a single 400G child interface, so all 400G is mapped to the parent logical channel.   
 
 ```xml
-                    <logical-channel-assignments>
-                        <assignment>
-                            <index>1</index>
-                            <config>
-                                <index>1</index>
-                                <allocation>400</allocation>
-                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
-                                <description>ETH to Coherent assignment</description>
-                                <logical-channel>200</logical-channel>
-                            </config>
-                        </assignment>
-                    </logical-channel-assignments>
-                </channel>
+<logical-channel-assignments>
+    <assignment>
+        <index>1</index>
+        <config>
+            <index>1</index>
+            <allocation>400</allocation>
+            <assignment-type>LOGICAL_CHANNEL</assignment-type>
+            <description>ETH to Coherent assignment</description>
+            <logical-channel>200</logical-channel>
+        </config>
+    </assignment>
+</logical-channel-assignments>
+</channel>
 ```
 
 Next we must define the parent logical-channel associated with the internal interface CoherentDSP0/0/0/20, and map that to the output OpticalChannel associated with the physical port. The rate is configured as 400 to represent 400G.   
 
 ```xml
-                <channel>
-                    <index>200</index>
-                    <config>
-                        <index>200</index>
-                        <admin-state>ENABLED</admin-state>
-                        <description>Coherent Logical Channel</description>
-                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_OTN</logical-channel-type>
-                    </config>
-                    <logical-channel-assignments>
-                        <assignment>
-                            <index>1</index>
-                            <config>
-                                <index>1</index>
-                                <allocation>400</allocation>
-                                <assignment-type>OPTICAL_CHANNEL</assignment-type>
-                                <description>Coherent to optical assignment</description>
-                                <optical-channel>0/0-OpticalChannel0/0/0/20</optical-channel>
-                            </config>
-                        </assignment>
-                    </logical-channel-assignments>
-                </channel>
+<channel>
+    <index>200</index>
+    <config>
+        <index>200</index>
+        <admin-state>ENABLED</admin-state>
+        <description>Coherent Logical Channel</description>
+        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_OTN</logical-channel-type>
+    </config>
+    <logical-channel-assignments>
+        <assignment>
+            <index>1</index>
+            <config>
+                <index>1</index>
+                <allocation>400</allocation>
+                <assignment-type>OPTICAL_CHANNEL</assignment-type>
+                <description>Coherent to optical assignment</description>
+                <optical-channel>0/0-OpticalChannel0/0/0/20</optical-channel>
+            </config>
+        </assignment>
+    </logical-channel-assignments>
+</channel>
 ```
 
 We will use the PROT_OTN encapsulation type for the channel, even though it's not technically a traditional G.709 OTN frame.  
@@ -441,18 +441,18 @@ This completes the configuration of the mappings between logical Ethernet and ph
 optical parameters using the openconfig-platform model.  
 
 ```xml
-        <components xmlns="http://openconfig.net/yang/platform">
-            <component>
-                <name>0/0-OpticalChannel0/0/0/20</name>
-                <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
-                    <config>
-                        <target-output-power>-100</target-output-power>
-                        <operational-mode>5003</operational-mode>
-                        <frequency>194300000</frequency>
-                    </config>
-                </optical-channel>
-            </component>
-        </components>
+<components xmlns="http://openconfig.net/yang/platform">
+    <component>
+        <name>0/0-OpticalChannel0/0/0/20</name>
+        <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+            <config>
+                <target-output-power>-100</target-output-power>
+                <operational-mode>5003</operational-mode>
+                <frequency>194300000</frequency>
+            </config>
+        </optical-channel>
+    </component>
+</components>
 ```
 
 As you can see the configuration is relatively straightforward, applying the 
@@ -594,29 +594,29 @@ First we will inspect the channel configuration for the child logical channel as
 router Ethernet interface HundredGigE0/0/0/20/0. Inspecting the first one we see the following:   
 
 ```xml
-                <channel>
-                    <index>201</index>
-                    <config>
-                        <index>201</index>
-                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
-                        <admin-state>ENABLED</admin-state>
-                        <description>ETH Logical Channel</description>
-                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
-                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
-                    </config>
-                    <logical-channel-assignments>
-                        <assignment>
-                            <index>1</index>
-                            <config>
-                                <index>1</index>
-                                <allocation>100</allocation>
-                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
-                                <description>ETH to Coherent assignment</description>
-                                <logical-channel>100</logical-channel>
-                            </config>
-                        </assignment>
-                    </logical-channel-assignments>
-                </channel>
+<channel>
+    <index>201</index>
+    <config>
+        <index>201</index>
+        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+        <admin-state>ENABLED</admin-state>
+        <description>ETH Logical Channel</description>
+        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+    </config>
+    <logical-channel-assignments>
+        <assignment>
+            <index>1</index>
+            <config>
+                <index>1</index>
+                <allocation>100</allocation>
+                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                <description>ETH to Coherent assignment</description>
+                <logical-channel>100</logical-channel>
+            </config>
+        </assignment>
+    </logical-channel-assignments>
+</channel>
 ```
 
 Here are the attributes used for the logical channel configuration: 
@@ -638,56 +638,56 @@ The second logical channel associated with HundredGigE0/0/0/20/1 is similar with
 101 instead of 100.  
 
 ```xml
-                <channel>
-                    <index>202</index>
-                    <config>
-                        <index>202</index>
-                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
-                        <admin-state>ENABLED</admin-state>
-                        <description>ETH Logical Channel</description>
-                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
-                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
-                    </config>
-                    <logical-channel-assignments>
-                        <assignment>
-                            <index>1</index>
-                            <config>
-                                <index>1</index>
-                                <allocation>100</allocation>
-                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
-                                <description>ETH to Coherent assignment</description>
-                                <logical-channel>100</logical-channel>
-                            </config>
-                        </assignment>
-                    </logical-channel-assignments>
-                </channel>
+<channel>
+    <index>202</index>
+    <config>
+        <index>202</index>
+        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+        <admin-state>ENABLED</admin-state>
+        <description>ETH Logical Channel</description>
+        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+    </config>
+    <logical-channel-assignments>
+        <assignment>
+            <index>1</index>
+            <config>
+                <index>1</index>
+                <allocation>100</allocation>
+                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                <description>ETH to Coherent assignment</description>
+                <logical-channel>100</logical-channel>
+            </config>
+        </assignment>
+    </logical-channel-assignments>
+</channel>
 ```
 
 The Coherent DSP level logical-channel configuration is similar to the first example, 
 except the allocation is now configured as 300 instead of 400 to reflect the 300G line rate.   
 
 ```xml
-                <channel>
-                    <index>100</index>
-                    <config>
-                        <index>100</index>
-                        <admin-state>ENABLED</admin-state>
-                        <description>Coherent Logical Channel</description>
-                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_OTN</logical-channel-type>
-                    </config>
-                    <logical-channel-assignments>
-                        <assignment>
-                            <index>1</index>
-                            <config>
-                                <index>1</index>
-                                <allocation>300</allocation>
-                                <assignment-type>OPTICAL_CHANNEL</assignment-type>
-                                <description>Coherent to optical assignment</description>
-                                <optical-channel>0/0-OpticalChannel0/0/0/20</optical-channel>
-                            </config>
-                        </assignment>
-                    </logical-channel-assignments>
-                </channel>
+<channel>
+    <index>100</index>
+    <config>
+        <index>100</index>
+        <admin-state>ENABLED</admin-state>
+        <description>Coherent Logical Channel</description>
+        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_OTN</logical-channel-type>
+    </config>
+    <logical-channel-assignments>
+        <assignment>
+            <index>1</index>
+            <config>
+                <index>1</index>
+                <allocation>300</allocation>
+                <assignment-type>OPTICAL_CHANNEL</assignment-type>
+                <description>Coherent to optical assignment</description>
+                <optical-channel>0/0-OpticalChannel0/0/0/20</optical-channel>
+            </config>
+        </assignment>
+    </logical-channel-assignments>
+</channel>
 ```
 
 
@@ -695,17 +695,17 @@ The OpticalChannel configuration is also similar with the exception the *target-
 has been omitted. In this case the device default power of -100 (-10dBM) will be used.   
 
 ```xml
-      <components xmlns="http://openconfig.net/yang/platform">
-            <component>
-                <name>0/0-OpticalChannel0/0/0/20</name>
-                <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
-                    <config>
-                        <operational-mode>5007</operational-mode>
-                        <frequency>195200000</frequency>
-                    </config>
-                </optical-channel>
-            </component>
-        </components>
+<components xmlns="http://openconfig.net/yang/platform">
+    <component>
+        <name>0/0-OpticalChannel0/0/0/20</name>
+        <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+            <config>
+                <operational-mode>5007</operational-mode>
+                <frequency>195200000</frequency>
+            </config>
+        </optical-channel>
+    </component>
+</components>
 ```
 
 
