@@ -719,3 +719,774 @@ using a NETCONF GET and using GNMi which can be used in different ways to retrie
 operational state data.   
 
 ## Using NETCONF 
+
+### Optical Channel Information 
+Request from openconfig-platform for OpticalChannel 0/0-OpticalChannel0/0/0/8 associated 
+with port 0/0/0/8.   
+
+```xml
+<get xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <filter>
+    <components xmlns="http://openconfig.net/yang/platform">
+      <component>
+        <name/>
+        <name>0/0-OpticalChannel0/0/0/8</name>
+      </component>
+    </components>
+  </filter>
+</get>
+```
+
+Response
+
+```xml
+<component>
+    <name>0/0-OpticalChannel0/0/0/1</name>
+    <config>
+     <name>0/0-OpticalChannel0/0/0/1</name>
+    </config>
+    <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+     <config>
+      <frequency>1600</frequency>
+      <target-output-power>0.00</target-output-power>
+     </config>
+     <state>
+      <target-output-power>0.00</target-output-power>
+     </state>
+     <extended xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-openconfig-terminal-device-ext">
+      <state>
+       <optics-cd-low-threshold>0</optics-cd-low-threshold>
+       <optics-cd-high-threshold>0</optics-cd-high-threshold>
+      </state>
+     </extended>
+    </optical-channel>
+   </component>
+   <component>
+    <name>0/0-OpticalChannel0/0/0/8</name>
+    <config>
+     <name>0/0-OpticalChannel0/0/0/8</name>
+    </config>
+    <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+     <config>
+      <target-output-power>-115</target-output-power>
+      <frequency>193700000</frequency>
+      <operational-mode>5005</operational-mode>
+     </config>
+     <state>
+      <target-output-power>-10.64</target-output-power>
+      <frequency>193700000</frequency>
+      <chromatic-dispersion>
+       <instant>-2</instant>
+       <interval>30000000000</interval>
+       <min>-4</min>
+       <avg>-2</avg>
+       <max>0</max>
+       <min-time>1664642812995785263</min-time>
+       <max-time>1664642792995781327</max-time>
+      </chromatic-dispersion>
+      <second-order-polarization-mode-dispersion>
+       <instant>37.00</instant>
+       <interval>30000000000</interval>
+       <min>35.00</min>
+       <avg>39.00</avg>
+       <max>42.00</max>
+       <min-time>1664642817995790775</min-time>
+       <max-time>1664642802995783064</max-time>
+      </second-order-polarization-mode-dispersion>
+      <polarization-dependent-loss>
+       <instant>1.10</instant>
+       <interval>30000000000</interval>
+       <min>1.10</min>
+       <avg>1.12</avg>
+       <max>1.20</max>
+       <min-time>1664642790996011456</min-time>
+       <max-time>1664642812995785263</max-time>
+      </polarization-dependent-loss>
+      <operational-mode>5005</operational-mode>
+     </state>
+     <extended xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-openconfig-terminal-device-ext">
+      <state>
+       <optics-cd-min>-13000</optics-cd-min>
+       <optics-cd-max>13000</optics-cd-max>
+       <optics-cd-low-threshold>-160000</optics-cd-low-threshold>
+       <optics-cd-high-threshold>160000</optics-cd-high-threshold>
+      </state>
+     </extended>
+    </optical-channel>
+   </component>
+  ```
+
+## Physical Channel Information 
+
+Additional data from physical channel located as part of the openconfig-platform 
+transceiver data. This is associated with the physical optics port referenced by 
+0/0-Optics0/0/0/8. ZR/ZR+ optics will always have a single physical channel.   
+
+Request
+  
+  ```xml 
+  <get xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <filter>
+    <components xmlns="http://openconfig.net/yang/platform">
+      <component>
+        <name/>
+        <name>0/0-Optics0/0/0/8</name>
+      </component>
+    </components>
+  </filter>
+</get>
+```
+
+Response
+
+  ```xml
+  <component>
+    <name>0/0-Optics0/0/0/8</name>
+    <transceiver xmlns="http://openconfig.net/yang/platform/transceiver">
+     <physical-channels>
+      <channel>
+       <index>1</index>
+       <config>
+        <index>1</index>
+       </config>
+       <state>
+        <index>1</index>
+        <laser-bias-current>
+         <instant>65.67</instant>
+         <interval>30000000000</interval>
+         <min>0.07</min>
+         <avg>0.07</avg>
+         <max>0.07</max>
+         <min-time>1664642790996011456</min-time>
+         <max-time>1664642790996011456</max-time>
+        </laser-bias-current>
+        <output-power>
+         <instant>-10.64</instant>
+         <interval>30000000000</interval>
+         <min>-10.76</min>
+         <avg>-10.74</avg>
+         <max>-10.69</max>
+         <min-time>1664642790996011456</min-time>
+         <max-time>1664642817995790775</max-time>
+        </output-power>
+        <input-power>
+         <instant>-6.25</instant>
+         <interval>30000000000</interval>
+         <min>-6.34</min>
+         <avg>-6.27</avg>
+         <max>-6.21</max>
+         <min-time>1664642812995785263</min-time>
+         <max-time>1664642790996011456</max-time>
+        </input-power>
+        <output-frequency>193700000</output-frequency>
+       </state>
+      </channel>
+     </physical-channels>
+     <state>
+      <present>PRESENT</present>
+      <form-factor xmlns:idx="http://openconfig.net/yang/transport-types">idx:OTHER</form-factor>
+      <date-code>2021-01-09T00:00:00Z+00:00</date-code>
+      <vendor-rev>01</vendor-rev>
+      <serial-no>ACA2501003X</serial-no>
+      <vendor-part>DP04QSDD-E30-19E</vendor-part>
+      <vendor>CISCO-ACACIA</vendor>
+      <connector-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:LC_CONNECTOR</connector-type>
+      <otn-compliance-code xmlns:idx="http://openconfig.net/yang/transport-types">idx:OTN_UNDEFINED</otn-compliance-code>
+      <sonet-sdh-compliance-code xmlns:idx="http://openconfig.net/yang/transport-types">idx:SONET_UNDEFINED</sonet-sdh-compliance-code>
+      <fault-condition>false</fault-condition>
+     </state>
+    </transceiver>
+   </component>
+   ``` 
+
+## Using gNMI 
+gNMI represents a modern method to manage configuration as well as retrieve
+state data. gNMI data can be retrieved using different methods including a
+single GET request or through a subscription. The subscription type can be of
+types ONCE, STREAM, or POLL. The subsequent mode of the stream can be be SAMPLE,
+ON_CHANGE, or TARGET_DEFINED. The subscription type and mode commonly used for
+continuous monitoring is STREAM and SAMPLE. SAMPLE also includes a period value
+specifying the interval at which the device sends data. Note since we are using the 
+same models, the data will be identical to the NETCONF example.  
+
+We will utilize the gNMIc utility found at <https://gnmic.kmrd.dev/> for gNMI 
+examples. 
+### gNMI GET for OpticalChannel Data  
+
+Request: 
+
+gnmic -a 172.29.11.20:57733 -u admin -p password --insecure --timeout 1m --encoding JSON_IETF get --path 'openconfig-platform:components/component[name='0/0-OpticalChannel0/0/0/8']'
+
+Respose: 
+
+```json
+[
+  {
+    "source": "172.29.11.20:57733",
+    "timestamp": 1664644343717885105,
+    "time": "2022-10-01T13:12:23.717885105-04:00",
+    "updates": [
+      {
+        "Path": "openconfig-platform:components/component[name=0/0-OpticalChannel0/0/0/8]",
+        "values": {
+          "components/component": {
+            "config": {
+              "name": "0/0-OpticalChannel0/0/0/8"
+            },
+            "openconfig-terminal-device:optical-channel": {
+              "Cisco-IOS-XR-openconfig-terminal-device-ext:extended": {
+                "state": {
+                  "optics-cd-high-threshold": 160000,
+                  "optics-cd-low-threshold": -160000,
+                  "optics-cd-max": 13000,
+                  "optics-cd-min": -13000
+                }
+              },
+              "config": {
+                "frequency": 193700000,
+                "operational-mode": 5005,
+                "target-output-power": "-115"
+              },
+              "state": {
+                "chromatic-dispersion": {
+                  "avg": "-1",
+                  "instant": "-2",
+                  "interval": "30000000000",
+                  "max": "0",
+                  "max-time": "1664644292995782101",
+                  "min": "-2",
+                  "min-time": "1664644307995794039"
+                },
+                "frequency": 193700000,
+                "operational-mode": 5005,
+                "polarization-dependent-loss": {
+                  "avg": "1.09",
+                  "instant": "1.10",
+                  "interval": "30000000000",
+                  "max": "1.10",
+                  "max-time": "1664644290995999741",
+                  "min": "1.00",
+                  "min-time": "1664644317995786022"
+                },
+                "second-order-polarization-mode-dispersion": {
+                  "avg": "42.37",
+                  "instant": "51.00",
+                  "interval": "30000000000",
+                  "max": "52.00",
+                  "max-time": "1664644297995784225",
+                  "min": "39.00",
+                  "min-time": "1664644307995794039"
+                },
+                "target-output-power": "-10.75"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]
+```
+
+### gNMI Subscription for OpticalChannel Data 
+
+gnmic -a 172.29.11.20:57733 -u admin -p CSCO123^ --insecure --timeout 1h --encoding JSON_IETF subscribe --path 'openconfig-platform:components/component[name='0/0-OpticalChannel0/0/0/8']' --mode stream --stream-mode sample --sample-interval 30s
+
+```json
+[
+  {
+    "source": "172.29.11.20:57733",
+    "subscription-name": "default-1664645644",
+    "timestamp": 1664645651219000000,
+    "time": "2022-10-01T13:34:11.219-04:00",
+    "prefix": "openconfig-platform:",
+    "updates": [
+      {
+        "Path": "openconfig-platform:components/component[name=0/0-OpticalChannel0/0/0/8]",
+        "values": {
+          "components/component": {
+            "config": {
+              "name": "0/0-OpticalChannel0/0/0/8"
+            },
+            "openconfig-terminal-device:optical-channel": {
+              "Cisco-IOS-XR-openconfig-terminal-device-ext:extended": {
+                "state": {
+                  "optics-cd-high-threshold": 160000,
+                  "optics-cd-low-threshold": -160000,
+                  "optics-cd-max": 13000,
+                  "optics-cd-min": -13000
+                }
+              },
+              "config": {
+                "frequency": 193700000,
+                "operational-mode": 5005,
+                "target-output-power": "-115"
+              },
+              "state": {
+                "chromatic-dispersion": {
+                  "avg": "-1",
+                  "instant": "-2",
+                  "interval": "30000000000",
+                  "max": "0",
+                  "max-time": "1664644292995782101",
+                  "min": "-2",
+                  "min-time": "1664644307995794039"
+                },
+                "frequency": 193700000,
+                "operational-mode": 5005,
+                "polarization-dependent-loss": {
+                  "avg": "1.09",
+                  "instant": "1.10",
+                  "interval": "30000000000",
+                  "max": "1.10",
+                  "max-time": "1664644290995999741",
+                  "min": "1.00",
+                  "min-time": "1664644317995786022"
+                },
+                "second-order-polarization-mode-dispersion": {
+                  "avg": "42.37",
+                  "instant": "51.00",
+                  "interval": "30000000000",
+                  "max": "52.00",
+                  "max-time": "1664644297995784225",
+                  "min": "39.00",
+                  "min-time": "1664644307995794039"
+                },
+                "target-output-power": "-10.75"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]
+```
+
+# Appendix 
+
+## Example XML NETCONF config for other ZR+ configuration modes 
+### ZR+ 1x400G 16QAM  
+
+```xml
+<config>
+        <terminal-device xmlns="http://openconfig.net/yang/terminal-device">
+            <logical-channels>
+                <channel>
+                    <index>30001</index>
+                    <config>
+                        <index>30001</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_400G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_400GE</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>400</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>30000</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>30000</index>
+                    <config>
+                        <index>30000</index>
+                        <admin-state>ENABLED</admin-state>
+                        <description>Coherent Logical Channel</description>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_OTN</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>400</allocation>
+                                <assignment-type>OPTICAL_CHANNEL</assignment-type>
+                                <description>Coherent to optical assignment</description>
+                                <optical-channel>0/0-OpticalChannel0/0/0/20</optical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+            </logical-channels>
+        </terminal-device>
+        <components xmlns="http://openconfig.net/yang/platform">
+            <component>
+                <name>0/0-OpticalChannel0/0/0/20</name>
+                <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+                    <config>
+                        <target-output-power>-115</target-output-power>
+                        <operational-mode>5005</operational-mode>
+                        <frequency>194300000</frequency>
+                    </config>
+                </optical-channel>
+            </component>
+        </components>
+    </config>
+```
+
+### ZR+ 1x100G QPSK 
+```xml
+ <config>
+        <terminal-device xmlns="http://openconfig.net/yang/terminal-device">
+            <logical-channels>
+                <channel>
+                    <index>30001</index>
+                    <config>
+                        <index>30001</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>30000</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>30000</index>
+                    <config>
+                        <index>30000</index>
+                        <admin-state>ENABLED</admin-state>
+                        <description>Coherent Logical Channel</description>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_OTN</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>OPTICAL_CHANNEL</assignment-type>
+                                <description>Coherent to optical assignment</description>
+                                <optical-channel>0/0-OpticalChannel0/0/0/20</optical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+            </logical-channels>
+        </terminal-device>
+        <components xmlns="http://openconfig.net/yang/platform">
+            <component>
+                <name>0/0-OpticalChannel0/0/0/20</name>
+                <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+                    <config>
+                        <target-output-power>-115</target-output-power>
+                        <operational-mode>5013</operational-mode>
+                    </config>
+                </optical-channel>
+            </component>
+        </components>
+    </config>
+``` 
+
+### ZR+ 2x100G QPSK 
+```xml
+<config>
+        <terminal-device xmlns="http://openconfig.net/yang/terminal-device">
+            <logical-channels>
+                <channel>
+                    <index>30012</index>
+                    <config>
+                        <index>30012</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>30010</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>30013</index>
+                    <config>
+                        <index>30013</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>30010</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>30010</index>
+                    <config>
+                        <index>30010</index>
+                        <admin-state>ENABLED</admin-state>
+                        <description>Coherent Logical Channel</description>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_OTN</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>200</allocation>
+                                <assignment-type>OPTICAL_CHANNEL</assignment-type>
+                                <description>Coherent to optical assignment</description>
+                                <optical-channel>0/0-OpticalChannel0/0/0/20</optical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+            </logical-channels>
+        </terminal-device>
+        <components xmlns="http://openconfig.net/yang/platform">
+            <component>
+                <name>0/0-OpticalChannel0/0/0/20</name>
+                <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+                    <config>
+                        <target-output-power>-100</target-output-power>
+                        <operational-mode>5009</operational-mode>
+                        <frequency>191300000</frequency>
+                    </config>
+                </optical-channel>
+            </component>
+        </components>
+    </config>
+```
+
+### ZR+ 4x100G 16QAM 
+This mode does not have widespread applicability in routing applications but is 
+included for completeness.
+
+```xml
+<config>
+        <terminal-device xmlns="http://openconfig.net/yang/terminal-device">
+            <logical-channels>
+                <channel>
+                    <index>30009</index>
+                    <config>
+                        <index>30009</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>30013</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>30010</index>
+                    <config>
+                        <index>30010</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>30013</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>30011</index>
+                    <config>
+                        <index>30011</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>30013</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>30012</index>
+                    <config>
+                        <index>30012</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>30013</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>30013</index>
+                    <config>
+                        <index>30013</index>
+                        <admin-state>ENABLED</admin-state>
+                        <description>Coherent Logical Channel</description>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_OTN</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>400</allocation>
+                                <assignment-type>OPTICAL_CHANNEL</assignment-type>
+                                <description>Coherent to optical assignment</description>
+                                <optical-channel>0/0-OpticalChannel0/0/0/20</optical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+            </logical-channels>
+        </terminal-device>
+        <components xmlns="http://openconfig.net/yang/platform">
+            <component>
+                <name>0/0-OpticalChannel0/0/0/20</name>
+                <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+                    <config>
+                        <target-output-power>-115</target-output-power>
+                        <operational-mode>5005</operational-mode>
+                        <frequency>191300000</frequency>
+                    </config>
+                </optical-channel>
+            </component>
+        </components>
+    </config>
+```
+
+## Verification of OpenConfig in XR CLI 
+The IOS-XR CLI does contain configuration commands to either configure or verify 
+OpenConfig configuration. The example below is for a 300G line rate application.  
+
+```bash
+terminal-device
+ logical-channel 30000
+  admin-state enable
+  description Coherent Logical Channel
+  logical-channel-type Otn
+  assignment-id 1
+   allocation 300
+   assignment-type optical
+   description Coherent to optical assignment
+   assigned-optical-channel 0_0-OpticalChannel0_0_0_8
+  !
+ !
+ logical-channel 30001
+  rate-class 100G
+  admin-state enable
+  description ETH Logical Channel
+  trib-protocol 400GE
+  logical-channel-type Ethernet
+  assignment-id 1
+   allocation 400
+   assignment-type logical
+   description ETH to Coherent assignment
+   assigned-logical-channel 30000
+  !
+ !
+ logical-channel 30002
+  rate-class 100G
+  admin-state enable
+  description ETH Logical Channel
+  trib-protocol 100G-MLG
+  logical-channel-type Ethernet
+  assignment-id 1
+   allocation 100
+   assignment-type logical
+   description ETH to Coherent assignment
+   assigned-logical-channel 30000
+  !
+ !
+ logical-channel 30003
+  rate-class 100G
+  admin-state enable
+  description ETH Logical Channel
+  trib-protocol 100G-MLG
+  logical-channel-type Ethernet
+  assignment-id 1
+   allocation 100
+   assignment-type logical
+   description ETH to Coherent assignment
+   assigned-logical-channel 30000
+  !
+ !
+ optical-channel 0_0-OpticalChannel0_0_0_8
+  power -115
+  frequency 194300000
+  line-port Optics0/0/0/8
+  operational-mode 5007
+ !
+!
+```
+
