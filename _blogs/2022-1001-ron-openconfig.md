@@ -165,15 +165,6 @@ The official repository for all OpenConfig models can be found at <https://githu
 ### Model List 
 The following models are used in provisioning and telemetry for DCO transceivers
 
-### Openconfig Terminal Device 
-In the context of optical device provisioning, one OpenConfig model used is
-the Terminal Device model. The original intent of the model was to provision
-external optical transponders, and has been implemented by Cisco for use with
-the Cisco 1004 family of muxponders. The model has been recently enhanced to cover the
-router pluggable DCO use cases where the "clients" are not physical external
-facing ports, but internal to the host router and always associated with a single
-external line facing interface.  
-
 ### Openconfig Platform and Transceiver Component
 The optical parameters used to provision the parent optical-channel and
 subsequent physical channel are applied at the component level of the
@@ -181,12 +172,26 @@ openconfig-platform model. The OpticalChannel component type is a logical
 component with a 1:1 correlation with a physical port. In Cisco routers The
 OpticalChannel component is populated when a transceiver capable of supporting
 it is inserted. The OpticalChannel will always be represented as
-[Rack]/[Slot]/[Instance]-OpticalChannel[Rack][Slot][Instance][Port].  The rack
-component will always be 0.  On fixed systems the initial instance value is
-omitted.  As an example on the 8201-32FH the OpticalChannel for port 20 is
-represented as 0/0-OpticalChannel0/0/0/20. On the NCS-57C3-MOD router with a
-QSFP-DD MPA in MPA slot 3 and ZR+ transceiver in Port 3 the OpticalChannel is
-0/0-OpticalChannel0/0/3/2.  
+[Rack]/[Slot]-OpticalChannel[Rack][Slot][Instance][Port].  The rack component
+will always be 0.  As an example on the 8201-32FH the OpticalChannel for port 20
+is represented as 0/0-OpticalChannel0/0/0/20. On the NCS-57C3-MOD router with a
+QSFP-DD MPA in MPA slot 3 and DCO transceiver in Port 3 the OpticalChannel is
+0/0-OpticalChannel0/0/3/2. On a Cisco 9904 modular router with a A9K-8HG-FLEX-TR
+line card in slot 1 and DCO transceiver in port 0, the OpticalChannel is
+0/1-OpticalChannel-0/1/0/0.  
+
+### Openconfig Terminal Device 
+In the context of optical device provisioning, one OpenConfig model used is the
+Terminal Device model. The original intent of the model was to provision
+external optical transponders, and has been implemented by Cisco for use with
+the Cisco NCS 1004 muxponder. The model has been recently enhanced to
+cover the router pluggable DCO use cases where the "clients" are not physical
+external facing ports, but internal to the host router and always associated
+with a single external line facing interface.  The Terminal Device model
+augments the Platform model to add the additional optical provisioning
+configuration parameters to the OpticalChannel component type.   
+
+
 ### Traditional Muxponder Use Case 
 
 A traditional muxponder maps client physical interfaces to framed output
@@ -204,7 +209,7 @@ channel, and ultimately to a 200G line port associated with the output optical
 channel. Note the numbers assigned to the logical channels are arbitrary
 integers.  
 
-![](http://xrdocs.io/design/images/ron-hld/ron-oc-muxponder.png)
+![](https://xrdocs.io/design/images/ron-hld/ron-oc-muxponder.png)
 
 ### Pluggable in Router Use Case 
 
@@ -216,6 +221,9 @@ pluggable, there is no physical client component, only the logical components
 associated with the host side of the DCO transceiver.  In Cisco routers, it is
 represented as one more Ethernet interfaces depending on the configuration.  
 
+
+![](https://xrdocs.io/design/images/ron-hld/ron-oc-generic.png)
+
 The example below shows a similar 200G application, but instead of two client
 physical ports, there are two HundredGigE interfaces created which are
 implicitly connected to the line port since they are integrated into the same
@@ -223,12 +231,9 @@ transceiver. This is a fundamental difference from the muxponder use case where
 there is no implicit mapping between client and output port. The host side Ethernet 
 interfaces of the DCO cannot be mapped to another line port. 
 
-
-![](http://xrdocs.io/design/images/ron-hld/ron-oc-generic.png)
-
 Note this example is only possible with the OpenZR+ transceiver since it
 supports line rates of 100G, 200G, 300G, and 400G where the OIF 400ZR only
 supports 400G.  
 
-![](http://xrdocs.io/design/images/ron-hld/ron-oc-zrp-200g.png)
+![](https://xrdocs.io/design/images/ron-hld/ron-oc-zrp-200g.png)
 
