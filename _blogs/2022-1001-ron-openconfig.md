@@ -141,24 +141,46 @@ OpenConfig is advancing the paradigm of an abstract set of YANG models used to p
 
 The official repository for all OpenConfig models can be found at <https://github.com/openconfig/public/> 
 
-## OpenConfig Terminal Device 
+## OpenConfig Models for DCO provisioning 
+
+### Openconfig Terminal Device 
 In the context of optical device provisioning, one OpenConfig model used is
 the Terminal Device model. The original intent of the model was to provision
 external optical transponders, and has been implemented by Cisco for use with
-the Cisco 1004 family of muxponders. This model has been enhanced to cover the
+the Cisco 1004 family of muxponders. The model has been recently enhanced to cover the
 router pluggable DCO use cases where the "clients" are not physical external
 facing ports, but internal to the host router and always associated with a single
 external line facing interface.  
 
+### Openconfig Platform and Transceiver Component
+The optical parameters used to provision the parent optical-channel and
+subsequent physical channel are applied at the component level of the
+openconfig-platform model. The OpticalChannel component type is a logical
+component with a 1:1 correlation with a physical port. In Cisco routers The
+OpticalChannel component is populated when a transceiver capable of supporting
+it is inserted. The OpticalChannel will always be represented as
+[Rack]/[Slot]/[Instance]-OpticalChannel[Rack][Slot][Instance][Port].  The rack
+component will always be 0.  On fixed systems the initial instance value is
+omitted.  As an example on the 8201-32FH the OpticalChannel for port 20 is
+represented as 0/0-OpticalChannel0/0/0/20.  
 ### Traditional Muxponder Use Case 
 
 A traditional muxponder maps client physical interfaces to framed output
 timeslots, which can then be further aggregated or mapped to a physical output
-channel on the DWDM line side. The Terminal Device model follows this structure
-by using a hierarchical structure of channels from client to eventually output
-wavelength. Physical client channels are mapped to intermediate logical
-channels, which are ultimately mapped to a physical line output channel. The
-model is flexible based on the multiplexing/aggregation required.  
+channel on the DWDM line side. There is no connection between the client port
+and line port until the mapping is created.  The Terminal Device model follows
+this structure by using a hierarchical structure of channels from client to
+eventually output line port. Physical client channels are mapped to intermediate
+logical channels, which are ultimately mapped to a physical line output channel.
+The model is flexible based on the multiplexing/aggregation required.  
+
+The example below shows the mapping for a 2x100G muxponder application where the
+two client ports each map to a 100G logical channel, those map to a 200G logical
+channel, and ultimately to a 200G line port associated with the output optical
+channel. Note the numbers assigned to the logical channels are arbitrary
+integers.  
+
+![](http://xrdocs.io/design/images/ron-hld/ron-oc-muxponder.png)
 
 ### Pluggable in Router Use Case 
 
@@ -169,4 +191,17 @@ be mapped into an intermediate logical channel. In the case of a router
 pluggable, there is no physical client component, only the logical components
 associated with the host side of the DCO transceiver.  In Cisco routers, it is
 represented as one more Ethernet interfaces depending on the configuration.  
+
+The example below shows a similar 200G application, but instead of two client
+physical ports, there are two HundredGigE interfaces created which are
+implicitly connected to the line port since they are integrated into the same
+transceiver. This is a fundamental difference from the muxponder use case where
+there is no implicit mapping between client and output port. The host side Ethernet 
+interfaces of the DCO cannot be mapped to another line port.   
+
+Note this example is only possible with the OpenZR+ transceiver since it
+supports line rates of 100G, 200G, 300G, and 400G where the OIF 400ZR only
+supports 400G.  
+
+![](http://xrdocs.io/design/images/ron-hld/ron-oc-zrp-200g.png)
 
