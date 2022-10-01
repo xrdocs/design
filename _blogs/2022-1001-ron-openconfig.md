@@ -261,8 +261,13 @@ pluggable, there is no physical client component, only the logical components
 associated with the host side of the DCO transceiver.  In Cisco routers, it is
 represented as one more Ethernet interfaces depending on the configuration.  
 
-
 ![](https://xrdocs.io/design/images/ron-hld/ron-oc-generic.png)
+
+Looking at a picture of the two optics is helpful in showing how the hierarchical 
+structure is configured for the DCO optics.  
+
+![](https://xrdocs.io/design/images/ron-hld/ron-oc-transceiver-structure.png)
+
 
 The example below shows a similar 200G application, but instead of two client
 physical ports, there are two HundredGigE interfaces created which are
