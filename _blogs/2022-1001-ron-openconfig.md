@@ -23,9 +23,7 @@ position: hidden
 | ---------------- | ---------------------- |-----|
 | 1.0       | 10/01/2022| Initial Publication 
 
-
 <br>
-
 
 # Routed Optical Networking  
 
@@ -385,8 +383,8 @@ Let's example some specific portions of the config in more detail.
 
 Here we create the first logical channel, associated with the host Ethernet interface, FourHundredGigE0/0/0/20. Since our application has a single 400G interface, the following is configured. The types following the idx: YANG component are defined in openconfig-transport-types.yang.    
 
-|User-Defined Index|Tributary Rate Class|Tributary Protocol|Channel Type|   
-|--------|----|-----|-----|
+|User-Defined Index|Tributary Rate Class|Tributary Protocol|Channel Type|
+|------|----|-----|-----|
 |100|400G|400GE|ETHERNET| 
 
 Next we must map this logical-channel to either a parent logical-channel or output OpticalChannel. Cisco uses a specific "CoherentDSP" interface to represent the framing layer of the DCO transceiver, so there is a parent logical channel representing that layer of the connection. In this case I have a single 400G child interface, so all 400G is mapped to the parent logical channel.   
