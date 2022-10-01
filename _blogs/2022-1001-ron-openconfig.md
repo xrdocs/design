@@ -39,10 +39,18 @@ information on Routed Optical Networking can be found at the following locations
  - <https://www.cisco.com/c/en/us/solutions/service-provider/routed-optical-networking.html> 
  - <https://xrdocs.io/latest-routed-optical-networking-hld> 
 
-In this blog we will discuss one major component of Routed Optical Networking, 
-the pluggable digital cohereent optics, and how they are managed using 
-open models from the OpenConfig consortium. Management includes both provisioning 
-the transceivers as well as monitoring them via telemetry.   
+
+
+In this blog we will discuss one major component of Routed Optical Networking,
+the pluggable digital cohereent optics, and how they are managed using open
+models from the OpenConfig consortium. Management includes both provisioning the
+transceivers as well as monitoring them via telemetry.  
+
+We will focus primarily on constructs such as OpenConfig YANG models and
+provisioning via NETCONF or gNMI. Users looking for a more UI-driven approach to
+managing Routed Optical Networking services, the Crosswork Hierarchical
+Controller application provides a point and click user interface, but still using
+open models to interface with Cisco routers. 
 
 # Pluggable Digital Coherent Optics 
 One of the foundations of Routed Optical Networking is the use of small form
@@ -126,7 +134,11 @@ user-configurable attributes for Cisco ZR/ZR+ DCO transceivers.
 
 The Frequency, Line Rate, and Operational Mode are required components. The
 Transmit Power is optional, a default power will be used based on the
-operational mode if none is supplied.    
+operational mode if none is supplied.  
+
+### Operational Mode Details 
+It's worth expanding on the role of the "Operational Mode" used in provisioning 
+the transceivers.  
 
 
 # OpenConfig 
@@ -142,6 +154,16 @@ OpenConfig is advancing the paradigm of an abstract set of YANG models used to p
 The official repository for all OpenConfig models can be found at <https://github.com/openconfig/public/> 
 
 ## OpenConfig Models for DCO provisioning 
+
+|Model|Use|
+|--------|----| 
+|Output Frequency | Hz | Frequency is another method to define the DWDM wavelength being used on the line side of the transceiver   
+|Transmit Power | dBm | The transmit power defines the signal power level. dBm is the power ratio of dB referenced to 1mW using the expression dBm = 10log(mW).  As an example 0dBm = 1mW, -3dBm=.50mW, +3dBM=2mW
+|Line Rate|Gbps|This is the output trunk rate of the signal, and may be determined by configuration or implicitly by the number of channels assigned| 
+|Operational Mode|Integer|The operational mode is an integer representing optical parameters specific to the transceiver. This includes settings such as the line rate, modulation, and other vendor specific settings.     
+
+### Model List 
+The following models are used in provisioning and telemetry for DCO transceivers
 
 ### Openconfig Terminal Device 
 In the context of optical device provisioning, one OpenConfig model used is
@@ -162,7 +184,9 @@ it is inserted. The OpticalChannel will always be represented as
 [Rack]/[Slot]/[Instance]-OpticalChannel[Rack][Slot][Instance][Port].  The rack
 component will always be 0.  On fixed systems the initial instance value is
 omitted.  As an example on the 8201-32FH the OpticalChannel for port 20 is
-represented as 0/0-OpticalChannel0/0/0/20.  
+represented as 0/0-OpticalChannel0/0/0/20. On the NCS-57C3-MOD router with a
+QSFP-DD MPA in MPA slot 3 and ZR+ transceiver in Port 3 the OpticalChannel is
+0/0-OpticalChannel0/0/3/2.  
 ### Traditional Muxponder Use Case 
 
 A traditional muxponder maps client physical interfaces to framed output
@@ -197,7 +221,10 @@ physical ports, there are two HundredGigE interfaces created which are
 implicitly connected to the line port since they are integrated into the same
 transceiver. This is a fundamental difference from the muxponder use case where
 there is no implicit mapping between client and output port. The host side Ethernet 
-interfaces of the DCO cannot be mapped to another line port.   
+interfaces of the DCO cannot be mapped to another line port. 
+
+
+![](http://xrdocs.io/design/images/ron-hld/ron-oc-generic.png)
 
 Note this example is only possible with the OpenZR+ transceiver since it
 supports line rates of 100G, 200G, 300G, and 400G where the OIF 400ZR only
