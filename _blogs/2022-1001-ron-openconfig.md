@@ -1,10 +1,10 @@
 ---
 published: true
 date: '2022-10-01 15:22 -0600'
-title: Provisioning OpenZR+ and OIF ZR transceivers using Openconfig 
+title: Managing OpenZR+ and OIF ZR transceivers using OpenConfig  
 author: Phil Bedard 
 excerpt: Openconfig ZR/ZR+ Provisioning  
-permalink: /blogs/zr-openconfig-provisioning
+permalink: /blogs/zr-openconfig-mgmt
 tags:
   - iosxr
   - design
@@ -36,44 +36,34 @@ Networking simplifies operations and lowers overall network TCO.  More
 information on Routed Optical Networking can be found at the following locations. 
 
 
- - <https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/datasheet-c78-744377.html> 
  - <https://www.cisco.com/c/en/us/solutions/service-provider/routed-optical-networking.html> 
  - <https://xrdocs.io/latest-routed-optical-networking-hld> 
 
+In this blog we will discuss one major component of Routed Optical Networking, 
+the pluggable digital cohereent optics, and how they are managed using 
+open models from the OpenConfig consortium. Management includes both provisioning 
+the transceivers as well as monitoring them via telemetry.   
 
-## Pluggable Digital Coherent Optics 
-
-Simple networks are easier to build and easier to operate. As networks scale to
-handle traffic growth, the level of network complexity must decline or at least
-remain flat. 
-
-IPoDWDM has attempted to move the transponder function into the router to remove
-the transponder and add efficiency to networks. In lower bandwidth applications,
-it has been a very successful approach. CWDM, DWDM SFP/SFP+, and CFP2-DCO
-pluggable transceivers have been used for many years now to build access,
-aggregation, and lower speed core networks. The evolution to 400G and
-advances in technology created an opportunity to unlock this potential
-in higher speed networks.   
-
-Transponder or muxponders have typically been used to aggregate multiple 10G or
-100G signals into a single wavelength. However, with reach limitations, and the
-fact transponders are still operating at 400G wavelength speeds, the transponder
-becomes a 1:1 input to output stage in the network, adding no benefit. 
-
-The Routed Optical Networking architecture unlocks this efficiency for networks
-of all sizes, due to advancements in coherent plugable technology. 
+# Pluggable Digital Coherent Optics 
+One of the foundations of Routed Optical Networking is the use of small form
+factor pluggable digital coherent optics. These optics can be used in a wide
+variety of network applications, reducing CapEx/OpEx cost and reducing
+complexity vs. using traditional external transponder equipment.  
 
 ## QSFP-DD and 400ZR and OpenZR+ Standards   
 
-As mentioned, the industry saw a point to improve network efficiency by shifting
+The networking industry saw a point to improve network efficiency by shifting
 coherent DWDM functions to router pluggables. Technology advancements have
 shrunk the DCO components into the standard QSFP-DD form factor, meaning no
 specialized hardware and the ability to use the highest capacity routers
 available today.  ZR/OpenZR+ QSFP-DD optics can be used in the same ports as the
 highest speed 400G non-DCO transceivers. 
 
-![](http://xrdocs.io/design/images/ron-hld/ron-design-zrp.png)
+### Cisco OpenZR+ Transceiver (QDD-400G-ZRP-S)
+![](http://xrdocs.io/design/images/ron-hld/zrp.png)
 
+### Cisco OIF 400ZR Transceiver (QDD-400G-ZR-S)
+![](http://xrdocs.io/design/images/ron-hld/zr.png)
 
 Two industry optical standards have emerged to cover a variety of use cases. The
 OIF created the 400ZR specification,
@@ -93,5 +83,90 @@ The following part numbers are used for Cisco's ZR400 and OpenZR+ MSA transceive
 400ZR| QDD-400G-ZR-S| 
 |OpenZR+| QDD-400G-ZRP-S|
 
-Cisco datasheet for these transceivers can be found at <https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/datasheet-c78-744377.html> 
+
+
+The Cisco datasheet for these transceivers can be found at <https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/datasheet-c78-744377.html> 
+
+
+## Cisco Hardware Support for 400G ZR/ZR+ DCO Transceivers 
+Cisco supports the OpenZR+ and OIF ZR transceivers across all IOS-XR product
+lines with 400G QSFP-DD ports, including the ASR 9000, NCS 540, NCS 5500, NCS
+5700, and Cisco 8000.  Please see the Routed Optical Networking Design or the
+individual product pages below for more information on each platform.  
+
+### Cisco 8000 
+<https://www.cisco.com/c/en/us/products/collateral/routers/8000-series-routers/datasheet-c78-742571.html>  
+
+### NCS 500 
+<https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-500-series-routers/ncs-540-large-density-router-ds.html>
+
+### Cisco ASR 9000 
+<https://www.cisco.com/c/en/us/products/collateral/routers/asr-9000-series-aggregation-services-routers/data_sheet_c78-501767.html> 
+
+### NCS 5500 and NCS 5700 
+<https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/datasheet-c78-736270.html><br>  
+<https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/datasheet-c78-744698.html>
+
+## Optical Provisioning Parameters
+Optical transceivers are responsible for taking information on their electrical 
+"host" interface and translating it into a format suitable for transmission across an 
+analog medium, and vice version. Thus the name "transceiver".  The aforementioned 
+standards bodies have defined the electrical host interface and optical line 
+interface specifications. The resulting configuration of those internal transceiver interfaces 
+and parameters are driven by user configuration.  The following represents the 
+user-configurable attributes for Cisco ZR/ZR+ DCO transceivers. 
+
+
+|Parameter|Units|Meaning|  
+|--------|----|------| 
+|Output Frequency | Hz | Frequency is another method to define the DWDM wavelength being used on the line side of the transceiver   
+|Transmit Power | dBm | The transmit power defines the signal power level. dBm is the power ratio of dB referenced to 1mW using the expression dBm = 10log(mW).  As an example 0dBm = 1mW, -3dBm=.50mW, +3dBM=2mW
+|Line Rate|Gbps|This is the output trunk rate of the signal, and may be determined by configuration or implicitly by the number of channels assigned| 
+|Operational Mode|Integer|The operational mode is an integer representing optical parameters specific to the transceiver. This includes settings such as the line rate, modulation, and other vendor specific settings.     
+
+The Frequency, Line Rate, and Operational Mode are required components. The
+Transmit Power is optional, a default power will be used based on the
+operational mode if none is supplied.    
+
+
+# OpenConfig 
+
+Taken from <https://www.openconfig.net>  
+
+```
+OpenConfig defines and implements a common, vendor-independent software layer for managing network devices. OpenConfig operates as an open source project with contributions from network operators, equipment vendors, and the wider community. OpenConfig is led by an Operator Working Group consisting of network operators from multiple segments of the industry.
+```
+
+OpenConfig is advancing the paradigm of an abstract set of YANG models used to perform device configuration and monitoring regardless of vendor. Cisco has worked with the OpenConfig consortium since its inception to implement these open community models across IOS-XR, IOS-XE, and NX-OS devices. In IOS-XR 7.7.1 more than 100 OpenConfig models and sub-models are implemented covering a wide variety of network configuration including device management, routing protocols, and optical transceiver configuration.  We will focus on the models specific to configuring the ZR/ZR+ DCO transceivers.  
+
+The official repository for all OpenConfig models can be found at <https://github.com/openconfig/public/> 
+
+## OpenConfig Terminal Device 
+In the context of optical device provisioning, one OpenConfig model used is
+the Terminal Device model. The original intent of the model was to provision
+external optical transponders, and has been implemented by Cisco for use with
+the Cisco 1004 family of muxponders. This model has been enhanced to cover the
+router pluggable DCO use cases where the "clients" are not physical external
+facing ports, but internal to the host router and always associated with a single
+external line facing interface.  
+
+### Traditional Muxponder Use Case 
+
+A traditional muxponder maps client physical interfaces to framed output
+timeslots, which can then be further aggregated or mapped to a physical output
+channel on the DWDM line side. The Terminal Device model follows this structure
+by using a hierarchical structure of channels from client to eventually output
+wavelength. Physical client channels are mapped to intermediate logical
+channels, which are ultimately mapped to a physical line output channel. The
+model is flexible based on the multiplexing/aggregation required.  
+
+### Pluggable in Router Use Case 
+
+In the case where a pluggable coherent optic is inserted into a router, the
+hierarchical model can be simplified. In the traditional muxponder use case
+above, there is a physical client transceiver with its own properties which must
+be mapped into an intermediate logical channel. In the case of a router
+pluggable, there is no physical client component, only the logical components
+associated with the host side of the DCO transceiver.  In Cisco routers, it is
+represented as one more Ethernet interfaces depending on the configuration.  
 

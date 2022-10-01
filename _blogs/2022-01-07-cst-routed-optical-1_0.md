@@ -168,8 +168,11 @@ specialized hardware and the ability to use the highest capacity routers
 available today.  ZR/OpenZR+ QSFP-DD optics can be used in the same ports as the
 highest speed 400G non-DCO transceivers. 
 
-![](http://xrdocs.io/design/images/ron-hld/ron-design-zrp.png)
+### Cisco OpenZR+ Transceiver (QDD-400G-ZRP-S)
+![](http://xrdocs.io/design/images/ron-hld/zrp.png)
 
+### Cisco OIF 400ZR Transceiver (QDD-400G-ZR-S)
+![](http://xrdocs.io/design/images/ron-hld/zr.png)
 
 Two industry optical standards have emerged to cover a variety of use cases. The
 OIF created the 400ZR specification,
