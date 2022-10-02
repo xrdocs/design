@@ -918,7 +918,11 @@ examples.
 
 Request: 
 
+<div class="highlighter-rouge">
+<pre class="highlight">
 gnmic -a 172.29.11.20:57733 -u admin -p password --insecure --timeout 1m --encoding JSON_IETF get --path 'openconfig-platform:components/component[name='0/0-OpticalChannel0/0/0/8']'
+</pre>
+</div>
 
 Respose: 
 
@@ -993,7 +997,11 @@ Respose:
 
 ### gNMI Subscription for OpticalChannel Data 
 
+<div class="highlighter-rouge">
+<pre class="highlight">
 gnmic -a 172.29.11.20:57733 -u admin -p CSCO123^ --insecure --timeout 1h --encoding JSON_IETF subscribe --path 'openconfig-platform:components/component[name='0/0-OpticalChannel0/0/0/8']' --mode stream --stream-mode sample --sample-interval 30s
+</pre> 
+</div> 
 
 ```json
 [
@@ -1432,7 +1440,8 @@ included for completeness.
 The IOS-XR CLI does contain configuration commands to either configure or verify 
 OpenConfig configuration. The example below is for a 300G line rate application.  
 
-```bash
+<div class="highlighter-rouge">
+<pre class="highlight">
 terminal-device
  logical-channel 30000
   admin-state enable
@@ -1491,8 +1500,8 @@ terminal-device
   operational-mode 5007
  !
 !
-```
-
+</pre>
+</div> 
 
 
 
