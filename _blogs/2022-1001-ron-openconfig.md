@@ -42,7 +42,9 @@ information on Routed Optical Networking can be found at the following locations
 In this blog we will discuss one major component of Routed Optical Networking,
 the pluggable digital cohereent optics, and how they are managed using open
 models from the OpenConfig consortium. Management includes both provisioning the
-transceivers as well as monitoring them via telemetry.  
+transceivers as well as monitoring them via telemetry. OpenConfig support is 
+found in IOS-XR 7.7.1 or later across all IOS-XR routers supporting ZR/ZR+ DCO 
+transceivers.   
 
 We will focus primarily on constructs such as OpenConfig YANG models and
 provisioning via NETCONF or gNMI. Users looking for a more UI-driven approach to
