@@ -1,7 +1,7 @@
 ---
 published: true
 date: '2022-10-01 15:22 -0600'
-title: Managing OpenZR+ and OIF ZR transceivers using OpenConfig  
+title: Managing OpenZR+ and OIF ZR transceivers on Cisco routers using OpenConfig  
 author: Phil Bedard 
 excerpt: Openconfig ZR/ZR+ Provisioning  
 permalink: /blogs/zr-openconfig-mgmt
