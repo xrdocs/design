@@ -40,17 +40,18 @@ information on Routed Optical Networking can be found at the following locations
 
 
 In this blog we will discuss one major component of Routed Optical Networking,
-the pluggable digital cohereent optics, and how they are managed using open
+the pluggable digital coherent optics, and how they are managed using open
 models from the OpenConfig consortium. Management includes both provisioning the
 transceivers as well as monitoring them via telemetry. OpenConfig support is 
 found in IOS-XR 7.7.1 or later across all IOS-XR routers supporting ZR/ZR+ DCO 
 transceivers.   
 
 We will focus primarily on constructs such as OpenConfig YANG models and
-provisioning via NETCONF or gNMI. Users looking for a more UI-driven approach to
+provisioning via NETCONF or gNMI. For users looking for a more UI-driven approach to
 managing Routed Optical Networking services, the Crosswork Hierarchical
 Controller application provides a point and click user interface, but still using
-open models to interface with Cisco routers. 
+open models to interface with Cisco routers. More information on the Crosswork 
+family of products can be found at <https://www.cisco.com/c/en/us/products/cloud-systems-management/crosswork-network-automation/index.html> 
 
 # Pluggable Digital Coherent Optics 
 One of the foundations of Routed Optical Networking is the use of small form
@@ -194,13 +195,15 @@ the openconfig-terminal-device-properties model. Once implemented a management
 application can learn the supported optical parameters and constraints to be 
 used in path calculation and provisioning.   
 
-## Openconfig Platform and Transceiver Component
+## OpenConfig Platform and Transceiver Component
 The optical parameters used to provision the parent optical-channel and
 subsequent physical channel are applied at the component level of the
 openconfig-platform model. The OpticalChannel component type is a logical
 component with a 1:1 correlation with a physical port. In Cisco routers The
 OpticalChannel component is populated when a transceiver capable of supporting
-it is inserted. The OpticalChannel will always be represented as
+it is inserted. 
+
+The OpticalChannel will always be represented as
 [Rack]/[Slot]-OpticalChannel[Rack][Slot][Instance][Port].  The rack component
 will always be 0.  As an example on the 8201-32FH the OpticalChannel for port 20
 is represented as 0/0-OpticalChannel0/0/0/20. On the NCS-57C3-MOD router with a
@@ -209,12 +212,32 @@ QSFP-DD MPA in MPA slot 3 and DCO transceiver in Port 3 the OpticalChannel is
 line card in slot 1 and DCO transceiver in port 0, the OpticalChannel is
 0/1-OpticalChannel-0/1/0/0.  
 
-### Optical Configuration/State Parameters for OpticalChannel Component 
+### Component Optical Provisioning Parameters  
 |Parameter|Units|
 |--------|----|
 |frequency|Mhz | 
 |target-output-power| dBm to two decimal places expressed in increments of .01dBm (+1dBM=100) | 
-|operatonal-mode|Integer|
+|operational-mode|Integer|
+
+### OpticalChannel Component Example 
+
+**QDD-400G-ZRP-S in port 0/0/0/10 on Cisco 8201**
+
+```xml
+<component>
+    <name>0/0-OpticalChannel0/0/0/10</name>
+    <config>
+     <name>0/0-OpticalChannel0/0/0/10</name>
+    </config>
+    <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+     <config>
+      <target-output-power>-10.00</target-output-power>
+      <frequency>196100000</frequency>
+      <operational-mode>5005</operational-mode>
+     </config>
+    </optical-channel> 
+</component>
+```
 
 ## Openconfig Terminal Device 
 In the context of optical device provisioning, one OpenConfig model used is the
