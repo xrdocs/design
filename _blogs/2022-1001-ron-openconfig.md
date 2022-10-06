@@ -399,7 +399,7 @@ Note the 5003 operational mode code which can be expanded as:
     </config>
   ```
 
-Let's example some specific portions of the config in more detail. 
+Let's examine some specific portions of the config in more detail. 
 
 ```xml
               <logical-channels>
@@ -744,8 +744,8 @@ has been omitted. In this case the device default power of -100 (-10dBM) will be
 
 
 # OpenConfig Monitoring Examples 
-The optics may also be monitored using the same OpenConfig models as used for 
-provisioning, as in OpenConfig models both config and state are have leafs in 
+The optics may also be monitored using the same OpenConfig models used for 
+provisioning, as in OpenConfig models both config and state have leafs in 
 the same model. We will look at two methods for retrieving operational state data, 
 using a NETCONF GET and using GNMi which can be used in different ways to retrieve 
 operational state data.   
@@ -753,8 +753,8 @@ operational state data.
 ## Using NETCONF 
 
 ### Optical Channel Information 
-Request from openconfig-platform for OpticalChannel 0/0-OpticalChannel0/0/0/8 associated 
-with port 0/0/0/8.   
+**Request from openconfig-platform for OpticalChannel 0/0-OpticalChannel0/0/0/8 associated 
+with port 0/0/0/8.** 
 
 ```xml
 <get xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -769,7 +769,7 @@ with port 0/0/0/8.
 </get>
 ```
 
-Response
+**Response**
 
 ```xml
 <component>
@@ -854,7 +854,7 @@ Additional data from physical channel located as part of the openconfig-platform
 transceiver data. This is associated with the physical optics port referenced by 
 0/0-Optics0/0/0/8. ZR/ZR+ optics will always have a single physical channel.   
 
-Request
+**Request**
   
   ```xml 
   <get xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -869,7 +869,7 @@ Request
 </get>
 ```
 
-Response
+**Response**
 
   ```xml
   <component>
@@ -945,7 +945,7 @@ We will utilize the gNMIc utility found at <https://gnmic.kmrd.dev/> for gNMI
 examples. 
 ### gNMI GET for OpticalChannel Data  
 
-Request: 
+**Request** 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -953,7 +953,7 @@ gnmic -a 172.29.11.20:57733 -u admin -p password --insecure --timeout 1m --encod
 </pre>
 </div>
 
-Respose: 
+**Response** 
 
 ```json
 [
@@ -1532,7 +1532,149 @@ terminal-device
 </pre>
 </div> 
 
+## IOS-XR CLI Operational Data 
+The main commands used to monitor optical information for the ZR/ZR+ optics is the 
+```show controller optics``` and ```show controller coherentdsp``` commands. 
 
+**Example for QDD-400G-ZR-S**  
+
+```
+RP/0/RP0/CPU0:ron-8201-1#show controllers optics 0/0/0/20
+Thu Oct  6 14:31:25.413 PDT
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: On
+
+ LED State: Yellow
+
+ FEC State: FEC ENABLED
+
+ Optics Status
+
+         Optics Type:  QSFPDD 400G ZR
+         DWDM carrier Info: C BAND, MSA ITU Channel=61, Frequency=193.10THz,
+         Wavelength=1552.524nm
+
+         Alarm Status:
+         -------------
+         Detected Alarms: None
+
+
+         LOS/LOL/Fault Status:
+
+         Alarm Statistics:
+
+         -------------
+         HIGH-RX-PWR = 0            LOW-RX-PWR = 0
+         HIGH-TX-PWR = 0            LOW-TX-PWR = 5
+         HIGH-LBC = 0               HIGH-DGD = 0
+         OOR-CD = 0                 OSNR = 9
+         WVL-OOL = 0                MEA  = 0
+         IMPROPER-REM = 0
+         TX-POWER-PROV-MISMATCH = 0
+         Laser Bias Current = 52.5 mA
+         Actual TX Power = -10.06 dBm
+         RX Power = -40.00 dBm
+         RX Signal Power = -40.00 dBm
+         Frequency Offset = 0 MHz
+         Laser Temperature = 40.40 Celsius
+         Laser Age = 0 %
+         DAC Rate = 1x1
+
+         Performance Monitoring: Enable
+
+         THRESHOLD VALUES
+         ----------------
+
+         Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+         ------------------------  ----------  ---------  ------------  -----------
+         Rx Power Threshold(dBm)         13.0      -23.0          10.0        -21.0
+         Rx Power Threshold(mW)          19.9        0.0          10.0          0.0
+         Tx Power Threshold(dBm)          0.0      -18.0          -2.0        -16.0
+         Tx Power Threshold(mW)           1.0        0.0           0.6          0.0
+         LBC Threshold(mA)               0.00       0.00          0.00         0.00
+         Temp. Threshold(celsius)       80.00      -5.00         75.00        15.00
+         Voltage Threshold(volt)         3.46       3.13          3.43         3.16
+
+         LBC High Threshold = 98 %
+         Configured Tx Power = -10.00 dBm
+         Configured Tx Power(mW) = 0.10 mW
+         Configured CD High Threshold = 160000 ps/nm
+         Configured CD lower Threshold = -160000 ps/nm
+         Configured OSNR lower Threshold = 9.00 dB
+         Configured DGD Higher Threshold = 80.00 ps
+         Baud Rate =  59.8437500000 GBd
+         Modulation Type: 16QAM
+         Chromatic Dispersion 0 ps/nm
+         Configured CD-MIN -2400 ps/nm  CD-MAX 2400 ps/nm
+         Second Order Polarization Mode Dispersion = 0.00 ps^2
+         Optical Signal to Noise Ratio = 0.00 dB
+         SNR = 0.00 dB
+         Polarization Dependent Loss = 0.00 dB
+         Polarization Change Rate = 0.00 rad/s
+         Differential Group Delay = 0.00 ps
+
+         Temperature = 42.00 Celsius
+         Voltage = 3.34 V
+
+ Transceiver Vendor Details
+
+         Form Factor            : QSFP-DD
+         Optics type            : QSFPDD 400G ZR
+         Name                   : CISCO-ACACIA
+         OUI Number             : 7c.b2.5c
+         Part Number            : DP04QSDD-E20-19E
+         Rev Number             : 10
+         Serial Number          : ACA245100ET
+         PID                    : QDD-400G-ZR-S
+         VID                    : ES03
+         Firmware Version       : Major.Minor.Build
+                 Active         : 61.20.13
+                 Inactive       : 61.10.12
+         Date Code(yy/mm/dd)    : 20/12/28
+         Fiber Connector Type: LC
+         Otn Application Code: Undefined
+         Sonet Application Code: Undefined
+``` 
+
+```
+RP/0/RP0/CPU0:ron-8201-1#show controllers coherentDSP 0/0/0/10
+Thu Oct  6 14:31:55.222 PDT
+
+Port                                            : CoherentDSP 0/0/0/10
+Controller State                                : Down
+Inherited Secondary State                       : Normal
+Configured Secondary State                      : Normal
+Derived State                                   : In Service
+Loopback mode                                   : None
+BER Thresholds                                  : SF = 1.0E-5  SD = 1.0E-7
+Performance Monitoring                          : Enable
+Bandwidth                                       : 400.0Gb/s
+
+Alarm Information:
+LOS = 1 LOF = 0 LOM = 0
+OOF = 0 OOM = 0 AIS = 0
+IAE = 0 BIAE = 0        SF_BER = 0
+SD_BER = 0      BDI = 0 TIM = 0
+FECMISMATCH = 0 FEC-UNC = 0     FLEXO_GIDM = 0
+FLEXO-MM = 0    FLEXO-LOM = 0   FLEXO-RDI = 0
+FLEXO-LOF = 0
+Detected Alarms                                 : LOS
+
+Bit Error Rate Information
+PREFEC  BER                                     : 5.0E-01
+POSTFEC BER                                     : 0.0E+00
+Q-Factor                                        : 0.00 dB
+
+Q-Margin                                        : 0.00dB
+
+OTU TTI Received
+
+FEC mode                                        : C_FEC
+```
 
 
 
