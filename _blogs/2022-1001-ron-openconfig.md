@@ -31,7 +31,7 @@ Routed Optical Networking introduced by Cisco in 2020 introduced a fundamental
 shift in how IP+Optical networks are built. Collapsing previously disparate 
 network layers and services into a single unified domain, Routed Optical 
 Networking simplifies operations and lowers overall network TCO.  More 
-information on Routed Optical Networking can be found at the following locations. 
+information on Routed Optical Networking can be found at the following locations:  
 
 
  - <https://www.cisco.com/c/en/us/solutions/service-provider/routed-optical-networking.html> 
