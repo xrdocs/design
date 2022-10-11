@@ -10,6 +10,32 @@ date: null
 
 {% include base_path %}
 
+<div class="feature__wrapper">
+    <div class="feature__item--right">
+      <div class="archive__item">
+          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
+           margin-left: auto; margin-right: auto;">
+            <img src="{{ base_path }}/images/design_lp/metro-design.png" alt="" />
+          </div>
+        <div class="archive__item-body">
+            <h2 class="archive__item-title">Managing Routed Optical Networking using OpenConfig &nbsp; 
+            <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
+            <div class="archive__item-excerpt" style="font-size: 0.65em;">
+              <p>Cisco's innovation with Routed Optical Networking doesn't stop at routing hardware and optics. Programmability 
+              and telemetry via open standards has been a key tenet to the solution since it was introduced in 2020.  In this blog we 
+              explore using OpenConfig to provision and monitor OIF 400ZR and OpenZR+ DCO transceivers.     
+             </p>
+            </div>
+            <p>
+            <a href="{{ base_path }}/blogs//zr-openconfig-mgmt" 
+                  class="btn ">OpenConfig ZR/ZR+ Management 📖</a>
+                  </p>
+        </div>
+      </div>
+    </div>
+</div>
+
+
 
 <div class="feature__wrapper">
     <div class="feature__item--right">

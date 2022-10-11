@@ -13,7 +13,7 @@ tags:
   - routing
   - sdn 
   - controller  
-position: hidden  
+position: top 
 ---
 {% include toc %}
 
@@ -21,7 +21,7 @@ position: hidden
 
 | Version          |Date                    |Comments| 
 | ---------------- | ---------------------- |-----|
-| 1.0       | 10/01/2022| Initial Publication 
+| 1.0       | 10/10/2022| Initial Publication 
 
 <br>
 
@@ -60,7 +60,7 @@ factor pluggable digital coherent optics. These optics can be used in a wide
 variety of network applications, reducing CapEx/OpEx cost and reducing
 complexity vs. using traditional external transponder equipment.  
 
-## QSFP-DD and 400ZR and OpenZR+ Standards   
+## OIF 400ZR and OpenZR+ Standards using QSFP-DD Transceivers  
 
 The networking industry saw a point to improve network efficiency by shifting
 coherent DWDM functions to router pluggables. Technology advancements have
