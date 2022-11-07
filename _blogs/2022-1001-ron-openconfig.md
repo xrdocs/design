@@ -1028,7 +1028,7 @@ gnmic -a 172.29.11.20:57733 -u admin -p password --insecure --timeout 1m --encod
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-gnmic -a 172.29.11.20:57733 -u admin -p CSCO123^ --insecure --timeout 1h --encoding JSON_IETF subscribe --path 'openconfig-platform:components/component[name='0/0-OpticalChannel0/0/0/8']' --mode stream --stream-mode sample --sample-interval 30s
+gnmic -a 172.29.11.20:57733 -u cisco -p cisco --insecure --timeout 1h --encoding JSON_IETF subscribe --path 'openconfig-platform:components/component[name='0/0-OpticalChannel0/0/0/8']' --mode stream --stream-mode sample --sample-interval 30s
 </pre> 
 </div> 
 
