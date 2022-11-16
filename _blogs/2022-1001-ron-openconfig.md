@@ -726,7 +726,7 @@ except the allocation is now configured as 300 instead of 400 to reflect the 300
 
 
 The OpticalChannel configuration is also similar with the exception the *target-output-power* setting 
-has been omitted. In this case the device default power of -100 (-10dBM) will be used.   
+has been omitted. In this case the device default power of -1000 (-10dBM) will be used.   
 
 ```xml
 <components xmlns="http://openconfig.net/yang/platform">
