@@ -279,6 +279,10 @@ minutes from start to finish.
 ![](http://xrdocs.io/design/images/ron-hld/optical-zr-p2p.png)
 
 ### NCS 1010 64 Channel FOADM P2P Deployment 
+The NCS 1010 includes two add/drop ports with embedded bi-directional EDFA
+amplifiers, ideal for connecting the new MD-32-E/O 32 channel, 150Ghz spaced
+passive multiplexer. Connecting both even and odd multiplexers allows the use of 
+64 total channels. 
 
 ![](http://xrdocs.io/design/images/ron-hld/optical-zr-p2p-1010.png)
 ### NCS 2000 Colorless Add/Drop Deployment 
@@ -297,6 +301,13 @@ switching capability, ZR and ZR+ wavelengths are easily provisioned over the
 infrastructure.  
 
 ![](http://xrdocs.io/design/images/ron-hld/optical-zrp-roadm.png)
+
+
+### NCS 1010 Multi-Degree Deployment 
+
+![](http://xrdocs.io/design/images/ron-hld/optical-zrp-bypass-1010.png)
+
+
 
 ### Long-Haul Deployment 
 Cisco has demonstrated in a physical lab 400G OpenZR+ services provisioned
