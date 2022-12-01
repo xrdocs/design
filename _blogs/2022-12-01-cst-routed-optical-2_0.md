@@ -219,6 +219,8 @@ still need a DWDM layer. Routed Optical Networking is flexible enough to work
 across point to point, ROADM based optical networks, or a mix of both. Cisco
 multiplexers, amplifiers, and ROADMs can satisfy any network need.  
 
+*Cisco NCS 1010* 
+
 Routed Optical Networking 2.0 introduces the new Cisco NCS 1010 open optical line system. 
 The NCS 1010 represents an evolution in open optical line systems, utilizing the same 
 IOS-XR software as Cisco routers and NCS 1004 series transponders. This enables the rich 
@@ -266,9 +268,9 @@ The future of networks may be a flat L3 network with simple point to point
 interconnection, but it will take time to migrate to this type of architecture.
 Routed Optical Network supports an evolution to the architecture by working over
 most modern photonic DWDM networks.  Below gives just a few of the supported
-optical topologies including both point to point and ROADM networks.
+optical topologies including both point to point and ROADM based DWDM networks.
 
-### 64 Channel FOADM P2P Deployment 
+### NCS 2000 64 Channel FOADM P2P Deployment 
 This example provides up to 25.6Tb on a single network span, and highlights the
 simplicity of the Routed Optical Networking solution.  The "optical" portion of
 the network including the ZR/ZR+ configuration can be completed in a matter of
@@ -276,14 +278,17 @@ minutes from start to finish.
 
 ![](http://xrdocs.io/design/images/ron-hld/optical-zr-p2p.png)
 
-### Colorless Add/Drop Deployment 
+### NCS 1010 64 Channel FOADM P2P Deployment 
+
+![](http://xrdocs.io/design/images/ron-hld/optical-zr-p2p-1010.png)
+### NCS 2000 Colorless Add/Drop Deployment 
 Using the NCS2K-MF-6AD-CFS colorless NCS2K-MF-LC module along with the LC16 LC
 aggregation module, and SMR20-FS ROADM module, a scalable colorless add/drop
 complex can be deployed to support 400ZR and OpenZR+.   
 
 ![](http://xrdocs.io/design/images/ron-hld/optical-zrp-colorless.png)
 
-### Multi-Degree ROADM Deployment 
+### NCS 2000 Multi-Degree ROADM Deployment 
 In this example a 3 degree ROADM node is shown with a local add/drop degree. The
 Routed Optical Networking solution fully supports ROADM based networks with
 optical bypass. The traffic demands of the network will dictate the most
@@ -295,10 +300,10 @@ infrastructure.
 
 ### Long-Haul Deployment 
 Cisco has demonstrated in a physical lab 400G OpenZR+ services provisioned
-across 1200km using NCS 2000 optical line systems. 300G, 200G, and 100G signals
-can achieve even greater distances. OpenZR+ is not just for shorter reach
-applications, it fulfills an ideal sweet spot in most provider networks in terms
-of bandwidth and reach.  
+across 1200km using NCS 2000 and NCS 1010 optical line systems. 300G, 200G,
+and 100G signals can achieve even greater distances. OpenZR+ is not just for
+shorter reach applications, it fulfills an ideal sweet spot in most provider
+networks in terms of bandwidth and reach.  
 
 ## Core Networks
 Long-haul core networks also benefit from the CapEx and OpEx savings of moving
