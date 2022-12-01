@@ -310,7 +310,7 @@ can support the add/drop of wavelengths via its A/D ports on the upper node, or
 express those wavelengths through the interconnect to site 4 via the additional 
 1010 OLT unit connected to site 4.   
 
-![](http://xrdocs.io/design/images/ron-hld/optical-zrp-bypass-1010.png)
+![](http://xrdocs.io/design/images/ron-hld/optical-zr-bypass-1010.png)
 
 
 ### Long-Haul Deployment 
