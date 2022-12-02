@@ -308,7 +308,8 @@ A multi-degree NCS 1010 site utilizes a separate NCS 1010 OLT device for each
 degree. The degree may be an add/drop or bypass degree. In our example Site 3 
 can support the add/drop of wavelengths via its A/D ports on the upper node, or
 express those wavelengths through the interconnect to site 4 via the additional 
-1010 OLT unit connected to site 4.   
+1010 OLT unit connected to site 4. In our example the wavelength originating at 
+sites 1 and 4 using ZR+ optics is expressed through site 3.  
 
 ![](http://xrdocs.io/design/images/ron-hld/optical-zr-bypass-1010.png)
 
@@ -405,6 +406,45 @@ Below gives an overview of some of the supported equipment used to build the
 DWDM layer of the Routed Optical Networking Solution.   
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-optical-hardware.png)
+
+
+### Network Convergence System 1010 
+
+The NCS 1010 Open Optical Line System (O-OLS) is a next-generation DWDM platform 
+available in fixed variants to satisfy building a modern flexible DWDM photonic 
+network.  
+
+The NCS 1010 Optical Line Terminal (OLT) uses a twin 33-port WSS architecture
+allowing higher scale for either add/drop or express wavelengths. The OLT also
+has two LC add/drop ports with integrated fixed gain EDFA to support the
+add/drop of lower power optical signals. OLTs are available in models with or
+without RAMAN amplification.  NCS 1010 Inline Amplifier nodes are available as
+bi-directional EDFA, EDFA with RAMAN in one direction, or bi-directional RAMAN.
+Each model of NCS 1010 is also available to support both C and L bands. In RON
+2.0 ZR and ZR+ optics utilize the C band, but may be used on the same fiber with
+L band signals using the NCS 1010 C+L combiner. 
+
+The NCS 1010 utilizes IOS-XR, inheriting the advanced automation and telemetry
+features similar to IOS-XR routers.   
+
+**NCS 1010 OLT with RAMAN** 
+![](http://xrdocs.io/design/images/ron-hld/ron-1010-olt-raman.png)
+
+**NCS 1010 ILA with RAMAN** 
+![](http://xrdocs.io/design/images/ron-hld/ron-1010-ila-raman.png)
+
+The NCS1K-MD32-E/O-C 32-port 150Ghz spaced passive multiplexer is used with the NCS 1010, supporting the 75Ghz 
+ZR/ZR+ signals and future higher baud rate signals. The MD-32 contains photodiodes to monitor RX power levels 
+on each add/drop port.   
+
+**NCS 1010 MD-32 Passive Filter** 
+![](http://xrdocs.io/design/images/ron-hld/ron-1010-md32.png)
+
+The NCS 1010 supports point to point and express DWDM optical topologies in RON
+2.0. All NCS 1010 services in RON 2.0 are managed using Cisco Optical Network
+Controller.  
+
+See more information on the NCS 1010 series at <https://www.cisco.com/c/en/us/products/collateral/optical-networking/network-convergence-system-1000-series/network-conver-system-1010-ds.html>
 
 ### Network Convergence System 2000 
 
