@@ -402,8 +402,6 @@ migration path from 100G to 400G access rings or uplinks when used in an aggrega
 
 See more information on Cisco NCS 540 at <https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-500-series-routers/ncs-540-large-density-router-ds.html>
 ## Routed Optical Networking Optical Hardware
-Below gives an overview of some of the supported equipment used to build the
-DWDM layer of the Routed Optical Networking Solution.   
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-optical-hardware.png)
 
@@ -420,7 +418,7 @@ has two LC add/drop ports with integrated fixed gain EDFA to support the
 add/drop of lower power optical signals. OLTs are available in models with or
 without RAMAN amplification.  NCS 1010 Inline Amplifier nodes are available as
 bi-directional EDFA, EDFA with RAMAN in one direction, or bi-directional RAMAN.
-Each model of NCS 1010 is also available to support both C and L bands. In RON
+Each model of NCS 1010 is also available to support both C and L bands. In Routed Optical Networking 
 2.0 ZR and ZR+ optics utilize the C band, but may be used on the same fiber with
 L band signals using the NCS 1010 C+L combiner. 
 
@@ -440,8 +438,8 @@ on each add/drop port.
 **NCS 1010 MD-32 Passive Filter** 
 ![](http://xrdocs.io/design/images/ron-hld/ron-1010-md32.png)
 
-The NCS 1010 supports point to point and express DWDM optical topologies in RON
-2.0. All NCS 1010 services in RON 2.0 are managed using Cisco Optical Network
+The NCS 1010 supports point to point and express DWDM optical topologies in Routed Optical Networking 
+2.0. All NCS 1010 services in Routed Optical Networking are managed using Cisco Optical Network
 Controller.  
 
 See more information on the NCS 1010 series at <https://www.cisco.com/c/en/us/products/collateral/optical-networking/network-convergence-system-1000-series/network-conver-system-1010-ds.html>
@@ -468,6 +466,13 @@ wavelengths for power. The 1001 features the ability to determine the proper
 amplifier gain setpoints based on the desired user power levels.  
 
 See more information on the NCS 1001 at <https://www.cisco.com/c/en/us/products/collateral/optical-networking/network-convergence-system-1000-series/datasheet-c78-738782.html>
+
+### NCS 2000 and NCS 1001 Hardware 
+The picture below does not represent all available hardware on the NCS 2000, 
+however does capture the modules typically used in Routed Optical Networking 
+deployments.  
+
+![](http://xrdocs.io/design/images/ron-hld/ron-optical-hardware.png)
 
 # Routed Optical Networking Automation 
 ## Overview 
@@ -532,12 +537,17 @@ Responsible for Multi-Layer Automation is the Crosswork Hierarchical Controller.
 *  Providing assurance at the IP and optical layers in a single tool. The
    network model allows users to quickly correlate faults and identify at which
    layer faults have occurred.
-* Additional HCO applications include the Root Cause Analysis tool, able to
-  quickly correlate upper layer faults to an underlying cause.   
+* Additional HCO applications include the following  
+  - Root Cause Analysis: Quickly correlate upper layer faults to an underlying cause.   
+  - Layer Relations: Quickly identify the lower layer resources supporting higher layer network resource or all network resources reliant on a selected 
+  lower layer network resource.  
+  - Network Inventory: View IP and optical node hardware inventory along with with network resources such as logical links, optical services, and traffic engineering tunnels  
+  - Network History: View state changes across all network resources at any point in time  
+  - Performance: View historical link utilization  
 
 Please see the following resources for more information on Crosswork HCO. <https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/crosswork-network-automation/solution-overview-c22-744695.html> 
 
-![](http://xrdocs.io/design/images/ron-hld/hco-multi-layer-circuit.png){:height="100%" width="100%"}
+![](http://xrdocs.io/design/images/ron-hld/hco-multi-layer-circuit-2.png){:height="100%" width="100%"}
 
 ## Crosswork Network Controller 
 Crosswork Network Controller is a multi-vendor IP domain controller. Crosswork
