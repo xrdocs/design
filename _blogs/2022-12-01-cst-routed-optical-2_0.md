@@ -825,10 +825,10 @@ frequency configuration. .
 ```
 
 ## Model-Driven Configuration using OpenConfig Models
-Starting on Release 2.0 all IOS-XR routers supporting ZR/ZR+ optics can be 
+Starting on Release 2.0 all IOS-XR 7.7.1+ routers supporting ZR/ZR+ optics can be 
 configured using OpenConfig models. Provisioning utilizes the openconfig-terminal-device 
 model and its extensions to the openconfig-platform model to support DWDM configuration 
-parameters. Below is an example of an OpenConfig payload to configure a ZR/ZR+ optics port with a 
+parameters. Below is an example of an OpenConfig payload to configure ZR/ZR+ optics port 0/0/0/20 with a 
 300G trunk rate with frequency 195.20 THz.  
 
 
@@ -961,7 +961,7 @@ fault has occurred at an optical layer, but is not a fiber fault. Having the
 ability to pinpoint the fault layer even within a specific domain is a powerful
 way to quickly determine the root cause of the fault.  
 
-![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-trace-fault.png){:height="100%" width="100%"}
+![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-trace-fault-2.png){:height="100%" width="100%"}
 
 ### Routed Optical Networking Link Assurance 
 The Link Assurance application allows users to view a network link and all of 
@@ -969,14 +969,27 @@ its dependent layers. This includes Routed Optical Networking multi-layer
 services. In addition to viewing layer information, fault and telemetry information 
 is also available by simply selecting a link or port.   
 
+#### ZRM Layer TX/RX Power 
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-2.png){:height="100%" width="100%"}
+
+#### ZRC Layer BER and Q-Factor / Q-Margin  
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-3.png){:height="100%" width="100%"}
 
 Optionally the user can see graphs of collected telemetry data to quickly identify trends or changes in specific operational 
-data.  
+data. Graphs of collected performance data is accessed using the "Performance" tab when a link or port is selected.   
 
+#### OTS Layer RX/TX Power Graph
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-graph-2.png){:height="100%" width="100%"}
+
+#### Event Monitoring 
+HCO records any transition of a network resource between up/down operational states. This is reflected in the 
+Link Assurance tool under the "Events" tab. 
+
+![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-events.png){:height="100%" width="100%"}
 ## IOS-XR CLI Monitoring of ZR400/OpenZR+ Optics
+
+
+
 
 ### Optics Controller 
 The optics controller represents the physical layer of the optics.  In the case
