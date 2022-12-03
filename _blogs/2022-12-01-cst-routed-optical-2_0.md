@@ -798,7 +798,7 @@ controller Optics0/0/0/20
 </pre>
 </div>
 
-## IOS-XR NETCONF Configuration 
+## Model-Driven Configuration using IOS-XR Native Models using NETCONF or gNMI  
 All configuration performed in IOS-XR today can also be done using NETCONF/YANG. The following payload exhibits the models 
 and configuration used to perform router optics provisioning. This is a more complete example showing the FEC, power, and 
 frequency configuration. .  
@@ -824,7 +824,123 @@ frequency configuration. .
 </data>
 ```
 
+## Model-Driven Configuration using OpenConfig Models
+Starting on Release 2.0 all IOS-XR routers supporting ZR/ZR+ optics can be 
+configured using OpenConfig models. Provisioning utilizes the openconfig-terminal-device 
+model and its extensions to the openconfig-platform model to support DWDM configuration 
+parameters. Below is an example of an OpenConfig payload to configure a ZR/ZR+ optics port with a 
+300G trunk rate with frequency 195.20 THz.  
 
+
+```xml
+<config>
+        <terminal-device xmlns="http://openconfig.net/yang/terminal-device">
+            <logical-channels>
+                <channel>
+                    <index>100</index>
+                    <config>
+                        <index>200</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>200</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>101</index>
+                    <config>
+                        <index>101</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>200</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>102</index>
+                    <config>
+                        <index>102</index>
+                        <rate-class xmlns:idx="http://openconfig.net/yang/transport-types">idx:TRIB_RATE_100G</rate-class>
+                        <admin-state>ENABLED</admin-state>
+                        <description>ETH Logical Channel</description>
+                        <trib-protocol xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_100G_MLG</trib-protocol>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_ETHERNET</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>100</allocation>
+                                <assignment-type>LOGICAL_CHANNEL</assignment-type>
+                                <description>ETH to Coherent assignment</description>
+                                <logical-channel>200</logical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+                <channel>
+                    <index>200</index>
+                    <config>
+                        <index>200</index>
+                        <admin-state>ENABLED</admin-state>
+                        <description>Coherent Logical Channel</description>
+                        <logical-channel-type xmlns:idx="http://openconfig.net/yang/transport-types">idx:PROT_OTN</logical-channel-type>
+                    </config>
+                    <logical-channel-assignments>
+                        <assignment>
+                            <index>1</index>
+                            <config>
+                                <index>1</index>
+                                <allocation>300</allocation>
+                                <assignment-type>OPTICAL_CHANNEL</assignment-type>
+                                <description>Coherent to optical assignment</description>
+                                <optical-channel>0/0-OpticalChannel0/0/0/20</optical-channel>
+                            </config>
+                        </assignment>
+                    </logical-channel-assignments>
+                </channel>
+            </logical-channels>
+        </terminal-device>
+        <components xmlns="http://openconfig.net/yang/platform">
+            <component>
+                <name>0/0-OpticalChannel0/0/0/20</name>
+                <optical-channel xmlns="http://openconfig.net/yang/terminal-device">
+                    <config>
+                        <operational-mode>5007</operational-mode>
+                        <frequency>195200000</frequency>
+                    </config>
+                </optical-channel>
+            </component>
+        </components>
+    </config>
+```
 
 # Routed Optical Networking Assurance 
 
@@ -848,17 +964,18 @@ way to quickly determine the root cause of the fault.
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-trace-fault.png){:height="100%" width="100%"}
 
 ### Routed Optical Networking Link Assurance 
-The Link Assurance application isolates the multi-layer path of a single Routed
-Optical Networking service, showing both the router termination points as well
-as the optical layer. This information is further enhanced with telemetry data
-coming from both the ZR/ZR+ optics as well as the optical link system nodes. 
+The Link Assurance application allows users to view a network link and all of 
+its dependent layers. This includes Routed Optical Networking multi-layer 
+services. In addition to viewing layer information, fault and telemetry information 
+is also available by simply selecting a link or port.   
 
-![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance.png){:height="100%" width="100%"}
+![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-2.png){:height="100%" width="100%"}
+![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-3.png){:height="100%" width="100%"}
 
 Optionally the user can see graphs of collected telemetry data to quickly identify trends or changes in specific operational 
 data.  
 
-![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-graph.png){:height="100%" width="100%"}
+![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-graph-2.png){:height="100%" width="100%"}
 ## IOS-XR CLI Monitoring of ZR400/OpenZR+ Optics
 
 ### Optics Controller 
