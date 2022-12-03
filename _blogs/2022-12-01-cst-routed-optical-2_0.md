@@ -590,7 +590,8 @@ on existing provider workflows.
 * [Unified IP and Optical using Crosswork Hierarchical Controller](#crosswork-hco-ui-provisioning)
 * [Unified IP and Optical using Cisco NSO Routed Optical Networking Multi-Layer Function Pack](#nso-ron-ml-cfp-provisioning) 
 * [ZR/ZR+ Optics using IOS-XR CLI](#ios-xr-cli-configuration) 
-* [ZR/ZR+ Optics using IOS-XR Netconf](#ios-xr-netconf-configuration)
+* [Model-driven ZR/ZR+ Optics configuration using Netconf or gNMI](#ios-xr-netconf-configuration)
+* [OpenConig ZR/ZR+ Optics configuration using Netconf or gNMI](#ios-xr-oc-configuration)
 
 ## OpenZR+ and 400ZR Properties 
 ### ZR/ZR+ Supported Frequencies 
@@ -646,7 +647,7 @@ the user, simplifying the end to end workflow. The frequency and power is
 automatically derived by Cisco Optical Network Controller based on the add/drop
 port and returned as a parameter to be used in router optics provisioning.  
 
-![](http://xrdocs.io/design/images/ron-hld/ron-hco-ip-link-provisioning.png)
+![](http://xrdocs.io/design/images/ron-hld/ron-hco-ip-link-provisioning-2.png)
 
 ### Operational Discovery 
 The Crosswork Hierarchical Controller provisioning process also performs a discovery phase to ensure the
@@ -799,30 +800,27 @@ controller Optics0/0/0/20
 
 ## IOS-XR NETCONF Configuration 
 All configuration performed in IOS-XR today can also be done using NETCONF/YANG. The following payload exhibits the models 
-and configuration used to perform router optics provisioning. This is a more complete example showing the FEC, power, modulation, 
-and line side rate (200G) configuration.   
+and configuration used to perform router optics provisioning. This is a more complete example showing the FEC, power, and 
+frequency configuration. .  
+
+**Note in Release 2.0 using IOS-XR 7.7.1 the newer IOS-XR Unified Models are utilized for provisioning**
 
 ```xml
 <data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
- <interface-configurations xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-ifmgr-cfg">
- <interface-configuration>
- <active>act</active>
- <interface-name>Optics0/0/0/20</interface-name>
-    <description> Managed by NSO .58, do not change manually</description> 
- <optics xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-controller-optics-cfg">
-  <optics-transmit-power>-100</optics-transmit-power>
-  <optics-performance-monitoring>true</optics-performance-monitoring>
-     <optics-modulation>16qam</optics-modulation>
- <optics-fec>fec-ofec</optics-fec>
- <optics-dwdm-carrier>
-  <grid-type>100Mhz-grid</grid-type>
-  <param-type>frequency</param-type>
-   <param-value>1956500 </param-value>
-  </optics-dwdm-carrier>
- </optics>
- <breakout xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-optics-driver-cfg">2x100</breakout>
- </interface-configuration>
-</interface-configurations>
+<controllers xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg">
+    <controller>
+        <controller-name>Optics0/0/0/0</controller-name>
+        <transmit-power xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-cont-optics-cfg">-115</transmit-power>
+        <fec xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-cont-optics-cfg">OFEC</fec>
+        <dwdm-carrier xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-cont-optics-cfg">
+          <grid-100mhz>
+            <frequency>1913625</frequency>
+          </grid-100mhz>
+        </dwdm-carrier>
+        <dac-rate xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-dac-rate-cfg">1x1.25</dac-rate>
+      </controller>
+</controllers> 
+
 </data>
 ```
 
@@ -839,10 +837,13 @@ Segment Routing TE layer across all layers. CW HCO identifies specific Routed
 Optical Networking links using ZR/ZR+ optics as seen by the ZRC (ZR Channel) and
 ZRM (ZR Media) layers from the 400ZR specification.  
 
-![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-trace.png){:height="100%" width="100%"}
+![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-trace-2.png){:height="100%" width="100%"}
 
 When faults occur at a specific layer, faults will be highlighted in red,
-quickly identifying the layer a fault has occurred.  
+quickly identifying the layer a fault has occurred. In this case we can see the
+fault has occurred at an optical layer, but is not a fiber fault. Having the
+ability to pinpoint the fault layer even within a specific domain is a powerful
+way to quickly determine the root cause of the fault.  
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-trace-fault.png){:height="100%" width="100%"}
 
