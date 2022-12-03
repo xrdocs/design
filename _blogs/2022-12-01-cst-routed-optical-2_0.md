@@ -382,7 +382,7 @@ gives an overview of PLE service signaling and transport.
 Starting in IOS-XR 7.7.1 the NC55-OIP-02 Modular Port Adapter (MPA) is supported
 on the NCS-55A2-MOD and NCS-57C3-MOD platforms. The NC55-OIP-02 has 8 SFP+ ports 
 
-![](http://xrdocs.io/design/images/ron-hld/ron-hardware-ple-mpa.png)
+![](http://xrdocs.io/design/images/ron-hld/ron-hardware-ple-mpa.png){:height="75%" width="75%"}
 
 Each port on the PLE MPA can be configured independently. The PLE MPA is responsible 
 for receiving data frames from the native PLE client and packaging those into fixed 
