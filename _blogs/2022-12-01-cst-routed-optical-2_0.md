@@ -1172,7 +1172,10 @@ Grafana can be used to quickly build powerful dashboards to monitor ZR/ZR+ and N
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-telemetry-grafana.png)
 
+
+
 ![](http://xrdocs.io/design/images/ron-hld/ron-telemetry-grafana-1010.png)
+
 <br>
 
 ---
