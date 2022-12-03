@@ -378,6 +378,131 @@ gives an overview of PLE service signaling and transport.
 ![](http://xrdocs.io/design/images/ron-hld/ron-ple-overview.png)
 
 
+## Circuit Style Segment Routing 
+CS-SR provides the underlying TDM-like transport to support traditional private line 
+Ethernet services without additional hardware and emulated bit-transparent services 
+using Private Line Emulation hardware. 
+
+### CS SR-TE paths characteristics 
+
+* Co-routed Bidirectional - Meaning the paths between two client ports are symmetric
+* Deterministic without ECMP - Meaning the path does not vary based on any load balancing criteria
+* Persistent - Paths are routed on a hop by hop basis, so they are not subject to path changes induced by network changes 
+* End-to-end path protection - Entire paths are switched from working to protect with the protect path in a hot standby state for fast transition   
+
+SR CS-TE policies are built using link adjacency SIDs without protection to ensure the paths do not take a TI-LFA path during 
+path failover and instead fail over to the pre-determined protect path.  
+
+### CS SR-TE path liveness detection 
+Paths can be configured with end to end liveness detection. Liveness detection uses TWAMP-lite probes which are looped at the far end to determine 
+if the end to end path is up bi-directionally. If more than the set number of probes is missed (set by the multiplier) the path will be considered down. Once liveness detection is enabled probes will be sent on all candidate paths. Either the default liveness probe profile can be used or if 
+you want to modify the default parameters a customized one can be created. 
+### CS SR-TE path failover behavior 
+CS SR-TE policies contain multiple candidate paths.  The highest preference candidate path is considered the working path, the second highest preference path is the protect path, and if a third lower preference path is configured would be a dynamic restoration path.  This provides 1:1+R 
+protection for CS SR-TE policies.  The following below shows the configuration of a CS SR-TE Policy with a working, protect, and restoration path. T  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy to-55a2-1
+   color 1001 end-point ipv4 100.0.0.44
+   path-protection
+   !
+   candidate-paths
+    preference 25
+     dynamic
+       metric-type igp 
+     !
+    !
+    preference 50
+     explicit segment-list protect-forward-path
+      reverse-path segment-list protect-reverse-path
+     !
+    !
+    preference 100
+     explicit segment-list working-forward-path
+      reverse-path segment-list working-reverse-path
+     !
+    !
+   !
+   performance-measurement
+    liveness-detection
+     liveness-profile name liveness-check
+</pre>
+</div>
+
+### CS SR-TE Policy operational details 
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:ron-ncs55a2-1#show segment-routing traffic-eng policy color 1001
+Sat Dec  3 13:32:38.356 PST
+
+SR-TE policy database
+---------------------
+
+Color: 1001, End-point: 100.0.0.42
+  Name: srte_c_1001_ep_100.0.0.42
+  Status:
+    adjmin: up  Operational: up for 2d09h (since Dec  1 04:08:12.648)
+  Candidate-paths:
+    Preference: 100 (configuration) (active)
+      Name: to-100.0.0.42
+      Requested BSID: dynamic
+      PCC info:
+        Symbolic name: cfg_to-100.0.0.42_discr_100
+        PLSP-ID: 1
+      Constraints:
+        Protection Type: protected-preferred
+        Maximum SID Depth: 12
+      Explicit: segment-list forward-adj-path-working (valid)
+        Reverse: segment-list reverse-adj-path-working
+        Weight: 1, Metric Type: TE
+          SID[0]: 15101 [adjacency-SID, 100.1.1.21 - 100.1.1.20]
+          SID[1]: 15102
+          SID[2]: 15103
+          SID[3]: 15104
+        Reverse path:
+          SID[0]: 15001
+          SID[1]: 15002
+          SID[2]: 15003
+          SID[3]: 15004
+      Protection Information:
+        Role: WORKING
+        Path Lock: Timed
+        Lock Duration: 300(s)
+        State: ACTIVE
+    Preference: 50 (configuration) (protect)
+      Name: to-100.0.0.42
+      Requested BSID: dynamic
+      PCC info:
+        Symbolic name: cfg_to-100.0.0.42_discr_50
+        PLSP-ID: 2
+      Constraints:
+        Protection Type: protected-preferred
+        Maximum SID Depth: 12
+      Explicit: segment-list forward-adj-path-protect(valid)
+        Reverse: segment-list reverse-adj-path-protect
+        Weight: 1, Metric Type: TE
+          SID[0]: 15119 [adjacency-SID, 100.1.42.1 - 100.1.42.0]
+        Reverse path:
+          SID[0]: 15191
+      Protection Information:
+        Role: PROTECT
+        Path Lock: Timed
+        Lock Duration: 300(s)
+        State: STANDBY
+  Attributes:
+    Binding SID: 24017
+    Forward Class: Not Configured
+    Steering labeled-services disabled: no
+    Steering BGP disabled: no
+    IPv6 caps enable: yes
+    Invalidation drop enabled: no
+    Max Install Standby Candidate Paths: 0
+</pre>
+</div>
+
 ## Private Line Emulation Hardware 
 Starting in IOS-XR 7.7.1 the NC55-OIP-02 Modular Port Adapter (MPA) is supported
 on the NCS-55A2-MOD and NCS-57C3-MOD platforms. The NC55-OIP-02 has 8 SFP+ ports 
@@ -387,13 +512,10 @@ on the NCS-55A2-MOD and NCS-57C3-MOD platforms. The NC55-OIP-02 has 8 SFP+ ports
 Each port on the PLE MPA can be configured independently. The PLE MPA is responsible 
 for receiving data frames from the native PLE client and packaging those into fixed 
 frames for transport over the packet network.  
-## Private Line Emulation Pseudowire Signaling 
-PLE utilizes IETF SAToP pseudowire encoding carried over dynamically signalled EVPN-VPWS 
-circuits. Enhancements to the EVPN VPWS service type have been introduced to the IETF via 
-<https://datatracker.ietf.org/doc/draft-schmutzer-bess-ple>. 
 
-PLE services use Differential Clock Recovery (DCR) to ensure proper frame timing between 
-the two PLE clients. 
+More information on the NC55-OIP-02 can be found in its datasheet located at 
+<https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/network-con-5500-series-ds.pdf>. A full 
+detailed to end to end configuration for PLE can be found in the Routed Optical Networking 2.0 Solution Guide found at <https://www.cisco.com/c/en/us/td/docs/optical/ron/2-0/solution/guide/b-ron-solution-20/m-ron.pdf>
 
 ### Supported Client Transceivers 
 
@@ -403,6 +525,148 @@ the two PLE clients.
 |OTN (OTU2e)| SFP-10G-LR-X, SFP-10G-ER-I, SFP-10G-Z |  
 |SONET/SDH| ONS-SC+-10G-LR/ER/SR (OC-192/STM-64), ONS-SI-2G-L1/L2/S1 (OC-48/STM-16) | 
 |Fiber Channel|DS-SFP-FCGE, DS-SFP-FC8G, DS-SFP-FC16G, DS-SFP-FC32G, 1/2/4/8G FC CWDM|
+
+
+## Private Line Emulation Pseudowire Signaling 
+PLE utilizes IETF SAToP pseudowire encoding carried over dynamically signalled EVPN-VPWS 
+circuits. Enhancements to the EVPN VPWS service type have been introduced to the IETF via 
+<https://datatracker.ietf.org/doc/draft-schmutzer-bess-ple>. 
+
+PLE services use Differential Clock Recovery (DCR) to ensure proper frame timing between 
+the two PLE clients. In order to mmaintain accuracy of the clock each PLE endpoint router 
+must have its frequency source traceable to a common primary reference clock (PRC).   
+
+## Private Line Emulation EVPN-VPWS Configuration 
+PLE services can be configured to utilize a CS SR-TE Policy or use dynamic MPLS 
+protocols. The example belows shows the use of CS SR-TE Policy as transport for the 
+PLE EVPN-VPWS service. Note the name of the sr-te policy in the preferred path command 
+is the persistent generated name and not the name used in the CLI configuration. This can 
+be determined using the "show segment-routing traffic-engineering policies" command.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ pw-class circuit-style-srte
+  encapsulation mpls
+   preferred-path sr-te policy srte_c_1001_ep_100.0.0.42
+  !
+ !
+ xconnect group ple
+  p2p ple-cs-1
+   interface CEM0/0/2/1
+   neighbor evpn evi 100 target 4201 source 4401
+    pw-class circuit-style-srte
+   !
+  !
+</pre>
+</div>
+
+## PLE Monitoring and Telemetry 
+
+The following "show" command can be used to monitor the state of PLE ports and services. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:ron-ncs55a2-1#show controllers optics 0/0/2/1
+Sat Dec  3 14:00:10.873 PST
+
+ Controller State: Up
+
+ Transport Admin State: In Service
+
+ Laser State: On
+
+ LED State: Not Applicable
+
+ Optics Status
+
+         Optics Type:  SFP+ 10G SR
+         Wavelength = 850.00 nm
+
+         Alarm Status:
+         -------------
+         Detected Alarms: None
+
+
+         LOS/LOL/Fault Status:
+
+         Laser Bias Current = 8.8 mA
+         Actual TX Power = -2.60 dBm
+         RX Power = -2.33 dBm
+
+         Performance Monitoring: Disable
+
+         THRESHOLD VALUES
+         ----------------
+
+         Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+         ------------------------  ----------  ---------  ------------  -----------
+         Rx Power Threshold(dBm)          2.0      -13.9          -1.0         -9.9
+         Tx Power Threshold(dBm)          1.6      -11.3          -1.3         -7.3
+         LBC Threshold(mA)              13.00       4.00         12.50         5.00
+         Temp. Threshold(celsius)       75.00      -5.00         70.00         0.00
+         Voltage Threshold(volt)         3.63       2.97          3.46         3.13
+
+         Polarization parameters not supported by optics
+
+         Temperature = 33.00 Celsius
+         Voltage = 3.30 V
+
+ Transceiver Vendor Details
+
+         Form Factor            : SFP+
+         Optics type            : SFP+ 10G SR
+         Name                   : CISCO-FINISAR
+         OUI Number             : 00.90.65
+         Part Number            : FTLX8574D3BCL-CS
+         Rev Number             : A
+         Serial Number          : FNS23300J42
+         PID                    : SFP-10G-SR
+         VID                    : V03
+         Date Code(yy/mm/dd)    : 19/07/25
+</pre>
+</div>
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:ron-ncs55a2-1#show controllers CEM 0/0/2/1
+Sat Dec  3 14:02:17.759 PST
+Interface                          : CEM0/0/2/1
+Admin state                        : Up
+Oper  state                        : Up
+Port bandwidth                     : 10312500 kbps
+Dejitter buffer (oper/in-use)      : 0/3432 usec
+Payload size (oper)                : 1024 bytes
+PDV (min/max/avg)                  : 980/2710/1845 usec
+Dummy mode                         : last-frame
+Dummy pattern                      : 0x0
+Idle pattern                       : 0x0
+Signalling                         : No CAS
+RTP                                : Not Enabled
+Clock type                         : Differential
+Detected Alarms                    : None
+
+Statistics Info
+---------------
+Ingress packets          : 380585724923, Ingress packets drop     : 0
+Egress packets           : 0, Egress packets drop      : 0
+Total error              : 0
+        Missing packets          : 0, Malformed packets        : 0
+        Jitter buffer underrun   : 0, Jitter buffer overrun    : 0
+        Misorder drops           : 0
+Reordered packets        : 0, Frames fragmented        : 0
+Error seconds            : 0, Severely error seconds   : 0
+Unavailable seconds      : 0, Failure counts           : 0
+
+Generated L bits         : 0, Received  L bits         : 0
+Generated R bits         : 2628601618, Received  R bits         : 0
+
+Endpoint Info
+-------------
+Passthrough     : No
+</pre>
+</div> 
+
 # Routed Optical Networking Architecture Hardware 
 All Routed Optical Networking solution routers are powered by Cisco IOS-XR.   
 ## Routed Optical Networking Validated Routers 
@@ -1229,17 +1493,17 @@ Grafana can be used to quickly build powerful dashboards to monitor ZR/ZR+ and N
 
 ---
 # Additional Resources
-### Cisco Routed Optical Networking Home 
+## Cisco Routed Optical Networking 2.0 Solution Guide
+<https://www.cisco.com/c/en/us/td/docs/optical/ron/2-0/solution/guide/b-ron-solution-20/m-ron.pdf>
+## Cisco Routed Optical Networking Home 
 * <https://www.cisco.com/c/en/us/solutions/service-provider/routed-optical-networking.html> 
-### Cisco Routed Optical Networking Tech Field Day 
+## Cisco Routed Optical Networking Tech Field Day 
 * Solution Overview: <https://techfieldday.com/video/build-your-network-with-cisco-routed-optical-networking-solution/> 
 * Automation Demo: <https://techfieldday.com/video/cisco-routed-optical-networking-solution-demo/> 
 
-### Cisco Champion Podcasts 
+## Cisco Champion Podcasts 
 * Cisco Routed Optical Networking Solution for the Next Decade <https://smarturl.it/CCRS8E24> 
 * Simplify Network Operations with Crosswork Hierarchical Controller: <https://smarturl.it/CCRS8E48 >
-
-### Cisco Routed Optical Networking 1.0 Solution Guide
 
 # Appendix A
 
