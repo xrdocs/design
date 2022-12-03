@@ -828,9 +828,13 @@ frequency configuration. .
 Starting on Release 2.0 all IOS-XR 7.7.1+ routers supporting ZR/ZR+ optics can be 
 configured using OpenConfig models. Provisioning utilizes the openconfig-terminal-device 
 model and its extensions to the openconfig-platform model to support DWDM configuration 
-parameters. Below is an example of an OpenConfig payload to configure ZR/ZR+ optics port 0/0/0/20 with a 
+parameters. 
+
+Below is an example of an OpenConfig payload to configure ZR/ZR+ optics port 0/0/0/20 with a 
 300G trunk rate with frequency 195.20 THz.  
 
+Please visit the blog at <https://xrdocs.io/design/blogs/zr-openconfig-mgmt> for in depth information 
+about configuring and monitoring ZR/ZR+ optics using OpenConfig models.  
 
 ```xml
 <config>
@@ -988,9 +992,6 @@ Link Assurance tool under the "Events" tab.
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-events.png){:height="100%" width="100%"}
 ## IOS-XR CLI Monitoring of ZR400/OpenZR+ Optics
 
-
-
-
 ### Optics Controller 
 The optics controller represents the physical layer of the optics.  In the case
 of ZR/ZR+ optics this includes the frequency information, RX/TX power, OSNR, and
@@ -1125,10 +1126,14 @@ Q[dB]                          :      9.40      9.40      9.40          0.00    
 Q_Margin[dB]                   :      2.20      2.20      2.20          0.00        NO        0.00        NO
 ```
 
-# Cisco IOS-XR Model-Driven Telemetry for ZR/ZR+ Monitoring 
-All operational data on IOS-XR routers can be monitored using streaming telemetry 
+# Cisco IOS-XR Model-Driven Telemetry for Routed Optical Networking Monitoring 
+
+
+All operational data on IOS-XR routers and optical line systems can be monitored using streaming telemetry 
 based on YANG models. Routed Optical Networking is no different, so a wealth of 
 information can be streamed from the routers in intervals as low as 5s.  
+
+## ZR/ZR+ DCO Telemetry 
 
 The following represents a list of validated sensor paths useful for monitoring
 the DCO optics in IOS-XR and the data fields available within these
@@ -1143,12 +1148,31 @@ sensor paths.  Note PM fields also support 15m and 24h paths in addition to the
 |Cisco-IOS-XR-pmengine-oper:performance-management/optics/optics-ports/optics-port/optics-current/optics-second30/optics-second30-optics/optics-second30-optic|dd__average, dgd__average, opr__average, opt__average, osnr__average, pcr__average, pmd__average, rx-sig-pow__average, snr__average, sopmd__average| 
 |Cisco-IOS-XR-pmengine-oper:performance-management/otu/otu-ports/otu-port/otu-current/otu-second30/otu-second30fecs/otu-second30fec|ec-bits__data, post-fec-ber__average, pre-fec-ber__average, q__average, qmargin__average, uc-words__data |  
 
-## Open-source ZR/ZR+ Monitoring 
+
+## NCS 1010 Optical Line System Monitoring  
+
+The following represents a list of validated sensor paths useful for monitoring
+the different optical resources on the NCS 1010 OLS. The OTS controller represents 
+the lowest layer port interconnecting optical elements. The NCS 1010 supports 
+per-channel monitoring, exposed as the OTS-OCH  
+
+| Sensor Path | Fields |
+|-------------|--------| 
+|Cisco-IOS-XR-controller-ots-oper:ots-oper/ots-ports/ots-port/ots-info | total-tx-power, total-rx-power, transmit-signal-power, receive-signal-power, agress-ampi-gain, ingress-ampli-gain, controller-state |
+|Cisco-IOS-XR-controller-ots-och-oper:ots-och-oper/ots-och-ports/ots-och-port/ots-och-info | total-tx-power, total-rx-power, transport-admin-state, line-channel, add-drop-channel | 
+|Cisco-IOS-XR-controller-oms-oper | rx-power, tx-power, controller-state, led-state | 
+|Cisco-IOS-XR-controller-och-oper:och-oper/och-ports/och-port/och-info |channel-frequency, channel-wavelength, controller-state, rx-power, tx-power, channel-width, led-state| 
+|Cisco-IOS-XR-pmengine-oper:performance-management/optics/optics-ports | opr, opt, opr-s, opt-s| 
+|Cisco-IOS-XR-olc-oper:olc/span-loss-ctrlr-tables/span-loss-ctrlr-table | neighbor-rid, rx-span-loss, tx-span-loss, name | 
+
+
+## Open-source  Monitoring 
 Cisco model-driven telemetry along with the open source collector Telegraf and the open source dashboard software 
-Grafana can be used to quickly build powerful dashboards to monitor ZR/ZR+ performance.  
+Grafana can be used to quickly build powerful dashboards to monitor ZR/ZR+ and NCS 1010 OLS performance.  
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-telemetry-grafana.png)
 
+![](http://xrdocs.io/design/images/ron-hld/ron-telemetry-grafana-1010.png)
 <br>
 
 ---
