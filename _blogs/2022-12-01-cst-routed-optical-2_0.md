@@ -19,7 +19,7 @@ position: hidden
 | Version          |Date                    |Comments| 
 | ---------------- | ---------------------- |-----|
 | 1.0       | 01/10/2022| Initial Routed Optical Networking Publication 
-| 2.0       | 12/01/2022| Private Line Emulation, NCS 1010, CW HCO updates 
+| 2.0       | 12/01/2022| Private Line Services, NCS 1010, CW HCO updates 
 
 
 # Solution Component Software Versions  
@@ -210,6 +210,21 @@ across their end to end infrastructure in a variety of router roles. See
 ![](http://xrdocs.io/design/images/ron-hld/npu_bandwidth.png)
 
 
+## Cisco Private Line Emulation 
+
+Starting in Routed Optical Networking 2.0, Cisco now supports Private Line
+Emulation (PLE) hardware and IOS-XR support to provide bit-transparent private
+line services over the converged packet network. Private Line Emulation supports
+the transport of Ethernet, SONET/SDH, OTN, and Fiber Channel services. See the
+PLE section of the document for in-depth information on PLE.   
+## Circuit Style Segment Routing 
+Circuit Style Segment Routing (CS-SR) is another Cisco advancement bringing 
+TDM circuit like behavior to SR-TE Policies. These policies use deterministic 
+hop by hop routing, co-routed bi-directional paths, hot standby protect paths, 
+and end to end liveness detection. Standard Ethernet services not requiring bit 
+transparency can be transported over a Segment Routing network similar to OTN 
+networks without the additional cost, complexity, and inefficiency of an OTN 
+network layer.   
 ## Cisco DWDM Network Hardware  
 
 Routed Optical Networking shifts an expensive and now often redundant
@@ -232,6 +247,7 @@ See the validated design hardware section for more information.
 
 
 <br>
+
 
 # Routed Optical Networking Network Use Cases
 
@@ -352,6 +368,41 @@ locations. 25.6Tbps of bandwidth is available over a single fiber using 64 400G
 wavelengths and simple optical amplifiers and multiplexers requiring no additional 
 configuration after initial turn-up.   
 
+# Routed Optical Networking Private Line Services 
+Release 2.0 introduces Circuit Style Segment Routing TE Policies and Private Line 
+Emulation hardware to enable traditional TDM-like private line services over the 
+converged Segment Routing packet network. The following provides an overview of 
+the hardware and software involved in supporting PL services. The figure below 
+gives an overview of PLE service signaling and transport.  
+
+![](http://xrdocs.io/design/images/ron-hld/ron-ple-overview.png)
+
+
+## Private Line Emulation Hardware 
+Starting in IOS-XR 7.7.1 the NC55-OIP-02 Modular Port Adapter (MPA) is supported
+on the NCS-55A2-MOD and NCS-57C3-MOD platforms. The NC55-OIP-02 has 8 SFP+ ports 
+
+![](http://xrdocs.io/design/images/ron-hld/ron-hardware-ple-mpa.png)
+
+Each port on the PLE MPA can be configured independently. The PLE MPA is responsible 
+for receiving data frames from the native PLE client and packaging those into fixed 
+frames for transport over the packet network.  
+## Private Line Emulation Pseudowire Signaling 
+PLE utilizes IETF SAToP pseudowire encoding carried over dynamically signalled EVPN-VPWS 
+circuits. Enhancements to the EVPN VPWS service type have been introduced to the IETF via 
+<https://datatracker.ietf.org/doc/draft-schmutzer-bess-ple>. 
+
+PLE services use Differential Clock Recovery (DCR) to ensure proper frame timing between 
+the two PLE clients. 
+
+### Supported Client Transceivers 
+
+|Transport Type| Supported Transceivers| 
+|--------|--------|
+|Ethernet| SFP-10G-SR/LR/ER, GLC-LH/EX/ZX-SMD, 1G/10G CWDM |  
+|OTN (OTU2e)| SFP-10G-LR-X, SFP-10G-ER-I, SFP-10G-Z |  
+|SONET/SDH| ONS-SC+-10G-LR/ER/SR (OC-192/STM-64), ONS-SI-2G-L1/L2/S1 (OC-48/STM-16) | 
+|Fiber Channel|DS-SFP-FCGE, DS-SFP-FC8G, DS-SFP-FC16G, DS-SFP-FC32G, 1/2/4/8G FC CWDM|
 # Routed Optical Networking Architecture Hardware 
 All Routed Optical Networking solution routers are powered by Cisco IOS-XR.   
 ## Routed Optical Networking Validated Routers 
