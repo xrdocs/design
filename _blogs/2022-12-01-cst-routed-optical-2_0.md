@@ -565,6 +565,8 @@ l2vpn
 
 The following "show" command can be used to monitor the state of PLE ports and services. 
 
+### Client Optics Port State 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 RP/0/RP0/CPU0:ron-ncs55a2-1#show controllers optics 0/0/2/1
@@ -627,29 +629,32 @@ Sat Dec  3 14:00:10.873 PST
 </pre>
 </div>
 
+
+### PLE CEM Controller Stats 
+
 <div class="highlighter-rouge">
 <pre class="highlight">
-RP/0/RP0/CPU0:ron-ncs55a2-1#show controllers CEM 0/0/2/1
-Sat Dec  3 14:02:17.759 PST
-Interface                          : CEM0/0/2/1
+RP/0/RP0/CPU0:ron-ncs57c3-1#show controllers CEM 0/0/3/1
+Sat Sep 24 11:34:22.533 PDT
+Interface                          : CEM0/0/3/1
 Admin state                        : Up
 Oper  state                        : Up
 Port bandwidth                     : 10312500 kbps
-Dejitter buffer (oper/in-use)      : 0/3432 usec
-Payload size (oper)                : 1024 bytes
+Dejitter buffer (cfg/oper/in-use)  : 0/813/3432 usec
+Payload size (cfg/oper)            : 1280/1024 bytes
 PDV (min/max/avg)                  : 980/2710/1845 usec
 Dummy mode                         : last-frame
-Dummy pattern                      : 0x0
-Idle pattern                       : 0x0
+Dummy pattern                      : 0xaa
+Idle pattern                       : 0xff
 Signalling                         : No CAS
-RTP                                : Not Enabled
+RTP                                : Enabled
 Clock type                         : Differential
 Detected Alarms                    : None
 
 Statistics Info
 ---------------
-Ingress packets          : 380585724923, Ingress packets drop     : 0
-Egress packets           : 0, Egress packets drop      : 0
+Ingress packets          : 517617426962, Ingress packets drop     : 0
+Egress packets           : 517277124278, Egress packets drop      : 0
 Total error              : 0
         Missing packets          : 0, Malformed packets        : 0
         Jitter buffer underrun   : 0, Jitter buffer overrun    : 0
@@ -659,13 +664,78 @@ Error seconds            : 0, Severely error seconds   : 0
 Unavailable seconds      : 0, Failure counts           : 0
 
 Generated L bits         : 0, Received  L bits         : 0
-Generated R bits         : 2628601618, Received  R bits         : 0
+Generated R bits         : 339885178, Received  R bits         : 17
 
 Endpoint Info
 -------------
 Passthrough     : No
 </pre>
 </div> 
+
+### PLE CEM PM Statistics 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:ron-ncs57c3-1#show controllers CEM 0/0/3/1 pm current 30-sec cem
+Sat Sep 24 11:37:02.374 PDT
+
+CEM in the current interval [11:37:00 - 11:37:02 Sat Sep 24 2022]
+
+CEM current bucket type : Valid
+INGRESS-PKTS                : 2521591              Threshold : 0            TCA(enable) : NO
+EGRESS-PKTS                 : 2521595              Threshold : 0            TCA(enable) : NO
+INGRESS-PKTS-DROPPED        : 0                    Threshold : 0            TCA(enable) : NO
+EGRESS-PKTS-DROPPED         : 0                    Threshold : 0            TCA(enable) : NO
+INPUT-ERRORS                : 0                    Threshold : 0            TCA(enable) : NO
+OUTPUT-ERRORS               : 0                    Threshold : 0            TCA(enable) : NO
+MISSING-PKTS                : 0                    Threshold : 0            TCA(enable) : NO
+PKTS-REORDER                : 0                    Threshold : 0            TCA(enable) : NO
+JTR-BFR-UNDERRUNS           : 0                    Threshold : 0            TCA(enable) : NO
+JTR-BFR-OVERRUNS            : 0                    Threshold : 0            TCA(enable) : NO
+MIS-ORDER-DROPPED           : 0                    Threshold : 0            TCA(enable) : NO
+MALFORMED-PKT               : 0                    Threshold : 0            TCA(enable) : NO
+ES                          : 0                    Threshold : 0            TCA(enable) : NO
+SES                         : 0                    Threshold : 0            TCA(enable) : NO
+UAS                         : 0                    Threshold : 0            TCA(enable) : NO
+FC                          : 0                    Threshold : 0            TCA(enable) : NO
+TX-LBITS                    : 0                    Threshold : 0            TCA(enable) : NO
+TX-RBITS                    : 0                    Threshold : 0            TCA(enable) : NO
+RX-LBITS                    : 0                    Threshold : 0            TCA(enable) : NO
+RX-RBITS                    : 0                    Threshold : 0            TCA(enable) : NO
+
+</pre>
+</div> 
+
+### PLE Client PM Statistics
+
+Below is an example of an 8Gbps Fiber Channel client. When the client encapsulation and speed are configured 
+a client specific controller will be created with additional PM statistics. For example, an Ethernet encapsulation 
+type would be TenGigECtrlr0/0/3/4.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:ron-ncs57c3-1#show controllers EightGigFibreChanCtrlr0/0/3/4 pm current 30-sec fc
+Sat Sep 24 11:51:55.168 PDT
+
+FC in the current interval [11:51:30 - 11:51:55 Sat Sep 24 2022]
+
+FC current bucket type : Valid
+ IFIN-OCTETS                           : 16527749196          Threshold : 0            TCA(enable) : NO
+ RX-PKT                                : 196758919            Threshold : 0            TCA(enable) : NO
+ IFIN-ERRORS                           : 0                    Threshold : 0            TCA(enable) : NO
+ RX-BAD-FCS                            : 0                    Threshold : 0            TCA(enable) : NO
+ IFOUT-OCTETS                          : 0                    Threshold : 0            TCA(enable) : NO
+ TX-PKT                                : 0                    Threshold : 0            TCA(enable) : NO
+ TX-BAD-FCS                            : 0                    Threshold : 0            TCA(enable) : NO
+ RX-FRAMES-TOO-LONG                    : 0                    Threshold : 0            TCA(enable) : NO
+ RX-FRAMES-TRUNC                       : 0                    Threshold : 0            TCA(enable) : NO
+ TX-FRAMES-TOO-LONG                    : 0                    Threshold : 0            TCA(enable) : NO
+ TX-FRAMES-TRUNC                       : 0                    Threshold : 0            TCA(enable) : NO
+</pre>
+</div> 
+
+
+
 
 # Routed Optical Networking Architecture Hardware 
 All Routed Optical Networking solution routers are powered by Cisco IOS-XR.   
