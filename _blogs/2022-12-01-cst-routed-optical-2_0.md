@@ -526,6 +526,9 @@ detailed to end to end configuration for PLE can be found in the Routed Optical 
 |SONET/SDH| ONS-SC+-10G-LR/ER/SR (OC-192/STM-64), ONS-SI-2G-L1/L2/S1 (OC-48/STM-16) | 
 |Fiber Channel|DS-SFP-FCGE, DS-SFP-FC8G, DS-SFP-FC16G, DS-SFP-FC32G, 1/2/4/8G FC CWDM|
 
+Note FC32G transceivers are supported in the even ports only and will disable the adjacent odd 
+SFP+ port.  
+{: .notice--warning}
 
 ## Private Line Emulation Pseudowire Signaling 
 PLE utilizes IETF SAToP pseudowire encoding carried over dynamically signalled EVPN-VPWS 
