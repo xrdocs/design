@@ -401,6 +401,9 @@ you want to modify the default parameters a customized one can be created.
 CS SR-TE policies contain multiple candidate paths.  The highest preference candidate path is considered the working path, the second highest preference path is the protect path, and if a third lower preference path is configured would be a dynamic restoration path.  This provides 1:1+R 
 protection for CS SR-TE policies.  The following below shows the configuration of a CS SR-TE Policy with a working, protect, and restoration path. T  
 
+![](http://xrdocs.io/design/images/ron-hld/ron-srcs-paths.png)
+
+
 <div class="highlighter-rouge">
 <pre class="highlight">
 segment-routing
