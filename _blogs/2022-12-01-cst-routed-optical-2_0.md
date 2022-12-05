@@ -1373,7 +1373,7 @@ data. Graphs of collected performance data is accessed using the "Performance" t
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-graph-2.png){:height="100%" width="100%"}
 
 #### Event Monitoring 
-HCO records any transition of a network resource between up/down operational states. This is reflected in the 
+Crosswork HCO records any transition of a network resource between up/down operational states. This is reflected in the 
 Link Assurance tool under the "Events" tab. 
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-events.png){:height="100%" width="100%"}
