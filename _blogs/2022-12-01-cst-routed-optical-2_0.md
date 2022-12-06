@@ -1513,6 +1513,39 @@ Q[dB]                          :      9.40      9.40      9.40          0.00    
 Q_Margin[dB]                   :      2.20      2.20      2.20          0.00        NO        0.00        NO
 ```
 
+## EPNM Monitoring of Routed Optical Networking 
+Evolved Programmable Network Manager, or EPNM, can also be used to monitor router ZR/ZR+ performance measurement data 
+and display device level alarms when faults occur. EPNM stores PM and alarm data for historical analysis.  
+
+### EPNM Chassis View of DCO Transceivers 
+The following shows a chassis view of a Cisco 8201 router. The default view is to show all active alarms on the 
+device and its components. Clicking on a specific component will give information on the component and narrow 
+the scope of alarms and data.   
+
+#### Chassis View 
+
+![](http://xrdocs.io/design/images/ron-hld/ron-epnm-chassis-view.png){:height="100%" width="100%"}
+
+#### Interface/Port View 
+
+![](http://xrdocs.io/design/images/ron-hld/ron-epnm-interface-view.png){:height="100%" width="100%"}
+
+### EPNM DCO Performance Measurement 
+EPNM continuously monitors and stores PM data for DCO optics for important KPIs such as TX/RX power, BER, and Q values.  The screenshots 
+below highlight monitoring. While EPNM stores historical data, clicking on a speciic KPI will enable realtime monitoring by polling for 
+data every 30 seconds.  
+
+#### DCO Physical Layer PM KPIs  
+
+The following shows common physical layer KPIs such as OSNR and RX/TX power.  
+
+![](http://xrdocs.io/design/images/ron-hld/ron-epnm-optics-phy-pm.png){:height="100%" width="100%"}
+
+The following shows common framing layer KPIs such as Bit Error Rate.  
+
+![](http://xrdocs.io/design/images/ron-hld/ron-epnm-optics-dsp-pm.png){:height="100%" width="100%"}
+
+
 # Cisco IOS-XR Model-Driven Telemetry for Routed Optical Networking Monitoring 
 
 
