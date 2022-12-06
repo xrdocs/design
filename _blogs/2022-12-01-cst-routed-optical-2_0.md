@@ -1533,18 +1533,19 @@ the scope of alarms and data.
 ### EPNM DCO Performance Measurement 
 EPNM continuously monitors and stores PM data for DCO optics for important KPIs such as TX/RX power, BER, and Q values.  The screenshots 
 below highlight monitoring. While EPNM stores historical data, clicking on a speciic KPI will enable realtime monitoring by polling for 
-data every 30 seconds.  
+data every 20 seconds.  
 
 #### DCO Physical Layer PM KPIs  
 
-The following shows common physical layer KPIs such as OSNR and RX/TX power.  
+The following shows common physical layer KPIs such as OSNR and RX/TX power.  This is exposed by monitoring the Optics layer of the interface.   
+DCO.    
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-epnm-optics-phy-pm.png){:height="100%" width="100%"}
 
-The following shows common framing layer KPIs such as Bit Error Rate.  
+The following shows common framing layer KPIs such as number of corrected words per interval and  (BIEC) Bit Error Rate. This is exposed by monitoring the CoherentDSP 
+layer of the interface.   
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-epnm-optics-dsp-pm.png){:height="100%" width="100%"}
-
 
 # Cisco IOS-XR Model-Driven Telemetry for Routed Optical Networking Monitoring 
 
