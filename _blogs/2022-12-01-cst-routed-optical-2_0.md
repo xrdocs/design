@@ -15,6 +15,11 @@ position: top
 ---
 {% include toc %}
 
+
+### PDF Download 
+
+<https://github.com/ios-xr/design/blob/master/Routed-Optical-Networking/2022-12-01-cst-routed-optical-2_0.pdf> 
+
 # Revision History
 
 | Version          |Date                    |Comments| 
