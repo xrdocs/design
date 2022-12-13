@@ -27,7 +27,7 @@ date: null
              </p>
             </div>
             <p>
-            <a href="{{ base_path }}/blogs//zr-openconfig-mgmt" 
+            <a href="{{ base_path }}/blogs/latest-routed-optical-networking-hld" 
                   class="btn ">Routed Optical Networking 2.0 📖</a>
                   </p>
         </div>
@@ -116,29 +116,6 @@ date: null
 </div>
 </div>
 
-
-<div class="feature__wrapper">
-    <div class="feature__item--right">
-      <div class="archive__item">
-          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
-           margin-left: auto; margin-right: auto;">
-            <img src="{{ base_path }}/images/design_lp/metro-design.png" alt="" />
-          </div>
-        <div class="archive__item-body">
-            <h2 class="archive__item-title">Routed Optical Networking 1.0 &nbsp; 
-            <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
-            <div class="archive__item-excerpt" style="font-size: 0.65em;">
-              <p>Explore Cisco's simplification of IP and Optical networks using Routed Optical Networking 
-              </p>
-            </div>
-            <p>
-            <a href="{{ base_path }}/blogs/latest-routed-optical-networking-hld" 
-                  class="btn ">High Level Design 📖</a>
-                  </p>
-        </div>
-      </div>
-    </div>
-</div>
 
 
 <div class="feature__wrapper">    
