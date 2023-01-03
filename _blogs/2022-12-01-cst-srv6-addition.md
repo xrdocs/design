@@ -58,44 +58,125 @@ IPv6 promised simplified networks and services by utilizing the large amount of 
 space to ues IPv6 addressing to easily correlate packet to service. The vision has been 
 there but the proper technology did not fully enable it. Segment Routing v6 is the 
 technology which not only provides an IPv6-only data-plane across the network, but also creates a 
-symmetry between data-plane and overlay services. 
+symmetry between data-plane, overlay services, and performance monitoring. 
 
-SRv6 fits into the overall Segment Routing architecture by supporting the same 
-services Traffic Engineering capabilities as the current SR-MPLS data-plane.  As 
-you can see in the figure below, SRv6 is the technology for enabling next-generation 
-IPv6 based networks to support complex user and infrastructure services.   
+SRv6 is the technology for enabling next-generation IPv6 based networks to
+support complex user and infrastructure services.   
 
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-cst-overview.png)
 
 # SRv6 Technology Overview  
-
 ## Segment Routing v6 IETF Standards and Drafts 
 
 |IETF Draft or RFC|Description| 
 |--------|----|
-400ZR| QDD-400G-ZR-S| 
-|OpenZR+| QDD-400G-ZRP-S|
+|RFC 8754| IPv6 Segment Routing Header|
+|RFC 8986| SRv6 Network Programming|
+|draft-ietf-spring-srv6-srh-compression| SRv6 compressed SIDs (uSID) |  
+|ietf-bess-srv6-services|BGP extensions to support SRv6| 
+|ietf-lsr-isis-srv6-extensions|IS-IS extensions to support SRv6| 
+|ietf-lsr-ospfv3-srv6-extensions|OSPFv3 extensions to support SRv6| 
+## IPv6 Segment Routing Header (SRH) 
+Defined in RFC 8754, the SRv6 header includes the SRv6 SID list along with
+additional attributes to program the SRv6 IPv6 data plane path. The SRH may be
+inserted by the source node or a SRv6 termination point. The SRH is not required
+in all SRv6 use cases such as a simple L3VPN or L2VPN with no traffic
+engineering requirements. Unlike MPLS, the SRv6 end IPv6 address can be used to
+identify the endpoint node and the service. 
 
-## Segment Routing v6 Header 
+## SRv6 Locator 
+The SRv6 locator is part of the SRv6 SID structure of Locator:Function:Argument. 
+The locator is allocated to nodes acting as SRv6 endpoints.  The locator is defined as
+a specific amount of bits of the IPv6 address steering traffic to the endpoint node.  
 
-## SRv6 Addressing 
+## SRv6 Compressed SID (micro-SID / uSID)
+SRv6 is made more efficient with the use compressed SIDs. Compressed SIDs are 
+also known as micro-SIDs (uSID).  In the case of micro-SID, multiple SRv6 SIDs 
+can be encoded in a single 128-bit SRv6 SID. Additional SRv6 SIDs can be included 
+in the path by adding an additional SRH if necessary.  
 
-## SRv6 Locator  
+## SRv6 Addressing with Compressed SID 
+Using the compressed SID or micro-SID format requires defining the IPv6 address
+structure segmenting the IPv6 address into a C-SID portion and Locator block 
+portion. A dedicated IPv6 prefix should be used for SRv6 and SRv6 micro-SID allocation. 
+RIR assigned pubilc prefixes can be utilized or private ULA space defined in RFC4193.   
 
-## SRv6 Compressed SID (micro-SID)
+### SRv6 uSID Carrier Format 
+Micro-SID requires defining a carrier format used globally across the network. There 
+is a parent block size dedicated to micro-SID allocations and then the length of each 
+micro-SID. IOS-XR supports the F3216 format, defining a 32-bit micro-SID block and 16-bit 
+ID format.   
 
-## SRv6 Forwarding Behavior 
+### Global C-SID Block (GIB) 
+The global ID block defines the block of SIDs used to identify nodes 
+either uniquely or as part of an anycast group. These addresses are used by other 
+nodes on the network to send SRv6 service traffic to the endpoint with the Global 
+C-SID assigned.  
+
+### Local C-SID Block (LIB)
+The local ID block is used to define SIDs which are local to a node. These are 
+typically used to identify services terminating on a node.   
+## Baseline SRv6 Forwarding Behavior
+Forwarding in SRv6 follows the semantics of simple IPv6 routing. The destination 
+is always identified as an IPv6 address. In the case of an SRv6 packet without an 
+additional SRH, traffic is routed to the endpoint destination node hop by hop 
+based on normal destination based prefix lookups. In the case of a SRH, the SRH 
+is only processed by a node if it is the destination address in the outer IPv6 
+header. If the node is the last SID in the SID list it will pop the SRH and process
+the packet further.  If the node is not the last SID in the SID list it will replace
+the outer IPv6 destination address with the next IPv6 address in the SID list.   
 
 ### Compressed SID without SRH  
+Compressed SIDs have the ability to instantiate a multi-hop SRv6 path using a 
+single 128-bit IPv6 address. Each micro-SID in the F3216 format uses 16 bits 
+to identify the next node. If the node receives the packet with its own address 
+as the IPv6 destination address it will further process the packet. It will either 
+shift the micro-SID component of the address 16 bits to the left and copy the new 
+address into the IPv6 destination address or if the locator is local to the node 
+further process the service packet.  Using the F3216 carrier format in IOS-XR, 
+upto 6 micro-SIDs can be encoded in a single 128-bit IPv6 address.  
 
-### Compressed SID with additional SRH 
+The example below illustrates the forwarding behavior with no additional SRH. 
+
+### Compressed SID with additional SRv6 Headers  
+Using additional SRv6 headers increases the depth of the micro-SID list to support 
+use cases with longer traffic engineered paths.  
 
 ### TI-LFA Mid-Point Protection 
 
 # SRv6 Enabled Services  
+Segment Routing with the IPv6 data plane is used to support all of the services 
+supported by the MPLS data plane while also enabling advanced functionality not 
+capable in MPLS based networks. L3VPN and L2VPN services are fully supported by 
+SRv6 with micro-SID.  
 
-## SRv6 Network Functions
+## SRv6 Network Functions and Endpoint Behaviors 
+RFC 8986 defines a set of SRv6 endpoint behaviors satisfying specific network 
+service functions. The table below defines a base set of functions and the identifiers 
+used. See RFC 8986 for details on each behavior.   
+
+|Behavior Identifier|Behavior Description| 
+|--------|----|
+|End| SRv6 version of prefix-SID|
+|End.X| L3 cross-connect, SRv6 version of Adj-SID|
+|End.T| IPv6 table lookup| 
+|End.DX6| Decapsulate and perform IPv6 cross-connect, per-CE IPv6 L3VPN use case| 
+|End.DX4| Decapsulate and perform IPv4 cross-connect, per-CE IPv4 L3VPN use case| 
+|End.DT6| Decapsulate and perform IPv6 route lookup, per-VRF IPv6 L3VPN use case| 
+|End.DT4| Decapsulate and perform IPv4 route lookup, per-VRF IPv4 L3VPN use case| 
+|End.DT46| Decapsulate and perform IPv4 or IPv6 route lookup, per-VRF IP L3VPN use case| 
+|End.DX2| Decapsulate and perform L2 cross-connect, P2P L2VPN use case| 
+|End.DX2V| Decapsulate and perform L2 VLAN lookup, P2P L2VPN using VLANs use case| 
+|End.DT2U| Decapsulate and perform unicast MAC lookup, L2VPN ELAN use case| 
+|End.DT2M| Decapsulate and perform L2 flooding, L2VPN ELAN use case| 
+|End.B6.Encaps| Identifies SRv6 SID bound to a SRv6 Policy, binding SID | 
+|End.B6.Encaps.Red| End.B6 with reduced SRH| 
+|End.BM| Endpoint bound to an SR-MPLS Policy| 
+
+### SRv6 Compressed SID Behavior 
+
+
 
 ## L2VPN 
 
