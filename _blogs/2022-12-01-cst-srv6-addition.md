@@ -67,6 +67,36 @@ support complex user and infrastructure services.
 ![](http://xrdocs.io/design/images/ron-hld/ron-cst-overview.png)
 
 # SRv6 Technology Overview  
+
+## SRv6 Benefits 
+
+### Scale 
+One of the main benefits of SRv6 is the ability to build networks at huge scale
+through address summarization. MPLS networks require a unique label per node be 
+distributed to all nodes requiring mutual reachability. In most cases there is also 
+the requirement of distributing a /32 IP prefix as well. In the MPLS CST design we 
+have the option to eliminate the IP and MPLS label distribution by utilizing a PCE to compute end to end 
+paths. While this method works well and is also available for SRv6 it can lead to a large number of 
+SR-TE or SRv6-TE policies.  
+
+SRv6 allows us to summarize domain loopback addresses at IGP or BGP boundaries.
+This means a domain of 1000 nodes no longer requires advertising 1000 IP
+prefixes and associated labels, but can be summarized into a single IP
+advertisement reachable via a simple longest prefix match (LPM) lookup.
+Networks of tens of thousands of nodes can now provide full reachability with
+very few IPv6 routes. See the deployment options section for more information.   
+
+### Simple Forwarding 
+In SRv6, if a node is not a terminating node it simply forwards the traffic using 
+IPv6 IP forwarding.  This means nodes which are not SRv6 aware can also participate 
+in a SRv6 network.  
+
+### Forwarding and Service Congruency 
+As you will see in the services section, the destination IPv6 address in SRv6 is 
+the service endpoint. Coupled with the simple forwarding this aids in troubleshooting 
+and is much easier to understand than the MPLS layered service and data plane.   
+
+
 ## Segment Routing v6 IETF Standards and Drafts 
 
 |IETF Draft or RFC|Description| 
@@ -77,6 +107,7 @@ support complex user and infrastructure services.
 |ietf-bess-srv6-services|BGP extensions to support SRv6| 
 |ietf-lsr-isis-srv6-extensions|IS-IS extensions to support SRv6| 
 |ietf-lsr-ospfv3-srv6-extensions|OSPFv3 extensions to support SRv6| 
+|draft-ppsenak-lsr-igp-pfx-reach-loss|Unreachable Prefix Announcement| 
 ## IPv6 Segment Routing Header (SRH) 
 Defined in RFC 8754, the SRv6 header includes the SRv6 SID list along with
 additional attributes to program the SRv6 IPv6 data plane path. The SRH may be
@@ -141,9 +172,64 @@ The example below illustrates the forwarding behavior with no additional SRH.
 
 ### Compressed SID with additional SRv6 Headers  
 Using additional SRv6 headers increases the depth of the micro-SID list to support 
-use cases with longer traffic engineered paths.  
+use cases with longer traffic engineered paths. This allows SRv6 with micro-SID to 
+enable path hop counts greater than SR-MPLS.  
 
-### TI-LFA Mid-Point Protection 
+### TI-LFA Mid-Point Protection
+SRv6 fully supports Topology Independent Loop-Free Alternates ensuring fast traffic
+protection the case of link and node failures. A per-prefix pre-computed loop-free backup path 
+is created. If the path requires traversing links which may end up in a loop, the 
+protecting node will insert an SRH with the appropriate SIDs to reach the Q node 
+with loop-free reachability to the destination prefix.   
+
+
+
+# SRv6 Deployment Overview  
+## Scalable Deployment using Domain Summarization and Redistribution 
+In the CST design we utilize separate IGP instances to segment the network.
+These segments can be based on scale, place in the network, or for other
+administrative reasons. We do not recommend exceeding 2000 routers in a single
+IGP domains.  
+
+SRv6 and its summarization capabilities are ideal for building high scale
+networks based on the CST design.  At each domain boundary the IPv6 locator 
+blocks are summarized and redistributed across adjacent domains. The end to end 
+redistribution of summary prefixes enabled reachability between any two nodes on 
+the network by simply doing a longest-prefix match on the destination address.  
+
+### Mutual Redistribution with Redundant Connectivity  
+Redistribution between IGP domains interconnected by multiple links requires
+additional consideration. While summary prefixes may not affect intra-domain
+connectivity, if they are redistributed back into the domain initially
+distributing them routing loops may occur. It's important to make sure the
+router is properly configured to not violate the split-horizon rule of
+advertising routes back to the same domain they received them from. See the IGP
+implementation section for more details.   
+
+### Unreachable Prefix Announcement
+Summarization hides the state of longer prefixes within the aggregate
+summary, leading to traffic loss or slower failover when an egress PE is
+unreachable. UPA is an IGP function to quickly poison a prefix which has become
+unreachable to an upstream node. It enables the notification of an individual
+prefix becoming unreachable, outside of the local area/domain and across the
+network in a manner that does not leave behind any persistent state in the
+link-state database. When an ingress PE receives the UPA for an egress PE it can 
+trigger fast switchover to an alternate path, such as a BGP PIC pre-programmed 
+backup path.   
+
+### SR Flexible Algorithms
+Flexible Algorithms or Flex-Algo is an important component in SRv6 networks. SRv6 
+enables advanced forwarding behavior without utilizing SR-TE Policies, increasing 
+scale and simplifying network deployments.  Flex-Algo is used in the CST SRv6 
+design to differentiate traffic based on latency or path constraints.   
+
+## SRv6-TE Policies for Advanced TE  
+SRv6 supports the same TE Policy functionality as SR-MPLS.  In cases where more advanced 
+TE is required than Flex-Algo provides, such as defining explicit paths or requiring 
+a path be disjoint from another path, SRv6-TE can be utilized. In CST SRv6 1.0, 
+on-demand networking can be used for supported services with SR-PCE to compute both 
+intra-domain and inter-domain paths.  Provisioning, visualization, and monitoring of 
+SRvv6-TE pahs is available in Crosswork Network Controller 4.0.  
 
 # SRv6 Enabled Services  
 Segment Routing with the IPv6 data plane is used to support all of the services 
@@ -176,21 +262,19 @@ used. See RFC 8986 for details on each behavior.
 
 ### SRv6 Compressed SID Behavior 
 
+When SRv6 SID compression is used enhanced methods are used when processing 
+End SRv6 packets. Since multiple SIDs are encoded in a single IPv6 address as the argument 
+component of the SRv6 address, a portion of the argument equal to the SID length 
+is copied into a specific portion of the IPv6 destination address matching the 
+next node in the path. 
 
+|Micro-SID Behavior Identifier|Behavior Description| 
+|--------|----|
+|uN| NEXT-CSID End behavior with shift and lookup (Prefix-SID) |
+|uA| NEXT-CSID End.X behavior with shift and xconnect (Adj-SID) |
+|uDT| NEXT-CSID End.DT behavior (End.DT4/End.DT6/End.DT2U/End.DT2M)|
+|uDX| NEXT-CSID End.DX behavior (End.DX4/End.DX6/End.DX2) |
 
-## L2VPN 
-
-Most modern SP networks start at the physical fiber optic layer. Above the
-physical fiber is technology to allow multiple photonic wavelengths to traverse
-a single fiber and be switched at junction points, we will call that the DWDM
-layer. 
-## L3VPN 
-
-In some networks, above this DWDM layer is an OTN layer, OTN being the
-evolution of traditional SONET/SDH networks. OTN grooms low speed TDM services
-into higher speed containers, and if OTN switching is involved, allows switching
-these services at intermediate points in the network. OTN is primarily used 
-in network to carry guaranteed bandwidth services.   
 
 # SRv6 OAM 
 
@@ -203,7 +287,69 @@ flexibility, and widespread interoperability between different vendors based on
 well-defined standards. In larger networks today carrying Internet traffic, the
 Ethernet/IP layer does not typically traverse an OTN layer, the OTN layer is
 primarily used only for business services. 
-# Enabling Technologies  
+# SRv6 Network Implementation 
+Implementing SRv6 in the network requires the following steps:  
+
+* Network Domain Planning 
+* SRv6 Address Planning 
+* SRv6 Base Router Configuration 
+* SRv6 Enabled Services Configuration  
+
+
+## Network Domain Planning 
+Networks require segmentation to scale. The initial step in designing scalable networks is 
+to determine where network boundaries. This leads directly to IGP segmentation of the network 
+utilized in the CST SRv6 design. In our example network we have three domains, two access domains 
+and one core domain. Each of these IGP domains is assigned a unique instance identifier. 
+
+
+![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-igp-layout.png)
+
+
+## IS-IS Router Configuration 
+As SRv6 is the IPv6 data plane for Segment Routing, it utilizes the same SID 
+distribution semantics as SR-MPLS. This is achieved through IGP extensions responsible 
+for distributing SID reachability within an IGP domain or even across IGP domains.  The CST 
+design utilizes IS-IS. 
+
+It is recommended to utilize IS-IS as an IPv6 IGP. OSPFv3 is not widely deployed 
+in networks today and typically lags behind IS-IS in feature development. 
+
+### Base Configuration
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy to-55a2-1
+   color 1001 end-point ipv4 100.0.0.44
+   path-protection
+   !
+   candidate-paths
+    preference 25
+     dynamic
+       metric-type igp 
+     !
+    !
+    preference 50
+     explicit segment-list protect-forward-path
+      reverse-path segment-list protect-reverse-path
+     !
+    !
+    preference 100
+     explicit segment-list working-forward-path
+      reverse-path segment-list working-reverse-path
+     !
+    !
+   !
+   performance-measurement
+    liveness-detection
+     liveness-profile name liveness-check
+</pre>
+</div>
+
+
+## Locator 
 ## Pluggable Digital Coherent Optics 
 
 Simple networks are easier to build and easier to operate. As networks scale to
