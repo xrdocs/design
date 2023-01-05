@@ -323,7 +323,9 @@ and one core domain. Each of these IGP domains is assigned a unique instance ide
 ## Network Address Planning 
 SRv6 using micro-SID requires allocating the appropriate parent IPv6 prefix and then further 
 delegation based on the micro-SID carrier format. We will use the F3216 format, using 
-a 32 bit block and 16 bits for each SID. 
+a 32 bit block and 16 bits for each SID. It is recommended the parent prefix, such as a /24 
+be allocated ONLY for SRv6 use. The block can be from public IPv6 resources or utilize a ULA 
+private block.   
 
 Specific segments of the IPv6 address can be used to represent areas of the network, flexible algorithms, 
 or other network data.  It is important to use the specific bits or bytes of the address used as identifiers 
@@ -338,8 +340,14 @@ recommended to use a locator prefix length of /48 on all nodes.
 
 ![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-locator-example.png)
 
+The example locator above encodes the following information: 
 
-
+|Identifier|Usage| 
+|--------|----|
+|fccc:00| /24 base SRv6 locator prefix used network wide |
+|W| Nibble  |
+|uDT| NEXT-CSID End.DT behavior (End.DT4/End.DT6/End.DT2U/End.DT2M)|
+|uDX| NEXT-CSID End.DX behavior (End.DX4/End.DX6/End.DX2) |
 
 
 
