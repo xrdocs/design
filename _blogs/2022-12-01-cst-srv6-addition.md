@@ -103,8 +103,9 @@ and is much easier to understand than the MPLS layered service and data plane.
 |--------|----|
 |RFC 8754| IPv6 Segment Routing Header|
 |RFC 8986| SRv6 Network Programming|
+|RFC 9252| BGP Overlay Services Based on Segment Routing over IPv6| 
+|RFC 9259| SRv6 OAM| 
 |draft-ietf-spring-srv6-srh-compression| SRv6 compressed SIDs (uSID) |  
-|ietf-bess-srv6-services|BGP extensions to support SRv6| 
 |ietf-lsr-isis-srv6-extensions|IS-IS extensions to support SRv6| 
 |ietf-lsr-ospfv3-srv6-extensions|OSPFv3 extensions to support SRv6| 
 |draft-ppsenak-lsr-igp-pfx-reach-loss|Unreachable Prefix Announcement| 
@@ -127,17 +128,31 @@ also known as micro-SIDs (uSID).  In the case of micro-SID, multiple SRv6 SIDs
 can be encoded in a single 128-bit SRv6 SID. Additional SRv6 SIDs can be included 
 in the path by adding an additional SRH if necessary.  
 
+### SRv6 micro-SID Terminology 
+
+|Item|Definition|
+|-----|----------|
+|Compressed-SID (C-SID)|A short encoding of a SID in an SRv6 packet that does not include the SID locator block bits|
+|uSID|A Micro SID. A type of Compressed-SID referred as NEXT-C-SID| 
+|uSID Locator Block|A block of uSIDs|
+|uSID Containe|A 128-bit SRv6 SID that contains a sequence of uSIDs. It can be encoded in the DA of an IPv6 header or at any position in the Segment List of an SRH|
+|Active uSID|First uSID after the uSID locator block|
+|Next uSID|Next uSID after the Active uSID|
+|Last uSID|From left to right, the last uSID before the first End-of-Container uSID|
+|End-of-Container (EoC) uSID|Reserved uSID (all-zero ID) used to mark the end of a uSID container.  All the empty uSID container positions must be filled with the End-of-Container ID|
+
+
 ## SRv6 Addressing with Compressed SID 
 Using the compressed SID or micro-SID format requires defining the IPv6 address
 structure segmenting the IPv6 address into a C-SID portion and Locator block 
 portion. A dedicated IPv6 prefix should be used for SRv6 and SRv6 micro-SID allocation. 
-RIR assigned pubilc prefixes can be utilized or private ULA space defined in RFC4193.   
+RIR assigned public prefixes can be utilized or private ULA space defined in RFC4193.   
 
 ### SRv6 uSID Carrier Format 
-Micro-SID requires defining a carrier format used globally across the network. There 
-is a parent block size dedicated to micro-SID allocations and then the length of each 
+Micro-SID requires defining a carrier format used globally across the network. 
+A parent block size is dedicated to micro-SID allocations and the length of each 
 micro-SID. IOS-XR supports the F3216 format, defining a 32-bit micro-SID block and 16-bit 
-ID format.   
+ID format.    
 
 ### Global C-SID Block (GIB) 
 The global ID block defines the block of SIDs used to identify nodes 
@@ -288,13 +303,13 @@ well-defined standards. In larger networks today carrying Internet traffic, the
 Ethernet/IP layer does not typically traverse an OTN layer, the OTN layer is
 primarily used only for business services. 
 # SRv6 Network Implementation 
+
 Implementing SRv6 in the network requires the following steps:  
 
 * Network Domain Planning 
 * SRv6 Address Planning 
 * SRv6 Base Router Configuration 
 * SRv6 Enabled Services Configuration  
-
 
 ## Network Domain Planning 
 Networks require segmentation to scale. The initial step in designing scalable networks is 
@@ -305,51 +320,302 @@ and one core domain. Each of these IGP domains is assigned a unique instance ide
 
 ![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-igp-layout.png)
 
+## Network Address Planning 
+SRv6 using micro-SID requires allocating the appropriate parent IPv6 prefix and then further 
+delegation based on the micro-SID carrier format. We will use the F3216 format, using 
+a 32 bit block and 16 bits for each SID. 
 
-## IS-IS Router Configuration 
-As SRv6 is the IPv6 data plane for Segment Routing, it utilizes the same SID 
+Specific segments of the IPv6 address can be used to represent areas of the network, flexible algorithms, 
+or other network data.  It is important to use the specific bits or bytes of the address used as identifiers 
+to also aid in summarization. 
+
+### Locator Formatting 
+The SRv6 locator identifies a node and its specific services. SRv6 using micro-SID should use a specific 
+locator format that adheres to the micro-SID carrier format and lends itself to summarization at network boundaries. 
+The following is a recommended way to define the locator format which allows for efficient summarization.  It is 
+recommended to use a locator prefix length of /48 on all nodes.  
+
+
+![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-locator-example.png)
+
+
+
+
+
+
+
+
+## Router Configuration
+The CST design supports using SRv6 micro-SID only. Legacy SRv6 using the 128-bit 
+carrier format is not supported.  
+
+### SRv6 Micro-SID Hardware Enablement
+On NCS 540, 5500, and 5700 platforms the following commands enable SRv6 with 
+micro-SID carrier. 
+
+<div class="highlighter-rouge">
+<pre class="highlight"> 
+hw-module profile segment-routing srv6 mode micro-segment format f3216
+</pre>
+</div>
+
+### Loopback Interface Configuration 
+While not required, it is recommended to use an IPv6 address from the Algo 0 (base IGP)
+locator address block for the Loopback interface.  
+
+<div class="highlighter-rouge">
+<pre class="highlight"> 
+interface Loopback0
+ ipv4 address 101.0.2.53 255.255.255.255
+ ipv6 address fccc:0:214::1/128
+!
+</pre>
+</div>
+
+
+### PE Locator Configuration 
+SRv6 enabled routers terminating services must have SRv6 locators configured.  In our 
+Flex-Algo use case we will have a single locator configured for each Flex-Algo, although 
+more locators can be configured as needed. The unode behavior is set to psp-usd which 
+performs penultimate-segment-popping and ultimate-segment-decapsulation.  See RFC 8986 for 
+more information on these behaviors.  
+
+In this case the locator value is assigned based on the following as identified in the addressing section:   
+
+|Identifier|Value| 
+|--------|----|
+|Domain | Access 2 | 
+|Global Base SRv6 Block | FCCC:00::/24| 
+|Global FA 0 Block| FCCC:00<b>00</b>::/32| 
+|Global FA 128 Block| FCCC:00<b>01</b> ::/32|
+|Global FA 129 Block| FCCC:00<b>02</b>::/32| 
+|Global FA 130 Block| FCCC:00<b>03</b>::/32| 
+|Global FA 131 Block| FCCC:00i<b>04</b>::/32| 
+|Access Domain 2| FCCC:00XX:<b>02</b>::/40| 
+|Unique node in Access Domain 2| FCCC:00XX:02<b>14</b>::/48| 
+
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ srv6
+  encapsulation
+   source-address fccc:0:214::1
+  !
+  locators
+   locator LocAlgo0
+    micro-segment behavior unode psp-usd
+    prefix fccc:0:214::/48
+   !
+   locator LocAlgo128
+    micro-segment behavior unode psp-usd
+    prefix fccc:1:214::/48
+    algorithm 128
+   !
+   locator LocAlgo129
+    micro-segment behavior unode psp-usd
+    prefix fccc:2:214::/48
+    algorithm 129
+   !
+   locator LocAlgo130
+    micro-segment behavior unode psp-usd
+    prefix fccc:3:214::/48
+    algorithm 130
+   !
+   locator LocAlgo131
+    micro-segment behavior unode psp-usd
+    prefix fccc:4:214::/48
+    algorithm 131
+   !
+  !
+ !
+!
+</pre>
+</div>
+
+### PE IS-IS Router Configuration 
+SRv6 is the IPv6 data plane for Segment Routing and utilizes the same SID 
 distribution semantics as SR-MPLS. This is achieved through IGP extensions responsible 
 for distributing SID reachability within an IGP domain or even across IGP domains.  The CST 
 design utilizes IS-IS. 
 
 It is recommended to utilize IS-IS as an IPv6 IGP. OSPFv3 is not widely deployed 
 in networks today and typically lags behind IS-IS in feature development. 
+{: .notice--warning}
 
-### Base Configuration
+In this example we are utilizing the base Algo 0 and four additional Algos, 
+128,129,130,131.  Each requires a separate Locator be applied to a Loopback interface
+on the router. The locator names are those defined in the earlier SRv6 base configuration section.  
+
 
 <div class="highlighter-rouge">
 <pre class="highlight">
-segment-routing
- traffic-eng
-  policy to-55a2-1
-   color 1001 end-point ipv4 100.0.0.44
-   path-protection
+router isis ACCESS
+ address-family ipv6 unicast
+  metric-style wide
+  microloop avoidance segment-routing
+  router-id Loopback0
+  segment-routing srv6
+   locator LocAlgo0
    !
-   candidate-paths
-    preference 25
-     dynamic
-       metric-type igp 
-     !
-    !
-    preference 50
-     explicit segment-list protect-forward-path
-      reverse-path segment-list protect-reverse-path
-     !
-    !
-    preference 100
-     explicit segment-list working-forward-path
-      reverse-path segment-list working-reverse-path
-     !
-    !
+   locator LocAlgo128
    !
-   performance-measurement
-    liveness-detection
-     liveness-profile name liveness-check
+   locator LocAlgo129
+   !
+   locator LocAlgo130
+   !
+   locator LocAlgo131
+   !
+  !
+  maximum-redistributed-prefixes 10000 level 2
+ !
+ interface Loopback0
+  address-family ipv6 unicast
+  !
+ ! 
+ interface TenGigE0/0/0/9
+  bfd fast-detect ipv6
+  point-to-point
+  hello-password keychain ISIS-KEY
+  address-family ipv6 unicast
+   fast-reroute per-prefix
+   fast-reroute per-prefix ti-lfa
+  !
+ !
+!
+</pre>
+</div>
+
+### Domain Boundary IS-IS Configuration 
+The multiple instance IS-IS configuration is similar to the SR-MPLS CST design. 
+The primary differences are the use of summarization, redistribution between instances, 
+and the use of UPA. 
+
+The configuration below is from the PE3 boundary node between the core and access 2 domains. 
+
+
+#### Unreachable Prefix Advertisement Confguration 
+The UPA configuration is enabled by configuring the UPA parameters under prefix-unreachable and 
+enabling the "adv-unreachable" for the summary prefix.  The adv-metric sets the metric of the unreachable 
+prefix and the adv-lifetime sets the amount of time it should be advertised in milliseconds.  
+
+#### Summary Prefix Configuration 
+
+A flex-algo algorithm can be attached to the summary prefix and used in path
+computation. Using the *explicit* keyword means only SRv6 prefix SIDs with the
+specified algorithm attached will be considered as contributing prefixes for the
+summary. 
+
+#### Core and Access Mutual Redistribution 
+Redistribution between IGP instances should always utilize route policies with 
+appropriate prefix-sets or tags to restrict the prefixes advertised between domains. 
+  
+Link-state IGP protocols only allow prefix summarization at boundaries such 
+as IS-IS areas, levels, or OSPF area boundaries. Summarization can also be 
+performed on external prefixes redistributed from another protocol or IGP instance.
+In our case the summary-prefix configuration for the ACCESS IGP instances 
+is in the CORE instance configuration. Tagging can be used to filter multiple 
+prefixes based on a single tag, such as all prefixes belonging to a specific 
+domain.   
+
+**Boundary Router 1** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+prefix-set ACCESS2-PE-uSID
+  fccc:0:200::/40 le 48,
+  fccc:1:200::/40 le 48,
+  fccc:2:200::/40 le 48,
+  fccc:3:200::/40 le 48,
+  fccc:4:200::/40 le 48
+end-set
+
+prefix-set ACCESS1-PE-uSID-Summary
+  fccc:0:100::/40,
+  fccc:1:100::/40,
+  fccc:2:100::/40,
+  fccc:3:100::/40,
+  fccc:4:100::/40
+end-set
+
+route-policy CORE-TO-ACCESS2-SRv6
+  if destination in ACCESS1-PE-uSID-Summary then
+    pass
+  else
+    drop
+  endif
+end-policy
+
+route-policy ACCESS2-TO-CORE-SRv6
+  if destination in ACCESS2-PE-uSID then
+    pass
+  else
+    drop
+  endif
+end-policy
+</pre>
+</div> 
+
+**Boundary Router 2** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+prefix-set ACCESS2-PE-uSID
+  fccc:0:200::/40 eq 48,
+  fccc:1:200::/40 eq 48,
+  fccc:2:200::/40 eq 48,
+  fccc:3:200::/40 eq 48,
+  fccc:4:200::/40 eq 48
+end-set
+
+prefix-set ACCESS1-PE-uSID-Summary
+  fccc:0:100::/40,
+  fccc:1:100::/40,
+  fccc:2:100::/40,
+  fccc:3:100::/40,
+  fccc:4:100::/40
+end-set
+
+
+In the ACCESS instance configuration the summary prefix is equivalent to 
+fccc:0000:00/40 as IOS-XR removes trailing zeroes from the address in the configuration. 
+{: .notice--warning}
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis ACCESS
+ address-family ipv6 unicast
+  prefix-unreachable
+   adv-metric 4261412866
+   adv-lifetime 1000
+  !
+  summary-prefix fccc::/40 tag 100 adv-unreachable
+  redistribute isis CORE route-policy CORE-TO-ACCESS2-SRv6
 </pre>
 </div>
 
 
-## Locator 
+<div class="highlighter-rouge">
+<pre class="highlight">
+router isis CORE
+ address-family ipv6 unicast
+  prefix-unreachable
+   adv-metric 4261412866
+   adv-lifetime 1000
+   rx-process-enable
+  !
+  summary-prefix fccc:0:200::/40 tag 102 adv-unreachable
+  summary-prefix fccc:1:200::/40 algorithm 128 tag 102 adv-unreachable explicit
+  summary-prefix fccc:2:200::/40 algorithm 129 tag 102 adv-unreachable explicit 
+  summary-prefix fccc:3:200::/40 algorithm 130 tag 102 adv-unreachable explicit 
+  summary-prefix fccc:4:200::/40 algorithm 131 tag 102 adv-unreachable explicit 
+  redistribute isis ACCESS route-policy ACCESS2-TO-CORE-SRv6
+  !
+ !
+!
+</pre>
+</div>
+
 ## Pluggable Digital Coherent Optics 
 
 Simple networks are easier to build and easier to operate. As networks scale to
