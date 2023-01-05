@@ -307,8 +307,8 @@ primarily used only for business services.
 Implementing SRv6 in the network requires the following steps:  
 
 * Network Domain Planning 
-* SRv6 Address Planning 
-* SRv6 Base Router Configuration 
+* SRv6 Network Address Planning 
+* SRv6 Router Configuration 
 * SRv6 Enabled Services Configuration  
 
 ## Network Domain Planning 
@@ -320,7 +320,7 @@ and one core domain. Each of these IGP domains is assigned a unique instance ide
 
 ![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-igp-layout.png)
 
-## Network Address Planning 
+## SRv6 Network Address Planning 
 SRv6 using micro-SID requires allocating the appropriate parent IPv6 prefix and then further 
 delegation based on the micro-SID carrier format. We will use the F3216 format, using 
 a 32 bit block and 16 bits for each SID. It is recommended the parent prefix, such as a /24 
@@ -331,7 +331,7 @@ Specific segments of the IPv6 address can be used to represent areas of the netw
 or other network data.  It is important to use the specific bits or bytes of the address used as identifiers 
 to also aid in summarization. 
 
-### Locator Formatting 
+### Locator Planning and Formatting  
 The SRv6 locator identifies a node and its specific services. SRv6 using micro-SID should use a specific 
 locator format that adheres to the micro-SID carrier format and lends itself to summarization at network boundaries. 
 The following is a recommended way to define the locator format which allows for efficient summarization.  It is 
@@ -367,8 +367,7 @@ Using the schema above our example address is as follows:
 |ZZ|02|Domain 102| 
 |NN|15|Node assigned identifier 15|
 
-This allows each domain's SRv6 SIDs to be summarized per flex-algo at the /40 length. 
-
+This allows each domain's SRv6 SIDs to be summarized per flex-algo at the /40 prefix length. 
 
 
 ## Router Configuration
