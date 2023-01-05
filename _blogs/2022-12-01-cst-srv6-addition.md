@@ -480,7 +480,7 @@ LocAlgo131            5        131   fccc:4:214::/48           Up       U
 
 **Dynamic Micro-SID Service SIDs based on Locator** 
 As shown below the primary locator for Algo 0 is identified as fccc:0:103::/48. Each 
-service has one or more SIDs allocated starting at fccc:0:103:e0000::/64. 
+service has one or more SIDs allocated starting at fccc:0:103:e000::/64. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
