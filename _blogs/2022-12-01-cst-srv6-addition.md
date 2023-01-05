@@ -335,21 +335,39 @@ to also aid in summarization.
 The SRv6 locator identifies a node and its specific services. SRv6 using micro-SID should use a specific 
 locator format that adheres to the micro-SID carrier format and lends itself to summarization at network boundaries. 
 The following is a recommended way to define the locator format which allows for efficient summarization.  It is 
-recommended to use a locator prefix length of /48 on all nodes.  
+required to use a locator prefix length of /48 on all nodes when using the F3216 carrier format.   
 
 
 ![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-locator-example.png)
 
 The example locator above encodes the following information: 
 
-|Identifier|Usage| 
-|--------|----|
-|fccc:00| /24 base SRv6 locator prefix used network wide |
-|W| Nibble  |
-|uDT| NEXT-CSID End.DT behavior (End.DT4/End.DT6/End.DT2U/End.DT2M)|
-|uDX| NEXT-CSID End.DX behavior (End.DX4/End.DX6/End.DX2) |
+|Identifier|Bit Length|Usage| 
+|--------|----|----|
+|fccc:00|24|Base SRv6 locator prefix used network wide |
+|WX|16|Together identifies the uSID block| 
+|W|8|General-use identifier, NCS platforms require this byte be set to 0 |
+|X|8|In our case the X portion identifies Flexible Algorithm, 0-3F usable for global SIDs |
+|ZZ|16|Identifies domain| 
+|NN|16|Identifies node|
 
+In our example network, we have a /32 micro-SID prefix allocated network wide for each Flex-Algo. This 
+is recommended as it quickly allows operators to identify the FA being used and promotes more efficient summarization. However, if FA is not being used these bits could be used for a different identifier. 
 
+The 16-bit domain identifier allows 255 domains, the 16-bit node identifier allows 255 nodes per domain. This 
+is flexible however, the structure could be shifted to allow less domains and more nodes per domain. 
+
+Using the schema above our example address is as follows: 
+
+|Identifier|Value|Meaning| 
+|--------|----|----|
+|fccc:00|24|Base SRv6 locator prefix used network wide |
+|W|0|General-use identifier, NCS platforms require this byte be set to 0 |
+|X|1|Flexible Algorithm 128 |
+|ZZ|02|Domain 102| 
+|NN|15|Node assigned identifier 15|
+
+This allows each domain's SRv6 SIDs to be summarized per flex-algo at the /40 length. 
 
 
 
@@ -386,7 +404,10 @@ SRv6 enabled routers terminating services must have SRv6 locators configured.  I
 Flex-Algo use case we will have a single locator configured for each Flex-Algo, although 
 more locators can be configured as needed. The unode behavior is set to psp-usd which 
 performs penultimate-segment-popping and ultimate-segment-decapsulation.  See RFC 8986 for 
-more information on these behaviors.  
+more information on these behaviors. 
+
+Locators are used to allocate both static and dynamic /64 SIDs used for services and link adjacency SIDs. 
+The SIDs used for dynamic allocation are in the *e0000-ffff* range in bits 48-63 of the IPv6 address.  
 
 In this case the locator value is assigned based on the following as identified in the addressing section:   
 
@@ -440,6 +461,46 @@ segment-routing
 !
 </pre>
 </div>
+
+**Configured Locators** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:cst-a-pe3#show segment-routing srv6 locator
+Thu Jan  5 17:27:30.127 UTC
+Name                  ID       Algo  Prefix                    Status   Flags
+--------------------  -------  ----  ------------------------  -------  --------
+LocAlgo0              1        0     fccc:0:214::/48           Up       U
+LocAlgo128            2        128   fccc:1:214::/48           Up       U
+LocAlgo129            3        129   fccc:2:214::/48           Up       U
+LocAlgo130            4        130   fccc:3:214::/48           Up       U
+LocAlgo131            5        131   fccc:4:214::/48           Up       U
+</pre>
+</div>
+
+**Dynamic Micro-SID Service SIDs based on Locator** 
+As shown below the primary locator for Algo 0 is identified as fccc:0:103::/48. Each 
+service has one or more SIDs allocated starting at fccc:0:103:e0000::/64. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:cst-a-pe3#show segment-routing srv6 sid
+Thu Jan  5 17:30:55.250 UTC
+
+*** Locator: 'LocAlgo0' ***
+
+SID                         Behavior          Context                           Owner               State  RW
+--------------------------  ----------------  --------------------------------  ------------------  -----  --
+fccc:0:103::                uN (PSP/USD)      'default':259                     sidmgr              InUse  Y
+fccc:0:103:e000::           uDT2U             4550:0                            l2vpn_srv6          InUse  Y
+fccc:0:103:e001::           uDT2M             4550:0                            l2vpn_srv6          InUse  Y
+fccc:0:103:e002::           uDX2              4600:600                          l2vpn_srv6          InUse  Y
+fccc:0:103:e003::           uDX2              650:650                           l2vpn_srv6          InUse  Y
+fccc:0:103:e004::           uDT4              'l3vpn-v4-srv6'                   bgp-100             InUse  Y
+</pre>
+</div>
+
+
 
 ### PE IS-IS Router Configuration 
 SRv6 is the IPv6 data plane for Segment Routing and utilizes the same SID 
