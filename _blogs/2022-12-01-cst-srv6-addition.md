@@ -246,11 +246,7 @@ on-demand networking can be used for supported services with SR-PCE to compute b
 intra-domain and inter-domain paths.  Provisioning, visualization, and monitoring of 
 SRvv6-TE pahs is available in Crosswork Network Controller 4.0.  
 
-# SRv6 Enabled Services  
-Segment Routing with the IPv6 data plane is used to support all of the services 
-supported by the MPLS data plane while also enabling advanced functionality not 
-capable in MPLS based networks. L3VPN and L2VPN services are fully supported by 
-SRv6 with micro-SID.  
+ 
 
 ## SRv6 Network Functions and Endpoint Behaviors 
 RFC 8986 defines a set of SRv6 endpoint behaviors satisfying specific network 
@@ -295,13 +291,6 @@ next node in the path.
 
 ## SRv6 Path Tracing 
 
-In all high bandwidth networks today, there is an Ethernet layer on which IP
-services traverse, since almost all data traffic today is IP. Ethernet
-and IP is used due to its ability to support statistical multiplexing, topology
-flexibility, and widespread interoperability between different vendors based on
-well-defined standards. In larger networks today carrying Internet traffic, the
-Ethernet/IP layer does not typically traverse an OTN layer, the OTN layer is
-primarily used only for business services. 
 # SRv6 Network Implementation 
 
 Implementing SRv6 in the network requires the following steps:  
@@ -644,13 +633,6 @@ prefix-set ACCESS1-PE-uSID-Summary
   fccc:4:100::/40
 end-set
 
-
-In the ACCESS instance configuration the summary prefix is equivalent to 
-fccc:0000:00/40 as IOS-XR removes trailing zeroes from the address in the configuration. 
-{: .notice--warning}
-
-<div class="highlighter-rouge">
-<pre class="highlight">
 router isis ACCESS
  address-family ipv6 unicast
   prefix-unreachable
@@ -662,6 +644,9 @@ router isis ACCESS
 </pre>
 </div>
 
+In the ACCESS instance configuration the summary prefix is equivalent to 
+fccc:0000:00/40 as IOS-XR removes trailing zeroes from the address in the configuration. 
+{: .notice--warning}
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -684,6 +669,158 @@ router isis CORE
 </pre>
 </div>
 
+
+### SRv6-TE Policies 
+SRv6 supports Traffic Engineering policies, using different metric types and 
+additional path constraints to engineer traffic paths from head-end to endpoint 
+node. SRv6 TE Policy configuration follows the same configuration as SR-MPLS 
+TE policies. In the CST SRv6 design 1.0 dynamic path calculation is supported using SR-PCE.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy srte_c_21009_ep_fccc:0:215::1
+   srv6
+    locator LocAlgo0 binding-sid dynamic behavior ub6-insert-reduced
+   !
+   source-address ipv6 fccc:0:103::1
+   color 21009 end-point ipv6 fccc:0:215::1
+   candidate-paths
+    preference 100
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      !
+     !
+    !
+   !
+  !
+ !
+!
+</pre>
+</div>
+
+**Operational Details** 
+
+<pre>
+RP/0/RP0/CPU0:cst-a-pe3#show segment-routing traffic-eng policy color 21009
+Thu Jan  5 23:42:24.222 UTC
+
+SR-TE policy database
+
+Color: 21009, End-point: fccc:0:215::1
+  Name: srte_c_21009_ep_fccc:0:215::1
+  Status:
+    Admin: up  Operational: up for 13:36:55 (since Jan  5 10:05:28.918)
+  Candidate-paths:
+    Preference: 100 (configuration) (active)
+      Name: srte_c_21009_ep_fccc:0:215::1
+      Requested BSID: dynamic
+      PCC info:
+        Symbolic name: cfg_srte_c_21009_ep_fccc:0:215::1_discr_100
+        PLSP-ID: 52
+      Constraints:
+        Protection Type: protected-preferred
+        Maximum SID Depth: 7
+      Dynamic (pce 101.0.1.101) (valid)
+        Metric Type: IGP,   Path Accumulated Metric: 260
+          SID[0]: fccc:0:108::/48 Behavior: uN (PSP/USD) (48)
+                  Format: f3216
+                  LBL:32 LNL:16 FL:0 AL:80
+                  Address: fccc:0:108::1
+          SID[1]: fccc:0:e::/48 Behavior: uN (PSP/USD) (48)
+                  Format: f3216
+                  LBL:32 LNL:16 FL:0 AL:80
+                  Address: fccc:0:e::1
+          SID[2]: fccc:0:215::/48 Behavior: uN (PSP/USD) (48)
+                  Format: f3216
+                  LBL:32 LNL:16 FL:0 AL:80
+                  Address: fccc:0:215::1
+      SRv6 Information:
+        Locator: LocAlgo0
+        Binding SID requested: Dynamic
+        Binding SID behavior: End.B6.Insert.Red
+  Attributes:
+    Binding SID: fccc:0:103:e014::
+    Forward Class: Not Configured
+    Steering labeled-services disabled: no
+    Steering BGP disabled: no
+    IPv6 caps enable: yes
+    Invalidation drop enabled: no
+    Max Install Standby Candidate Paths: 0
+</pre>
+
+**Explicit segment list definition** 
+
+The sid-format must be defined so the appropriate uSID container can be 
+populated with each node SID in the path.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  segment-lists
+   srv6
+    sid-format usid-f3216
+   !
+   segment-list APE7-srv6
+    srv6
+     index 1 sid fccc:0:109::
+     index 2 sid fccc:0:20f::
+     index 3 sid fccc:0:215::
+    !
+   !
+  !
+ !
+!
+</pre>
+</div>
+
+
+### On-Demand SRv6-TE Policy 
+On-demand next-hop or ODN is supported for SRv6. In the 1.0 version of the CST 
+SRv6 design, ODN paths must be computed using SR-PCE. 
+
+In this case the dynamic binding SID for the policy is associated with the flex-algo Algo128 
+locator and has a constraint to use algorithm 128.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  on-demand color 6128
+   srv6
+    locator LocAlgo128 binding-sid dynamic behavior ub6-insert-reduced
+   !
+   source-address ipv6 fccc:1:103::
+   dynamic
+    pcep
+    !
+    metric
+     type igp
+    !
+   !
+   constraints
+    segments
+     sid-algorithm 128
+    !
+   !
+  !
+ !
+!
+</pre>
+</div>
+
+
+
+## Enabling Services over SRv6  
+Segment Routing with the IPv6 data plane is used to support all of the services 
+supported by the MPLS data plane while also enabling advanced functionality not 
+capable in MPLS based networks. L3VPN and L2VPN services are fully supported by 
+SRv6 with micro-SID. 
 ## Pluggable Digital Coherent Optics 
 
 Simple networks are easier to build and easier to operate. As networks scale to
