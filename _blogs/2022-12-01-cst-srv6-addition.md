@@ -755,7 +755,7 @@ Color: 21009, End-point: fccc:0:215::1
 
 **Explicit segment list definition** 
 
-The sid-format must be defined so the appropriate uSID container can be 
+In the case of building a policy with explicit paths, the sid-format must be defined so the appropriate uSID container can be 
 populated with each node SID in the path.  
 
 <div class="highlighter-rouge">
