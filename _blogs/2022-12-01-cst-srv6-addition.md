@@ -212,6 +212,8 @@ blocks are summarized and redistributed across adjacent domains. The end to end
 redistribution of summary prefixes enabled reachability between any two nodes on 
 the network by simply doing a longest-prefix match on the destination address.  
 
+
+
 ### Mutual Redistribution with Redundant Connectivity  
 Redistribution between IGP domains interconnected by multiple links requires
 additional consideration. While summary prefixes may not affect intra-domain
@@ -820,7 +822,10 @@ segment-routing
 Segment Routing with the IPv6 data plane is used to support all of the services 
 supported by the MPLS data plane while also enabling advanced functionality not 
 capable in MPLS based networks. L3VPN and L2VPN services are fully supported by 
-SRv6 with micro-SID. 
+SRv6 with micro-SID.
+
+### L3VPN Configuration Example 
+
 ## Pluggable Digital Coherent Optics 
 
 Simple networks are easier to build and easier to operate. As networks scale to
