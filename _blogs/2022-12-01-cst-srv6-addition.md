@@ -302,6 +302,7 @@ Implementing SRv6 in the network requires the following steps:
 * SRv6 Router Configuration 
 * SRv6 Enabled Services Configuration  
 
+
 ## Network Domain Planning 
 Networks require segmentation to scale. The initial step in designing scalable networks is 
 to determine where network boundaries. This leads directly to IGP segmentation of the network 
@@ -816,15 +817,287 @@ segment-routing
 </pre>
 </div>
 
+## MPLS to SRv6 Migration 
 
 
 ## Enabling Services over SRv6  
 Segment Routing with the IPv6 data plane is used to support all of the services 
 supported by the MPLS data plane while also enabling advanced functionality not 
-capable in MPLS based networks. L3VPN and L2VPN services are fully supported by 
-SRv6 with micro-SID.
+capable in MPLS based networks. In CST SRv6 1.0 L3VPN, EVPN-ELAN, and EVPN-VPWS services are 
+supported using SRv6 micro-SID.   
+
+### SRv6 Service Forwarding 
+MPLS uses a multi-label stack to carry overlay VPN services over an MPLS underlay 
+network. There is always at least a 2-label stack identifying the egress node and 
+specific underlay service or service entity.  
+
+SRv6 utilizes the flexibility of IPv6 to encode the service information without 
+multiple layers. Since the Locator assigned to the egress node is a /48 all traffic within 
+the /48 will reach the node. This leaves the remaining 80 bits to be used for identifying 
+services and service components.  IOS-XR will dynamically assign a /64 out of the /48 Locator 
+for services.  As an example a L3VPN with per-VRF SRv6 SID allocation will be assigned a /64 as will 
+an EVPN-VPWS service.   
+
+In the simplest forwarding use case the ingress node simply sets the SRv6 packet destination 
+address to the IPv6 service address.  It is forwarded hop by hop based on the IPv6 DA, meaning 
+intermediate nodes not SRv6 aware can also forward the traffic.  
 
 ### L3VPN Configuration Example 
+This is an example of a 3-node L3VPN using SRv6. Each node has already been assigned 
+a SRv6 Locator to be used with this L3VPN.  In this case we are using the Locator 
+defined for the base algo, LocAlgo0. Service SIDs will be allocated from the 
+fccc::103::/48 block.  This service is carrying IPv4 routes over SRv6 and utilizes the  
+uDT4 behavior type.    
+
+#### Egress PE Configuration 
+
+**Locator Configuration**
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ srv6
+  locators
+   locator LocAlgo0
+    micro-segment behavior unode psp-usd
+    prefix fccc:0:103::/48
+</pre>
+</div> 
+
+**VRF Configuration** 
+The VRF configuration is identical to non-SRv6 use cases. 
+
+**BGP Configuration**
+SRv6 must be explicitly enabled for services utilizing SRv6.   
+In IOS-XR 7.8.1 per-vrf is the only SID allocation mode supported. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+router bgp 100
+ vrf l3vpn-v4-srv6
+  rd 100:6001
+  address-family ipv4 unicast
+   segment-routing srv6
+    locator LocAlgo0
+    alloc mode per-vrf
+   !
+   redistribute connected
+  !
+ !
+!
+</pre>
+</div> 
+
+**SID Allocation** 
+Here we see the two SIDs allocated to each address family.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:cst-a-pe3#show segment-routing srv6 sid detail fccc:0:103:e004::
+Sun Jan  8 16:54:01.080 UTC
+
+*** Locator: 'LocAlgo0' ***
+
+SID                         Behavior          Context                           Owner               State  RW
+--------------------------  ----------------  --------------------------------  ------------------  -----  --
+fccc:0:103:e004::           uDT4              'l3vpn-v4-srv6'                   bgp-100             InUse  Y
+  SID Function: 0xe004
+  SID context: { table-id=0xe0000005 ('l3vpn-v4-srv6':IPv4/Unicast) }
+  Locator: 'LocAlgo0'
+  Allocation type: Dynamic
+  Created: Nov 28 20:20:21.184 (5w5d ago)
+</pre>
+</div> 
+
+#### L3VPN Route on Ingress Node 
+Here we see the route received from the egress node. There is a new SubTLV containing 
+the SRv6 encoding type and we can see the service SID has been encoded as part of the 
+BGP label TLV.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:cst-a-pe8#show bgp vrf l3vpn-v4-srv6 64.4.4.0/24 detail
+BGP routing table entry for 64.4.4.0/24, Route Distinguisher: 100:6001
+Versions:
+  Process           bRIB/RIB  SendTblVer
+  Speaker             2215286      2215286
+    Flags: 0x20041012+0x00000000;
+Last Modified: Dec 20 03:42:26.946 for 2w5d
+Paths: (1 available, best #1)
+  Not advertised to any peer
+  Path #1: Received by speaker 0
+  Flags: 0x2000000085060005+0x00, import: 0x39f
+  Not advertised to any peer
+  Local
+    fccc:0:103::1 (metric 120) from fccc:0:216::1 (101.0.1.50), if-handle 0x00000000
+      Received Label 0xe0040
+      Origin incomplete, metric 0, localpref 100, valid, internal, best, group-best, import-candidate, imported
+      Received Path ID 0, Local Path ID 1, version 2215286
+      Extended community: RT:100:6001
+      Originator: 101.0.1.50, Cluster list: 101.0.2.202, 101.0.0.200, 101.0.1.201
+      PSID-Type:L3, SubTLV Count:1, R:0x00,
+       SubTLV:
+        T:1(Sid information), Sid:fccc:0:103::, F:0x00, R2:0x00, Behavior:63, R3:0x00, SS-TLV Count:1
+         SubSubTLV:
+          T:1(Sid structure):
+           Length [Loc-blk,Loc-node,Func,Arg]:[32,16,16,0], Tpose-len:16, Tpose-offset:48
+      Source AFI: VPNv4 Unicast, Source VRF: l3vpn-v4-srv6, Source Route Distinguisher: 100:6001
+
+</pre>
+</div> 
+
+#### Forwarding Entry on Ingress Node  
+
+In the forwarding entry we see the SRv6 encapsulation with a SID list of the 
+service address. This address is used as a the destination address of the IPv6 
+packet sent from the ingress router. The router will utilize the /40 summary 
+to reach the end service address.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:cst-a-pe8#show cef vrf l3vpn-v4-srv6 64.4.4.0/24
+64.4.4.0/24, version 11, SRv6 Headend, internal 0x5000001 0x30 (ptr 0x8c326328) [1], 0x0 (0x0), 0x0 (0x9016d028)
+ Updated Dec 20 03:42:26.875
+ Prefix Len 24, traffic index 0, precedence n/a, priority 3
+  gateway array (0xa4a8b360) reference count 1, flags 0x2010, source rib (7), 0 backups
+                [1 type 3 flags 0x48441 (0xa5ba6658) ext 0x0 (0x0)]
+  LW-LDI[type=0, refc=0, ptr=0x0, sh-ldi=0x0]
+  gateway array update type-time 1 Dec 20 03:42:26.874
+ LDI Update time Dec 20 03:42:26.874
+
+  Level 1 - Load distribution: 0
+  [0] via fccc:0:103::/128, recursive
+
+   via fccc:0:103::/128, 619 dependencies, recursive [flags 0x6000]
+    path-idx 0 NHID 0x0 [0x8df4b168 0x0]
+    next hop VRF - 'default', table - 0xe0800000
+    next hop fccc:0:103::/128 via fccc:0:100::/40
+    SRv6 H.Encaps.Red SID-list {fccc:0:103:e004::}
+
+    Load distribution: 0 1 (refcount 1)
+
+    Hash  OK  Interface                 Address
+    0     Y   TenGigE0/0/0/8            fe80::28a:96ff:fe4a:8078
+    1     Y   TenGigE0/0/0/9            fe80::28a:96ff:fec7:e878
+
+
+RP/0/RP0/CPU0:cst-a-pe8#show route ipv6 fccc:0:103:e004::
+
+Routing entry for fccc:0:100::/40
+  Known via "isis ACCESS", distance 115, metric 120
+  Tag 1003, type level-2
+  Installed Dec  1 01:53:02.153 for 5w3d
+  Routing Descriptor Blocks
+    fe80::28a:96ff:fe4a:8078, from fccc:0:e::1, via TenGigE0/0/0/8, Protected, ECMP-Backup (Local-LFA)
+      Route metric is 120
+    fe80::28a:96ff:fec7:e878, from fccc:0:e::1, via TenGigE0/0/0/9, Protected, ECMP-Backup (Local-LFA)
+      Route metric is 120
+  No advertising protos.
+</pre>
+</div> 
+
+
+### L2VPN EVPN-VPWS 
+EVPN-VPWS is configured similar to the MPLS use case with the exception of 
+specifying the transport type as srv6.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:cst-a-pe3#show run l2vpn xconnect group EVPN-VPWS-SRv6_MH
+Sun Jan  8 17:22:09.140 UTC
+l2vpn
+ xconnect group EVPN-VPWS-SRv6_MH
+  p2p EVPN-VPWS-SRv6_MH
+   interface TenGigE0/0/0/5.600
+   neighbor evpn evi 4600 service 600 segment-routing srv6
+   !
+  !
+ !
+!
+</pre>
+</div> 
+
+#### L2VPN EVPN-VPWS State 
+The SRv6 behavior of uDX2 means micro-SID behavior with L2 cross-connect. This 
+is a multi-homed service on the remote side, so there are two service SIDs 
+listed as remote endpoints. 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+Group EVPN-VPWS-SRv6_MH, XC EVPN-VPWS-SRv6_MH, state is up; Interworking none
+  AC: TenGigE0/0/0/5.600, state is up
+    Type VLAN; Num Ranges: 1
+    Rewrite Tags: []
+    VLAN ranges: [600, 600]
+    MTU 1500; XC ID 0x264; interworking none
+    Statistics:
+      packets: received 480066518, sent 480034205
+      bytes: received 480066514256, sent 479074130038
+      drops: illegal VLAN 0, illegal length 0
+  EVPN: neighbor ::ffff:10.0.0.1, PW ID: evi 4600, ac-id 600, state is up ( established )
+    XC ID 0xc0000031
+    Encapsulation SRv6
+    Encap type Ethernet
+    Ignore MTU mismatch: Enabled
+    Transmit MTU zero: Enabled
+    Reachability: Up
+
+      SRv6              Local                        Remote
+      ----------------  ---------------------------- --------------------------
+      uDX2              fccc:0:103:e002::            fccc:0:214:e002::
+                                                     fccc:0:215:e002::
+      AC ID             600                          600
+      MTU               1514                         0
+      Locator           LocAlgo0                     N/A
+      Locator Resolved  Yes                          N/A
+      SRv6 Headend      H.Encaps.L2.Red              N/A
+    Statistics:
+      packets: received 480034205, sent 480066518
+      bytes: received 479074130038, sent 480066514256
+</pre>
+</div> 
+
+
+### EVPN ELAN 
+In this case we are using Algorithm 128, the low latency Flex Algo for the end 
+to end path between the ingress node and egress node.  
+
+#### Egres PE EVPN Configuration 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+evpn 
+  evi 4500 segment-routing srv6
+    bgp
+    route-target import 100:4500
+    route-target export 100:4500
+    !
+    advertise-mac
+    !
+    locator LocAlgo128
+  !
+!
+</pre>
+</div> 
+
+#### Egress PE BVI Configuration 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+l2vpn
+ bridge group srv6_evpn_MH
+  bridge-domain srv6_evpn_MH_1
+   interface Bundle-Ether25.4500
+   !
+   evi 4500 segment-routing srv6
+   !
+  !
+ !
+!
+</pre>
+</div> 
+
+
+
 
 ## Pluggable Digital Coherent Optics 
 
