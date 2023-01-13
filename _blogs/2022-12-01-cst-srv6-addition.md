@@ -898,9 +898,6 @@ segment-routing
 </pre>
 </div>
 
-## MPLS to SRv6 Migration 
-
-
 ## Enabling Services over SRv6  
 Segment Routing with the IPv6 data plane is used to support all of the services 
 supported by the MPLS data plane while also enabling advanced functionality not 
@@ -1076,7 +1073,6 @@ Routing entry for fccc:0:100::/40
 </pre>
 </div> 
 
-
 ### L2VPN EVPN-VPWS 
 EVPN-VPWS is configured similar to the MPLS use case with the exception of 
 specifying the transport type as srv6.  
@@ -1228,6 +1224,25 @@ fccc:1:215:e001::           uDT2M             4500:0                            
 </pre>
 </div> 
 
+
+## MPLS and SRv6 Migration 
+In 7.8.1 IOS-XR supports two transition technologies used to interwork
+between traditional MPLS and SRv6 domains. Interworking between different data plane  
+types can take place using transport layer interworking or service layer interworking. 
+The transition methods supported in CST SRv6 1.0 and IOS-XR 7.8.1 utilize service 
+interworking and support IPv4 and IPv6 L3VPN services.   
+
+### SRv6 and MPLS Service Interworking Gateway 
+IETF draft draft-agrawal-spring-srv6-mpls-interworking-10 covers the semantics of 
+the SRv6 and MPLS gateway functionality. A gateway node translates L3VPN service routes 
+and their associated data plane forwarding information between SR-MPLS and SRv6 endpoints.  
+In CST SRv6 1.0 the ASR 9000 supported this functionality. 
+
+![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-service-interworking.png)
+
+**In-Depth SRv6 to MPLS Service Interworking Documentation** 
+
+<https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-0/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-70x/b-segment-routing-cg-asr9000-70x_chapter_011.html#id_133508> 
 
 
 ## Pluggable Digital Coherent Optics 
