@@ -288,10 +288,6 @@ next node in the path.
 |uDX| NEXT-CSID End.DX behavior (End.DX4/End.DX6/End.DX2) |
 
 
-# SRv6 OAM 
-
-## SRv6 Path Tracing 
-
 # SRv6 Network Implementation 
 
 Implementing SRv6 in the network requires the following steps:  
