@@ -409,6 +409,7 @@ In this case the locator value is assigned based on the following as identified 
 |Access Domain 2| FCCC:00XX:<b>02</b>::/40| 
 |Unique node in Access Domain 2| FCCC:00XX:02<b>14</b>::/48| 
 
+**PE Locator Router Configuration** 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -753,7 +754,8 @@ router isis CORE
 SRv6 supports Traffic Engineering policies, using different metric types and 
 additional path constraints to engineer traffic paths from head-end to endpoint 
 node. SRv6 TE Policy configuration follows the same configuration as SR-MPLS 
-TE policies. In the CST SRv6 design 1.0 dynamic path calculation is supported using SR-PCE.   
+TE policies. In the CST SRv6 design 1.0 dynamic path calculation is supported using SR-PCE. Please
+see the CST implementation guide for PCE configuration details.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -1408,6 +1410,11 @@ we are crossing two domains we have two additional micro-SIDs at cst-pa1 and
 cst-pe3. The last SID is the egress node, a-pe7.  
 
 # Additional Resources 
+
+**Converged SDN Transport Design** 
+
+High Level Design Guide: <https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld> 
+Implementation Guide: <https://xrdocs.io/design/blogs/latest-converged-sdn-transport-ig> 
 
 **Cisco Segment Routing Home** 
 
