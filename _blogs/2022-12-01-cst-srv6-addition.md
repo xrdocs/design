@@ -1426,10 +1426,10 @@ guides for SRv6 and SRv6 Micro-SID.
 
 **SRv6 CCO Documentation** 
 
-SRv6 Micro-SID Configuration Guide for ASR 9000: <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-78x/configure-srv6-micro-sid.html> 
-SRv6 Traffic Engineering Configuration Guide for ASR 9000: <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-78x/configure-srv6-traffic-engineering.html> 
+SRv6 Micro-SID Configuration Guide for ASR 9000: <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-78x/configure-srv6-micro-sid.html><br>
+SRv6 Traffic Engineering Configuration Guide for ASR 9000: <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-78x/configure-srv6-traffic-engineering.html><br> 
 
 
-SRv6 Micro-SID Configuration Guide for NCS 5500: <https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/segment-routing/78x/b-segment-routing-cg-ncs5500-78x/configure-srv6-micro-sid.html> 
-SRv6 Traffic Engineering Configuration Guide for NCS 5500: <https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/segment-routing/78x/b-segment-routing-cg-ncs5500-78x/configure-srv6-traffic-engineering.html> 
+SRv6 Micro-SID Configuration Guide for NCS 5500: <https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/segment-routing/78x/b-segment-routing-cg-ncs5500-78x/configure-srv6-micro-sid.html><br> 
+SRv6 Traffic Engineering Configuration Guide for NCS 5500: <https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/segment-routing/78x/b-segment-routing-cg-ncs5500-78x/configure-srv6-traffic-engineering.html><br> 
 
