@@ -586,7 +586,7 @@ domain.
 UPA prefixes must also be redistributed beyond domain boundaries. The longer UPA
 component prefix is generated in the CORE IS-IS instance, and must be
 redistributed into the appropriate remote instance. As an example if
-fccc:0::100:::1/128 in Access Domain 1 is unreachable, a UPA is generated in the
+fccc:0\:100\:1/128 in Access Domain 1 is unreachable, a UPA is generated in the
 CORE domain for the /128 prefix, and then must be redistributed in Access domain
 2 so ingress PEs can more quickly switch to an alternative path. In our example
 BGP next-hop for service routes is the /128 Loopback address assigned from Algo
