@@ -1385,7 +1385,7 @@ and L3VPN services utilizing an SRv6 data plane.
 
 **Selecting an SRv6-TE Policy will highlight the end to end path across domains**
 
-![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-cnc-selection.png)
+![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-cnc-srv6-policy-selection.png)
 
 **Selecting an SRv6-TE Policy will highlight the end to end path across domains**
 
@@ -1395,7 +1395,7 @@ we are crossing two domains we have two additional micro-SIDs at cst-pa1 and
 cst-pe3. The last SID is the egress node, a-pe7.  
 
 
-![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-cnc-policy-details.png)
+![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-cnc-srv6-policy-details.png)
 
 | Sensor Path | Fields |
 |-------------|--------| 
