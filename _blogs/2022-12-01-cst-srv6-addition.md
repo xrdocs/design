@@ -1402,12 +1402,15 @@ and L3VPN services utilizing an SRv6 data plane.
 
 ![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-cnc-srv6-policy-selection.png)
 
-**Selecting an SRv6-TE Policy will highlight the end to end path across domains**
+**Selecting the ellipses and "details" will show details about the policy**
 
 We can now see the full details of the SRv6-TE policy incuding the uSID list
 which has been created to build the end-to-end path across IGP instances. Since
 we are crossing two domains we have two additional micro-SIDs at cst-pa1 and
 cst-pe3. The last SID is the egress node, a-pe7.  
+
+![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-cnc-srv6-policy-details.png)
+
 
 # Additional Resources 
 
