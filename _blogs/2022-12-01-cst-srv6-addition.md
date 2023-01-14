@@ -918,7 +918,25 @@ an EVPN-VPWS service.
 
 In the simplest forwarding use case the ingress node simply sets the SRv6 packet destination 
 address to the IPv6 service address.  It is forwarded hop by hop based on the IPv6 DA, meaning 
-intermediate nodes not SRv6 aware can also forward the traffic.  
+intermediate nodes not SRv6 aware can also forward the traffic. 
+
+#### L3VPN Forwarding Example 
+
+In the single-domain example below, a VPNv4 L3VPN is configured between routers 
+R1 and R3. R3 advertises the VPNv4 prefix with the appropriate parameters required 
+for R1 to properly build the packet to R3.  As you can see, there is no SRH involved
+in this simple example, all of the information is encoded in the VPNv4 advertisement 
+to allow R1 to use a single IPv6 destination address to send traffic to the appropriate
+service. 
+
+R2 will utilize standard LPM (longest prefix match) routing, and does not need to be 
+SRv6 aware.  
+
+The uDT4 behavior means "decapsulate the packet and perform an IPv4 routing lookup". The local 
+SID fccc:1:215:e004::/64 is assigned to the specific L3VPN VRF.  
+
+
+![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-service-interworking.png)
 
 ### L3VPN Configuration Example 
 This is an example of a 3-node L3VPN using SRv6. Each node has already been assigned 
