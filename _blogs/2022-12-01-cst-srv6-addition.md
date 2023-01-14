@@ -28,11 +28,10 @@ position: hidden
 
 | Element          |Version                    |
 | ---------------- | --------------------------|
-| Router IOS-XR      | 7.8.1 | 
+| IOS-XR Routers (ASR 9000, NCS 5500, NCS 540)      | 7.8.1 | 
 | Crosswork Network Controller | 4.1 | 
 
 <br>
-
 
 # Summary  
 
