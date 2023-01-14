@@ -786,7 +786,8 @@ segment-routing
 
 **Operational Details** 
 
-<pre>
+<div class="highlighter-rouge">
+<pre class="highlight">
 RP/0/RP0/CPU0:cst-a-pe3#show segment-routing traffic-eng policy color 21009
 Thu Jan  5 23:42:24.222 UTC
 
@@ -833,6 +834,7 @@ Color: 21009, End-point: fccc:0:215::1
     Invalidation drop enabled: no
     Max Install Standby Candidate Paths: 0
 </pre>
+</div>
 
 **Explicit segment list definition** 
 
