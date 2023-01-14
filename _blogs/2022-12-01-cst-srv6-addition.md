@@ -1254,7 +1254,7 @@ interworking and support IPv4 and IPv6 L3VPN services.
 IETF draft draft-agrawal-spring-srv6-mpls-interworking-10 covers the semantics of 
 the SRv6 and MPLS gateway functionality. A gateway node translates L3VPN service routes 
 and their associated data plane forwarding information between SR-MPLS and SRv6 endpoints.  
-In CST SRv6 1.0 the ASR 9000 supported this functionality using per-VRF MPLS label and 
+In CST SRv6 1.0 the ASR 9000 and NCS 5500 series support this functionality using per-VRF MPLS label and 
 SRv6 allocation.   
 
 ![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-service-interworking.png)
@@ -1412,15 +1412,19 @@ which has been created to build the end-to-end path across IGP instances. Since
 we are crossing two domains we have two additional micro-SIDs at cst-pa1 and
 cst-pe3. The last SID is the egress node, a-pe7.  
 
+# Additional Resources 
 
-![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-cnc-srv6-policy-details.png)
+**Cisco Segment Routing Home** 
 
-| Sensor Path | Fields |
-|-------------|--------| 
-|Cisco-IOS-XR-controller-ots-oper:ots-oper/ots-ports/ots-port/ots-info | total-tx-power, total-rx-power, transmit-signal-power, receive-signal-power, agress-ampi-gain, ingress-ampli-gain, controller-state |
-|Cisco-IOS-XR-controller-ots-och-oper:ots-och-oper/ots-och-ports/ots-och-port/ots-och-info | total-tx-power, total-rx-power, transport-admin-state, line-channel, add-drop-channel | 
-|Cisco-IOS-XR-controller-oms-oper | rx-power, tx-power, controller-state, led-state | 
-|Cisco-IOS-XR-controller-och-oper:och-oper/och-ports/och-port/och-info |channel-frequency, channel-wavelength, controller-state, rx-power, tx-power, channel-width, led-state| 
-|Cisco-IOS-XR-pmengine-oper:performance-management/optics/optics-ports | opr, opt, opr-s, opt-s| 
-|Cisco-IOS-XR-olc-oper:olc/span-loss-ctrlr-tables/span-loss-ctrlr-table | neighbor-rid, rx-span-loss, tx-span-loss, name | 
+<https://segment-routing.net> contains many blogs, demo videos, and configuration 
+guides for SRv6 and SRv6 Micro-SID.  
+
+**SRv6 CCO Documentation** 
+
+SRv6 Micro-SID Configuration Guide for ASR 9000: <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-78x/configure-srv6-micro-sid.html> 
+SRv6 Traffic Engineering Configuration Guide for ASR 9000: <https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-78x/configure-srv6-traffic-engineering.html> 
+
+
+SRv6 Micro-SID Configuration Guide for NCS 5500: <https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/segment-routing/78x/b-segment-routing-cg-ncs5500-78x/configure-srv6-micro-sid.html> 
+SRv6 Traffic Engineering Configuration Guide for NCS 5500: <https://www.cisco.com/c/en/us/td/docs/iosxr/ncs5500/segment-routing/78x/b-segment-routing-cg-ncs5500-78x/configure-srv6-traffic-engineering.html> 
 
