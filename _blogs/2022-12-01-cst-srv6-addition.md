@@ -928,8 +928,8 @@ in this simple example, all of the information is encoded in the VPNv4 advertise
 to allow R1 to use a single IPv6 destination address to send traffic to the appropriate
 service. 
 
-R2 will utilize standard LPM (longest prefix match) routing, and does not need to be 
-SRv6 aware.  
+Traffic will be routed across the proper Flex-Algo path. R4 will utilize
+standard LPM (longest prefix match) routing using the Algo 128 topology.     
 
 The uDT4 behavior means "decapsulate the packet and perform an IPv4 routing lookup". The local 
 SID fccc:1:215:e004::/64 is assigned to the specific L3VPN VRF.  
