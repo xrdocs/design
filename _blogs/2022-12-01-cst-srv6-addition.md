@@ -935,7 +935,7 @@ The uDT4 behavior means "decapsulate the packet and perform an IPv4 routing look
 SID fccc:1:215:e004::/64 is assigned to the specific L3VPN VRF.  
 
 
-![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-service-interworking.png)
+![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-l3vpn-forwarding.png)
 
 ### L3VPN Configuration Example 
 This is an example of a 3-node L3VPN using SRv6. Each node has already been assigned 
