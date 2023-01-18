@@ -246,7 +246,7 @@ TE is required than Flex-Algo provides, such as defining explicit paths or requi
 a path be disjoint from another path, SRv6-TE can be utilized. In CST SRv6 1.0, 
 on-demand networking can be used for supported services with SR-PCE to compute both 
 intra-domain and inter-domain paths.  Provisioning, visualization, and monitoring of 
-SRvv6-TE pahs is available in Crosswork Network Controller 4.0.  
+SRvv6-TE pahs is available in Crosswork Network Controller 4.1.  
 
  
 
@@ -406,7 +406,7 @@ In this case the locator value is assigned based on the following as identified 
 |Global FA 128 Block| FCCC:00<b>01</b> ::/32|
 |Global FA 129 Block| FCCC:00<b>02</b>::/32| 
 |Global FA 130 Block| FCCC:00<b>03</b>::/32| 
-|Global FA 131 Block| FCCC:00i<b>04</b>::/32| 
+|Global FA 131 Block| FCCC:00<b>04</b>::/32| 
 |Access Domain 2| FCCC:00XX:<b>02</b>::/40| 
 |Unique node in Access Domain 2| FCCC:00XX:02<b>14</b>::/48| 
 
@@ -755,8 +755,13 @@ router isis CORE
 SRv6 supports Traffic Engineering policies, using different metric types and 
 additional path constraints to engineer traffic paths from head-end to endpoint 
 node. SRv6 TE Policy configuration follows the same configuration as SR-MPLS 
-TE policies. In the CST SRv6 design 1.0 dynamic path calculation is supported using SR-PCE. Please
-see the CST implementation guide for PCE configuration details.  
+TE policies. 
+
+In the CST SRv6 design 1.0 dynamic path calculation is supported using SR-PCE.
+Please see the CST implementation guide for PCE configuration details.
+Additionally, in CST SRv6 1.0 path computation for SRv6-TE Policies requires a path 
+of nodes supporting for SRv6, if the only path is via a node not supporting 
+SRv6, path calculation will fail.    
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -902,7 +907,12 @@ segment-routing
 Segment Routing with the IPv6 data plane is used to support all of the services 
 supported by the MPLS data plane while also enabling advanced functionality not 
 capable in MPLS based networks. In CST SRv6 1.0 L3VPN, EVPN-ELAN, and EVPN-VPWS services are 
-supported using SRv6 micro-SID.   
+supported using SRv6 micro-SID. 
+
+### Services Route Reflector Design 
+The Converged SDN Transport design makes use of a set of service BGP route reflectors (S-RRs) communicating 
+BGP service routes between PE nodes in a scalable and resilient manner. In CST SRv6 1.0 SRv6 service routes 
+are expected from an IPv6 peer.  
 
 ### SRv6 Service Forwarding 
 MPLS uses a multi-label stack to carry overlay VPN services over an MPLS underlay 
@@ -1255,7 +1265,7 @@ IETF draft draft-agrawal-spring-srv6-mpls-interworking-10 covers the semantics o
 the SRv6 and MPLS gateway functionality. A gateway node translates L3VPN service routes 
 and their associated data plane forwarding information between SR-MPLS and SRv6 endpoints.  
 In CST SRv6 1.0 the ASR 9000 and NCS 5500 series support this functionality using per-VRF MPLS label and 
-SRv6 allocation.   
+SRv6 SID allocation.   
 
 ![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-service-interworking.png)
 
@@ -1326,11 +1336,11 @@ data path for service prefixes being translated.
 
 **The folowing shows the data plane in the MPLS to SRv6 direction** 
 
-![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-interworking-dataplane.png)
+![](http://xrdocs.io/design/images/cst-srv6/cst-srv6-interworking-dataplane.jpeg)
 
 **In-Depth SRv6 to MPLS Service Interworking Documentation** 
 
-<https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-0/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-70x/b-segment-routing-cg-asr9000-70x_chapter_011.html#id_133508> 
+<https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/segment-routing/configuration/guide/b-segment-routing-cg-asr9000-78x/configure-srv6-micro-sid.html#id_133508> 
 
 ### Dual-Connected PE 
 Dual Connected PE allows the seamless migration of L3VPN PE routers from the
