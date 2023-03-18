@@ -1,9 +1,10 @@
 ---
 published: true
-date: '2022-01-07 15:22 -0600'
+date: '2023-03-01 00:00 -0600'
 title: Cisco Converged SDN Transport SRv6 Transport High Level Design 
 author: Phil Bedard 
-excerpt: CST SRv6 HLD  
+excerpt: CST SRv6 HLD 
+permalink: /blogs/latest-converged-sdn-transport-srv6
 tags:
   - iosxr
   - design
@@ -13,7 +14,7 @@ tags:
   - cst 
   - srv6 
   - routing 
-position: hidden 
+position: top 
 ---
 {% include toc %}
 
@@ -21,7 +22,7 @@ position: hidden
 
 | Version          |Date                    |Comments| 
 | ---------------- | ---------------------- |-----|
-| 1.0       | 01/10/2023| Initial version  
+| 1.0       | 03/01/2023| Initial version  
 
 
 # Solution Component Software Versions  
