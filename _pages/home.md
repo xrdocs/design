@@ -15,6 +15,32 @@ date: null
       <div class="archive__item">
           <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
            margin-left: auto; margin-right: auto;">
+            <img src="{{ base_path }}/images/design_lp/srv6.png" alt="" />
+          </div>
+        <div class="archive__item-body">
+            <h2 class="archive__item-title">Converged SDN Transport SRv6 Design&nbsp; 
+            <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
+            <div class="archive__item-excerpt" style="font-size: 0.65em;">
+              <p>This in-depth guide adds SRv6 uSID transport to the Converged SDN Transport Design. SRv6 enables a new level 
+                 of simplicity and power to networks carrying any type of service traffic. Harnessing the power of IPv6, the 
+                 service and transport layers are converged into a single seamless easy to operate network without the complexities 
+                 of MPLS label distribution and switching.   
+             </p>
+            </div>
+            <p>
+            <a href="{{ base_path }}/blogs/latest-routed-optical-networking-hld" 
+                  class="btn ">Converged SDN Transport SRv6 1.0 📖</a>
+                  </p>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="feature__wrapper">
+    <div class="feature__item--right">
+      <div class="archive__item">
+          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
+           margin-left: auto; margin-right: auto;">
             <img src="{{ base_path }}/images/design_lp/metro-design.png" alt="" />
           </div>
         <div class="archive__item-body">
