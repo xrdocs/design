@@ -41,7 +41,7 @@ date: null
       <div class="archive__item">
           <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
            margin-left: auto; margin-right: auto;">
-            <img src="{{ base_path }}/images/design_lp/metro-design.png" alt="" />
+            <img src="{{ base_path }}/images/design_lp/ron-icon.png" alt="" />
           </div>
         <div class="archive__item-body">
             <h2 class="archive__item-title">Routed Optical Networking Design 2.0&nbsp; 
