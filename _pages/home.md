@@ -28,7 +28,7 @@ date: null
              </p>
             </div>
             <p>
-            <a href="{{ base_path }}/blogs/latest-routed-optical-networking-hld" 
+            <a href="{{ base_path }}/blogs/latest-converged-sdn-transport-srv6" 
                   class="btn ">Converged SDN Transport SRv6 1.0 📖</a>
                   </p>
         </div>
