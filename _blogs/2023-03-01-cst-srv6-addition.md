@@ -364,7 +364,7 @@ The CST design supports using SRv6 micro-SID only. Legacy SRv6 using the 128-bit
 carrier format is not supported.  
 
 ### SRv6 Micro-SID Hardware Enablement
-On NCS 540, 5500, and 5700 platforms the following commands enable SRv6 with 
+On NCS 540 and NCS 5500 platforms the following command enables SRv6 with 
 micro-SID carrier. 
 
 <div class="highlighter-rouge">
