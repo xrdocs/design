@@ -351,8 +351,8 @@ Using the schema above our example address is as follows:
 |Identifier|Value|Meaning| 
 |--------|----|----|
 |fccc:00|24|Base SRv6 locator prefix used network wide |
-|W|0|General-use identifier, NCS platforms require this byte be set to 0 |
-|X|1|Flexible Algorithm 128 |
+|X|0|General-use identifier, NCS platforms require this byte be set to 0 |
+|Y|1|Flexible Algorithm 128 |
 |ZZ|02|Domain 102| 
 |NN|15|Node assigned identifier 15|
 
