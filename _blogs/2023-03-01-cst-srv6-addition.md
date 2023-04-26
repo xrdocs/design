@@ -334,16 +334,16 @@ The example locator above encodes the following information:
 |Identifier|Bit Length|Usage| 
 |--------|----|----|
 |fccc:00|24|Base SRv6 locator prefix used network wide |
-|WX|16|Together identifies the uSID block| 
-|W|8|General-use identifier, NCS platforms require this byte be set to 0 |
-|X|8|In our case the X portion identifies Flexible Algorithm, 0-3F usable for global SIDs |
-|ZZ|16|Identifies domain| 
-|NN|16|Identifies node|
+|XY|8|Together identifies the uSID block| 
+|X|4|General-use identifier, NCS platforms require this byte be set to 0 |
+|Y|4|In our case the X portion identifies Flexible Algorithm, 0-3F usable for global SIDs |
+|ZZ|8|Identifies domain| 
+|NN|8|Identifies node|
 
 In our example network, we have a /32 micro-SID prefix allocated network wide for each Flex-Algo. This 
 is recommended as it quickly allows operators to identify the FA being used and promotes more efficient summarization. However, if FA is not being used these bits could be used for a different identifier. 
 
-The 16-bit domain identifier allows 255 domains, the 16-bit node identifier allows 255 nodes per domain. This 
+The 8-bit domain identifier allows 255 domains, the 8-bit node identifier allows 255 nodes per domain. This 
 is flexible however, the structure could be shifted to allow less domains and more nodes per domain. 
 
 Using the schema above our example address is as follows: 
