@@ -92,7 +92,7 @@ Regional Core Bypass / Express Peering
 
 Regional SP networks serving residential subscribers are typically deployed in an aggregation/access hierarchy using logical Ethernet connections over a metro optical transport network. The aggregation nodes serve as an aggregation point for connections to regional sites along with acting as the ingress point for traffic coming from the SP backbone. If a distributed peering fabric is implemented, SPs can drive even greater efficiency by selecting specific high bandwidth regional sites for core bypass. This is simply connecting the regional hub routers directly to a localized peering facility, bypassing the regional core aggregation nodes which are simply acting as a pass through for the traffic. Due to the growth in Internet video traffic, this secondary express peering network in time will likely be higher capacity than the original SP converged network. The same express peering network can also be used to serve content originated by the SP, leaving the converged regional network to serve other higher priority traffic needs.
 
-![peering-wp-fig-3.png]({{site.baseurl}}/images/peering-wp-fig-3.png)
+![peering-wp-fig-3.png]({{site.baseurl}}/images/peering-express-bypass2.png)
 
 Figure 3 - Express Peering Fabric
 
