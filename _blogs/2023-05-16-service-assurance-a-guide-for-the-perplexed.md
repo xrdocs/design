@@ -69,5 +69,27 @@ Service assurance can be a complex undertaking.  One option is to do nothing: bu
 
 Surmounting these challenges requires a dedicated service assurance function.   
 
-## Service Assurance
-While passive metrics like interface statistics or sflow records can be very helpful at determining the health of the network, they can't actually assure a service.  The only way to know if the service actually meets the SLA is to measure traffic sent through the service’s data path.  This most common way to do this is by injecting traffic to probe the network.  This process is commonly referred to as "active monitoring."  There are different kinds of probes that can be generated from different devices at different parts of the network, but active monitoring involves sending, receiving and tracking traffic to directly measure the end customer’s experience of the service.   
+## Active Assurance
+
+While passive metrics like interface statistics or sflow records can be very helpful at determining the health of the network, they can't actually assure a service.  The only way to know if the service actually meets the SLA is to measure traffic sent through the service’s data path.  Since services like L2 and L3VPNs do not define an embedded assurance function, an additional mechanism must be employed to probe the data path of the service.  The most common way to do this is by injecting synthetic traffic to probe the network.  This process is commonly referred to as "active monitoring."  There are different kinds of probes that can be generated from different devices at different parts of the network, but all active monitoring involves sending, receiving and tracking traffic to directly measure the end customer’s experience of the service.   
+
+
+### Active Assurance at Layer 3
+The original form of active assurance were our old friends, ping and traceroute.
+
+To enhance these stalwart tools, Cisco developed a set of performance measurement features collectively referred to as "IP-SLA."  IP-SLA enabled measurements of loss, delay and jitter to IP endpoints using a variety of operations, including ICMP, UDP, HTTP and more. IP-SLA is a form of active assurance that sends and receives probes from the router itself.
+
+The obvious usefulness of performance measurement made it an excellent candidate for standardization.  In 2006, the IETF standardized One-Way Active Measurement Protocol (OWAMP). OWAMP provided the precision of one-way measurements but the requirement for network-wide clock synchronization limited its adoption.  
+
+In 2008, [RFC 5357](https://datatracker.ietf.org/doc/html/rfc5357) introduced Two-Way Active Measurement Protocol (TWAMP) to extend OWAMP to allow for two-way and round-trip measurements (with or without clock synchronization). Because TWAMP defined multiple logical roles for session establishment, most vendors ended up implementing a simpler architecture, "TWAMP Light", that only needed a Sender and Responder.  
+
+Unfortunately, TWAMP Light was only an appendix to RFC 5357 and not suffiently specified to prevent interoperability issues.  Hence we have [RFC 8762](https://datatracker.ietf.org/doc/html/rfc8762), Simple Two Way Active Measurement Protocol (STAMP), which codified and extended TWAMP Light. STAMP is extensible and backwards compatible with TWAMP-Light, so hopefully it will stick around for a while.
+
+Other work is ongoing in the IETF to standardize STAMP extensions in order to leverage the forwarding capabilities of Segment Routing networks (sometimes called Segment Routing Performance Measurement or [SR-PM](https://datatracker.ietf.org/doc/draft-ietf-ippm-stamp-srpm/)).  Inside Cisco, "SR-PM" is sometimes used as a shorthand term for the superset of all L3 performance management features (SR and IP).  So if you're interested in TWAMP-Light and a Cisco person is talking to you about SR-PM, don't worry, you're both talking about the same thing.
+
+### Active Assurance at Layer 2
+
+A different set of standards governs service assurance in Layer 2 networks (think L2VPN, VPLS, EVPN VPWS, etc).  The building blocks of Ethernet Operation, Administration and Management (OAM) began with IEEE 802.1ag, which defined Connectivity Fault Management (CFM).  The ITU came out with its own Ethernet OAM standard, Y.1731. Both 802.1ag and Y.1731 cover fault management, while performance management is solely covered by ITU-T Y.1731. Nowadays, IEEE 802.1ag is considered a subset of ITU-T Y.1731.
+
+The history of multiple standards means, again, that terminology can be confusing.  In Cisco documentation, CFM is used as a generic term for Ethernet OAM, including Y.1731.
+
