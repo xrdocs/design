@@ -91,5 +91,38 @@ Other work is ongoing in the IETF to standardize STAMP extensions in order to le
 
 A different set of standards governs service assurance in Layer 2 networks (think L2VPN, VPLS, EVPN VPWS, etc).  The building blocks of Ethernet Operation, Administration and Management (OAM) began with IEEE 802.1ag, which defined Connectivity Fault Management (CFM).  The ITU came out with its own Ethernet OAM standard, Y.1731. Both 802.1ag and Y.1731 cover fault management, while performance management is solely covered by ITU-T Y.1731. Nowadays, IEEE 802.1ag is considered a subset of ITU-T Y.1731.
 
-The history of multiple standards means, again, that terminology can be confusing.  In Cisco documentation, CFM is used as a generic term for Ethernet OAM, including Y.1731.
+The history of multiple standards means, again, that terminology can be confusing.  In Cisco documentation, CFM is used as a generic term for Ethernet OAM, which includes Y.1731.
+
+### Service Activation Testing Methodologies
+
+In addition to the "AMPs" and Y.1731, you may run across a few other measurement standards. 
+
+[Y.1564](https://www.itu.int/rec/T-REC-Y.1564-201602-I/en) is an out-of-service ethernet test methodology that validates the proper configuration and performance of an ethernet service before it is handed over to the end customer.  
+
+[RFC 6349](https://www.ietf.org/rfc/rfc6349.txt) defines a methodology for TCP throughput testing.
+
+These methods should not be confused with service assurance since they are only intended to be used during service activation or active troubleshooting.
+
+## Embedded or External
+
+Active assurance methods like TWAMP and Y.1731 require a sender and receiver/responder.  The functionality can be embedded in an existing router or it can be a dedicated external device.
+
+### Embedded
+There are many reasons to take advantage of active probing capabilities built in to your routers.  First of all, it's free!  You've already paid for the device to forward traffic, so if it can also do active assurance, then by all means, try this first.  Operationally, it's also a slam dunk.  Whatever tools you use to manage your router config can also manage probe configuration.  There are no new systems to manage or integrate.
+
+Embedded probes have a unique advantage in that they can test the internals of the network infrastructure. SR-PM, IOS XR's performance measurement toolkit, includes the capability to test link performance as well as end-to-end traffic engineering paths.  This is something external probes simply can't do.
+
+One common argument against embedded probes is performance.  And that was certainly true in the past, when probes were generated in and punted to the RP. If the punt path was congested, the probe would report poor performance when the actual datapath was fine. In modern systems, however, hardware timestamping ensures that the NPU stamps the probes, giving a much more accurate measurement of network delay.  In addition, many systems can support "hardware offload" which pushes the entire process of probe generation into the NPU, giving you a high fidelity measurement of the actual datapath and much higher performance than was possible in the past.  So if you looked at IP-SLA a decade ago and dismissed it because of performance, you should take another look at modern implementations.
+
+Another consideration is interoperability.  If you're using embedded probes in a multi-vendor network, then you have to ensure interoperability between the vendors' implementations of the protocol.  This was especially painful with TWAMP-Light, since the lack of specificity in the RFC made it easy to interpret differently.  This should get better as STAMP becomes the industry standard.
+
+Functionality is the final consideration for embedded probes. The limited memory and compute on a router means that more elaborate customer experience tests like page download times and MOS scores are really not well-suited.  Moreover, your upgrade cycle for assurance features is tied to the upgrade cycle of the entire router which can easily be multiple years.  That's a long time to wait for a new assurance feature.
+
+
+### External
+External probing devices come in all shapes and sizes.
+
+
+
+
 
