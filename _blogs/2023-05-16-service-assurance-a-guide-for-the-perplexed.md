@@ -112,15 +112,24 @@ There are many reasons to take advantage of active probing capabilities built in
 
 Embedded probes have a unique advantage in that they can test the internals of the network infrastructure. SR-PM, IOS XR's performance measurement toolkit, includes the capability to test link performance as well as end-to-end traffic engineering paths.  This is something external probes simply can't do.
 
-One common argument against embedded probes is performance.  And that was certainly true in the past, when probes were generated in and punted to the RP. If the punt path was congested, the probe would report poor performance when the actual datapath was fine. In modern systems, however, hardware timestamping ensures that the NPU stamps the probes, giving a much more accurate measurement of network delay.  In addition, many systems can support "hardware offload" which pushes the entire process of probe generation into the NPU, giving you a high fidelity measurement of the actual datapath and much higher performance than was possible in the past.  So if you looked at IP-SLA a decade ago and dismissed it because of performance, you should take another look at modern implementations.
+One common argument against embedded probes is performance.  And that was certainly true in the past, when probes were punted to the RP for processing. If the punt path was congested, the probe would report poor performance when the actual datapath was fine. In modern systems, however, hardware timestamping ensures that the NPU stamps the probes in the datapath, giving a much more accurate measurement of network delay.  In addition, many systems can support "hardware offload" which pushes the entire process of probe generation into the NPU, giving you a high fidelity measurement of the actual datapath and much higher performance than was possible in the past.  So if you looked at IP-SLA a decade ago and dismissed it because of performance, you should take another look at modern implementations.
 
 Another consideration is interoperability.  If you're using embedded probes in a multi-vendor network, then you have to ensure interoperability between the vendors' implementations of the protocol.  This was especially painful with TWAMP-Light, since the lack of specificity in the RFC made it easy to interpret differently.  This should get better as STAMP becomes the industry standard.
 
-Functionality is the final consideration for embedded probes. The limited memory and compute on a router means that more elaborate customer experience tests like page download times and MOS scores are really not well-suited.  Moreover, your upgrade cycle for assurance features is tied to the upgrade cycle of the entire router which can easily be multiple years.  That's a long time to wait for a new assurance feature.
+Functionality is the final consideration for embedded probes. The limited memory and compute on a router means that more elaborate customer experience tests like page download times are really not well-suited.  Moreover, your upgrade cycle for assurance features is tied to the upgrade cycle of the entire router which can easily be multiple years.  That's a long time to wait for a new assurance feature.
 
+In sum, embedded probes offer an inexpensive way to get simple, scalable measurements of services, traffic engineered-paths and physical links with excellent fidelity to the actual data path and better performance than ever before. But if interoperability is a problem or you need more complex and/or end-to-end tests, then you may have to consider an external probing system.
 
 ### External
-External probing devices come in all shapes and sizes.
+External probing devices come in all shapes and sizes, from Network Interface Devices (NIDs) to pluggable SFPs to containers running in generic compute.  They can be deployed at any place in the network that a service provider has a presence, including the end customer site (if the SP has deployed a managed service). Most external probes support all of the assurance protocols we discussed earlier, including of the service activation tests.
+
+External probes can be deployed in-line which measures the service exactly as the end customer experiences it. This is very accurate but also very expensive, as you need one device for every service.  Other deployment models place the NID or SFP at a place in the network where probes can be injected into multiple service paths (e.g. on a trunk port with many VLANs associated with many different VRFs).
+
+Because external probes represent dedicated -> best functionality.
+
+Vendors add value with analytics platforms.
+
+Downside -- capex and opex.
 
 
 
