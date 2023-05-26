@@ -17,7 +17,7 @@ The concept of IP assurance is not quite as old as IP, but it's close: ARAPNET d
 
 These are big questions, so I'm going to tackle them across a series of blog posts.  This first one will cover the what and why of assurance.  In part two, I'll cover the protocols and tools you have to work with.  And in part three, I'll look at some key design questions.
 
-## What Do I Mean By Service Assurance?
+## What Is Service Assurance?
 
 Assurance is the process of measuring performance and managing faults with the ultimate goal of optimization.  You can "assure" many things -- a router, a path, a service, or an end-to-end digital experience. Assurance addresses different questions depending on the layer it applies to, so I like to divide it into three categories:
 
