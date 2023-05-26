@@ -19,7 +19,7 @@ These are big questions, so I'm going to tackle them across a series of blog pos
 
 ## What Do I Mean By Service Assurance?
 
-Assurance is the process of measuring performance and managing faults with the ultimate goal of optimization  You can "assure" many things -- a router, a path, a service, or an end-to-end digital experience. Assurance addresses different questions depending on the layer it applies to, so I like to divide it into three categories:
+Assurance is the process of measuring performance and managing faults with the ultimate goal of optimization.  You can "assure" many things -- a router, a path, a service, or an end-to-end digital experience. Assurance addresses different questions depending on the layer it applies to, so I like to divide it into three categories:
 
 ![AssuranceTaxonomy2.png]({{site.baseurl}}/images/AssuranceTaxonomy2.png)
 
