@@ -1,8 +1,15 @@
 ---
-published: false
+published: true
 date: '2023-05-16 09:31 -0600'
 title: 'Service Assurance: A Guide For the Perplexed'
-author: scadora
+author: Shelly Cadora
+position: hidden
+excerpt: >-
+  An introduction to the current landscape of assurance in service provider
+  networks
+tags:
+  - iosxr
+  - cisco
 ---
 ## Introduction
 
