@@ -1,10 +1,11 @@
 ---
-published: false
+published: true
 date: '2023-05-26 12:58 -0600'
 title: 'Service Assurance: A Guide for the Perplexed,  Part Two'
 author: Shelly Cadora
 tags:
   - iosxr
+position: hidden
 ---
 In [Part One](https://xrdocs.io/design/blogs/2023-05-16-service-assurance-a-guide-for-the-perplexed/) of this series on Service Assurance, I discussed what and why Service Providers need it.  In Part Two, I take a closer look at the specific protocols and tools you have to accomplish the task.
 
