@@ -1,9 +1,9 @@
 ---
 published: true
-date: '2023-05-16 09:31 -0600'
+date: '2023-05-26'
 title: 'Service Assurance: A Guide For the Perplexed'
 author: Shelly Cadora
-position: bottom
+position: top
 excerpt: >-
   An introduction to the current landscape of assurance in service provider
   networks
