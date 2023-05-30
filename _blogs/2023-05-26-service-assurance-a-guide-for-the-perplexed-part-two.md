@@ -7,6 +7,8 @@ tags:
   - iosxr
 position: hidden
 ---
+
+
 In [Part One](https://xrdocs.io/design/blogs/2023-05-16-service-assurance-a-guide-for-the-perplexed/) of this series on Service Assurance, I discussed what and why Service Providers need it.  In Part Two, I take a closer look at the specific protocols and tools you have to accomplish the task.
 
 ## Active Assurance at Layer 3
@@ -29,8 +31,6 @@ Insider Tip: In Cisco, "SR-PM" is sometimes used as a shorthand term for the sup
 
 A different set of standards governs service assurance in Layer 2 networks (think L2VPN, VPLS, EVPN VPWS, etc).  The building blocks of Ethernet Operation, Administration and Management (OAM) began with [IEEE 802.1ag](https://www.ieee802.org/1/pages/802.1ag.html), which defined Connectivity Fault Management (CFM).  The ITU came out with its own Ethernet OAM standard, [Y.1731](https://www.itu.int/rec/T-REC-Y.1731/en). Both 802.1ag and Y.1731 cover fault management, while performance management is solely covered by ITU-T Y.1731. Nowadays, IEEE 802.1ag is considered a subset of ITU-T Y.1731.
 
-Insider Tip: The history of multiple standards means, again, that terminology can be confusing.  In Cisco documentation, CFM is used as a generic term for Ethernet OAM, which includes Y.1731.
-{: .notice--info}
 
 ## Service Activation Testing Methodologies
 
@@ -40,7 +40,7 @@ In addition to the "AMPs" and Y.1731, you may run across a few other measurement
 
 [RFC 6349](https://www.ietf.org/rfc/rfc6349.txt) defines a methodology for TCP throughput testing.
 
-These methods should not be confused with service assurance since they are only intended to be used during service activation or active troubleshooting.
+These methods are not suitabe for on-going service assurance since they are only intended to be used during service activation or active troubleshooting.
 
 ## Where to Run: Embedded or External?
 
@@ -56,7 +56,7 @@ One common argument against embedded probes is performance.  And that was certai
 
 Another consideration is interoperability.  If you're using embedded probes in a multi-vendor network, then you have to ensure interoperability between the vendors' implementations of the protocol.  This was especially painful with TWAMP-Light, since the lack of specificity in the RFC made it easy to interpret differently.  This will get better as STAMP becomes the industry standard.
 
-Functionality is the final consideration for embedded probes. The limited memory and compute on a router means that more elaborate customer experience tests like page download times are really not well-suited.  Moreover, your upgrade cycle for assurance features is tied to the upgrade cycle of the entire router which can be measured in months or years.  That's a long time to wait for a new assurance feature.
+Functionality is the final consideration for embedded probes. The limited memory and compute on a router means that more elaborate customer experience tests (e.g. page download or MOS scoring) are really not well-suited.  Moreover, your upgrade cycle for assurance features is tied to the upgrade cycle of the entire router which can be measured in months or years.  That's a long time to wait for a new assurance feature.
 
 In sum, embedded probes offer an inexpensive way to get simple, scalable measurements of services, traffic engineered and ECMP paths and physical links with excellent fidelity to the actual data path and better performance than ever before. But if interoperability is a problem or you need more complex and/or end-to-end tests, then you may have to consider an external probing system.
 
@@ -68,7 +68,7 @@ External probing devices come in all shapes and sizes, from Network Interface De
 
 Physical probe generators can be deployed in-line which measures the service exactly as the end customer experiences it. This is very accurate but also very expensive, as you need one device for every service.  Other deployment models place the NID, SFP or containerized agent at a place in the network where probes can be injected into multiple service paths (e.g. on a trunk port with many VLANs associated with many different VRFs).
 
-Unlike routers, whose primary function is to forward traffic, external probes are dedicated to the sole purpose of analyzing the network. The breadth of functionality they support can be much wider, encompassing Ethernet OAM, TWAMP, and service activation protocols as well as detailed insight into Layer 7 transactions (e.g. HTTP, DNS, TCP, SSL, etc) and high-level path analysis (e.g. using traceroute). Taken together, the information from external probes deployed at the right places in the network can give a good snapshot of the end customer's digital experience.
+Unlike routers, whose primary function is to forward traffic, external probes are dedicated to the sole purpose of measuring the network. The breadth of functionality they support can be much wider, encompassing Ethernet OAM, TWAMP, and service activation protocols as well as detailed insight into Layer 7 transactions (e.g. HTTP, DNS, TCP, SSL, etc) and high-level path analysis (e.g. using traceroute). Taken together, the information from external probes deployed at the right places in the network can give a good snapshot of the end customer's digital experience.
 
 While external probes give good insight into end-to-end performance all the way up to the application layer, they can't dig into the internals of the service provider network.  The network is a black box to external probes. Things like link performance, path performance, and ECMP paths are essentially invisible to external probes.  
 
