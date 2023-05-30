@@ -5,8 +5,10 @@ title: 'Service Assurance: A Guide for the Perplexed,  Part Two'
 author: Shelly Cadora
 tags:
   - iosxr
-position: hidden
+position: top
+excerpt: 'An overview of protocols, methods and tools for service assurance'
 ---
+
 
 
 In [Part One](https://xrdocs.io/design/blogs/2023-05-16-service-assurance-a-guide-for-the-perplexed/) of this series on Service Assurance, I discussed what and why Service Providers need it.  In Part Two, I take a closer look at the specific protocols and tools you have to accomplish the task.
@@ -40,7 +42,7 @@ In addition to the "AMPs" and Y.1731, you may run across a few other measurement
 
 [RFC 6349](https://www.ietf.org/rfc/rfc6349.txt) defines a methodology for TCP throughput testing.
 
-These methods are not suitabe for on-going service assurance since they are only intended to be used during service activation or active troubleshooting.
+These methods are not suitable for on-going service assurance since they are only intended to be used during offline service activation or active troubleshooting.
 
 ## Where to Run: Embedded or External?
 
