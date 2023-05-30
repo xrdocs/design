@@ -3,7 +3,8 @@ published: false
 date: '2023-05-26 13:01 -0600'
 title: 'Service Assurance: A Guide For The Perplexed, Part Three'
 ---
-In part of this series on Service Assurance, I reviewed the methods, protocols and tools available for active assurance of services.  In this part, I want to look some high level design options to help guide your deployment.  I call these:
+
+In [Part Two](https://xrdocs.io/design/blogs/2023-05-26-service-assurance-a-guide-for-the-perplexed-part-two/) of this series on Service Assurance, I reviewed the methods, protocols and tools available for active assurance of services.  In this part, I want to look some high level design options to help guide your deployment.  I call these:
 - Do nothing
 - Do everything
 - Do something
@@ -32,12 +33,17 @@ The "do-everything" is obviously the best approach for ensuring your service SLA
 
 Given the scale and complexity issues, true per-service assurance may be unattainable. But there is a middle ground.  Instead of taking a service as the unit of measurement, you could instead measure the shared transport paths and use that as a proxy for all the services that use those paths.  Instead of 15000 probes for the 500 L3VPNS above, you could measure all 10 paths and 3 classes of service with 30 probes and use that in fulfillment of the SLA measurement. 
 
-Probing the transport path is not a direct measurement of the service performance: it measures the performance of a shared path that goes between the internally facing PE interfaces and may not capture service-specific forwarding issues inside the PEs themselves.  But in many cases, it can serve as a reasonable proxy measurement.
+Probing the transport path is not a direct measurement of the service performance: it measures the performance of a shared path that goes between the internally facing PE interfaces and may not capture service-specific forwarding issues inside the PEs themselves.  But in many cases, it can serve as a reasonable proxy measurement since the majority of forwarding issues occur in the shared transport network.  In addition, path measurement is a natural fit for the built-in probing capabilities of your routers, making it a relatively inexpensive thing to deploy.
 
-Probing paths is inherently more scalable than probing services since many thousands of services might share the same path.  However, relying on path probe data opens a new challenge: how to associate a service with a path (or paths).  If all services use the shortest path between two PEs and the variations associated with ECMP paths can be ignored, then this might be “good enough.”  In a more complicated scenario, a service might be configured to use a TE path but have fallen back to the shortest path because the TE path failed. Moreover, in the case of SR-TE, different prefixes in a single service could be assigned a different policy, resulting in multiple paths to the same destination.  Under these conditions, maintaining a real time mapping of services to paths represents a non-trivial amount of work for a management application. 
+Probing paths is inherently more scalable than probing services since many thousands of services might share the same path.  However, relying on path probe data opens a new challenge: how to associate a service with a path (or paths).  If all services use the shortest path between two PEs and the variations associated with ECMP paths can be ignored, then this might be “good enough.”  In a more complicated scenario, a service might be configured to use a TE path but have fallen back to the shortest path because the TE path failed. Moreover, in the case of SR-TE, different prefixes in a single service could be assigned a different policy, resulting in multiple paths to the same destination.  Under these conditions, maintaining a real time mapping of services to paths represents a non-trivial amount of work for a management application. To be fair, the mapping of a service to the results of a service assurance probe requires work for external probes as well.
 
 ## Conclusion
-Although I've presented nothing, everything and something as separate deployment options, in reality, most providers will end up doing some of each.
+Although I've presented "nothing", "everything" and "something" as separate deployment options, in reality, most providers will end up doing some of each.
 
-Probes are expensive, so Service Providers can design their service offerings accordingly.  If a service is going to include premium SLAs that can only be measured by expensive, individual probes, then that expense can be included in the prices of the premium service.  In the end, perhaps only a fraction of the services offered by a provider would need regularly monitored SLAs.  Path measurement and best-effort design principles could suffice for the rest.
+Probes are expensive, so Service Providers can design their service offerings accordingly.  If a service is going to include premium SLAs that can only be measured by expensive, individual probes, then that expense can be included in the prices of the premium service.  In the end, perhaps only a portion of the services offered by a provider would need individually monitored SLAs.  Path measurement and best-effort design principles could suffice for the rest.
+
+Service assurance in IP networks is an area of active evolution. 
+  
+
+
 
