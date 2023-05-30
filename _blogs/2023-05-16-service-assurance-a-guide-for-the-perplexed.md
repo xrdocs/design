@@ -53,23 +53,17 @@ SPs are highly motivated to assure that the service meets the SLA for several re
 
 - **Streamline Troubleshooting**: Swamped by barrage of network events and alarms, network operators are challenged to understand the root cause of reported service disruptions as well as the service impact of network faults.  Good service assurance data can help localize failures and identify root causes more quickly. 
 
-## What’s A Service Provider To Do? 
 
-Service assurance can be a complex undertaking.  One option is to do nothing: build a solid network with plenty of redundancy, monitor for network faults (“Network Assurance”) and have faith that the architecture can deliver the needed SLAs.  This “best-effort” approach to service assurance has several weaknesses: 
+## Active Beats Passive for Service Assurance
 
-- If an SP can’t measure the latency or jitter of a service, they can’t sell more expensive low-latency or jitter-bound services.  For lack of assurance, money is left on the table. 
+A lot of Network Assurance relies on what are called "passive" metrics.  Passive monitoring looks at state and statistics, such as interface statistics and memory utilization, on individual devices.  Techniques like sFlow and Netflow are passive metrics, since they observe streams of traffic at different points in the network.  Passive metrics offer a good picture of the health of a device at a given moment in time.  Taken together, they create a good, high level picture of the overall functioning of the network. 
 
-- The end customer knows more about the quality of their service and can detect impairments long before the SP is even aware of a problem. 
-
-- Troubleshooting a faulty service requires a lot of legwork on the part of smart (i.e. expensive) network engineers.  When the number of services is small and commands a high price, that isn’t a big problem.  But as Cloud and Video push bandwidth demand ever higher, that approach to services just doesn’t scale.  
-
-Surmounting these challenges requires a dedicated service assurance function.   
-
-## Active Assurance
-
-While passive metrics like interface statistics or sflow records can be very helpful at determining the health of the network ("Network Assurance"), they can't actually assure a service.  The only way to know if the service actually meets the SLA is to measure traffic sent through the service’s data path.  Since services like L2 and L3VPNs do not define an embedded assurance function, an additional mechanism must be employed to probe the data path of the service.  
+While passive metrics are effective for Network Assurance, they provide only an indirect measurement of the health of a service.  Everything can look good from a device perspective (BGP neighbors up, interface utilization normal, etc) but service traffic could still be getting delayed, dropped or sub-optimally forwarded along the path. The only way to know if the service actually meets the SLA is to measure traffic sent through the service’s data path.  Since services like L2 and L3VPNs do not define an embedded assurance function, an additional mechanism must be employed to probe the data path of the service.  
 
 The most common way to do this is by injecting synthetic traffic to probe the network.  This process is commonly referred to as "active monitoring."  There are different kinds of probes that can be generated from different devices at different parts of the network, but all active monitoring involves sending, receiving and tracking traffic to directly measure the end customer’s experience of the service.   
+
+See [RFC 7799](https://datatracker.ietf.org/doc/html/rfc7799) for more on the distinction between active and passive measurements as well as a definition of "hybrid" methods which modify customer traffic to carry performance data.
+{: .notice--info}
 
 ## Conclusion
 Unlike optical services (which carry performance, fault and path data in the header of every frame), IP/MPLS-based services like L2 and L3VPNs do not define an embedded assurance function.  Nevertheless, end customers expect their SLAs to be delivered as promised. Assuring service performance through some form of active monitoring is increasingly a must-have for Service Providers.
