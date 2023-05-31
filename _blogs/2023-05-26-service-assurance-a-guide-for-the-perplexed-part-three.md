@@ -11,13 +11,16 @@ In [Part Two](https://xrdocs.io/design/blogs/2023-05-26-service-assurance-a-guid
 
 ## The Do Nothing Approach
 
-Service assurance can be a complex undertaking.  One option is to do nothing: build a solid network with plenty of redundancy and lots of extra capacity, monitor for network performance and faults (“Network Assurance”) and have faith that the architecture can deliver the needed SLAs.  This is a simple, inexpensive approach that can deliver a lot of value in a well-designed network.  Because IP networks in general and services in particular don't come with any built-in mechanisms for assurance, many operators start here by necessity.  But this “best-effort” approach to service assurance has several weaknesses: 
+Service assurance can be a complex undertaking.  One option is to do nothing: build a solid network with plenty of redundancy and lots of extra capacity, monitor for network performance and faults (“Network Assurance”) and have faith that the architecture can deliver the needed SLAs.  This is a simple approach that can deliver value in a well-designed network.  Because IP networks in general and services in particular don't come with any built-in mechanisms for assurance, many operators start here by necessity.  But this “best-effort” approach to service assurance has several weaknesses: 
 
 - If an SP can’t measure the latency or jitter of a service, they can’t sell more expensive low-latency or jitter-bound services.  For lack of assurance, money is left on the table. 
 
 - The end customer knows more about the quality of their service and can detect impairments long before the SP is even aware of a problem. 
 
-- Troubleshooting a faulty service requires a lot of legwork on the part of smart (i.e. expensive) network engineers.  When the number of services is small and commands a high price, that isn’t a big problem.  But as Cloud and Video push bandwidth demand ever higher, that approach to services won’t scale.  
+- Troubleshooting a faulty service requires a lot of legwork on the part of smart (i.e. expensive) network engineers.  When the number of services is small and commands a high price, that isn’t a big problem.  But as Cloud and Video push bandwidth demand ever higher, that approach to services won’t scale.
+
+- The cost of over-engineering excess capacity may exceed the cost of a good service assurance solution.
+
 
 ## The Do Everything Approach
 
@@ -35,14 +38,16 @@ Given the scale and complexity issues, true per-service assurance may be unattai
 
 Probing the transport path is not a direct measurement of the service performance: it measures the performance of a shared path that goes between the internally facing PE interfaces and may not capture service-specific forwarding issues inside the PEs themselves.  But in many cases, it can serve as a reasonable proxy measurement since the majority of forwarding issues occur in the shared transport network.  In addition, path measurement is a natural fit for the built-in probing capabilities of your routers, making it a relatively inexpensive thing to deploy.
 
-Probing paths is inherently more scalable than probing services since many thousands of services might share the same path.  However, relying on path probe data opens a new challenge: how to associate a service with a path (or paths).  If all services use the shortest path between two PEs and the variations associated with ECMP paths can be ignored, then this might be “good enough.”  In a more complicated scenario, a service might be configured to use a TE path but have fallen back to the shortest path because the TE path failed. Under these conditions, maintaining a real time mapping of services to paths represents a non-trivial amount of work for a management application. Although, to be fair, the mapping of a service to the results of a service assurance probe requires work for external probes as well.
+![ServicesVsPath.png]({{site.baseurl}}/images/ServicesVsPath.png)
+
+Probing paths is inherently more scalable than probing services since many thousands of services might share the same path.  However, relying on path probe data opens a new challenge: how to associate a service with a path (or paths).  If all services use the shortest path between two PEs and the variations associated with ECMP paths can be ignored, then this might be “good enough.”  In a more complicated scenario, a service might be configured to use a TE path but have fallen back to the shortest path because the TE path failed. Under these conditions, maintaining a real time mapping of services to paths represents a non-trivial amount of work for a management application (although, to be fair, the mapping of a service to the results of a service assurance probe requires work for external probes as well).
 
 ## Conclusion
 Although I've presented "nothing", "everything" and "something" as separate deployment options, in reality, most providers will end up doing some of each.
 
 In the end, there are no really hard and fast rules about "what to deploy, where" when it comes to service assurance.  Design choices are always about trade-offs.  Active assurance is important but often expensive. If a service is going to include premium SLAs that can only be measured by individual probes, then that expense can be included in the price of the premium service.  Perhaps only a portion of the services offered by a provider actually need individually monitored SLAs.  Prudent deployment of path measurement and best-effort design principles could suffice for the rest.
 
-The good news is that service assurance is an area of active development for Cisco.  New standards and tools are in process; new silicon will bring better scale and new features. IP networks may not have started with built-in assurance but the demands of today's network will continue to drive its evolution.
+The good news is that service assurance is an area of active development for Cisco.  New standards and tools are in process; new silicon will bring better scale and new features. IP networks may not have started with built-in assurance but the demands of today's networks will continue to drive its evolution.
 
   
 
