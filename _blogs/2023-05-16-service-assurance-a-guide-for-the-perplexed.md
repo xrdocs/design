@@ -69,4 +69,4 @@ See [RFC 7799](https://datatracker.ietf.org/doc/html/rfc7799) for more on the di
 ## Conclusion
 Unlike optical services (which carry performance, fault and path data in the header of every frame), IP/MPLS-based services like L2 and L3VPNs do not define an embedded assurance function.  Nevertheless, end customers expect their SLAs to be delivered as promised. Assuring service performance through some form of active monitoring is increasingly a must-have for Service Providers.
 
-In part two of this series, I'll take a deep dive into protocols and tools for active assurance. 
+In [part two](https://xrdocs.io/design/blogs/2023-05-26-service-assurance-a-guide-for-the-perplexed-part-two/) of this series, I'll take a deep dive into protocols and tools for active assurance. 
