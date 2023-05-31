@@ -1,7 +1,10 @@
 ---
-published: false
+published: true
 date: '2023-05-26 13:01 -0600'
 title: 'Service Assurance: A Guide For The Perplexed, Part Three'
+tags:
+  - iosxr
+  - Service Assurance
 ---
 
 In [Part Two](https://xrdocs.io/design/blogs/2023-05-26-service-assurance-a-guide-for-the-perplexed-part-two/) of this series on Service Assurance, I reviewed the methods, protocols and tools available for active assurance of services.  In this part, I want to look some high level design options to help guide your deployment.  I call these:
