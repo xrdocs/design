@@ -10,12 +10,13 @@ excerpt: >-
 tags:
   - iosxr
   - cisco
+  - Service Assurance
 ---
 ## Introduction
 
 The concept of IP assurance is not quite as old as IP, but it's close: ARAPNET deployed IPv4 in January of 1983; by December, Mike Muuss had developed the ping utility to test reachability and delay. Techniques for assuring the network's forwarding functions through direct performance measurement have been evolving ever since, resulting in a confusing array of tools, protocols and choices.  Many network architects are left wondering: "What should I deploy for assurance, where, and why?"
 
-These are big questions, so I'm going to tackle them across a series of blog posts.  This first one will cover the what and why of assurance.  In part two, I'll cover the protocols and tools you have to work with.  And in part three, I'll look at some key design questions.
+These are big questions, so I'm going to tackle them across a series of blog posts.  This first one will cover the what and why of assurance.  In [part two](https://xrdocs.io/design/blogs/2023-05-26-service-assurance-a-guide-for-the-perplexed-part-two/), I'll cover the protocols and tools you have to work with.  And in [part three](https://xrdocs.io/design/blogs/2023-05-26-service-assurance-a-guide-for-the-perplexed-part-three), I'll look at some key design questions.
 
 ## What Is Service Assurance?
 
