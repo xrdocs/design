@@ -1604,7 +1604,7 @@ router bgp 100
    next-hop-self
   !
  !
- neighbor-group BGP-LU-PE
+ neighbor-group BGP-LU-BORDER
   remote-as 100
   update-source Loopback0
   address-family ipv4 labeled-unicast
