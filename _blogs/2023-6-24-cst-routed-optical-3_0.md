@@ -165,7 +165,7 @@ becomes a 1:1 input to output stage in the network, adding no benefit.
 The Routed Optical Networking architecture unlocks this efficiency for networks
 of all sizes, due to advancements in coherent plugable technology. 
 
-## QSFP-DD and 400ZR and OpenZR+ Standards   
+## QSFP-DD, 400ZR, and OpenZR+ Standards   
 
 As mentioned, the industry saw a point to improve network efficiency by shifting
 coherent DWDM functions to router pluggables. Technology advancements have
@@ -173,6 +173,14 @@ shrunk the DCO components into the standard QSFP-DD form factor, meaning no
 specialized hardware and the ability to use the highest capacity routers
 available today.  ZR/OpenZR+ QSFP-DD optics can be used in the same ports as the
 highest speed 400G non-DCO transceivers. 
+
+
+### Cisco High Power OpenZR+ Transceiver (DP04QSDD-HE0)
+Routed Optical Networking 2.0 introduces the Cisco HIgh Power +1dB ZR+ transceiver. This high launch power 
+DCO enables the use of the optics with optical add drop systems requiring higher input power, and enables 
+longer distances when used in passive or dark fiber applications without amplification.  
+
+![](http://xrdocs.io/design/images/ron-hld/bright_zrp.png)
 
 ### Cisco OpenZR+ Transceiver (QDD-400G-ZRP-S)
 ![](http://xrdocs.io/design/images/ron-hld/zrp.png)
@@ -197,9 +205,11 @@ The following part numbers are used for Cisco's ZR400 and OpenZR+ MSA transceive
 |--------|----|
 400ZR| QDD-400G-ZR-S| 
 |OpenZR+| QDD-400G-ZRP-S|
+|High Power OpenZR+| DP04QSDD-HE0|
 
-Cisco datasheet for these transceivers can be found at <https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/datasheet-c78-744377.html> 
+Cisco datasheet for the QDD-400G-ZRP-S and QDD-400G-ZR-S transceivers can be found at <https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/datasheet-c78-744377.html> 
 
+Cisco datasheet for the DP04QSDD-HE0 can be found at <https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/400g-qsfp-dd-high-power-optical-module-ds.html> 
 ## Cisco Routers
 
 We are at a point in NPU development where the pace of NPU bandwidth growth has
