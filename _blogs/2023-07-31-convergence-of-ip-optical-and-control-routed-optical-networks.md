@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 date: '2023-07-31 14:14 +0300'
 title: 'Convergence of IP, Optical and Control: Routed  Optical Networks'
 author: Ori Gerstel
