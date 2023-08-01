@@ -1,3 +1,9 @@
 [submodule "images/avatars"]
 	path = images/avatars
 	url = https://github.com/xrdocs/avatars
+[submodule "_data"]
+	path = _data
+	url = https://github.com/xrdocs/_data.git
+[submodule "images/--force"]
+	path = images/--force
+	url = https://github.com/xrdocs/avatars.git
