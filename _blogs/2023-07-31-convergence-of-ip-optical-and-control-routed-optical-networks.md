@@ -8,9 +8,9 @@ tags:
   - iosxr
 ---
 
-   
+'   
 
-Many thanks [Daniele Ceccareli](https://www.linkedin.com/in/daniele-ceccarelli-426a135/), Director of Product Management at Cisco for co-authoring this post.
+Many thanks [Daniele Ceccareli](https://www.linkedin.com/in/daniele-ceccarelli-426a135/), Principal Product Manager at Cisco, for co-authoring this post.
 
 Convergence of packet and optical network technologies has been attempted for many years, but it is only happening now, why? Because of RON...
 Routed Optical Networking (RON) is an architecture that combines optical networking technologies and packet network technologies into a single network that provides all types of services to customers from a single platform. This new paradigm has always been appealing because the resulting network has less layers and an overall simpler structure, but it is finally becoming reality for the following reasons:
