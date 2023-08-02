@@ -6,6 +6,7 @@ author: Ori Gerstel
 excerpt: The control architecture required for managing routed optical networks
 tags:
   - iosxr
+  - Optical
 position: hidden
 ---
 
