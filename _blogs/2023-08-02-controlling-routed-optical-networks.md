@@ -82,7 +82,7 @@ The functional goals described above are supported by the RON control system as 
 
 **Adaptive networking:** HCO coordinates between the optical controller and IP controller to ensure RON links carry the maximum feasible capacity at each point in time, subject to the constraints of the optical layer. If the optical capacity needs to be reduced to allow keeping the link up in the face of deteriorating transmission conditions, the IP controller diverts some traffic away from the link.
 
- # Summary
- 
+# Summary
+
 In this paper we reviewed the goals of the control and management solution for RON. The requirement for a modular multivendor solution implies that this control system must be a hierarchical system, comprising of vendor domain controllers and a vendor-agnostic hierarchical controller. We also explain how the functional goals for RON will be implemented by such a hierarchy.
 
