@@ -57,7 +57,7 @@ Moreover, having a single controller that knows everything violates another requ
 
 For these reasons the control hierarchy has been agreed upon by various standards bodies such as IETF and ONF and is part of a larger hierarchy that includes OSS tools like service orchestrates and assurance systems and includes other parts of the Service Provider network such as access networks and data center resources as show in in the following figure. Again, the guiding principle is “divide and conquer”: use smaller building blocks specializing in different domains and different technologies, aggregated into systems with wider scope but less domain-specific knowledge to build a hierarchy that together provides full functionality without requiring any component to be too large and complex.
 
-![Picture 2.png]({{site.baseurl}}/images/Picture 2.png){:height="90%" width="90%"}
+![]({{site.baseurl}}/images/Picture%202.png)
 
 
 # Meeting the functional requirements for RON
