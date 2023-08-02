@@ -1,5 +1,5 @@
 ---
-published: false
+published: true
 date: '2023-08-02 09:59 +0300'
 title: Controlling Routed Optical Networks
 author: Ori Gerstel
