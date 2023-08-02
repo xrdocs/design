@@ -1,6 +1,6 @@
 ---
 published: true 
-date: '2019-09-07 11:00 -0400'
+date: '2019-09-07 11:00-0400'
 title: Modernizing IX Fabric Design Using Segment Routing and EVPN 
 excerpt: IX fabrics began as very simple L2 switching designs but have evolved to worldwide interconnection networks supporting Terabits of traffic. SR and EVPN transform simple IX networks into flexible and resilient fabrics support any service type at any location in the fabric. 
 author: Phil Bedard
@@ -8,7 +8,7 @@ tags:
   - iosxr
   - Peering
   - Design
-position: hidden 
+position: top 
 ---
 
 {% include toc %}
