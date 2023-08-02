@@ -42,7 +42,7 @@ Unified service assurance: troubleshooting the network from a single pane of gla
 **Multivendor solution:** the above capabilities must be achieved in a multivendor environment, since networks are rarely single vendor.
 Modular solution: The solution must be modular to allow SPs to replace parts they don’t like without an extremely high cost of reimplementing the new solution (vendor lock-in avoidance).
 
-# 3.	Control system architecture implications
+# Control system architecture implications
 
 Most of the above goals are functional requirements that can be met once the control system has access to the various network domains. We will describe how this is done in a section below. However, the last two goals dictate the architecture of the control system and therefore deserve special attention. Achieving a full multivendor solution implies that the control system must have in depth understanding of how each domain and each technology must be configured, as well as an understanding of the possible failure modes, allowing for detailed troubleshooting. This implies that the control system must comprise of vendor specific tools that provide intimate knowledge of the different domains, and an umbrella controller on top that integrates information from all the domains into a single vendor-agnostic database. In other words, a hierarchical structure of domain controllers and a hierarchical controller as shown in the following figure.
 
