@@ -6,6 +6,7 @@ author: Ori Gerstel
 excerpt: The control architecture required for managing routed optical networks
 tags:
   - iosxr
+position: hidden
 ---
 
 {% include toc %}
@@ -85,4 +86,3 @@ The functional goals described above are supported by the RON control system as 
 # Summary
 
 In this paper we reviewed the goals of the control and management solution for RON. The requirement for a modular multivendor solution implies that this control system must be a hierarchical system, comprising of vendor domain controllers and a vendor-agnostic hierarchical controller. We also explain how the functional goals for RON will be implemented by such a hierarchy.
-
