@@ -46,7 +46,8 @@ Modular solution: The solution must be modular to allow SPs to replace parts the
 
 Most of the above goals are functional requirements that can be met once the control system has access to the various network domains. We will describe how this is done in a section below. However, the last two goals dictate the architecture of the control system and therefore deserve special attention. Achieving a full multivendor solution implies that the control system must have in depth understanding of how each domain and each technology must be configured, as well as an understanding of the possible failure modes, allowing for detailed troubleshooting. This implies that the control system must comprise of vendor specific tools that provide intimate knowledge of the different domains, and an umbrella controller on top that integrates information from all the domains into a single vendor-agnostic database. In other words, a hierarchical structure of domain controllers and a hierarchical controller as shown in the following figure.
 
-![Picture1.png]({{site.baseurl}}/images/Picture1.png){:height="200%" width="200%"}
+![Picture 1.png]({{site.baseurl}}/images/Picture 1.png)
+
 
 Attempting to implement all these functions in a single controller – like some vendors have suggested – results in creating a “godbox” – a system that knows everything about everything. This has been tried in the past and is doomed for failure since every innovation that a vendor implements in their domain must be supported by the godbox, which means an endless backlog of features and a slow implementation schedule that slows down the innovation that vendors can introduce. This problem becomes worse by the fact that in the optical domain each vendor has their proprietary “secret sauce” of how to compute which optical connections are feasible from a transmission perspective. Skipping the IP controller in an attempt to control the WDM pluggables from an optical controller is also a bad idea: it may work if the solution is only attempting to manage RON links, but it caps the solution to just the first step in the RON evolution and does not allow for advanced functions that require sophisticated IP layer functionality that is implemented in the IP controller.
 
@@ -56,7 +57,8 @@ Moreover, having a single controller that knows everything violates another requ
 
 For these reasons the control hierarchy has been agreed upon by various standards bodies such as IETF and ONF and is part of a larger hierarchy that includes OSS tools like service orchestrates and assurance systems and includes other parts of the Service Provider network such as access networks and data center resources as show in in the following figure. Again, the guiding principle is “divide and conquer”: use smaller building blocks specializing in different domains and different technologies, aggregated into systems with wider scope but less domain-specific knowledge to build a hierarchy that together provides full functionality without requiring any component to be too large and complex.
 
-![Picture2.png]({{site.baseurl}}/images/Picture2.png){:height="200%" width="200%"}
+![Picture 2.png]({{site.baseurl}}/images/Picture 2.png){:height="90%" width="90%"}
+
 
 # Meeting the functional requirements for RON
 
