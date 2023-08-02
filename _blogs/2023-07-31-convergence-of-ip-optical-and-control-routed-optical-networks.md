@@ -9,7 +9,6 @@ tags:
 ---
 
 <br>
-
 Many thanks [Daniele Ceccareli](https://www.linkedin.com/in/daniele-ceccarelli-426a135/), Principal Product Manager at Cisco, for co-authoring this post.
 
 Convergence of packet and optical network technologies has been attempted for many years, but it is only happening now, why? Because of RON...
@@ -25,12 +24,12 @@ More details about Routed Optical Networking (RON) can be found here:
 
 Achieving a full multivendor solution implies that the control system must have in depth understanding of how each domain and each technology must be configured, as well as an understanding of the possible failure modes, allowing for detailed troubleshooting. This implies that the control system must comprise of vendor specific tools that provide intimate knowledge of the different domains, and an umbrella controller on top that integrates information from all the domains into a single vendor-agnostic database. In other words, a hierarchical structure of domain controllers and a hierarchical controller as shown in the following figure.
 
-![Picture1.png]({{site.baseurl}}/images/Picture1.png)
+![]({{site.baseurl}}/images/Picture1.png)
 
 This architecture has been widely adopted by standardization bodies (e.g. IETF, ONF, MEF) and the major Service Providers all over the world. It is part of a larger hierarchy that includes OSS tools like service orchestrators and assurance systems and includes other parts of the Service Provider network such as access networks and data center resources. 
 The following figure provides its mapping against IETF ACTN architecture (RFC 8453), where a clear and clean boundary separation between the packet and optical domains is provided and the Hierarchical Controller (MDSC) is the only entity capable to manage multidomain and multilayer services from a single UI/NBI.
 
-![Picture2.png]({{site.baseurl}}/images/Picture2.png)
+![]({{site.baseurl}}/images/Picture2.png)
 
 A few alternative architectures have been proposed by different vendors, spanning from an ambitious single “godbox” controller that knows everything about the IP layer and optical layer, to more modest attempts to just control the pluggable in the router via the optical controller of the line system.
 The godbox idea is clearly a bad idea: have we not learned from the past? This didn’t work well even when controlling IP and optical gear of the same vendor, let alone attempting to do it across the entire industry and keep it up to speed and fully tested against all possible gear...
