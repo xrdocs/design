@@ -7,6 +7,7 @@ excerpt: The control architecture required for managing routed optical networks
 tags:
   - iosxr
   - Optical
+  - RON
 position: hidden
 ---
 
