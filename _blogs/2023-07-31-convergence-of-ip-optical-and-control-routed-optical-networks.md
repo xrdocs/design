@@ -6,6 +6,9 @@ author: Ori Gerstel
 excerpt: The control system for Routed Optical Networks
 tags:
   - iosxr
+  - Optical
+  - RON
+position: top
 ---
 
 <br>
