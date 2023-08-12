@@ -1177,7 +1177,7 @@ Responsible for Multi-Layer Automation is the Crosswork Hierarchical Controller.
 * CW HCO unifies data from the IP and optical networks into a single network
   model. HCO utilizes industry standard IETF topology models for IP and TAPI for
   optical topology and service information. HCO can also leverage legacy EMS/NMS
-  systems or device interrogation.   
+  systems or use device interrogation.   
 * Responsible for managing multi-layer Routed Optical Networking links using a
   single UI.    
 *  Providing assurance at the IP and optical layers in a single tool. The
@@ -1203,9 +1203,12 @@ Network Controller is responsible for the following IP network functions.
   applications and exposing northbound via IETF RFC 8345 topology models 
 * Collecting traffic information from the network for use with CNC's traffic
   optimization application, Crosswork Optimization Engine 
+* Enable Bandwidth Guaranteed Circuit-Style Segment Routing paths using Circuit Style Manager **New in CNC 5.0 / RON 2.1**  
 * Perform provisioning of SR-TE, RSVP-TE, L2VPN, and L3VPN using standard
   industry models (IETF TEAS-TE, L2NM, L3NM) via UI or northbound API 
-* Visualization and assurance of SR-TE, RSVP-TE, and xVPN services 
+* Visualization and assurance of SR-TE, RSVP-TE, and xVPN services
+* Optmization of network resources with its industry first Tactical Traffic Engineering applications 
+  to perform traffic when needed. 
 * Use additional Crosswork applications to perform telemetry collection/alerting,
   zero-touch provisioning, and automated and assurance network changes  
 
@@ -1234,10 +1237,10 @@ We support multiple ways to provision Routed Optical Networking services based
 on existing provider workflows.  
 
 * [Unified IP and Optical using Crosswork Hierarchical Controller](#crosswork-hco-ui-provisioning)
-* [Unified IP and Optical using Cisco NSO Routed Optical Networking Multi-Layer Function Pack](#nso-ron-ml-cfp-provisioning) 
+* [IP router DCO provisioning using Cisco NSO Routed Optical Networking Multi-Layer Function Pack](#nso-ron-ml-cfp-provisioning) 
 * [ZR/ZR+ Optics using IOS-XR CLI](#ios-xr-cli-configuration) 
-* [Model-driven ZR/ZR+ Optics configuration using Netconf or gNMI](#ios-xr-netconf-configuration)
-* [OpenConig ZR/ZR+ Optics configuration using Netconf or gNMI](#ios-xr-oc-configuration)
+* [Cisco Native Model-driven ZR/ZR+ Optics configuration using Netconf or gNMI](#ios-xr-netconf-configuration)
+* [OpenConfig ZR/ZR+ Optics configuration using Netconf or gNMI](#ios-xr-oc-configuration)
 
 ## OpenZR+ and 400ZR Properties 
 ### ZR/ZR+ Supported Frequencies 
@@ -1304,14 +1307,35 @@ management will have a very familiar experience. Crosswork Hierarchical Controll
 both the router optics as well as the underlying optical network to support the
 ZR/ZR+ wavelength.   
 
-### Inter-Layer Link Definition 
+### Cross-Layer Link Definition 
 
-End to end provisioning requires first defining the Inter-Layer link between the
+End to end provisioning requires first defining the Cross-Layer or Inter-Layer links between the
 router ZR/ZR+ optics and the optical line system add/drop ports. This is done
-using a GUI based NMC (Network Media Channel) Cross-Link application in Crosswork HCO.
+in Crosswork HCO using a UI based "Link Manager" application, used to define 
+the Network Media Channel (NMC) interconnection between ZR/ZR+ port and optical 
+add/drop port.
+
 The below screenshot shows defined NMC cross-links.   
 
-![](http://xrdocs.io/design/images/ron-hld/ron-hco-nmc-xconnects.png)
+![](http://xrdocs.io/design/images/ron-hld/ron-hco-cross-layer-link.png)
+
+### Cross-Layer Link Validation (New) 
+
+Starting in RON 2.1 and HCO 7.0 users now have the ability to validate the 
+connectivity of an NMC Cross-Layer link. Validation is done by manipulating the 
+transmit power of the optics on the routers and continuously monitoring the power
+seen on the receive side of the optical line system add/drop port. In RON 2.1 the 
+link validation solution is supported using all XR based Cisco routers and NCS 1010 
+optical line systems.  Validation can be done for all links or per-link using the 
+"Validate Link" option.
+
+Using the Cross-Layer Link Validation is service affecting 
+{: .notice--warning}
+
+The screenshot below shows a successful validation.  
+
+![](http://xrdocs.io/design/images/ron-hld/ron-hco-cl-link-validation.png)
+
 ### IP Link Provisioning 
 Once the inter-layer links are created, the user can then proceed in
 provisioning an end to end circuit.  The provisioning UI takes as input the two
