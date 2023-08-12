@@ -3,7 +3,7 @@ published: true
 date: '2023-06-24 15:22 -0600'
 title: Cisco Routed Optical Networking 
 author: Phil Bedard 
-excerpt: Routed Optical Networking 3.0  
+excerpt: Routed Optical Networking 2.1  
 tags:
   - iosxr
   - design
@@ -25,7 +25,7 @@ position: hidden
 | ---------------- | ---------------------- |-----|
 | 1.0       | 01/10/2022| Initial Routed Optical Networking Publication 
 | 2.0       | 12/01/2022| Private Line Services, NCS 1010, CW HCO updates 
-| 3.0       | 06/24/2023| High-Power ZR+ Optics, Bandwidth Guaranteed PLE, Connectivity Verification
+| 2.1       | 06/24/2023| High-Power ZR+ Optics, Bandwidth Guaranteed PLE, Connectivity Verification
 
 
 # Solution Component Software Versions  
@@ -175,8 +175,8 @@ available today.  ZR/OpenZR+ QSFP-DD optics can be used in the same ports as the
 highest speed 400G non-DCO transceivers. 
 
 
-### Cisco High Power OpenZR+ Transceiver (DP04QSDD-HE0)
-Routed Optical Networking 2.0 introduces the Cisco HIgh Power +1dB ZR+ transceiver. This high launch power 
+### Cisco High Power OpenZR+ Transceiver (DP04QSDD-HE0) **New for 2.1** 
+Routed Optical Networking 2.1 introduces the Cisco HIgh Power +1dB ZR+ transceiver. This high launch power 
 DCO enables the use of the optics with optical add drop systems requiring higher input power, and enables 
 longer distances when used in passive or dark fiber applications without amplification.  
 
@@ -236,11 +236,11 @@ PLE section of the document for in-depth information on PLE.
 ## Circuit Style Segment Routing 
 Circuit Style Segment Routing (CS-SR) is another Cisco advancement bringing 
 TDM circuit like behavior to SR-TE Policies. These policies use deterministic 
-hop by hop routing, co-routed bi-directional paths, hot standby protect paths, 
-and end to end liveness detection. Standard Ethernet services not requiring bit 
-transparency can be transported over a Segment Routing network similar to OTN 
-networks without the additional cost, complexity, and inefficiency of an OTN 
-network layer.   
+hop by hop routing, co-routed bi-directional paths, hot standby protect paths
+with end to end liveness detection, and bandwidth guaranteed services.
+Standard Ethernet services not requiring bit transparency can be transported
+over a Segment Routing network similar to OTN networks without the additional
+cost, complexity, and inefficiency of an OTN network layer.   
 ## Cisco DWDM Network Hardware  
 
 Routed Optical Networking shifts an expensive and now often redundant
@@ -252,12 +252,13 @@ multiplexers, amplifiers, and ROADMs can satisfy any network need.
 
 *Cisco NCS 1010* 
 
-Routed Optical Networking 2.0 introduces the new Cisco NCS 1010 open optical line system. 
-The NCS 1010 represents an evolution in open optical line systems, utilizing the same 
-IOS-XR software as Cisco routers and NCS 1004 series transponders. This enables the rich 
-XR automation and telemetry support to extend to the DWDM photonic line system. The NCS 1010 
-also simplifies how operators build DWDM networks with advanced integrated functions and a flexible 
-twin 1x33 WSS.  
+Routed Optical Networking 2.0 introduces the new Cisco NCS 1010 open optical
+line system.  The NCS 1010 represents an evolution in open optical line
+systems, utilizing the same IOS-XR software as Cisco routers and NCS 1004
+series transponders. This enables the rich XR automation and telemetry support
+to extend to the DWDM photonic line system. The NCS 1010 also simplifies how
+operators build DWDM networks with advanced integrated functions and a
+flexible twin 1x33 WSS.  
 
 See the validated design hardware section for more information.  
 
@@ -395,30 +396,51 @@ gives an overview of PLE service signaling and transport.
 
 
 ## Circuit Style Segment Routing 
-CS-SR provides the underlying TDM-like transport to support traditional private line 
-Ethernet services without additional hardware and emulated bit-transparent services 
-using Private Line Emulation hardware. 
+CS-SR provides the underlying TDM-like transport to support traditional
+private line Ethernet services without additional hardware and bit-transparent
+Ethernet, OTN, SONET/SDH, and Fiber Channel services using Private Line
+Emulation hardware. 
 
 ### CS SR-TE paths characteristics 
 
 * Co-routed Bidirectional - Meaning the paths between two client ports are symmetric
 * Deterministic without ECMP - Meaning the path does not vary based on any load balancing criteria
 * Persistent - Paths are routed on a hop by hop basis, so they are not subject to path changes induced by network changes 
-* End-to-end path protection - Entire paths are switched from working to protect with the protect path in a hot standby state for fast transition   
+* End-to-end path protection - Entire paths are switched from working to protect with the protect path in a hot standby state for fast transition  
+* Bandwidth guaranteed paths  
 
 SR CS-TE policies are built using link adjacency SIDs without protection to ensure the paths do not take a TI-LFA path during 
 path failover and instead fail over to the pre-determined protect path.  
 
 ### CS SR-TE path liveness detection 
-Paths can be configured with end to end liveness detection. Liveness detection uses TWAMP-lite probes which are looped at the far end to determine 
-if the end to end path is up bi-directionally. If more than the set number of probes is missed (set by the multiplier) the path will be considered down. Once liveness detection is enabled probes will be sent on all candidate paths. Either the default liveness probe profile can be used or if 
-you want to modify the default parameters a customized one can be created. 
+Paths can be configured with end to end liveness detection. Liveness detection
+uses STAMP (Simple Two-Way Active Measurement Protocol) probes which are
+looped at the far end to determine if the end to end path is up
+bi-directionally. If more than the set number of probes is missed (set by the
+multiplier) the path will be considered down. Once liveness detection is
+enabled probes will be sent on all candidate paths. Either the default
+liveness probe profile can be used or if you want to modify the default
+parameters a customized one can be created. 
 ### CS SR-TE path failover behavior 
-CS SR-TE policies contain multiple candidate paths.  The highest preference candidate path is considered the working path, the second highest preference path is the protect path, and if a third lower preference path is configured would be a dynamic restoration path.  This provides 1:1+R 
-protection for CS SR-TE policies.  The following below shows the configuration of a CS SR-TE Policy with a working, protect, and restoration path. T  
+CS SR-TE policies contain multiple candidate paths.  The highest preference
+candidate path is considered the working path, the second highest preference
+path is the protect path, and if a third lower preference path is configured
+would be a dynamic restoration path.  This provides 1:1+R protection for CS
+SR-TE policies.   
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-srcs-paths.png)
 
+### Static CS SR-TE Policies 
+Static CS SR-TE policies are policies using explicit pre-defined paths for the
+working and protect paths in both the forward and reverse direction. These
+explicit paths define the hop by hop path using adjacency-SIDs. The explicit SID
+lists are defined on the head-end routers and part of the persistent device
+configuration. They can be built by a user or an external controller which is
+creating the paths by available network information.  Explicit SID lists can be 
+referenced by multiple SR Policies.   
+ 
+The following below shows the configuration of a static CS SR-TE
+Policy with a working, protect, and restoration path.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -519,6 +541,227 @@ Color: 1001, End-point: 100.0.0.42
     IPv6 caps enable: yes
     Invalidation drop enabled: no
     Max Install Standby Candidate Paths: 0
+</pre>
+</div>
+
+
+### Dynamic Circuit Style SR-TE 
+
+Release 2.1 of Routed Optical Networking introduces the concept of dynamic CS
+SR-TE. Dynamic CS SR-TE utilizes Cisco's SR-PCE Path Computation Element to
+compute the working and protection paths of the CS SR-TE policy. Each head-end
+node acts as a Path Computation Client, utilizing PCEP and Circuit Style PCEP
+extensions to communicate the required path characteristics to SR-PCE. 
+
+#### Bi-directional Association ID 
+
+Circuit style paths are bi-directional and co-routed. The association ID value
+is used to communicate the constraint to SR-PCE. SR-PCE will then compute the
+same co-routed path from each head-end router to the tail-end router. The
+working paths on both head-end routers require using the same ID.  The protect
+paths will also use the same ID, but unique from the working path ID. Likewise,
+the optional restoration paths will also utilize a unique ID.  The identifiers
+should be globally unique for each pair of CS SR-TE policies.  The following 
+gives an example of the identifiers: 
+
+|Router|Path Type|Association ID|  
+|--------|--------|----------|
+|A| Working|100|
+|Z| Working|100| 
+|A| Protect|200|
+|Z| Protect|200| 
+|A| Restoration|300|
+|Z| Restoration|300| 
+
+#### Disjoint path group ID  
+
+Another property of CS SR-TE policies is working and protect paths are fully 
+disjoint. A disjoint group ID is used to communicate the constraint to SR-PCE. On 
+each head-end node the working and protect candidate paths are assigned the 
+same disjoint group ID. The disjoint group ID will be globally unique on 
+each head-end node. Available options for path disjointness are node, link, and 
+srlg.  
+
+|Router|Path Type|Disjoint Group ID|  
+|--------|--------|----------|
+|A| Working|101|
+|Z| Working|201| 
+|A| Protect|101|
+|Z| Protect|201| 
+
+#### Path constraints 
+
+Circuit style paths utilize only unprotected adjacency SID, those constraints are 
+communicated to SR-PCE using specific configuration and flags in PCEP. 
+
+The following configuration shows the full dynamic SR-TE configuration on 
+each head-end node.  
+
+**Router A**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy dynamic-cs-srte-to-55a2-p2
+   color 119 end-point ipv4 100.0.0.44
+   path-protection
+   !
+   candidate-paths
+    preference 100
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      !
+     !
+     constraints
+      segments
+       protection unprotected-only
+       adjacency-sid-only
+      !
+      disjoint-path group-id 10 type link
+     !
+     bidirectional
+      co-routed
+      association-id 101
+     !
+    !
+    preference 200
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      !
+     !
+     lock 
+       duration 30
+     !
+     constraints
+      segments
+       protection unprotected-only
+       adjacency-sid-only
+      !
+      disjoint-path group-id 10 type link
+     !
+     bidirectional
+      co-routed
+      association-id 201
+     !
+    !
+    preference 50
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      !
+     !
+     backup-ineligible
+     lock 
+       duration 60
+     !
+     constraints
+      segments
+       protection unprotected-only
+       adjacency-sid-only
+      !
+     !
+     bidirectional
+      co-routed
+      association-id 301
+     !
+    !
+   !
+   performance-measurement
+    liveness-detection
+     liveness-profile backup name CS-PROTECT
+     liveness-profile name CS-WORKING
+     invalidation-action down
+</pre>
+</div>
+
+
+**Router Z**
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+policy dynamic-cs-srte-to-57c3-p2
+   color 119 end-point ipv4 100.0.0.42
+   path-protection
+   !
+   candidate-paths
+    preference 100
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      !
+     !
+     constraints
+      segments
+       protection unprotected-only
+       adjacency-sid-only
+      !
+      disjoint-path group-id 11 type link
+     !
+     bidirectional
+      co-routed
+      association-id 101
+     !
+    !
+    preference 200
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      !
+     !
+     lock 
+       duration 30
+     !
+     constraints
+      segments
+       protection unprotected-only
+       adjacency-sid-only
+      !
+      disjoint-path group-id 11 type link
+     !
+     bidirectional
+      co-routed
+      association-id 201
+     !
+    !
+    preference 50
+     dynamic
+      pcep
+      !
+      metric
+       type igp
+      !
+     !
+     backup-ineligible
+     lock 
+       duration 60
+     !
+     constraints
+      segments
+       protection unprotected-only
+       adjacency-sid-only
+      !
+     !
+     bidirectional
+      co-routed
+      association-id 301
+
+   !
+   performance-measurement
+    liveness-detection
+     liveness-profile backup name CS-PROTECT
+     liveness-profile name CS-WORKING
+     invalidation-action down
 </pre>
 </div>
 
@@ -1017,13 +1260,41 @@ multiplexer.
 |192.500|192.425|192.350|192.275|192.200|192.125|192.050|191.975|
 |191.900|191.825|191.750|191.675|191.600|191.525|191.450|191.375| 
 
-### Supported Line Side Rate and Modulation  
+### Supported Line Side Rate, FEC, and Modulation  
 
-OIF 400ZR transceivers support 400G only per the OIF specification. OpenZR+
-transceivers can support 100G, 200G, 300G, or 400G line side rate. See router
-platform documentation for supported rates. The modulation is determined by the
-line side rate.  400G will utilize 16QAM, 300G 8QAM, and 200G/100G rates will
-utilize QPSK.  
+OIF 400ZR transceivers support 400G only with the cFEC FEC type per the OIF
+specification. OpenZR+ transceivers can support 100G, 200G, 300G, or 400G line
+side rate. See router platform documentation for supported rates on each
+platform or line card. OpenZR+ optics can utilize the cFEC type in 400G mode to 
+retain compatibility with OIF 400ZR.   
+### 50Ghz Spectrum Compatiblity Modes (New) 
+
+Starting in Routed Optical Networking 2.1 and IOS-XR 7.9.1 additional support 
+has been added for the 200G-8QAM and 200G-16QAM modes. 200G-8QAM utilizes a 
+symbol rate of 40.1Gbaud and 200G-16QAM utilizes a symbol rate of 30.1Gbaud. This 
+ensures the signal width is compability with legacy 50Ghz filter optical line 
+systems. 100G-QPSK also utilizes a 30.1Gbaud symbol rate.   
+
+**OpenZR+ Supported Configurations** 
+
+| Transceiver Type | Rate | FEC | Modulation | Standard |  
+|--------|--------|------|------|------------| 
+|QDD-400G-ZR-S|400|cFEC|16QAM|OIF 400ZR|  
+|QDD-400G-ZRP-S|400|cFEC|16QAM|OIF 400ZR|  
+|QDD-400G-ZRP-S|400|oFEC|16QAM|OpenZR+|  
+|QDD-400G-ZRP-S|300|oFEC|8QAM|OpenZR+|  
+|QDD-400G-ZRP-S|200|oFEC|QPSK|OpenZR+|  
+|QDD-400G-ZRP-S|200|oFEC|8QAM|OpenZR+|  
+|QDD-400G-ZRP-S|200|oFEC|16QAM|OpenZR+|  
+|QDD-400G-ZRP-S|100|oFEC|QPSK|OpenZR+|  
+|DP04QSDD-HE0|400|cFEC|16QAM|OIF 400ZR|  
+|DP04QSDD-HE0|400|oFEC|16QAM|OpenZR+|  
+|DP04QSDD-HE0|300|oFEC|8QAM|OpenZR+|  
+|DP04QSDD-HE0|200|oFEC|QPSK|OpenZR+|  
+|DP04QSDD-HE0|200|oFEC|8QAM|OpenZR+|  
+|DP04QSDD-HE0|200|oFEC|16QAM|OpenZR+|  
+|DP04QSDD-HE0|100|oFEC|QPSK|OpenZR+|  
+
 
 ## Crosswork Hierarchical Controller UI Provisioning 
 
