@@ -792,7 +792,8 @@ user.
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-link-bandwidth.png){:height="100%" width="100%"}
 
-#### SR-PCE to CSM Communication 
+#### SR-PCE to Circuit Style Manager (CSM) Communication 
+
 CSM communicates to SR-PCE through the SR-PCE northbound API. When the session is established 
 between CSM and SR-PCE, SR-PCE will delegate all CS-SRTE Policies with bandwidth constraints 
 to CSM for path computation.  
