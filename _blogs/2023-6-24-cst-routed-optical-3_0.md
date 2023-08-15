@@ -786,6 +786,10 @@ the BW on a link meets or exceeds the threshold percentage configured by the use
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-configuration.png){:height="100%" width="100%"}
 
+**Allocated and reserved link bandwidth**
+
+![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-link-bandwidth.png){:height="100%" width="100%"}
+
 #### SR-PCE to CSM Communication 
 CSM communicates to SR-PCE through the SR-PCE northbound API. When the session is established 
 between CSM and SR-PCE, SR-PCE will delegate all CS-SRTE Policies with bandwidth constraints 
@@ -825,13 +829,111 @@ Mon Jun 12 17:55:44.238 PDT
     Steering labeled-services disabled: no
     Steering BGP disabled: no
     IPv6 caps enable: yes
-    Bandwidth Requested: 10.000 Gbps
-    Bandwidth Current: 10.000 Gbps
-    Invalidation drop enabled: no
-    Max Install Standby Candidate Paths: 0
+    <b>Bandwidth Requested: 10.000 Gbps
+    Bandwidth Current: 10.000 Gbps</b>
 </pre>
 </div>
 
+### CNC CS-SRTE Monitoring 
+Starting in CNC 5.0, CS-SRTE Policies are fully supported. CS-SRTE Policies 
+are identified as a specific type of policy in the Traffic Engineering dashboard 
+and have enhanced visualization and monitoring capabilities.  
+
+**CS-SRTE Dashboard** 
+![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-policy-dashboard.png){:height="100%" width="100%"}
+
+
+**CS-SRTE Policy Visualization of Working and Protect Paths** 
+When visualizing CS-SRTE policies we can see both Working and Protect paths 
+including which path is currently active, denoted by the A icon.  
+
+![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-policy-overview.png){:height="100%" width="100%"}
+
+**CS-SRTE Policy Path Details** 
+When we inspect the policy path details we can see both the requested and reserved bandwidth for the path 
+and then the additional details such as path constraints and hop by hop path.  
+
+![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-policy-path-details.png){:height="100%" width="100%"}
+
+### CNC CS-SRTE Provisioning 
+In CNC 5.0 the Circuit-Style SR-TE Function Pack is supported. This service type
+simplifies CS-SRTE provisioning by dynamically allocating IDs for the
+bi-directional association ID and disjoint-group ID. It also simplifies
+provisioning by provisioning both the A to Z and Z to A policies at one time vs.
+defining each one independently.   
+
+**NSO Payload for Dynamic CS SR-TE Policy** 
+
+```json
+{
+  "data": {
+    "cisco-cs-sr-te-cfp:cs-sr-te-policy": [
+      {
+        "name": "clus-demo-ple-fc8",
+        "head-end": {
+          "device": "ron-ncs55a2-1",
+          "ip-address": "100.0.0.44"
+        },
+        "tail-end": {
+          "device": "ron-ncs55a2-2",
+          "ip-address": "100.0.0.22"
+        },
+        "color": 3000,
+        "bandwidth": 10000000,
+        "disjoint-path": {
+          "forward-path": {
+            "type": "node",
+            "group-id": 900
+          },
+          "reverse-path": {
+            "type": "node",
+            "group-id": 901
+          }
+        },
+        "path-protection": {
+        },
+        "performance-measurement": {
+          "liveness-detection": {
+            "profile": "ple",
+            "backup": "ple",
+            "logging": {
+              "session-state-change": [null]
+            }
+          }
+        },
+        "working-path": {
+          "dynamic": {
+            "constraints": {
+              "segments": {
+                "protection": "unprotected-only"
+              }
+            },
+            "pce": {
+            },
+            "metric-type": "latency",
+            "bidirectional-association-id": 1000
+          }
+        },
+        "protect-path": {
+          "dynamic": {
+            "constraints": {
+              "segments": {
+                "protection": "unprotected-only"
+              }
+            },
+            "pce": {
+            },
+            "metric-type": "latency",
+            "bidirectional-association-id": 1001
+          },
+          "revertive": true,
+          "wait-to-revert-timer": 30
+        }
+      }
+    ]
+  }
+}
+``` 
 
 ## Private Line Emulation Hardware 
 Starting in IOS-XR 7.7.1 the NC55-OIP-02 Modular Port Adapter (MPA) is supported
