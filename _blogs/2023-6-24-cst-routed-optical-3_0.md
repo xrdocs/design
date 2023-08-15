@@ -551,7 +551,9 @@ Release 2.1 of Routed Optical Networking introduces the concept of dynamic CS
 SR-TE. Dynamic CS SR-TE utilizes Cisco's SR-PCE Path Computation Element to
 compute the working and protection paths of the CS SR-TE policy. Each head-end
 node acts as a Path Computation Client, utilizing PCEP and Circuit Style PCEP
-extensions to communicate the required path characteristics to SR-PCE. 
+extensions to communicate the required path characteristics to SR-PCE. Utilizing
+SR-PCE to compute the optimal disjoint paths simplifies the configuration and
+deployment of Circuit-Style Policies.   
 
 #### Bi-directional Association ID 
 
@@ -764,6 +766,72 @@ policy dynamic-cs-srte-to-57c3-p2
      invalidation-action down
 </pre>
 </div>
+
+
+### Circuit-Style SR-TE with Bandwidth Admission Control using Crosswork Circuit Style Manager 
+
+Routed Optical Networking 2.1 with Crosswork Network Controller 5.0 now supports 
+utilizing the new Circuit Style Manager to provide Bandwidth Admission Controller
+and guaranteed bandwidth paths for Circuit-Style Policies.  CNC 5.0 also supports 
+full provisioning, monitoring, and visualization of Circuit-Style Policies.  
+
+#### CNC Circuit-Style Manager Configuration 
+In CNC 5.0, Circuit Style Manager uses a simple network-wide bandwidth percentage setting 
+to reserve a specific amount of bandwidth for BW-guaranteed CS-SRTE policies. CNC's 
+network model will track the allocation of bandwidth on each link and the amount of 
+capacity reserved by active CS-SRTE Policies. 
+
+The Link CS BW Min Threshold configuration is used to trigger system alerts when 
+the BW on a link meets or exceeds the threshold percentage configured by the user. 
+
+![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-configuration.png){:height="100%" width="100%"}
+
+#### SR-PCE to CSM Communication 
+CSM communicates to SR-PCE through the SR-PCE northbound API. When the session is established 
+between CSM and SR-PCE, SR-PCE will delegate all CS-SRTE Policies with bandwidth constraints 
+to CSM for path computation.  
+
+#### Bandwidth Admission Control Operation 
+BW CAC is supported for dynamic CS SR-TE Policies. Utilizing the "bandwidth" configuration 
+option for the policy triggers the inclusion of the "bandwidth" object in the PCEP request to 
+SR-PCE. SR-PCE will delegate path computation requests with bandwidth constraints to CNC CSM. Based
+on the CS-SRTE Policy configuration, CSM will compute a Working, Protect, and Restoration path to 
+be used by the policy. The paths computed by CSM will adhere to the CS-SRTE properties with Working 
+and Protect paths being fully disjoint (link, node, or SRLG) and each path will be co-routed meaning 
+the Working path from A to Z will be identical to the path from Z to A.  
+
+**CS SR-TE Policy Bandwidth Configuration** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+segment-routing
+ traffic-eng
+  policy srte_c_3000_ep_100.0.0.44
+   bandwidth <b>10000000</b> 
+   color 3000 end-point ipv4 100.0.0.44
+   path-protection
+</pre>
+</div>
+
+**Operational Information** 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:ron-ncs55a2-2#show segment-routing traffic-eng policy color 3000  | beg Attributes
+Mon Jun 12 17:55:44.238 PDT
+  Attributes:
+    Binding SID: 24010
+    Forward Class: Not Configured
+    Steering labeled-services disabled: no
+    Steering BGP disabled: no
+    IPv6 caps enable: yes
+    Bandwidth Requested: 10.000 Gbps
+    Bandwidth Current: 10.000 Gbps
+    Invalidation drop enabled: no
+    Max Install Standby Candidate Paths: 0
+</pre>
+</div>
+
 
 ## Private Line Emulation Hardware 
 Starting in IOS-XR 7.7.1 the NC55-OIP-02 Modular Port Adapter (MPA) is supported
@@ -1336,14 +1404,25 @@ The screenshot below shows a successful validation.
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-cl-link-validation.png)
 
-### IP Link Provisioning 
-Once the inter-layer links are created, the user can then proceed in
-provisioning an end to end circuit.  The provisioning UI takes as input the two
-router endpoints, the associated ZR/ZR+ ports, and the IP addressing or bundle
-membership of the link. The optical line system provisioning is abstracted from
-the user, simplifying the end to end workflow. The frequency and power is
-automatically derived by Cisco Optical Network Controller based on the add/drop
-port and returned as a parameter to be used in router optics provisioning.  
+### IP Link Provisioning using Crosswork HCO 
+
+Crosswork HCO supports end-to-end multi-layer provisioning of Routed Optical 
+Networking circuits, providing a simplified way to provisioning DCO optics in 
+the routers and the supporting optical line system OTSiMC channel in a single 
+operation.  
+
+HCO also supports separating the router and optical line system provisioning as 
+two separate tasks, and also supports router-only provisioning for use cases where either
+dark fiber or passive optical components are being used.  
+
+Once the cross layer links are created, the user can then proceed in
+provisioning an end to end circuit spanning both IP and optical networks.  The
+provisioning UI takes as input the two router endpoints, the associated ZR/ZR+
+ports, and the IP addressing or bundle membership of the link. The optical line
+system provisioning is abstracted from the user, simplifying the end to end
+workflow. The frequency and power is automatically derived by Cisco Optical
+Network Controller based on the add/drop port and returned as a parameter to be
+used in router optics provisioning.  
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-hco-ip-link-provisioning-2.png)
 
@@ -1353,53 +1432,24 @@ service is operational before considering the provisioning complete. If
 operational discovery fails, the end to end service will be rolled back.  
 ## NSO RON-ML CFP Provisioning
 Providers familiar with using Cisco Network Service Orchestrator have an option
-to utilize NSO to perform IP+Optical provisioning of Routed Optical Networking
-services. Cisco has created the Routed Optical Network Multi-Layer Core Function
-Pack, RON-ML CFP to perform end to end provisioning of services. The
-aforementioned Crosswork HCO provisioning utilizes the RON-ML CFP to perform end device
-provisioning.  
+to utilize NSO to provision optical and IP layer configuration for ZR/ZR+ router
+DCOs.  
+Cisco has created the Routed Optical Network Multi-Layer Core Function Pack,
+RON-ML CFP to perform the provisioning of Routed Optical Networking services on
+the router endpoints. The aforementioned Crosswork HCO provisioning utilizes the
+RON-ML CFP to perform end device provisioning.  
 
-Please see the Cisco Routed Optical Networking RON-ML CFP documentation located at 
-
-### Routed Optical Networking Inter-Layer Links 
-Similar to the use case with CW HCO provisioning, before end to end provisioning
-can be performed, inter-layer links must be provisioned between the optical
-ZR/ZR+ port and the optical line system add/drop port.  This is done using the
-"inter-layer-link" NSO service. The optical end point can be defined as either a
-TAPI SIP or by the TAPI equipment inventory identifier. Inter-layer links are 
-not required for router-only provisioning.   
+Please see the Cisco Routed Optical Networking RON-ML CFP documentation for more
+details.  
 
 ### RON-ML End to End Service 
-The RON-ML service is responsible for end to end IP+optical provisioning. RON-ML
-supports full end to end provisioning, router-only provisioning, or optical-only
-provisioning where only the router ZR/ZR+ configuration is performed. The
-frequency and transmit power can be manually defined or optionally provided by
-Cisco ONC when end to end provisioning is performed.   
+The RON-ML service is responsible for router DCO provisioning. All IP layer configuration 
+such as bundle membership and IP addressing is optional, allowing potentially different 
+teams to perform optical parameter provisioning vs. Ethernet/IP layer configuration.  
 
 ### RON-ML API Provisioning
-Use the following URL for NSO provisioning: ```http://<nso host>/restconf/data``` 
-
-**Inter-Layer Link Service** 
-
-```json
-{
-  "data": {
-    "cisco-ron-cfp:ron": {
-      "inter-layer-link": [
-        {
-          "end-point-device": "ron-8201-1",
-          "line-port": "0/0/0/20",
-          "ols-domain": {
-            "network-element": "ron-ols-1",
-            "optical-add-drop": "1/2008/1/13,14",
-            "optical-controller": "onc-real-new"
-          }
-        }
-      ]
-    }
-  }
-}
-```
+Use the following URL for NSO RESTCONF provisioning using a PATCH operation:
+```http://<nso host>:<port>/restconf/data``` 
 
 **Provisioning ZR+ optics and adding interface to Bundle-Ether 100 interface**  
 
@@ -1413,9 +1463,6 @@ Use the following URL for NSO provisioning: ```http://<nso host>/restconf/data``
           "bandwidth": "400",
           "circuit-id": "E2E Bundle ONC-57 S9|chan11 - S10|chan11",
           "grid-type": "100mhz-grid",
-          "ols-domain": {
-            "service-state": "UNLOCKED"
-          },
           "end-point": [
             {
               "end-point-device": "ron-8201-1",
@@ -1480,7 +1527,9 @@ Configuring the router portion of the Routed Optical Networking link is very
 simple.  All optical configuration related to the ZR/ZR+ optics configuration is
 located under the optics controller relevent to the faceplate port. Default
 configuration the optics will be in an up/up state using a frequency of
-193.10Thz.
+193.10Thz.  The default transmit power is dependent on the optics type.  The default 
+transmit power for the QDD-400G-ZR-S (OIF 400ZR) and QDD-400G-ZRP-S is -10 dBm. 
+The default transmit power for the High-Power ZR+ DP04QSDD-HE0 is 0 dBm.  
 
 The basic configuration with a specific frequency of 195.65 Thz is located below,   
 the only required component is the bolded channel frequency setting.  
@@ -1898,7 +1947,7 @@ per-channel monitoring, exposed as the OTS-OCH
 |Cisco-IOS-XR-olc-oper:olc/span-loss-ctrlr-tables/span-loss-ctrlr-table | neighbor-rid, rx-span-loss, tx-span-loss, name | 
 
 
-## Open-source  Monitoring 
+## Open-source Monitoring 
 Cisco model-driven telemetry along with the open source collector Telegraf and the open source dashboard software 
 Grafana can be used to quickly build powerful dashboards to monitor ZR/ZR+ and NCS 1010 OLS performance.  
 
