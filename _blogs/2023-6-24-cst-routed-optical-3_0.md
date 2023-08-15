@@ -770,19 +770,21 @@ policy dynamic-cs-srte-to-57c3-p2
 
 ### Circuit-Style SR-TE with Bandwidth Admission Control using Crosswork Circuit Style Manager 
 
-Routed Optical Networking 2.1 with Crosswork Network Controller 5.0 now supports 
-utilizing the new Circuit Style Manager to provide Bandwidth Admission Controller
-and guaranteed bandwidth paths for Circuit-Style Policies.  CNC 5.0 also supports 
-full provisioning, monitoring, and visualization of Circuit-Style Policies.  
+Routed Optical Networking 2.1 with Crosswork Network Controller 5.0 and IOS-XR
+7.9.1 now supports utilizing the new Circuit Style Manager to provide Bandwidth
+Admission Controller and guaranteed bandwidth paths for Circuit-Style Policies.
+CNC 5.0 also supports full provisioning, monitoring, and visualization of
+Circuit-Style Policies.  
 
 #### CNC Circuit-Style Manager Configuration 
-In CNC 5.0, Circuit Style Manager uses a simple network-wide bandwidth percentage setting 
-to reserve a specific amount of bandwidth for BW-guaranteed CS-SRTE policies. CNC's 
-network model will track the allocation of bandwidth on each link and the amount of 
-capacity reserved by active CS-SRTE Policies. 
+In CNC 5.0, Circuit Style Manager uses a simple network-wide bandwidth
+percentage setting to reserve a specific amount of bandwidth for BW-guaranteed
+CS-SRTE policies. CNC's network model will track the allocation of bandwidth on
+each link and the amount of capacity reserved by active CS-SRTE Policies. 
 
-The Link CS BW Min Threshold configuration is used to trigger system alerts when 
-the BW on a link meets or exceeds the threshold percentage configured by the user. 
+The Link CS BW Min Threshold configuration is used to trigger system alerts when
+the BW on a link meets or exceeds the threshold percentage configured by the
+user. 
 
 ![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-configuration.png){:height="100%" width="100%"}
 
@@ -796,13 +798,15 @@ between CSM and SR-PCE, SR-PCE will delegate all CS-SRTE Policies with bandwidth
 to CSM for path computation.  
 
 #### Bandwidth Admission Control Operation 
-BW CAC is supported for dynamic CS SR-TE Policies. Utilizing the "bandwidth" configuration 
-option for the policy triggers the inclusion of the "bandwidth" object in the PCEP request to 
-SR-PCE. SR-PCE will delegate path computation requests with bandwidth constraints to CNC CSM. Based
-on the CS-SRTE Policy configuration, CSM will compute a Working, Protect, and Restoration path to 
-be used by the policy. The paths computed by CSM will adhere to the CS-SRTE properties with Working 
-and Protect paths being fully disjoint (link, node, or SRLG) and each path will be co-routed meaning 
-the Working path from A to Z will be identical to the path from Z to A.  
+BW CAC is supported for dynamic CS SR-TE Policies. Utilizing the "bandwidth"
+configuration option for the policy triggers the inclusion of the "bandwidth"
+object in the PCEP request to SR-PCE. SR-PCE will delegate path computation
+requests with bandwidth constraints to CNC CSM. Based on the CS-SRTE Policy
+configuration, CSM will compute a Working, Protect, and Restoration path to be
+used by the policy. The paths computed by CSM will adhere to the CS-SRTE
+properties with Working and Protect paths being fully disjoint (link, node, or
+SRLG) and each path will be co-routed meaning the Working path from A to Z will
+be identical to the path from Z to A.  
 
 **CS SR-TE Policy Bandwidth Configuration** 
 
@@ -841,7 +845,6 @@ and have enhanced visualization and monitoring capabilities.
 
 **CS-SRTE Dashboard** 
 ![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-policy-dashboard.png){:height="100%" width="100%"}
-
 
 **CS-SRTE Policy Visualization of Working and Protect Paths** 
 When visualizing CS-SRTE policies we can see both Working and Protect paths 
