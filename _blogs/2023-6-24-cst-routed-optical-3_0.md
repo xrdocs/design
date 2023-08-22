@@ -796,7 +796,9 @@ user.
 
 CSM communicates to SR-PCE through the SR-PCE northbound API. When the session is established 
 between CSM and SR-PCE, SR-PCE will delegate all CS-SRTE Policies with bandwidth constraints 
-to CSM for path computation.  
+to CSM for path computation. 
+
+![](http://xrdocs.io/design/images/ron-hld/ron-cnc-csm-communication.png){:height="100%" width="100%"}
 
 #### Bandwidth Admission Control Operation 
 BW CAC is supported for dynamic CS SR-TE Policies. Utilizing the "bandwidth"
