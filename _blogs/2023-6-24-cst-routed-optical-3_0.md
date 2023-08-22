@@ -183,10 +183,10 @@ longer distances when used in passive or dark fiber applications without amplifi
 ![](http://xrdocs.io/design/images/ron-hld/bright_zrp.png)
 
 ### Cisco OpenZR+ Transceiver (QDD-400G-ZRP-S)
-![](http://xrdocs.io/design/images/ron-hld/zrp.png)
+![](http://xrdocs.io/design/images/ron-hld/zrp.png){:height="50%" width="50%"}
 
 ### Cisco OIF 400ZR Transceiver (QDD-400G-ZR-S)
-![](http://xrdocs.io/design/images/ron-hld/zr.png)
+![](http://xrdocs.io/design/images/ron-hld/zr.png){:height="50%" width="50%"}
 
 Two industry optical standards have emerged to cover a variety of use cases. The
 OIF created the 400ZR specification,
