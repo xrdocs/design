@@ -4,7 +4,6 @@ date: '2022-12-10 15:22 -0600'
 title: Cisco Routed Optical Networking 
 author: Phil Bedard 
 excerpt: Routed Optical Networking 2.0  
-permalink: /blogs/latest-routed-optical-networking-hld 
 tags:
   - iosxr
   - design
