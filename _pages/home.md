@@ -18,7 +18,7 @@ date: null
             <img src="{{ base_path }}/images/design_lp/ron-icon.png" alt="" />
           </div>
         <div class="archive__item-body">
-            <h2 class="archive__item-title">Routed Optical Networking Design 2.0&nbsp; 
+            <h2 class="archive__item-title">Routed Optical Networking Design 2.1&nbsp; 
             <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
               <p>Update to the Routed Optical Networking design. This addition to the solution introduces Cisco's High Power +1dBm ZR+ optics along 
