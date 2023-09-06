@@ -1,8 +1,9 @@
 ---
 published: true
-date: '2023-06-24 15:22 -0600'
+date: '2023-08-24 15:22 -0600'
 title: Cisco Routed Optical Networking 
 author: Phil Bedard 
+permalink: /blogs/latest-routed-optical-networking-hld 
 excerpt: Routed Optical Networking 2.1  
 tags:
   - iosxr
@@ -10,14 +11,14 @@ tags:
   - optical  
   - ron 
   - routing 
-position: hidden 
+position: top  
 ---
 {% include toc %}
 
 
 ### PDF Download 
 
-<https://github.com/ios-xr/design/blob/master/Routed-Optical-Networking/2022-12-01-cst-routed-optical-2_0.pdf> 
+<https://github.com/ios-xr/design/blob/master/Routed-Optical-Networking/2023-08-24-cst-routed-optical-2_1.pdf> 
 
 # Revision History
 

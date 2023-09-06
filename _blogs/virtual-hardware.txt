@@ -1,0 +1,2877 @@
+[
+  {
+    "source": "172.29.11.40:57733",
+    "timestamp": 1694011214235976824,
+    "time": "2023-09-06T10:40:14.235976824-04:00",
+    "updates": [
+      {
+        "Path": "openconfig:components/component[name=Rack 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=Rack 0-RouteProcessor Slot 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Mother Board]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-MgmtEth0/RP0/CPU0/0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-USB Port 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-External Alarm1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-External Alarm2]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-External Alarm3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-External Alarm4]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Intel 8 Core CPU Complex]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-USB container]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Alarm]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Status]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Sync]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Q2A In-Die Temp Sensor]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-CPU In-Die Temp Sensor]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-X86_CORE_0_TEMP_SENSOR]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-X86_CORE_1_TEMP_SENSOR]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-X86_CORE_2_TEMP_SENSOR]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-X86_CORE_3_TEMP_SENSOR]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-X86_CORE_4_TEMP_SENSOR]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-X86_CORE_5_TEMP_SENSOR]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-X86_CORE_6_TEMP_SENSOR]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-X86_CORE_7_TEMP_SENSOR]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Inlet Temp Sensor]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V8_Q2A_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V25_Q2A_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Outlet Temp Sensor]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P0V82_Q2A_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V8_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-CPU Temp Sensor Local]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P3V3_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P0V8_Q2A_SRDS_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-CPU Temp Sensor Remote]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P0V82_METDX1_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Q2A Temp Sensor Local]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V82_CPU_CORE_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V2_CPU_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Q2A Temp Sensor Remote]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V05_CPU_TEMP]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-MetaDx Temp Sensor Remote]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VH1_P12V]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP8_METADX_AVDD_0V8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP9_P1V0_IOFPGA]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP10_P1V8_IOFPGA]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP11_P2V5]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP12_P3V3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP13_P1V8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VH1_CPU_12V]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VH4_CPU_5V_SDTBY]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VH2_GDDR6_1V25]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP1_CPU_1V2_SDTBY]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP2_CPU_2V5_SDTBY]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP3_CPU_3V3_SDTBY]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP4_CPU_CORE_1V82]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP5_CPU_PCH_1V5]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP6_CPU_DDR_VTT_0V6]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP7_CPU_DDR_1V2]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP8_CPU_2V5]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP9_CPU_1V05]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP10_CPU_1V3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VH3_GDDR6-VPP_1V8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP11_CPU_1V7]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP12_CPU_3V3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V8_Q2A_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V25_Q2A_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VH4_Q2A_0V88]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P0V82_Q2A_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V8_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP1_Q2A_XVDD1P8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P3V3_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P0V8_Q2A_SRDS_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP2_Q2A_TVDD1P2]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P0V8_METDX1_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP3_Q2A_XVDD0P8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V82_CPU_CORE_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V2_CPU_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP4_Q2A_VDCC_0V82]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V05_CPU_VOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-VP5_METADX_0V8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-MB-ALTITUDE Sensor]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-GNSS]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-MB-HUMIDITY Sensor]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V8_Q2A_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V25_Q2A_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P0V82_Q2A_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V8_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P3V3_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P0V8_Q2A_SRDS_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P0V82_METDX1_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V82_CPU_CORE_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V2_CPU_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-P1V05_CPU_IOUT]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Disk0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-IoFpgaGolden]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Primary-BIOS]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SsdSAMSA64G3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-IoFpga]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TamFwGolden]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TamFw]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-StdbyFpgaGolden]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-StdbyFpga]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-ADM-MBConfig]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-ADM-DBConfig]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-MB IDPROM]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-DDR4 DIMM 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-DDR4 DIMM 1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran2A]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics Controller 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-FourHundredGigE0/0/0/0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-QSFP bay 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 0 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Rx Lane 0 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Rx Lane 1 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Rx Lane 2 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Rx Lane 3 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Rx Lane 4 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Rx Lane 5 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Rx Lane 6 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Rx Lane 7 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 1 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 2 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 3 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 4 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 5 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 6 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 7 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Module Temp]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-3.3 V]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 0 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 1 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 2 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 3 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 4 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 5 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 6 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-Tx Lane 7 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=FourHundredGigE0/0/0/0-IDPROM]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-OpticalChannel0/0/0/0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 9]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/9]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFP56 bay 9]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 9]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 10]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/10]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 10]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 10]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 11]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/11]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 11]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 11]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 12]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/12]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 12]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 12]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 13]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/13]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 13]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 13]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 14]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/14]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 14]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 14]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 15]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/15]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 15]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 15]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 16]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/16]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 16]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 16]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 17]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/17]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 17]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 17]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 18]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/18]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 18]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 18]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-HundredGigE0/0/0/1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-QSFP bay 1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Tx Lane 0 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Rx Lane 0 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Rx Lane 1 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Rx Lane 2 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Rx Lane 3 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Tx Lane 1 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Tx Lane 2 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Tx Lane 3 Power]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Temperature Sensor]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Voltage Sensor]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Tx Lane 0 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Tx Lane 1 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Tx Lane 2 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-Tx Lane 3 Current]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=HundredGigE0/0/0/1-IDPROM]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-OpticalChannel0/0/0/1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 19]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/19]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 19]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 19]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 20]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/20]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 20]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 20]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 21]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/21]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 21]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 21]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 22]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/22]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 22]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 22]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 23]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/23]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 23]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 23]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 24]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/24]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 24]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 24]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 25]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/25]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 25]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 25]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 26]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/26]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 26]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 26]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 27]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/27]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 27]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 27]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 28]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/28]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 28]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 28]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 2]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/2]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFP56 bay 2]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 2]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 29]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/29]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 29]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 29]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 30]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/30]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 30]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 30]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 31]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/31]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 31]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 31]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 32]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/32]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 32]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 32]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 33]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/33]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFPP bay 33]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 33]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFP56 bay 3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 4]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/4]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFP56 bay 4]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 4]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 5]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/5]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFP56 bay 5]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 5]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 6]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/6]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFP56 bay 6]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 6]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 7]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/7]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFP56 bay 7]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 7]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Slice 0 Qumran Port Module 8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-TwentyFiveGigE0/0/0/8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-SFP56 bay 8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-Optics LED Port 8]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-MB IOFPGA SPI Flash 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-MB IOFPGA SPI Flash 1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/RP0/CPU0-OBFL Flash]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=Rack 0-Fan Tray 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-Fan 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-FAN_0 Speed]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-Fan 1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-FAN_1 Speed]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-Fan 2]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-FAN_2 Speed]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-Fan 3]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-FAN_3 Speed]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-Fan 4]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-FAN_4 Speed]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-Fan 5]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-FAN_5 Speed]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-Status]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=0/FT0-FAN IDPROM]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=Rack 0-PSU Slot 0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=Rack 0-PSU Slot 1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=Rack 0-CHASSIS IDPROM]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-NODE 0/RP0/CPU0]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-aaa-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-acl-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-apphosting-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-appmgr-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-bcdl-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-bfd-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-bgp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-bgputil-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-bng-stubs-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-bundles-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cal-pi-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cds-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cem-driver-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cfgmgr-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cfm-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cofo-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-core-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-core-calv-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-common-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-common-optics-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-common-psu-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-devobj-misc-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-devobj-npu-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-devobj-phy-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-devobj-sensors-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-devobj-storage-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-devobj-test-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-devobj-timing-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-fpgalib-access-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-fpgalib-common-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-fpgalib-infra-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-fpgalib-kmod-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-fpgalib-misc-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-driver-optics-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-ethsw-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-idprom-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpa-tamlib-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-cpri-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ctc-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-debug-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-dhcp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-diskboot-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-drivers-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-edpl-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-eem-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-elmi-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ema-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-enhancedmanageability-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-erp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-featurecapability-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-fib-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-filesysinv-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-foundation-ncs540l-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-fpd-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-gil-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ha-infra-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-host-core-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-httpclient-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-icpe-eth-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-icpe-opt-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-identifier-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-infra-sla-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-install-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ip-apps-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ip-core-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ip-infra-vrf-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ip-mibs-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ip-static-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ipc-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ipsla-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-is-is-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-l2snooptransport-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-l2vpn-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ldp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-licensing-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-link-oam-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-linuxnetworking-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-linuxsecurity-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-lldp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-lpts-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-manageabilityxml-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-mandatory-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-mcast-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-mcastl2snoop-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-mda-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-mpls-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-mpls-oam-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-mpls-oam-client-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-mpls-static-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-bfd-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-bundles-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-card-support-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-cfm-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-core-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-cpa-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-cpa-bcm-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-cpa-devobj-misc-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-cpa-test-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-cpri-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-fab-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-fpd-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-link-oam-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-mcast-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-netflow-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-optics-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-os-wr9-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-portmode-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-sat-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-timing-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ncs540l-vether-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-netflow-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ntp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-optics-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-orrspf-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-os-wr9-apps-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-os-wr9-core-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-os-wr9-hardware-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ospf-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-p4rt-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-perf-meas-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-perfmgmt-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-pfi-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-pird-stubs-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-pkt-trace-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-pm-alarm-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-portmode-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-procmgr-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-python-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-qos-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-routing-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-rpl-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-rsvp-te-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-security-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-security-tams-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-secy-driver-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-servicelayer-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-snmp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-snmp-hw-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-span-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-spi-core-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-spi-hw-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-spp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-sr-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-stats-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-stp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-stubs-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-sysdb-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-syslog-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-telemetry-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-timing-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-tmpdir-cleanup-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-track-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-transports-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-tty-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-tunnel-ip-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-udld-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-upgradematrix-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-utils-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-vether-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-vpnmib-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-xmlinfra-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-xrlibcurl-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      },
+      {
+        "Path": "openconfig:components/component[name=IOSXR-PKG/1 xr-ztp-7.9.1.28Iv1.0.0-1]",
+        "values": {
+          "components/component": null
+        }
+      }
+    ]
+  }
+]
