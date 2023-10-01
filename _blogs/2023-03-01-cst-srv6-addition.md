@@ -247,7 +247,7 @@ TE is required than Flex-Algo provides, such as defining explicit paths or requi
 a path be disjoint from another path, SRv6-TE can be utilized. In CST SRv6 1.0, 
 on-demand networking can be used for supported services with SR-PCE to compute both 
 intra-domain and inter-domain paths.  Provisioning, visualization, and monitoring of 
-SRvv6-TE pahs is available in Crosswork Network Controller 4.1.  
+SRv6-TE paths is available in Crosswork Network Controller 4.1.  
 
  
 
