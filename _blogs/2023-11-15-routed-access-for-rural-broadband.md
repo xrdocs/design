@@ -30,7 +30,6 @@ In addition to being able to transmit high-bandwidth data over long distances wi
 With all the advantages of fiber and 10 Gigabits of symmetric bandwidth, XGS-PON is a compelling choice for rural broadband over the next 5 years.
 
 ## Value Proposition
-
 [Converged SDN Transport](https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld) is the gold standard for modern service provider networking architecture, delivering a high-scale, programmable network capable of delivering all services (Residential, Business, 4G/5G Mobile Backhaul, Video, IoT).   While many of the high-level design principles of Converged SDN Transport can be extended to rural broadband, some deployments will benefit from some modifications.  In particular,  rural broadband deployments may emphasize:
 - **Lower densities**: rural deployments will have fewer people over greater distances than urban or suburban deployments
 - **Lower scale**: unlike urban or suburban deployments, rural deployments may have much smaller total subscriber counts.  The RBB Design is targeted at deployments from 5,000 to 100,000 subscribers.
@@ -41,7 +40,7 @@ With all the advantages of fiber and 10 Gigabits of symmetric bandwidth, XGS-PON
 Routed Access for Rural Broadband PON introduces best-practice network design for small operators looking to deploy residential broadband services.
 
 ## Solution Overview
-The Routed Access for Rural Broadband is made of the following main building blocks:
+Routed Access for Rural Broadband is made of the following main building blocks:
 - IOS-XR as a common Operating System proven in Service Provider Networks
 - Routed access with transport based on Segment Routing
 - Redundancy and traffic isolation provided by Layer 2 (EVPN) and Layer 3 VPN services based on BGP
@@ -63,18 +62,13 @@ There are many benefits to bringing IP and MPLS to the access network:
 ### Hardware Components
 
 #### NCS 540 Series
-The NCS 540 family of routers are powerful and versatile access routers capable of aggregating 10G uplinks from XGS-PON devices.
-More information on the NCS 540 router line can be found at:
-https://www.cisco.com/c/en/us/products/routers/network-convergence-system-540-series-routers/index.html
+The [NCS 540 family](https://www.cisco.com/c/en/us/products/routers/network-convergence-system-540-series-routers/index.html) of routers are powerful and versatile access routers capable of aggregating uplinks from XGS-PON devices.  With a wide range of speeds (10G/25G/40G/100G) and port densities, the NCS 540 series can support many variations of access rings.
 
 #### NCS 5500 / 5700 Fixed Chassis
-The NCS 5500 / 5700 fixed series devices are validated in access and aggregation roles.  The NCS-55A1-24Q6H-S and NCS-55A1-24Q6H-SS have 24x1GE/10GE, 24x1GE/10GE/25GE, and 6x40GE/100GE interfaces. The 24Q6H-SS provides MACSEC support on all interfaces. The NCS-55A1-24Q6H series also supports 10GE/25GE DWDM optics on all relevant ports.
+The [NCS 5500 / 5700 fixed series](https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/ncs-5500-5700-platform-ar-wp.html) devices are scalable, low-power consumption, and cost-optimized 100G routing platforms for aggregation and high-scale access roles in the Routed Access for Rural Broadband design. The platform family offers industry-leading density of 1/10/25/40/50/100/400G ports with efficient forwarding performance, low jitter, and the lowest power consumption per gigabits/sec at a very cost-effective price point.
 
 #### ASR 9000
-The ASR 9000 is the router of choice for edge services. The Routed Access for Rural Broadband utilizes the ASR 9000 in a PE function role, performing Pseudowire headend termination for per-subscriber policy with BNG.
-
-#### Cisco 8000
-The Routed Access design includes the Cisco 8000 family. Cisco 8000 routers provide the lowest power consumption in the industry, all while supporting systems over 200 Tbps and features service providers require. The Cisco 8000 can fulfills the role of aggregation router in the design. Service termination is not supported on the 8000.
+The ASR 9000 is the router family of choice for edge services. The Routed Access for Rural Broadband utilizes the ASR 9000 in a PE function role, performing Pseudowire headend termination for per-subscriber policy with BNG.
 
 ### Design Components
 
@@ -85,28 +79,37 @@ Once the user’s traffic reaches the OLT, it gets handed off to the access netw
 
 In a routed ring access topology, routers are connected in a ring.  Because traffic can flow in either direction, the ring topology provides an automatic backup path if a link or router fails. 
 
-[insert picture]
+In the following example topology, generic XGS-PON OLTs with 10G uplinks connect to a 100G routed access ring of NCS 540s.  The 55A1-24Hs, with 24 100G ports, can aggregate multiple 100G NCS 540 rings and, if needed, provide uplinks for 100G OLT shelves.
 
-In a point to point access architecture, the access routers can be single or dual-homed to the central office .  Dual-homing enables redundancy should either of the uplinks fail.  
+![RBB_Ring_Topo.jpg]({{site.baseurl}}/images/RBB_Ring_Topo.jpg)
 
-[insert picture]
+Depending on the density and distribution of subscribers and the uplink capabilities of the your PON solution, different platforms in the NCS540 and NCS5500/5700 families can be used to construct the access ring and aggregation nodes.
+
+In a point to point access architecture, the access routers can be single or dual-homed to the central office.  Dual-homing enables redundancy should either of the uplinks fail.  
+
+![RBB_Hub_And_Spoke.jpg]({{site.baseurl}}/images/RBB_Hub_And_Spoke.jpg)
 
 Regardless of how the routers connect back to the Internet (ring or point-to-point), each router serves as an aggregation point for individual OLTs, OLT rings or OLT trees.  Depending on the availability requirements, those OLTs can be single or dual-homed to the routers.  
 
 ### Routing and Forwarding
 
 The foundation technology used in this design is Segment Routing (SR) with a MPLS based Data Plane.  Because rural broadband designs are typically small enough to run a single IGP domain, the focus of the design is on intra-domain forwarding.  For networks that exceed the scale limits of a single domain, refer to the Inter-Domain Operation guidelines of the Converged SDN Transport design.
+
 Segment Routing dramatically reduces the amount of protocols needed in a Service Provider Network. Simple extensions to traditional IGP protocols like ISIS or OSPF provide full Intra-Domain Routing and Forwarding Information over a label switched infrastructure, along with High Availability (HA) and Fast Re-Route (FRR) capabilities.
+
 Segment Routing introduces the idea of a Prefix Segment Identifier or Prefix-SID.  A prefix-SID identifies the router and must be unique for every router in the IGP Domain. Prefix-SID is statically allocated by the network operator in the IGP configuration process. The Prefix-SID is advertised by the IGP protocol which eliminates the need to use LDP or RSVP protocol to exchange MPLS labels.
+
 The Routed Access for Rural Broadband design uses IS-IS as the IGP protocol.
-Fast Re-Route using TI-LFA
+
+#### Fast Re-Route using TI-LFA
 Segment-Routing embeds a simple Fast Re-Route (FRR) mechanism known as Topology Independent Loop Free Alternate (TI-LFA).
+
 TI-LFA provides sub 50ms convergence for link and node protection. TI-LFA is completely stateless and does not require any additional signaling mechanism as each node in the IGP Domain calculates a primary and a backup path automatically and independently based on the IGP topology. After the TI-LFA feature is enabled, no further care is expected from the network operator to ensure fast network recovery from failures. This is in stark contrast with traditional MPLS-FRR, which requires RSVP and RSVP-TE and therefore adds complexity in the transport design.
 
 ### MPLS VPN Services
 One of the advantages of an IP/MPLS network is that it enables the deployment of VPN services.  Many people associate L3VPN and L2VPN with expensive business services.  But even small providers can benefit from judicious use of MPLS VPNs in residential deployments.
 
-In the simplest design, subscriber traffic arrives at the access device, receives an IP address via DHCP and gets access to the Internet via the global routing table. Many larger, modern networks are being built to isolate the global routing table from the underlying infrastructure. In this case, the Internet global table is carried as an L3VPN service just like any other VPN service, leaving the infrastructure layer protected from both the global Internet.  
+In the simplest design, subscriber traffic arrives at the access device, receives an IP address via DHCP and gets access to the Internet via the global routing table. Many larger, modern networks are being built to isolate the global routing table from the underlying infrastructure. In this case, the Internet global table is carried as an L3VPN service, leaving the infrastructure layer protected from both the global Internet.  
 
 The other use case for MPLS VPN services is when Broadband Network Gateway (BNG)  is deployed for per-subscriber traffic management.  Because BNG requires more sophisticated treatment of the user traffic and, hence, more expensive forwarding hardware, the BNG device is often deployed in a centralized location to take advantage of economies of scale.  Access devices can be configured to backhaul Layer 2 subscriber traffic to the BNG device using EVPN pseudowires.
 
@@ -122,6 +125,7 @@ The platforms in the design have sophisticated and rich QoS feature sets that ar
 QoS policies applied to network interfaces act on the aggregate subscriber traffic on that interface. This, combined with OLT QoS capabilities, may be sufficient for simple deployments of sparsely populated areas, may be sufficient for some RBB providers.  Other providers may need to leverage a BNG solution for finer-grained QoS policies.  
 
 ## Use Cases
+
 ### High Speed Residential Data Services
 The primary use case for rural broadband deployments leveraging federal grants such as BEAD is a high speed (100M minimum) data service.  Other offerings, such as telephone
 and video, may be offered over a funded network that meets the unicast data requirements but those services are subject to additional regulation.
@@ -133,7 +137,6 @@ In the 1:1 VLAN model, each subscriber is assigned their own VLAN.  Typically, t
 The routed access design for rural broadband can support either VLAN model.  
 
 ### High Availability for PON
-
 Whether you’re deploying a single OLT shelf, a tree of OLTs or a ring of OLT, the connection from the OLT to the access router represents a potential point of failure.  To protect against the failure of a single port on either the router or the OLT, multiple links are commonly be bundled together for a redundant connection.  The router, however, remains a single point of failure.
 
 To protect against a router failure, the OLT can be dual-homed to two different routers using EVPN.  EVPN enables “all-active” redundant links to two or more routers.  The  OLT believes that it is connected to a single device using a normal bundle interface.  
