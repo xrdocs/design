@@ -26,14 +26,14 @@ While traditional, large-scale service providers will be able to expand their se
 ### Focus on Fiber
 Although many types of technology can enable high-speed broadband access, a clear preference for fiber to the home has emerged.  The majority of BEAD funding ($41.6 billion) is to be used to deploy last-mile fiber-optic networks.   Only “extremely high-cost” areas will be permitted to deploy non-fiber technologies under the terms of the program. 
 
-There are several reasons for the focus on fiber for rural broadband deployments. Network design for residential broadband services is constrained by the availability of power for electronic components that make up the network.  So called “active” electronic components need power (and sometimes cooling) to function.  A passive optical network (PON) running over fiber does not need to be powered by electricity (even splitters function without added power).  Because PON is composed of passive optical components that don’t need power, higher distances can be achieved between a customer’s home or business and the central office or hub. For rural deployments with low population densities and long distances between subscribers, PON is an obvious choice.
+There are several reasons for the focus on fiber for rural broadband deployments. Network design for residential broadband services is constrained by the availability of power for electronic components that make up the network. A passive optical network (PON) running over fiber does not need to be powered by electricity (even splitters function without added power) which means that higher distances can be achieved between a customer’s home or business and the central office or hub. For rural deployments with low population densities and long distances between subscribers, PON is an obvious choice.
 
 In addition to being able to transmit high-bandwidth data over long distances with minimal electro-magnetic interference, fiber deployments can last for decades with the same fiber supporting higher and higher data rates as technologies evolves over time. One such transition is happening now.  For more than a decade, Gigabit-capable Pon (GPON) has been the gold standard for fiber deployments, providing 2.5Gpbs downstream and 1.25 Gbps upstream.  As the demand for bandwidth has grown, providers have started to shift to 10-Gigabit symmetric PON (XGS-PON).  Because GPON and XGS-PON run on different wavelengths, both can run on the same fiber.  Providers can easily migrate from GPON to XGS-PON by swapping out the equipment on either end of the fiber.
 
 With all the advantages of fiber and 10 Gigabits of symmetric bandwidth, XGS-PON is a compelling choice for rural broadband over the next 5 years.
 
 ## Value Proposition
-[Converged SDN Transport](https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld) is the gold standard for modern service provider networking architecture, delivering a high-scale, programmable network capable of delivering all services (Residential, Business, 4G/5G Mobile Backhaul, Video, IoT).   While many of the high-level design principles of Converged SDN Transport can be extended to rural broadband, some deployments will benefit from some modifications.  In particular,  rural broadband deployments may emphasize:
+[Converged SDN Transport](https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld) is the gold standard for modern service provider networking architecture, delivering a high-scale, programmable network capable of delivering all services (Residential, Business, 4G/5G Mobile Backhaul, Video, IoT).   While many of the high-level design principles of Converged SDN Transport can be extended to rural broadband, many deployments will benefit from some modifications.  In particular,  rural broadband deployments may emphasize:
 - **Lower densities**: rural deployments will have fewer people over greater distances than urban or suburban deployments
 - **Lower scale**: unlike urban or suburban deployments, rural deployments may have much smaller total subscriber counts.  The RBB Design is targeted at deployments from 5,000 to 100,000 subscribers.
 - **More flexibility**:  rural deployments may require the flexibility to build as they go, starting simple and adding functionality as requirements evolve and funding allows.  The RBB design starts with basic connectivity with the option to add redundancy and subscriber-specific features later on.
@@ -44,11 +44,17 @@ Routed Access for Rural Broadband PON introduces best-practice network design fo
 
 ## Solution Overview
 Routed Access for Rural Broadband is made of the following main building blocks:
+
+- PON-Agnostic 
 - IOS-XR as a common Operating System proven in Service Provider Networks
 - Routed access with transport based on Segment Routing
 - Redundancy and traffic isolation provided by Layer 2 (EVPN) and Layer 3 VPN services based on BGP
 - BNG for optional per-subscriber traffic management
 
+### PON Agnostic
+One of the first decisions a new rural broadband provider makes is how to deploy PON.  The optical line terminal (OLT) is the starting point of the optical network and serves as the demarkation point of the access network. Many PON vendors offer OLTs in a variety of form-factors, from massive 48-port PON shelves to 4-port temperature-hardened remote OLTs, to pluggable SFPs that provide full OLT functionality when plugged into an ethernet port.
+
+The sparser densities and longer distances in rural broadband will typically favor smaller form factor OLTs.  But whatever the form factor, the Routed Access for Rural Broadband design supports any vendor's OLT that connects to the access network via common ethernet technologies.
 
 ### Routed Access
 Access domains have traditionally been built using flat Layer 2 native ethernet technologies.  But traditions sometimes persist even when the reasons for them no longer exist.  In the past, many people defaulted to Layer 2 networks because switching was less expensive and Layer 2 seemed simpler than IP/MPLS networks.  But big shifts in the economics of routing silicon have made routers more affordable and innovations like Segment Routing have made MPLS much simpler to deploy.  
@@ -76,7 +82,7 @@ The [ASR 9900](https://www.cisco.com/c/en/us/products/routers/asr-9000-series-ag
 ### Design Components
 
 #### Topology Options
-Unlike the tidy racks of data center networks, the physical design of broadband networks tends to be messy, dominated by the geography and population density of the area to be served.  Homes connect back to an Optical Line Terminal (OLT) located at a point-of-presence, central office or outside plant in a point-to-multipoint topology.  An XGS-PON OLT can serve homes in a 20 to 100 km radius.  A small, remote OLT (hardened for outside conditions) with 4 ports and a 64-way split could serve up to 256 homes.  A 16-port PON shelf with the same 64-way split might serve 1024 homes within a 40 km radius.  For denser, less rural areas, larger PON shelves can be stacked to serve tens or hundreds of thousands of homes within the supported radius.
+Unlike the tidy racks of data center networks, the physical design of broadband networks tends to be messy, dominated by the geography and population density of the area to be served.  Homes connect back to OLT located at a point-of-presence, central office or outside plant in a point-to-multipoint topology.  An XGS-PON OLT can serve homes in a 20 to 100 km radius.  A small, remote OLT (hardened for outside conditions) with 4 ports and a 64-way split could serve up to 256 homes.  A 16-port PON shelf with the same 64-way split might serve 1024 homes within a 40 km radius.  For denser, less rural areas, larger PON shelves can be stacked to serve tens or hundreds of thousands of homes within the supported radius.
 
 Once the user’s traffic reaches the OLT, it gets handed off to the access network which takes that traffic to the Internet (or other service).  The design of access networks is also determined by geography and the availability of fiber.   Two typical designs are ring and point-to-point.
 
@@ -130,8 +136,7 @@ QoS policies applied to network interfaces act on the aggregate subscriber traff
 ## Use Cases
 
 ### High Speed Residential Data Services
-The primary use case for rural broadband deployments leveraging federal grants such as BEAD is a high speed (100M minimum) data service.  Other offerings, such as telephone
-and video, may be offered over a funded network that meets the unicast data requirements but those services are subject to additional regulation.
+The primary use case for rural broadband deployments leveraging federal grants such as BEAD is a high speed (100M minimum) data service.  Other offerings, such as telephone and video, may be offered over a funded network that meets the unicast data requirements but those services are subject to additional regulation.
 
 Depending on the configuration of the PON network, unicast subscriber traffic will arrive at the access router from the OLT in one of two ways: VLAN per service (N:1 VLAN) or VLAN per subscriber (1:1 VLAN).  In the N:1 VLAN model, a service (e.g. high-speed data) is represented by a VLAN.  Many (“N”) subscribers access that service via a single (“1”) VLAN.  Other services, like voice and video, use other VLANs.  This is the simplest solution to deploy and maintain.
 
@@ -142,7 +147,7 @@ The routed access design for rural broadband can support either VLAN model.
 ### High Availability for PON
 Whether you’re deploying a single OLT shelf, a tree of OLTs or a ring of OLT, the connection from the OLT to the access router represents a potential point of failure.  To protect against the failure of a single port on either the router or the OLT, multiple links are commonly be bundled together for a redundant connection.  The router, however, remains a single point of failure.
 
-To protect against a router failure, the OLT can be dual-homed to two different routers using EVPN.  EVPN enables “all-active” redundant links to two or more routers.  The  OLT believes that it is connected to a single device using a normal bundle interface.  
+To protect against a router failure, the OLT can be dual-homed to two different routers using EVPN.  EVPN supports “all-active” redundant links to two or more routers.  The  OLT believes that it is connected to a single device using a normal bundle interface.  
 
 The routed access design for rural broadband supports a single, non-redundant uplink, a bundled interface to the same router, and a bundled interface to two redundant routers with EVPN.
 
@@ -286,6 +291,13 @@ interface HundredGigE0/0/1/0
 ```
 
 ## BGP – Access
+Enable BGP when your deployment needs any of the following:
+
+- Multi-homed, redundant connectivity to the OLT using EVPN-enabled LAG
+- Isolation of user traffic into a non-default VRF
+- Per-subscriber policy with BNG
+
+Very small networks can use fully meshed BGP peers.  Otherwise, a route reflector is recommended.
     
 ### IOS-XR configuration
 
@@ -320,847 +332,151 @@ router bgp 100
 
 # Services
     
-## End-To-End Services
+## EVPN-enabled LAG for Redundant OLT Connections
+![Redundant OLT 2.jpg]({{site.baseurl}}/images/Redundant OLT 2.jpg)
 
-![]({{site.baseurl}}/images/cmfi/image6.png)
 
-_Figure 6: End-To-End Services Table_
+When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 300 on both routers which share a default anycast gateway represented by the BVI interface.  The BVI interface can be assigned a DHCP relay profile, included in the global routing table or put in a separate VRF.
 
-### L3VPN MP-BGP VPNv4 On-Demand Next-Hop
+### Access Router Service Provisioning:
 
-![]({{site.baseurl}}/images/cmfi/image7.png)
-
-_Figure 7: L3VPN MP-BGP VPNv4 On-Demand Next-Hop Control Plane_
-
-**Access Routers:** **Cisco ASR920 IOS-XE**
-
-1.  **Operator:** New VPNv4 instance via CLI or NSO
-
-2.  **Access Router:** Advertises/receives VPNv4 routes to/from Services
-    Route-Reflector (sRR)
-
-3.  **Access Router**: Request SR-PCE to provide path (shortest IGP metric)
-    to remote access router
-
-4.  **SR-PCE:** Computes and provides the path to remote router(s)
-
-5.  **Access Router:** Programs Segment Routing Traffic Engineering
-    (SRTE) Policy to reach remote access router
-
-Please refer to “**On Demand Next-Hop (ODN) – IOS-XE**” section for
-initial ODN configuration.
-
-#### Access Router Service Provisioning (IOS-XE):
-
-**VRF definition configuration**
+**Interface configuration**
 
 ```
-vrf definition L3VPN-SRODN-1
- rd 100:100
- route-target export 100:100
- route-target import 100:100
- address-family ipv4
- exit-address-family
-```
-
-
-**VRF Interface configuration**
-
-```
-interface GigabitEthernet0/0/2
- mtu 9216
- vrf forwarding L3VPN-SRODN-1
- ip address 10.5.1.1 255.255.255.0
- negotiation auto
-end
-```
-
-**BGP VRF configuration Static & BGP neighbor **
-
-**Static routing configuration**
-
-```
-router bgp 100
- address-family ipv4 vrf L3VPN-SRODN-1
-  redistribute connected
- exit-address-family
-```
-
-**BGP neighbor configuration**
-
-```
-router bgp 100
- neighbor Customer-1 peer-group
- neighbor Customer-1 remote-as 200
- neighbor 10.10.10.1 peer-group Customer-1
- address-family ipv4 vrf L3VPN-SRODN-2
-   neighbor 10.10.10.1 activate
- exit-address-family
-```
-
-### L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop
-
-![]({{site.baseurl}}/images/cmfi/image8.png)
-
-_Figure 8: L2VPN Single-Homed EVPN-VPWS On-Demand Next-Hop Control Plane_
-
-**Access Routers:** **Cisco NCS5501-SE IOS-XR**
-
-1.  **Operator:** New EVPN-VPWS instance via CLI or NSO
-
-2.  **Access Router:** Advertises/receives EVPN-VPWS instance to/from
-    Services Route-Reflector (sRR)
-
-3.  **Access Router**: Request SR-PCE to provide path (shortest IGP metric)
-    to remote access router
-
-4.  **SR-PCE:** Computes and provides the path to remote router(s)
-
-5.  **Access Router:** Programs Segment Routing Traffic Engineering
-    (SRTE) Policy to reach remote access router
-
-Please refer to “**On Demand Next-Hop (ODN) – IOS-XR**” section for
-initial ODN configuration.
-
-#### Access Router Service Provisioning (IOS-XR):
-
-**PORT Based service configuration**
-
-```
-l2vpn                                                                                                                                                            
- xconnect group evpn_vpws                                                                                                                                        
- p2p odn-1                                                                                                                                                      
-  interface TenGigE0/0/0/5                                                                                                                                
-   neighbor evpn evi 1000 target 1 source 1  
-
-interface TenGigE0/0/0/5 
-  l2transport
-```
-
-**VLAN Based service configuration**
-
-```
-l2vpn                                                                                                                                                            
- xconnect group evpn_vpws                                                                                                                                        
- p2p odn-1                                                                                                                
-  interface TenGigE0/0/0/5.1                                                                                                     
-  neighbor evpn evi 1000 target 1 source 1  
-
-interface TenGigE0/0/0/5.1 l2transport
- encapsulation dot1q 1
- rewrite ingress tag pop 1 symmetric
+interface TenGigE0/0/0/1
+ bundle id 1 mode active
+ !
+interface Bundle-Ether1
+ lacp system mac 0000.0000.0001
+ lacp system priority 1
 !
-```
-
-### L2VPN Static Pseudowire (PW) – Preferred Path (PCEP)
-
-![]({{site.baseurl}}/images/cmfi/image9.png)
-
-_Figure 9: L2VPN Static Pseudowire (PW) – Preferred Path (PCEP) Control
-Plane_
-
-**Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
-
-1.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
-
-2.  **Access Router**: Request SR-PCE to provide path (shortest IGP metric)
-    to remote access router
-
-3.  **SR-PCE:** Computes and provides the path to remote router(s)
-
-4.  **Access Router:** Programs Segment Routing Traffic Engineering
-    (SRTE) Policy to reach remote access router
-    
-#### Access Router Service Provisioning (IOS-XR):
-
-```
-segment-routing                                                                                                                                                 
- traffic-eng                                                                                                                                                     
-  policy GREEN-PE7
-   color 200 end-point ipv4 100.0.2.52
-   candidate-paths
-    preference 1
-     dynamic
-      pce
-      !
-      metric
-       type igp
-```
-
-**Port Based Service configuration**
-
-```
-interface TenGigE0/0/0/15 
-  l2transport
-
-l2vpn 
- pw-class static-pw-class-PE7
-  encapsulation mpls
-   control-word
-   preferred-path sr-te policy GREEN-PE7
-
- p2p Static-PW-to-PE7-1                                                                                                                                  
-  interface TenGigE0/0/0/15                                                                                                                        
-   neighbor ipv4 100.0.2.52 pw-id 1000                      
-    mpls static label local 1000 remote 1000 pw-class static-pw-class-PE7   
-```
-
-
-**VLAN Based Service configuration**
-
-```
-interface TenGigE0/0/0/5.1001 l2transport
- encapsulation dot1q 1001
+interface Bundle-Ether1.300 l2transport
+ encapsulation dot1q 300
  rewrite ingress tag pop 1 symmetric
-
-l2vpn 
- pw-class static-pw-class-PE7
-  encapsulation mpls
-   control-word
-   preferred-path sr-te policy GREEN-PE7
-  p2p Static-PW-to-PE7-2                                                                                                                                      
-   interface TenGigE0/0/0/5.1001
-    neighbor ipv4 100.0.2.52 pw-id 1001                      
-     mpls static label local 1001 remote 1001 pw-class static-pw-class-PE7 
-```
-
-#### Access Router Service Provisioning (IOS-XE):
-
-**Port Based service with Static OAM configuration**
-
-```
-interface GigabitEthernet0/0/1
- mtu 9216
- no ip address
- negotiation auto
- no keepalive
- service instance 10 ethernet
-  encapsulation default
-  xconnect 100.0.2.54 100 encapsulation mpls manual pw-class mpls
-   mpls label 100 100
-   no mpls control-word
  !
- pseudowire-static-oam class static-oam                        
- timeout refresh send 10                                      
- ttl 255                     
-        
-pseudowire-class mpls                                                     
- encapsulation mpls                                                       
- no control-word                                                          
- protocol none                                                            
- preferred-path interface Tunnel1                                         
- status protocol notification static static-oam                           
-!           
+interface BVI1
+ host-routing
+ ipv4 address 10.10.65.1 255.255.255.0
+ local-proxy-arp
+ ipv6 address 3ffe:501:ffff:101::8/64
+ mac-address 0.0.3
 ```
 
-**VLAN Based Service configuration**
+**EVPN Ethernet-Segment Configuration**
 
 ```
-interface GigabitEthernet0/0/1
- no ip address
- negotiation auto
- service instance 1 ethernet Static-VPWS-EVC
-  encapsulation dot1q 10
-  rewrite ingress tag pop 1 symmetric
-  xconnect 100.0.2.54 100 encapsulation mpls manual pw-class mpls
-   mpls label 100 100
-   no mpls control-word
- !
-
-pseudowire-class mpls                                                     
- encapsulation mpls                                                       
- no control-word                                                          
- protocol none                                                            
- preferred-path interface Tunnel1  
+evpn
+ interface Bundle-Ether1
+  ethernet-segment
+   identifier type 0 00.00.00.00.00.00.00.00.01
 ```
 
-### End-To-End Services Data Plane
-
-![]({{site.baseurl}}/images/cmfi/image10.png)
-
-_Figure 10: End-To-End Services Data Plane_
-
-## Hierarchical Services
-
-![]({{site.baseurl}}/images/cmfi/image11.png)
-
-_Figure 11: Hierarchical Services Table_
-
-### L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Headend (PWHE)
-
-![]({{site.baseurl}}/images/cmfi/image12.png)
-
-_Figure 12: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with Pseudowire-Headend (PWHE) Control Plane_
-
-**Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
-
-1.  **Operator:** New EVPN-VPWS instance via CLI or NSO
-
-2.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
-
-**Provider Edge Routers:** **Cisco ASR9000 IOS-XR**
-
-1.  **Operator:** New EVPN-VPWS instance via CLI or NSO
-
-2.  **Provider Edge Router:** Path to Access Router is known via
-    ACCESS-ISIS IGP.
-
-3.  **Operator:** New L3VPN instance (VPNv4/6) together with
-    Pseudowire-Headend (PWHE) via CLI or NSO
-
-4.  **Provider Edge Router:** Path to remote PE is known via CORE-ISIS
-    IGP.
-    
-#### Access Router Service Provisioning (IOS-XR):
-
-**VLAN based service configuration**
+**L2VPN Bridge-Group Configuration**
 
 ```
 l2vpn
- xconnect group evpn-vpws-l3vpn-PE1
-  p2p L3VPN-VRF1
-   interface TenGigE0/0/0/5.501
-   neighbor evpn evi 13 target 501 source 501
+ bridge group RBB_BRIDGE_GROUP
+  bridge-domain RBB_BRIDGE_DOMAIN
+   interface Bundle-Ether1.300
    !
-  !
+   routed interface BVI1
+   !
+   evi 3
+```
+  
+## Per-subscriber policies with BNG
+
+![EVPN Pseudowire.jpg]({{site.baseurl}}/images/EVPN Pseudowire.jpg)
+
+When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 311 on both routers that backhauls Layer 2 traffic to PE3 which can authenticate the subscriber, apply per-subscriber policies, assign IP addresses and route traffic to the internet.
+
+### Access Router Service Provisioning:
+
+**Interface Configuration**
+
+```
+interface TenGigE0/0/0/1
+ bundle id 1 mode active
  !
-interface TenGigE0/0/0/5.501 l2transport
- encapsulation dot1q 501
+interface Bundle-Ether1
+ lacp system mac 0000.0000.0001
+ lacp system priority 1
+ 
+interface Bundle-Ether1.300 l2transport
+ encapsulation dot1q 300
  rewrite ingress tag pop 1 symmetric
-```
-
-**Port based service configuration**
-
-```
-l2vpn                                                                                                                                                            
- xconnect group evpn-vpws-l3vpn-PE1                                                                                           
- p2p odn-1                                                                                                                                                      
- interface TenGigE0/0/0/5                                                                                                                                
-   neighbor evpn evi 13 target 502 source 502  
-
-interface TenGigE0/0/0/5 
-  l2transport
-```
-
-#### Access Router Service Provisioning (IOS-XE):
-
-**VLAN based service configuration**
+ ```
+ 
+ **EVPN Ethernet-Segment Configuration**
 
 ```
-l2vpn evpn instance 14 point-to-point
- vpws context evpn-pe4-pe1
-  service target 501 source 501
-  member GigabitEthernet0/0/1 service-instance 501
- !
-interface GigabitEthernet0/0/1
- service instance 501 ethernet
-  encapsulation dot1q 501
-  rewrite ingress tag pop 1 symmetric
- !
+evpn
+ interface Bundle-Ether1
+  ethernet-segment
+   identifier type 0 00.00.00.00.00.00.00.00.01
+```
+
+**L2VPN Pseudowire Configuration**
+
+ ```
+ l2vpn
+ xconnect group RBB-PWHE-BNG
+  p2p RBB-PWHE-BNG1
+   interface Bundle-Ether1.311
+   neighbor evpn evi 10101 service 101
  ```
 
-**Port based service configuration**
+### Service Router Provisioning:
 
+The pseudowire initiated on pe101 and pe102 is terminated on the BNG router, pe3, on a pseudowire headend endpoint (PW-Ether).  When the first dhcp request from the subscriber arrives on the pseudowire headend on pe3, pe3 will authenticate the source mac-address and apply the per-subscriber policy.
+
+**Interface configuration**
 ```
-l2vpn evpn instance 14 point-to-point
- vpws context evpn-pe4-pe1
-  service target 501 source 501
-  member GigabitEthernet0/0/1 service-instance 501
+interface PW-Ether2103
+ mtu 1518
+ ipv4 address 182.168.103.1 255.255.255.0
+ ipv6 address 2000:103:1::1:1/64
+ ipv6 enable
+ service-policy type control subscriber RBB_IPoE_PWHE
+ attach generic-interface-list PWHE-RBB-2
+ ipsubscriber ipv4 l2-connected
+  initiator dhcp
  !
-interface GigabitEthernet0/0/1
- service instance 501 ethernet
-  encapsulation default
-```
-
-#### Provider Edge Router Service Provisioning (IOS-XR):
-
-**VRF configuration**  
-
-```
-vrf L3VPN-ODNTE-VRF1                                                                                                                   
- address-family ipv4 unicast                                                                                                           
-  import route-target                                                                                                                  
-   100:501                                                                                                                             
-  !                                                                                                                                    
-  export route-target                                                                                                                  
-   100:501                                                                                                                             
-  !                                                                                                                                    
- !                                                                                                                                     
- address-family ipv6 unicast                                                                                                           
-  import route-target                                                                                                                  
-   100:501                                                                                                                             
-  !                                                                                                                                    
-  export route-target                                                                                                                  
-   100:501                                                                                                                             
-  !
- !
-```
-
-**BGP configuration**
-
-```
-router bgp 100                                                                                                                         
- vrf L3VPN-ODNTE-VRF1
-  rd 100:501
-  address-family ipv4 unicast
-   redistribute connected
-  !
-  address-family ipv6 unicast
-   redistribute connected
-  !
- !
-```
-
-**PWHE configuration**
-
-```
-interface PW-Ether1
- vrf L3VPN-ODNTE-VRF1
- ipv4 address 10.13.1.1 255.255.255.0
- ipv6 address 1000:10:13::1/126
- attach generic-interface-list PWHE
+ ipsubscriber ipv6 l2-connected
+  initiator dhcp
 !
+generic-interface-list PWHE
+ interface HundredGigE0/0/0/15
 ```
 
-**EVPN VPWS configuration towards Access PE**
-
+**L2VPN Pseudowire configuration**
 ```
 l2vpn
- xconnect group evpn-vpws-l3vpn-A-PE3
-  p2p L3VPN-ODNTE-VRF1
-   interface PW-Ether1
-   neighbor evpn evi 13 target 501 source 501
-   !
+ xconnect group rbb-pwhe-bng
+  p2p rbb-pwhe-bng1
+   interface PW-Ether2101
+   neighbor evpn evi 10101 service 101
 ```
 
-![]({{site.baseurl}}/images/cmfi/image13.png)
-
-_Figure 13: L3VPN – Single-Homed EVPN-VPWS, MP-BGP VPNv4/6 with
-Pseudowire-Headend (PWHE) Data Plane_
-
-### L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4 with Anycast IRB
-
-![]({{site.baseurl}}/images/cmfi/image14.png)
-
-_Figure 14: L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4 with
-Anycast IRB Control Plane_
-
-**Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
-
-3.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
-
-4.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
-
-**Provider Edge Routers:** **Cisco ASR9000 IOS-XR (Same on both PE
-routers in same location PE1/2 and PE3/4)**
-
-5.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
-
-6.  **Provider Edge Routers:** Path to Access Router is known via
-    ACCESS-ISIS IGP.
-
-7.  **Operator:** New L3VPN instance (VPNv4/6) together with Anycast IRB
-    via CLI or NSO
-
-8.  **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
-    IGP.
-    
-#### Access Router Service Provisioning (IOS-XR):
-
-**VLAN based service configuration**
+**Policy-Map and dynamic policy for BNG**
 
 ```
-l2vpn
- xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
-  p2p L3VPN-VRF1
-   interface TenGigE0/0/0/2.1
-   neighbor ipv4 100.100.100.12 pw-id 5001
-    mpls static label local 5001 remote 5001
-    pw-class static-pw-h-l3vpn-class
-   !
-  !
-interface TenGigE0/0/0/2.1 l2transport
- encapsulation dot1q 1
- rewrite ingress tag pop 1 symmetric
-!
-
-l2vpn
- pw-class static-pw-h-l3vpn-class
-  encapsulation mpls
-   control-word
-  !
-```
-
-**Port based service configuration**
-
-```
-l2vpn
- xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
-  p2p L3VPN-VRF1
-   interface TenGigE0/0/0/2
-   neighbor ipv4 100.100.100.12 pw-id 5001
-    mpls static label local 5001 remote 5001
-    pw-class static-pw-h-l3vpn-class
-   !
-  !
-interface TenGigE0/0/0/2 
- l2transport
-!
-
-l2vpn
- pw-class static-pw-h-l3vpn-class
-  encapsulation mpls
-   control-word
-  !
-```
-
-#### Access Router Service Provisioning (IOS-XE):
-
-**VLAN based service configuration**
-
-```
-interface GigabitEthernet0/0/5
- no ip address
- media-type auto-select
- negotiation auto
- service instance 1 ethernet
-  encapsulation dot1q 1
-  rewrite ingress tag pop 1 symmetric
-  xconnect 100.100.100.12 4001 encapsulation mpls manual
-   mpls label 4001 4001
-   mpls control-word
- !
-```
-
-**Port based service configuration**
-
-```
-interface GigabitEthernet0/0/5
- no ip address
- media-type auto-select
- negotiation auto
- service instance 1 ethernet
-  encapsulation default
-  xconnect 100.100.100.12 4001 encapsulation mpls manual
-   mpls label 4001 4001
-   mpls control-word
- !
-```
-
-#### Provider Edge Routers Service Provisioning (IOS-XR):
-
-```
-cef adjacency route override rib
-```
-
-**AnyCast Loopback configuration**
-
-```
-interface Loopback100
- description Anycast
- ipv4 address 100.100.100.12 255.255.255.255
-!
-
-router isis ACCESS
- interface Loopback100
- address-family ipv4 unicast
- prefix-sid index 1012
-```
-
-**L2VPN configuration**
-
-```
-l2vpn                                                             
- bridge group Static-VPWS-H-L3VPN-IRB                             
-  bridge-domain VRF1                                              
-   neighbor 100.0.1.50 pw-id 5001                                 
-    mpls static label local 5001 remote 5001                      
-    pw-class static-pw-h-l3vpn-class                              
-   !                                                              
-   neighbor 100.0.1.51 pw-id 4001                                 
-    mpls static label local 4001 remote 4001                      
-    pw-class static-pw-h-l3vpn-class                              
-   !                                                              
-   routed interface BVI1                                          
-    split-horizon group core                                      
-   !                                                              
-   evi 12001
-   !
-  !
-```
-
-**EVPN configuration**
-
-```
-evpn
- evi 12001
-  !
-  advertise-mac
+policy-map type control subscriber RBB_IPoE_PWHE
+ event session-start match-first
+  class type control subscriber DHCP46 do-until-failure
+   1 authorize aaa list RBB_AUTH1_LIST identifier source-address-mac password cisco
+   10 activate dynamic-template PWHE_PBNG1
   !
  !
- virtual neighbor 100.0.1.50 pw-id 5001
-  ethernet-segment
-   identifier type 0 12.00.00.00.00.00.50.00.01
-```
-
-**Anycast IRB configuration**
-
-```
-interface BVI1
- host-routing
- vrf L3VPN-AnyCast-ODNTE-VRF1
- ipv4 address 12.0.1.1 255.255.255.0
- mac-address 12.0.1
- load-interval 30
-!
-```
-
-**VRF configuration**
-
-```
-vrf L3VPN-AnyCast-ODNTE-VRF1
- address-family ipv4 unicast
-  import route-target
-   100:10001
-  !
-  export route-target
-   100:10001
-  !
- !
-!
-```
-
-**BGP configuration**
-
-```
-router bgp 100
- vrf L3VPN-AnyCast-ODNTE-VRF1
-  rd auto
-  address-family ipv4 unicast
-   redistribute connected
-  !
- !
-```
-
-![]({{site.baseurl}}/images/cmfi/image15.png)
-
-_Figure 15: L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4/6 with
-Anycast IRB Datal Plane_
-
-### L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN with Anycast IRB
-
-![]({{site.baseurl}}/images/cmfi/image16.png)
-
-_Figure 16: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
-with Anycast IRB Control Plane_
-
-**Access Routers:** **Cisco NCS5501-SE IOS-XR or Cisco ASR920 IOS-XE**
-
-5.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
-
-6.  **Access Router:** Path to PE Router is known via ACCESS-ISIS IGP.
-
-**Provider Edge Routers:** **Cisco ASR9000 IOS-XR (Same on both PE
-routers in same location PE1/2 and PE3/4)**
-
-7.  **Operator:** New Static Pseudowire (PW) instance via CLI or NSO
-
-8.  **Provider Edge Routers:** Path to Access Router is known via
-    ACCESS-ISIS IGP.
-
-
-9.  **Operator:** New L2VPN Multipoint EVPN instance together with
-    Anycast IRB via CLI or NSO (Anycast IRB is optional when L2 and L3
-    is required in same service instance)
-
-10. **Provider Edge Routers:** Path to remote PEs is known via CORE-ISIS
-    IGP.
-
-**Please note that provisioning on Access and Provider Edge routers is
-same as in “L3VPN – Anycast Static Pseudowire (PW), MP-BGP VPNv4/6 with
-Anycast IRB”. In this use case there is BGP EVPN instead of MP-BGP
-VPNv4/6 in the core.**
-
-#### Access Router Service Provisioning (IOS-XR):
-
-**VLAN based service configuration**
-
-```
-l2vpn
- xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
-  p2p L3VPN-VRF1
-   interface TenGigE0/0/0/2.1
-   neighbor ipv4 100.100.100.12 pw-id 5001
-    mpls static label local 5001 remote 5001
-    pw-class static-pw-h-l3vpn-class
-   !
-  !
-interface TenGigE0/0/0/2.1 l2transport
- encapsulation dot1q 1
- rewrite ingress tag pop 1 symmetric
-!
-
-l2vpn
- pw-class static-pw-h-l3vpn-class
-  encapsulation mpls
-   control-word
-  !
-```
-
-**Port based service configuration**
-
-```
-l2vpn
- xconnect group Static-VPWS-PE12-H-L3VPN-AnyCast
-  p2p L3VPN-VRF1
-   interface TenGigE0/0/0/2
-   neighbor ipv4 100.100.100.12 pw-id 5001
-    mpls static label local 5001 remote 5001
-    pw-class static-pw-h-l3vpn-class
-   !
-  !
-  
-interface TenGigE0/0/0/2 
- l2transport
-!
-
-l2vpn
- pw-class static-pw-h-l3vpn-class
-  encapsulation mpls
-   control-word
-  !
-```
-
-#### Access Router Service Provisioning (IOS-XE):
-
-**VLAN based service configuration**
-
-```
-interface GigabitEthernet0/0/5
- no ip address
- media-type auto-select
- negotiation auto
- service instance 1 ethernet
-  encapsulation dot1q 1
-  rewrite ingress tag pop 1 symmetric
-  xconnect 100.100.100.12 4001 encapsulation mpls manual
-   mpls label 4001 4001
-   mpls control-word
- !
-```
-
-**Port based service configuration**
-
-```
-interface GigabitEthernet0/0/5
- no ip address
- media-type auto-select
- negotiation auto
- service instance 1 ethernet
-  encapsulation default
-  xconnect 100.100.100.12 4001 encapsulation mpls manual
-   mpls label 4001 4001
-   mpls control-word
- !
-```
-
-#### Provider Edge Routers Service Provisioning (IOS-XR):
-
-```
-cef adjacency route override rib
-```
-
-**AnyCast Loopback configuration**
-
-```
-interface Loopback100
- description Anycast
- ipv4 address 100.100.100.12 255.255.255.255
-!
-
-router isis ACCESS
- interface Loopback100
- address-family ipv4 unicast
- prefix-sid index 1012
-```
-
-**L2VPN Configuration**
-
-```
-l2vpn                                                             
- bridge group Static-VPWS-H-L3VPN-IRB                             
-  bridge-domain VRF1                                              
-   neighbor 100.0.1.50 pw-id 5001                                 
-    mpls static label local 5001 remote 5001                      
-    pw-class static-pw-h-l3vpn-class                              
-   !                                                              
-   neighbor 100.0.1.51 pw-id 4001                                 
-    mpls static label local 4001 remote 4001                      
-    pw-class static-pw-h-l3vpn-class                              
-   !                                                              
-   routed interface BVI1                                          
-    split-horizon group core                                      
-   !                                                              
-   evi 12001
-   !
-  !
-```
-
-**EVPN configuration**
-
-```
-evpn
- evi 12001
-  !
-  advertise-mac
-  !
- !
- virtual neighbor 100.0.1.50 pw-id 5001
-  ethernet-segment
-   identifier type 0 12.00.00.00.00.00.50.00.01
-```
-
-**Anycast IRB configuration**
-
-```
-interface BVI1
- host-routing
- vrf L3VPN-AnyCast-ODNTE-VRF1
- ipv4 address 12.0.1.1 255.255.255.0
- mac-address 12.0.1
- load-interval 30
-!
-```
-
-**VRF configuration**
-
-```
-vrf L3VPN-AnyCast-ODNTE-VRF1
- address-family ipv4 unicast
-  import route-target
-   100:10001
-  !
-  export route-target
-   100:10001
-  !
- !
-!
-```
-
-**BGP configuration**
-
-```
-router bgp 100
- vrf L3VPN-AnyCast-ODNTE-VRF1
-  rd auto
-  address-family ipv4 unicast
-   redistribute connected
-  !
- !
+ end-policy-map
  
+ dynamic-template
+ type ipsubscriber PWHE_PBNG1
+  ipv4 verify unicast source reachable-via rx
+  ipv4 unnumbered Loopback44
+  ipv4 unreachables disable
+  ipv6 enable
+ !
+!
 ```
 
-![]({{site.baseurl}}/images/cmfi/image17.png)
-
-_Figure 17: L2/L3VPN – Anycast Static Pseudowire (PW), Multipoint EVPN
-with Anycast IRB Data Plane_
