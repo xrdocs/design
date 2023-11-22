@@ -402,8 +402,8 @@ interface Bundle-Ether1
  lacp system mac 0000.0000.0001
  lacp system priority 1
  
-interface Bundle-Ether1.300 l2transport
- encapsulation dot1q 300
+interface Bundle-Ether1.311 l2transport
+ encapsulation dot1q 311
  rewrite ingress tag pop 1 symmetric
  ```
  
@@ -431,14 +431,15 @@ evpn
 The pseudowire initiated on pe101 and pe102 is terminated on the BNG router, pe3, on a pseudowire headend endpoint (PW-Ether).  When the first dhcp request from the subscriber arrives on the pseudowire headend on pe3, pe3 will authenticate the source mac-address and apply the per-subscriber policy.
 
 **Interface configuration**
+
 ```
-interface PW-Ether2103
+interface PW-Ether2101
  mtu 1518
- ipv4 address 182.168.103.1 255.255.255.0
- ipv6 address 2000:103:1::1:1/64
+ ipv4 address 182.168.101.1 255.255.255.0
+ ipv6 address 2000:101:1::1:1/64
  ipv6 enable
  service-policy type control subscriber RBB_IPoE_PWHE
- attach generic-interface-list PWHE-RBB-2
+ attach generic-interface-list PWHE
  ipsubscriber ipv4 l2-connected
   initiator dhcp
  !
@@ -449,6 +450,17 @@ generic-interface-list PWHE
  interface HundredGigE0/0/0/15
 ```
 
+**DHCP configuration**
+
+```
+dhcp ipv4
+ profile RBB_GROUP proxy
+  helper-address vrf default 10.0.65.2 giaddr 101.0.0.3
+  relay information option allow-untrusted
+ !
+ interface PW-Ether2101 proxy profile RBB_GROUP
+ ```
+ 
 **L2VPN Pseudowire configuration**
 ```
 l2vpn
@@ -473,10 +485,13 @@ policy-map type control subscriber RBB_IPoE_PWHE
  dynamic-template
  type ipsubscriber PWHE_PBNG1
   ipv4 verify unicast source reachable-via rx
-  ipv4 unnumbered Loopback44
+  ipv4 unnumbered Loopback1
   ipv4 unreachables disable
   ipv6 enable
  !
 !
 ```
 
+This configuration is used for a deployment using IPoE subscriber sessions. The configuration of some external elements such as the RADIUS authentication server are outside the scope of this document. For more information about the subscriber features and policy (including QoS, security ACLs, Lawful Intercept and more), see the [Broadband Network Gateway Configuration Guide for Cisco ASR 9000 Series Routers](https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/bng/configuration/guide/b-bng-cg-asr9000-78x.html).
+
+## Infrastructure Assurance
