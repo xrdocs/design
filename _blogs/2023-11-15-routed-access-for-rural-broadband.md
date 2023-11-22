@@ -151,7 +151,7 @@ To protect against a router failure, the OLT can be dual-homed to two different 
 
 The routed access design for rural broadband supports a single, non-redundant uplink, a bundled interface to the same router, and a bundled interface to two redundant routers with EVPN.
 
-### Per-subsciber Policies with BNG
+### Per-subscriber Policies with BNG
 To manage individual subscriber sessions, providers can implement Broadband Network Gateway (BNG).  BNG acts as a gatekeeper, verifying that only approved subscribers can get access to the network and implementing per-subscriber policies (such as QoS or access-control lists) to improve security and the quality of subscriber experience.
 
 BNG manages all aspects of subscriber access including:
@@ -338,6 +338,8 @@ router bgp 100
 
 When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 300 on both routers which share a default anycast gateway represented by the BVI interface.  The BVI interface can be assigned a DHCP relay profile, included in the global routing table or put in a separate VRF.
 
+Note that this configuration can be applied even if you only have a single access router.  By configuring a bundle interface from the beginning, you can easily add another link when the fiber connection becomes available.
+
 ### Access Router Service Provisioning:
 
 **Interface configuration**
@@ -494,4 +496,4 @@ policy-map type control subscriber RBB_IPoE_PWHE
 
 This configuration is used for a deployment using IPoE subscriber sessions. The configuration of some external elements such as the RADIUS authentication server are outside the scope of this document. For more information about the subscriber features and policy (including QoS, security ACLs, Lawful Intercept and more), see the [Broadband Network Gateway Configuration Guide for Cisco ASR 9000 Series Routers](https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/bng/configuration/guide/b-bng-cg-asr9000-78x.html).
 
-## Infrastructure Assurance
+
