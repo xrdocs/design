@@ -1,9 +1,10 @@
 ---
-published: false
+published: true
 date: '2023-11-15 12:24 -0700'
 title: Routed Access for Rural Broadband
 author: Shelly Cadora
 excerpt: A Cisco routed access design for rural broadband
+position: hidden
 ---
 
 {% include toc %}
@@ -46,7 +47,7 @@ Routed Access for Rural Broadband PON introduces best-practice network design fo
 Routed Access for Rural Broadband is made of the following main building blocks:
 
 - PON-Agnostic 
-- IOS-XR as a common Operating System proven in Service Provider Networks
+- IOS-XR as a common operating system proven in Service Provider Networks
 - Routed access with transport based on Segment Routing
 - Redundancy and traffic isolation provided by Layer 2 (EVPN) and Layer 3 VPN services based on BGP
 - BNG for optional per-subscriber traffic management
@@ -54,7 +55,7 @@ Routed Access for Rural Broadband is made of the following main building blocks:
 ### PON Agnostic
 One of the first decisions a new rural broadband provider makes is how to deploy PON.  The optical line terminal (OLT) is the starting point of the optical network and serves as the demarkation point of the access network. Many PON vendors offer OLTs in a variety of form-factors, from massive 48-port PON shelves to 4-port temperature-hardened remote OLTs, to pluggable SFPs that provide full OLT functionality when plugged into an ethernet port.
 
-The sparser densities and longer distances in rural broadband will typically favor smaller form factor OLTs.  But whatever the form factor, the Routed Access for Rural Broadband design supports any vendor's OLT that connects to the access network via common ethernet technologies.
+The sparser densities and longer distances in rural broadband will typically favor smaller form factor OLTs.  In any case, the Routed Access for Rural Broadband design supports any vendor's OLT that connects to the access network via common ethernet technologies.
 
 ### Routed Access
 Access domains have traditionally been built using flat Layer 2 native ethernet technologies.  But traditions sometimes persist even when the reasons for them no longer exist.  In the past, many people defaulted to Layer 2 networks because switching was less expensive and Layer 2 seemed simpler than IP/MPLS networks.  But big shifts in the economics of routing silicon have made routers more affordable and innovations like Segment Routing have made MPLS much simpler to deploy.  
@@ -86,7 +87,7 @@ Unlike the tidy racks of data center networks, the physical design of broadband 
 
 Once the user’s traffic reaches the OLT, it gets handed off to the access network which takes that traffic to the Internet (or other service).  The design of access networks is also determined by geography and the availability of fiber.   Two typical designs are ring and point-to-point.
 
-In a routed ring access topology, routers are connected in a ring.  Because traffic can flow in either direction, the ring topology provides an automatic backup path if a link or router fails. 
+In a routed ring access topology, routers are connected in a ring.  Because traffic can flow in either direction, the ring topology provides an automatic backup path if a link or router fails with sub 50-millisecond convergence times. 
 
 In the following example topology, generic XGS-PON OLTs with 10G uplinks connect to a 100G routed access ring of NCS 540s.  The 55A1-24Hs, with 24 100G ports, can aggregate multiple 100G NCS 540 rings and, if needed, provide uplinks for 100G OLT shelves.
 
@@ -94,7 +95,7 @@ In the following example topology, generic XGS-PON OLTs with 10G uplinks connect
 
 Depending on the density and distribution of subscribers, the uplink capabilities of the your PON solution, the availability requirements, and the acceptable oversubscription rate, different platforms in the NCS540 and NCS5500/5700 families can be used to construct the access ring and aggregation nodes.
 
-In a point to point access architecture, the access routers can be single or dual-homed to the central office.  Dual-homing enables redundancy should either of the uplinks fail.  
+In a point to point access architecture, the access routers can be single or dual-homed to the central office.  Dual-homing enables redundancy should either of the uplinks fail, as well as providing extra capacity during normal operation.  
 
 ![RBB_Hub_And_Spoke.jpg]({{site.baseurl}}/images/RBB_Hub_And_Spoke.jpg)
 
@@ -118,7 +119,7 @@ TI-LFA provides sub 50ms convergence for link and node protection. TI-LFA is com
 ### MPLS VPN Services
 One of the advantages of an IP/MPLS network is that it enables the deployment of VPN services.  Many people associate L3VPN and L2VPN with expensive business services.  But even small providers can benefit from judicious use of MPLS VPNs in residential deployments.
 
-In the simplest design, subscriber traffic arrives at the access device, receives an IP address via DHCP and gets access to the Internet via the global routing table. Many larger, modern networks are being built to isolate the global routing table from the underlying infrastructure. In this case, the Internet global table is carried as an L3VPN service, leaving the infrastructure layer protected from both the global Internet.  
+In the simplest design, subscriber traffic arrives at the access device, receives an IP address via DHCP and gets access to the Internet via the global routing table. Many large, modern networks are being built to isolate the global routing table from the underlying infrastructure. In this case, the Internet global table is carried as an L3VPN service, leaving the infrastructure layer protected from both the global Internet.  
 
 The other use case for MPLS VPN services is when Broadband Network Gateway (BNG) is deployed for per-subscriber traffic management.  Because BNG requires more sophisticated treatment of the user traffic and, hence, more expensive forwarding hardware, the BNG device is often deployed in a centralized location to take advantage of economies of scale.  Access devices can be configured to backhaul Layer 2 subscriber traffic to the BNG device using EVPN pseudowires.
 
@@ -145,9 +146,7 @@ In the 1:1 VLAN model, each subscriber is assigned their own VLAN.  Typically, t
 The routed access design for rural broadband can support either VLAN model.  
 
 ### High Availability for PON
-Whether you’re deploying a single OLT shelf, a tree of OLTs or a ring of OLT, the connection from the OLT to the access router represents a potential point of failure.  To protect against the failure of a single port on either the router or the OLT, multiple links are commonly be bundled together for a redundant connection.  The router, however, remains a single point of failure.
-
-To protect against a router failure, the OLT can be dual-homed to two different routers using EVPN.  EVPN supports “all-active” redundant links to two or more routers.  The  OLT believes that it is connected to a single device using a normal bundle interface.  
+Whether you’re deploying a single OLT shelf, a tree of OLTs or a ring of OLT, the connection from the OLT to the access router represents a potential point of failure.  To protect against the failure of a single port on either the router or the OLT, multiple links are commonly be bundled together for a redundant connection.  To protect against a router failure, the OLT can be dual-homed to two different routers using EVPN.  EVPN supports “all-active” redundant links to two or more routers.  The  OLT believes that it is connected to a single device using a normal bundle interface.  
 
 The routed access design for rural broadband supports a single, non-redundant uplink, a bundled interface to the same router, and a bundled interface to two redundant routers with EVPN.
 
@@ -161,7 +160,7 @@ BNG manages all aspects of subscriber access including:
 - Policy management
 - Quality of Service (QoS)
 
-Cisco’s implementation of BNG is a mature, feature-rich technology that supports many use cases of varying degrees of complexity.  The RBB design focuses on a simple IP over Ethernet (IPoE) deployment that authenticates subscribers, assigns addresses using DHCP, and applies per-subscriber QoS policies.  
+Cisco’s implementation of BNG is a mature, feature-rich technology that supports many use cases of varying degrees of complexity.  The RBB design focuses on a simple IP over Ethernet (IPoE) deployment that authenticates subscribers, assigns addresses using DHCP, and applies per-subscriber policy.  
 
 # Implementation Details
 
@@ -187,7 +186,8 @@ Cisco’s implementation of BNG is a mature, feature-rich technology that suppor
 
 ## Testbed Overview
 
-![RBB_High_Level_Test_Topology.jpg]({{site.baseurl}}/images/RBB_High_Level_Test_Topology.jpg)
+![RBB_testbed.jpg]({{site.baseurl}}/images/RBB_testbed.jpg)
+
 
 _Figure 1: Routed Access For Rural Broadband High Level Topology_
 
@@ -207,7 +207,7 @@ _Figure 1: Routed Access For Rural Broadband High Level Topology_
 ## Key Resources to Allocate  
 - IP Addressing 
   - IPv4 address plan
-  - IPv6 address plan, recommend dual plane day 1  
+  - IPv6 address plan  
 - IS-IS unique instance identifiers
 
 
@@ -290,6 +290,77 @@ interface HundredGigE0/0/1/0
 !
 ```
 
+**QoS Policy-Map Configuration**
+
+The following represent simple policies to classify on ingress (core facing interfaces only) and queue on egress.  For simplicity, only two classes and queues are used: high-priority (dscp 46) and default (everything else).
+
+```
+class-map match-any match-ef
+ description High priority, EF
+ match dscp 46
+ end-class-map
+!
+class-map match-any match-traffic-class-1
+ description "Match highest priority traffic-class 1"
+ match traffic-class 1
+ end-class-map
+!
+policy-map rbb-egress-queuing
+ class match-traffic-class-1
+  priority level 1
+  queue-limit 500 us
+ !
+ class class-default
+  queue-limit 250 ms
+ !
+ end-policy-map
+!
+policy-map core-egress-queuing
+ class match-traffic-class-1
+  priority level 1
+  queue-limit 500 us
+ !
+ class class-default
+  queue-limit 250 ms
+ !
+ end-policy-map
+!
+policy-map rbb-ingress-classifier
+ class match-ef
+  set traffic-class 1
+  set qos-group 1
+ !
+ class class-default
+  set traffic-class 0
+  set qos-group 0
+ !
+ end-policy-map
+!
+policy-map core-ingress-classifier
+ class match-ef
+  set traffic-class 1
+ !
+ class class-default
+ !
+ end-policy-map
+```
+ 
+**Core-facing Interface Qos Config**
+
+```
+interface HundredGigE0/0/1/0
+ service-policy input core-ingress-classifier
+ service-policy output core-egress-queuing
+ ```
+
+**OLT-facing Interface QoS Config**
+
+```
+ interface Bundle-Ether1
+ service-policy input rbb-ingress-classifier
+ service-policy output rbb-egress-queuing
+ ```
+ 
 ## BGP – Access
 Enable BGP when your deployment needs any of the following:
 
@@ -335,14 +406,13 @@ router bgp 100
 ## EVPN-enabled LAG for Redundant OLT Connections
 ![Redundant OLT 2.jpg]({{site.baseurl}}/images/Redundant OLT 2.jpg)
 
-
 When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 300 on both routers which share a default anycast gateway represented by the BVI interface.  The BVI interface can be assigned a DHCP relay profile, included in the global routing table or put in a separate VRF.
 
-Note that this configuration can be applied even if you only have a single access router.  By configuring a bundle interface from the beginning, you can easily add another link when the fiber connection becomes available.
+Note that this configuration can be applied even if you only have a single link to a single access router.  By configuring a bundle interface from the beginning, you can easily add another to a second router without changing the configuration of the first router.
 
 ### Access Router Service Provisioning:
 
-**Interface configuration**
+**PON-facing Access interface configuration**
 
 ```
 interface TenGigE0/0/0/1
@@ -387,6 +457,8 @@ l2vpn
 ```
   
 ## Per-subscriber policies with BNG
+
+The following configuration is used for a deployment of IPoE subscriber sessions. The configuration of some external elements such as the RADIUS authentication server are outside the scope of this document. For more information about the subscriber features and policy (including QoS, security ACLs, Lawful Intercept and more), see the [Broadband Network Gateway Configuration Guide for Cisco ASR 9000 Series Routers](https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/bng/configuration/guide/b-bng-cg-asr9000-78x.html).
 
 ![EVPN Pseudowire.jpg]({{site.baseurl}}/images/EVPN Pseudowire.jpg)
 
@@ -494,6 +566,9 @@ policy-map type control subscriber RBB_IPoE_PWHE
 !
 ```
 
-This configuration is used for a deployment using IPoE subscriber sessions. The configuration of some external elements such as the RADIUS authentication server are outside the scope of this document. For more information about the subscriber features and policy (including QoS, security ACLs, Lawful Intercept and more), see the [Broadband Network Gateway Configuration Guide for Cisco ASR 9000 Series Routers](https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/bng/configuration/guide/b-bng-cg-asr9000-78x.html).
+## Summary: Routed Access for Rural Broadband
+
+The Routed Access design brings the benefits of Converged SDN Transport to rural broadband networks with simple, flexible, smaller-scale approach to residential broadband. No matter what PON solution you deploy, Routed Access reduces the complexity associated with Layer 2 networks by introducing the many benefits of IP and Segment Routing as close to the PON network as possible.
+
 
 
