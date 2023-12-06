@@ -59,9 +59,9 @@ One of the first decisions a new rural broadband provider makes is how to deploy
 The sparser densities and longer distances in rural broadband will typically favor smaller form factor OLTs.  In any case, the Routed Access for Rural Broadband design supports any vendor's OLT that connects to the access network via common ethernet technologies.
 
 ### Routed Access
-Access domains have traditionally been built using flat Layer 2 native ethernet technologies.  But traditions sometimes persist even when the reasons for them no longer exist.  In the past, many people defaulted to Layer 2 networks because switching was less expensive and Layer 2 seemed simpler than IP/MPLS networks.  But big shifts in the economics of routing silicon have made routers more affordable and innovations like Segment Routing have made MPLS much simpler to deploy.  
+Access domains have traditionally been built using flat Layer 2 native ethernet technologies.  But traditions sometimes persist even when the reasons for them no longer exist.  In the past, many people defaulted to Layer 2 networks because switching was less expensive and Layer 2 seemed simpler than IP networks.  But big shifts in the economics of routing silicon have made routers more affordable and innovations in routing protocols have made it simpler to deploy.  
 
-There are many benefits to bringing IP and MPLS to the access network:
+There are many benefits to bringing IP to the access network:
 
 - Arbitrary Topologies: To prevent broadcast storms and duplicate packets, traditional Layer2 topologies must not contain loops.  G.8032 is a common loop prevention technique that requires an underlying ring topology.  In other topologies, Spanning Tree Protocol is required to block redundant ports.  Because IP networks use TTL to prevent loops, arbitrary topologies can be supported without disabling redundant paths.
 - Reconvergence: In Layer 2 networks, MAC-learning occurs in the data plane.  Changes in topology (i.e. link failures) require flushing all MAC tables and subsequent flooding of traffic.  This can caused extended reconvergence times. L3 networks, on the other hand, can reconverge very quickly
