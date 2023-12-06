@@ -10,6 +10,8 @@ position: hidden
 {% include toc %}
 # High-Level Design
 
+Routed Access for Rural Broadband PON introduces best-practice network design for small operators looking to deploy residential broadband services.
+
 ## Key Drivers
 
 ### New Sources of Funding
@@ -41,7 +43,6 @@ With all the advantages of fiber and 10 Gigabits of symmetric bandwidth, XGS-PON
 - **Residential PON**: while large providers may need to support a wide variety of services, rural broadband will often focus on providing PON to residential subscribers with a simple high-speed data (with or without voice) service.  The RBB design focuses on providing an access network design for PON networks.
 - **Simplicity**: smaller, non-traditional providers need simple, easy-to-manage networks.  The RBB design streamlines the Converged SDN Transport design, eliminating complex features where possible.  These features can be added later if the scale and service requirements of the network change.
 
-Routed Access for Rural Broadband PON introduces best-practice network design for small operators looking to deploy residential broadband services.
 
 ## Solution Overview
 Routed Access for Rural Broadband is made of the following main building blocks:
@@ -101,29 +102,42 @@ In a point to point access architecture, the access routers can be single or dua
 
 Regardless of how the routers connect back to the Internet (ring or point-to-point), each router serves as an aggregation point for individual OLTs, OLT rings or OLT trees.  Depending on the availability requirements, those OLTs can be single or dual-homed to the routers.  
 
-### Routing and Forwarding
+#### Routing and Forwarding
 
-The foundation technology used in this design is Segment Routing (SR) with a MPLS based Data Plane.  Because rural broadband designs are typically small enough to run a single IGP domain, the focus of the design is on intra-domain forwarding.  For networks that exceed the scale limits of a single domain, refer to the [Inter-Domain Operation](https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld#inter-domain-operation) guidelines of the Converged SDN Transport design.
+Once the user traffic reaches the access router, it enters the layer 3 domain of the network. The ethernet frame header is discarded and the packet is routed over the IP network to the final destination.
 
-Segment Routing reduces the amount of protocols needed in a Service Provider Network. Simple extensions to traditional IGP protocols like ISIS or OSPF provide full Intra-Domain Routing and Forwarding Information over a label switched infrastructure, along with High Availability (HA) and Fast Re-Route (FRR) capabilities.
+The routing protocol or IGP (Interior Gateway Protocol) allows routers in the same domain to exchange routing information so that packets can be routed according to the destination IP address. This design uses IS-IS as the IGP protocol.  Because rural broadband designs are typically small enough to run a single IGP domain, the focus of the design is on intra-domain forwarding.  For networks that exceed the scale limits of a single domain, refer to the [Inter-Domain Operation](https://xrdocs.io/design/blogs/latest-converged-sdn-transport-hld#inter-domain-operation) guidelines of the Converged SDN Transport design.
 
-Segment Routing introduces the idea of a Prefix Segment Identifier or Prefix-SID.  A prefix-SID identifies the router and must be unique for every router in the IGP Domain. Prefix-SID is statically allocated by the network operator in the IGP configuration process. The Prefix-SID is advertised by the IGP protocol which eliminates the need to use LDP or RSVP protocol to exchange MPLS labels.
+To improve forwarding performance and enable advanced features, this design uses Multiprotocol Label Switching (MPLS) for the data plane.  MPLS is a "layer 2.5" technology that enables routers to transfer packets through the network using labels. Instead of needing expensive route table lookups at every hop, MPLS traffic can be efficiently forwarded through label-switching.  Historically, a separate protocol like LDP was required to advertise labels throughout the network.  Today, Segment Routing eliminates the need to configure and maintain LDP to advertise labels.  
 
-The Routed Access for Rural Broadband design uses IS-IS as the IGP protocol.
+Segment Routing reduces the amount of protocols needed in a Service Provider Network. Simple extensions to traditional IGP protocols like ISIS provide full Intra-Domain Routing and Forwarding Information over a label switched infrastructure, along with High Availability (HA) and Fast Re-Route (FRR) capabilities that enable fast recovery should a link or node fail.
+
+Segment Routing introduces the idea of a Prefix Segment Identifier or Prefix-SID.  A prefix-SID identifies the router and must be unique for every router in the IGP Domain. Prefix-SID is statically allocated by the network operator in the IGP configuration process. The Prefix-SID is advertised by the IGP protocol which eliminates the need to use LDP or RSVP protocol to exchange MPLS labels.  For these reasons, Segment Routing is a foundational technology in this design.
 
 #### Fast Re-Route using TI-LFA
 Segment-Routing embeds a simple Fast Re-Route (FRR) mechanism known as Topology Independent Loop Free Alternate (TI-LFA).
 
 TI-LFA provides sub 50ms convergence for link and node protection. TI-LFA is completely stateless and does not require any additional signaling mechanism as each node in the IGP Domain calculates a primary and a backup path automatically and independently based on the IGP topology. After the TI-LFA feature is enabled, no further care is expected from the network operator to ensure fast network recovery from failures. This is in stark contrast with traditional MPLS-FRR, which requires RSVP and RSVP-TE and therefore adds complexity in the transport design.
 
-### MPLS VPN Services
+#### MPLS VPN Services
 One of the advantages of an IP/MPLS network is that it enables the deployment of VPN services.  Many people associate L3VPN and L2VPN with expensive business services.  But even small providers can benefit from judicious use of MPLS VPNs in residential deployments.
 
 In the simplest design, subscriber traffic arrives at the access device, receives an IP address via DHCP and gets access to the Internet via the global routing table. Many large, modern networks are being built to isolate the global routing table from the underlying infrastructure. In this case, the Internet global table is carried as an L3VPN service, leaving the infrastructure layer protected from both the global Internet.  
 
 The other use case for MPLS VPN services is when Broadband Network Gateway (BNG) is deployed for per-subscriber traffic management.  Because BNG requires more sophisticated treatment of the user traffic and, hence, more expensive forwarding hardware, the BNG device is often deployed in a centralized location to take advantage of economies of scale.  Access devices can be configured to backhaul Layer 2 subscriber traffic to the BNG device using EVPN pseudowires.
 
-### QOS
+#### IPv6 vs IPv4
+To address the inevitable exhaustion of IPv4 addresses, the IETF standardized IPv6 decades ago. Even today, however, IPv6 adoption remains incomplete.  Some content on the internet is only available via IPv4; some network infrastructure features are still optimized for IPv4.
+
+For rural broadband networks, this design recommends using IPv4 for the underlay transport infrastructure.  SR-MPLS is very mature on IPv4 networks and private IP addressing can be used for the routers in the network, thus avoiding address exhaustion concerns for these devices.  At the same time, the design supports "dual-stack" (IPv4 and IPv6) deployments to ensure that the network can transition to IPv6-based transport should the need arise.  The underlay transport architecture for IPv6 network is called "SRv6."  SRv6 enables next-generation IPv6 based networks to support complex user and infrastructure services at very high scale.  Rural broadband networks typically do not have the scale or complexity to make SRv6 as compelling.  But if, for any reason, IPv4 and SR-MPLS are not suitable for your deployment, reference the [Cisco Converged SDN Transport SRv6 Transport High Level Design](https://xrdocs.io/design/blogs/latest-converged-sdn-transport-srv6) for details on SRv6-based transport.
+
+For end customers and customer premise equipment, addressing schemes can be IPv4-only, IPv6-only or dual-stack.  Deploying IPv4 addresses will require either 1) acquiring globally routable IPv4 addresses; or 2) translating private IPv4 addresses using a Carrier Grade Nat (CGN) solution.  Each option has drawbacks.  If you have not already been allocated a block, globally routable IPv4 addresses are expensive.  In 2022, IPv4 addresses were selling for around $60 each.  In addition to being expensive, purchased addresses can come with baggage.  Depending on the actions of the previous owner, the address may have acquired a bad reputation that resulted in it being blacklisted from certain networks. This can be a difficult problem to detect, troubleshoot and clean up. If you chose a CGN solution instead, you will need far fewer globally routed addresses but you will have to purchase, configure and maintain another device in the dataplane.
+
+Over [40% of the world's top 1000 websites](https://pulse.internetsociety.org/technologies) are accessible via native IPv6, which means that IPv6-only clients can quickly access that content.  However, for the rest of the content on the network, some translation or tunneling mechanism must be implemented to allow IPv6-only end users to connect to IPv4-only content which adds complexity to the network design.
+
+Given the state of the internet today, a dual-stack deployment with CGN may represent the best tradeoff for rural broadband deployments.  Native IPv6 traffic (which includes popular, bandwidth heavy services like Netflix and YouTube) can go natively between clients and content providers.  IPv6 traffic will bypass the CGN function, reducing the load on that device.  IPv4-only content will continue to leverage CGN until the day that IPv6 has been fully adopted world-wide.
+
+#### QOS
 Quality of Service (QoS) refers to the ability of a network to provide better service to various types of network traffic.  To achieve an end to end QoS objective (i.e. between the subscriber and the Internet), it’s necessary to consider the different mechanisms in the PON network and routed access network.
 
 QoS can be applied in two directions: upstream (from the subscriber to the Internet) or downstream (from the internet to the subscriber).  In PON networks, upstream traffic is controlled by the OLT, which implements a flow-control mechanism that lends itself to a simpler implementation of QoS.  The ITU-T G.983.4 recommendation coupled with other QoS mechanisms enable the OLT to effectively schedule, shape and prioritize upstream traffic.
@@ -146,7 +160,7 @@ In the 1:1 VLAN model, each subscriber is assigned their own VLAN.  Typically, t
 The routed access design for rural broadband can support either VLAN model.  
 
 ### High Availability for PON
-Whether you’re deploying a single OLT shelf, a tree of OLTs or a ring of OLT, the connection from the OLT to the access router represents a potential point of failure.  To protect against the failure of a single port on either the router or the OLT, multiple links are commonly be bundled together for a redundant connection.  To protect against a router failure, the OLT can be dual-homed to two different routers using EVPN.  EVPN supports “all-active” redundant links to two or more routers.  The  OLT believes that it is connected to a single device using a normal bundle interface.  
+Whether you’re deploying a single OLT shelf, a tree of OLTs or a ring of OLT, the connection from the OLT to the access router represents a potential point of failure.  To protect against the failure of a single port on either the router or the OLT, multiple links are commonly bundled together for a redundant connection.  To protect against a router failure, the OLT can be dual-homed to two different routers using EVPN.  EVPN supports “all-active” redundant links to two or more routers.  The  OLT believes that it is connected to a single device using a normal bundle interface.  
 
 The routed access design for rural broadband supports a single, non-redundant uplink, a bundled interface to the same router, and a bundled interface to two redundant routers with EVPN.
 
@@ -569,6 +583,3 @@ policy-map type control subscriber RBB_IPoE_PWHE
 ## Summary: Routed Access for Rural Broadband
 
 The Routed Access design brings the benefits of Converged SDN Transport to rural broadband networks with simple, flexible, smaller-scale approach to residential broadband. No matter what PON solution you deploy, Routed Access reduces the complexity associated with Layer 2 networks by introducing the many benefits of IP and Segment Routing as close to the PON network as possible.
-
-
-
