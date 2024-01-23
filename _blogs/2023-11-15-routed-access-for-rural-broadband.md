@@ -4,7 +4,9 @@ date: '2023-11-15 12:24 -0700'
 title: Routed Access for Rural Broadband
 author: Shelly Cadora
 excerpt: A Cisco routed access design for rural broadband
-position: hidden
+position: top
+tags:
+  - cisco
 ---
 
 {% include toc %}
