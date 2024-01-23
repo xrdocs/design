@@ -10,7 +10,7 @@ position: hidden
 {% include toc %}
 # High-Level Design
 
-Routed Access for Rural Broadband PON introduces best-practice network design for small operators looking to deploy residential broadband services.
+Routed Access for Rural Broadband introduces best-practice network design for small operators looking to deploy residential broadband services.
 
 ## Key Drivers
 
