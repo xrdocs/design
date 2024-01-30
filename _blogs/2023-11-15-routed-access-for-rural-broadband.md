@@ -424,7 +424,7 @@ router bgp 100
 
 When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 300 on both routers which share a default anycast gateway represented by the BVI interface.  The BVI interface can be assigned a DHCP relay profile, included in the global routing table or put in a separate VRF.  
 
-VRF (Virtual Routing and Forwarding) is a feature that allows the router to maintain multiple, independent routing tables.  Creating a separate VRF for user and Internet traffic isolates the infrastructure layer and protects it from the Internet. Read more about the uses and benefits of VRFs in network design in the [Peering Fabric Design]{https://xrdocs.io/design/blogs/2018-10-01-peering-fabric-hld/#internet-and-peering-in-a-vrf}. 
+VRF (Virtual Routing and Forwarding) is a feature that allows the router to maintain multiple, independent routing tables.  Creating a separate VRF for user and Internet traffic isolates the infrastructure layer and protects it from the Internet. Read more about the uses and benefits of VRFs in network design in the [Peering Fabric Design](https://xrdocs.io/design/blogs/2018-10-01-peering-fabric-hld/#internet-and-peering-in-a-vrf}). 
 {: .notice--info}
 
 Note that this configuration can be applied even if you only have a single link to a single access router.  By configuring a bundle interface from the beginning, you can easily add another to a second router without changing the configuration of the first router.
@@ -479,7 +479,7 @@ l2vpn
 
 The following configuration is used for a deployment of IPoE subscriber sessions. The configuration of some external elements such as the RADIUS authentication server are outside the scope of this document. For more information about the subscriber features and policy (including QoS, security ACLs, Lawful Intercept and more), see the [Broadband Network Gateway Configuration Guide for Cisco ASR 9000 Series Routers](https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/bng/configuration/guide/b-bng-cg-asr9000-78x.html).
 
-![EVPN PW 3.jpg]({{site.baseurl}}/images/EVPN PW 3.jpg)
+![EVPN PW 5.jpg]({{site.baseurl}}/images/EVPN PW 5.jpg)
 
 When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 311 on both routers that backhauls Layer 2 traffic to PE3 which can authenticate the subscriber, apply per-subscriber policies, assign IP addresses and route traffic to the internet.
 
