@@ -433,7 +433,7 @@ Note that this configuration can be applied even if you only have a single link 
 **PON-facing Access interface configuration**
 
 ```
-interface TenGigE0/0/0/1
+interface TenGigE0/0/0/0
  bundle id 1 mode active
  !
 interface Bundle-Ether1
@@ -478,7 +478,7 @@ l2vpn
 
 The following configuration is used for a deployment of IPoE subscriber sessions. The configuration of some external elements such as the RADIUS authentication server are outside the scope of this document. For more information about the subscriber features and policy (including QoS, security ACLs, Lawful Intercept and more), see the [Broadband Network Gateway Configuration Guide for Cisco ASR 9000 Series Routers](https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/bng/configuration/guide/b-bng-cg-asr9000-78x.html).
 
-![EVPN PW 2.jpg]({{site.baseurl}}/images/EVPN PW 2.jpg)
+![EVPN PW 3.jpg]({{site.baseurl}}/images/EVPN PW 3.jpg)
 
 When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 311 on both routers that backhauls Layer 2 traffic to PE3 which can authenticate the subscriber, apply per-subscriber policies, assign IP addresses and route traffic to the internet.
 
@@ -487,7 +487,7 @@ When applied to both pe101 and pe102, the following configuration creates a brid
 **Interface Configuration**
 
 ```
-interface TenGigE0/0/0/1
+interface TenGigE0/0/0/0
  bundle id 1 mode active
  !
 interface Bundle-Ether1
