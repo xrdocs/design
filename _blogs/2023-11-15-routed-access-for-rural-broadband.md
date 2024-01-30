@@ -430,7 +430,7 @@ Note that this configuration can be applied even if you only have a single link 
 
 ### Access Router Service Provisioning:
 
-**PON-facing Access interface configuration**
+**PON-facing Access Interface Configuration**
 
 ```
 interface TenGigE0/0/0/0
