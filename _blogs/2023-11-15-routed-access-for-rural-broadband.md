@@ -162,7 +162,7 @@ In the 1:1 VLAN model, each subscriber is assigned their own VLAN.  Typically, t
 The routed access design for rural broadband can support either VLAN model.  
 
 ### High Availability for PON
-Whether you’re deploying a single OLT shelf, a tree of OLTs or a ring of OLT, the connection from the OLT to the access router represents a potential point of failure.  To protect against the failure of a single port on either the router or the OLT, multiple links are commonly bundled together for a redundant connection.  To protect against a router failure, the OLT can be dual-homed to two different routers using EVPN.  EVPN supports “all-active” redundant links to two or more routers.  The  OLT believes that it is connected to a single device using a normal bundle interface.  
+Whether you’re deploying a single OLT shelf, a tree of OLTs or a ring of OLTs, the connection from the OLT to the access router represents a potential point of failure.  To protect against the failure of a single port on either the router or the OLT, multiple links are commonly bundled together for a redundant connection.  To protect against a router failure, the OLT can be dual-homed to two different routers using EVPN.  EVPN supports “all-active” redundant links to two or more routers.  The  OLT believes that it is connected to a single device using a normal bundle interface.  
 
 The routed access design for rural broadband supports a single, non-redundant uplink, a bundled interface to the same router, and a bundled interface to two redundant routers with EVPN.
 
@@ -202,8 +202,7 @@ Cisco’s implementation of BNG is a mature, feature-rich technology that suppor
 
 ## Testbed Overview
 
-![RBB_testbed.jpg]({{site.baseurl}}/images/RBB_testbed.jpg)
-
+![RBB_CVD_testbed.jpg]({{site.baseurl}}/images/RBB_CVD_testbed.jpg)
 
 _Figure 1: Routed Access For Rural Broadband High Level Topology_
 
@@ -420,9 +419,12 @@ router bgp 100
 # Services
     
 ## EVPN-enabled LAG for Redundant OLT Connections
-![Redundant OLT 2.jpg]({{site.baseurl}}/images/Redundant OLT 2.jpg)
+![EVPN_Enabled_LAG.jpg]({{site.baseurl}}/images/EVPN_Enabled_LAG.jpg)
 
-When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 300 on both routers which share a default anycast gateway represented by the BVI interface.  The BVI interface can be assigned a DHCP relay profile, included in the global routing table or put in a separate VRF.
+
+When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 300 on both routers which share a default anycast gateway represented by the BVI interface.  The BVI interface can be assigned a DHCP relay profile, included in the global routing table or put in a separate VRF.  
+
+VRF (Virtual Routing and Forwarding) is a feature that allows the router to maintain multiple, independent routing tables.  Creating a separate VRF for user and Internet traffic isolates the infrastructure layer and protects it from the Internet. Read more about the uses and benefits of VRFs in network design in the [Peering Fabric Design]{https://xrdocs.io/design/blogs/2018-10-01-peering-fabric-hld/#internet-and-peering-in-a-vrf}. {: .notice--info}
 
 Note that this configuration can be applied even if you only have a single link to a single access router.  By configuring a bundle interface from the beginning, you can easily add another to a second router without changing the configuration of the first router.
 
@@ -476,7 +478,7 @@ l2vpn
 
 The following configuration is used for a deployment of IPoE subscriber sessions. The configuration of some external elements such as the RADIUS authentication server are outside the scope of this document. For more information about the subscriber features and policy (including QoS, security ACLs, Lawful Intercept and more), see the [Broadband Network Gateway Configuration Guide for Cisco ASR 9000 Series Routers](https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/bng/configuration/guide/b-bng-cg-asr9000-78x.html).
 
-![EVPN Pseudowire.jpg]({{site.baseurl}}/images/EVPN Pseudowire.jpg)
+![EVPN PW 2.jpg]({{site.baseurl}}/images/EVPN PW 2.jpg)
 
 When applied to both pe101 and pe102, the following configuration creates a bridge group for VLAN 311 on both routers that backhauls Layer 2 traffic to PE3 which can authenticate the subscriber, apply per-subscriber policies, assign IP addresses and route traffic to the internet.
 
@@ -510,8 +512,8 @@ evpn
 
  ```
  l2vpn
- xconnect group RBB-PWHE-BNG
-  p2p RBB-PWHE-BNG1
+ xconnect group RBB-PW-BNG
+  p2p RBB-PW-BNG1
    interface Bundle-Ether1.311
    neighbor evpn evi 10101 service 101
  ```
