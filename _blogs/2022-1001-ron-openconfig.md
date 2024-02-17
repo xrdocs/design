@@ -121,7 +121,7 @@ individual product pages below for more information on each platform.
 ## Optical Provisioning Parameters
 Optical transceivers are responsible for taking information on their electrical 
 "host" interface and translating it into a format suitable for transmission across an 
-analog medium, and vice version. Thus the name "transceiver".  The aforementioned 
+analog medium, and vice versa. Thus the name "transceiver".  The aforementioned 
 standards bodies have defined the electrical host interface and optical line 
 interface specifications. The resulting configuration of those internal transceiver interfaces 
 and parameters are driven by user configuration.  The following represents the 

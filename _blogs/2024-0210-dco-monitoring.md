@@ -66,7 +66,7 @@ available today.  ZR/OpenZR+ QSFP-DD optics can be used in the same ports as the
 highest speed 400G non-DCO transceivers. 
 
 
-### Cisco High Power OpenZR+ "Bright" Transceiver (DP04QSDD-HE0)
+### Cisco High-Power OpenZR+ "Bright" Transceiver (DP04QSDD-HE0)
 
 <img src="http://xrdocs.io/design/images/ron-hld/bright_zrp.png" width="500"/>
 
@@ -96,10 +96,10 @@ The following part numbers are used for Cisco's ZR400 and OpenZR+ MSA transceive
 |--------|----|
 400ZR| QDD-400G-ZR-S| 
 |OpenZR+| QDD-400G-ZRP-S|
-|OpenZR+ High-Power | DP04QSDD-HE0| 
+|OpenZR+ High-Power (Bright) | DP04QSDD-HE0| 
 
 
-The Cisco datasheet for these transceivers can be found at <https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/datasheet-c78-744377.html> 
+The Cisco datasheet for these transceivers can be found at <https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/datasheet-c78-744377.html> and <https://www.cisco.com/c/en/us/products/collateral/interfaces-modules/transceiver-modules/400g-qsfp-dd-high-power-optical-module-ds.html>  
 
 
 ## Cisco Hardware Support for 400G ZR/ZR+ DCO Transceivers 
@@ -121,10 +121,10 @@ individual product pages below for more information on each platform.
 <https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/datasheet-c78-736270.html><br>  
 <https://www.cisco.com/c/en/us/products/collateral/routers/network-convergence-system-5500-series/datasheet-c78-744698.html>
 
-## Optical Provisioning Parameters
+## Digital Coherent Optics Provisioning  
 Optical transceivers are responsible for taking information on their electrical 
 "host" interface and translating it into a format suitable for transmission across an 
-analog medium, and vice version. Thus the name "transceiver".  The aforementioned 
+analog medium, and vice versa. Thus the name "transceiver".  The aforementioned 
 standards bodies have defined the electrical host interface and optical line 
 interface specifications. The resulting configuration of those internal transceiver interfaces 
 and parameters are driven by user configuration.  The following represents the 
