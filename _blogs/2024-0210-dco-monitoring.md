@@ -203,12 +203,11 @@ considered an ideal range of values.
 The rest of the document goes into detail about the PM data available and how to
 monitor them.  These however are the key values which should be monitored.      
 
-- Optical Receive Power (RX Power) 
-- Optical Transmit Power (TX Power)
+- Optical Receive Power (RX Power)  
+- Q-Factor 
 - Q-Margin 
-- OSNR 
 
-RX power, Q-Margin, and OSNR will be have some absolute value once the circuit 
+RX power, Q-Factor, and Q-Margin will be have some absolute value once the circuit 
 is operational. Each of these values have known minimums based on the DCO 
 specifications, but will be different for every operational circuit. It's 
 important to monitor the values for changes.  
@@ -244,7 +243,7 @@ by different photonic elements. Amplifiers can introduce and increase noise. As
 the primary signal is amplified so is the noise inherent in analog signals.
 Measuring the true optical signal to noise ratio requires test measurement
 equipment which cannot be packaged in the size of a DCO. The DCO estimates the
-OSNR based on DSP compensation.   
+OSNR based on DSP compensation and are not precise in all conditions.     
 
 ### Chromatic Dispersion
 Chromatic Dispersion is a linear optical impairment which degrades the
@@ -341,6 +340,18 @@ signal after being processed. It indicates how much signal margin exists and if
 degradation occurs how much it can degrade before the signal is lost. A Q-Margin
 less than 1 is considered unhealthy. The Q-Margin is useful during both circuit
 turn-up as well as checking the ongoing health of the circuit.   
+
+### General guidelines for acceptable values 
+The following table highlights some general acceptable values and how the OSNR, 
+Pre-FEC BER, and Q-margin relate to each other. 
+
+|Q-margin| Pre-FEC BER | OSNR margin | Optical channel health|   
+|-----| ------- |-------|-------|   
+|< 0.5dB|> 1.5E-2 | < 1dB | Poor |  
+|0.5dB to 1dB |1.5E-2 to 1.0E-2 | 1dB to 2.2dB | Acceptable |  
+|1.0dB to 1.5dB |1.0E-2 to 7.0E-3 | 2.2dB to 3.4dB | Healthy |  
+|> 1.5dB | <7.0E-3 | > 3.4dB | $${\color{green}Very\space Healthy}$$ |  
+
 
 ## Environmental PM  
 
@@ -490,7 +501,7 @@ Detected Alarms                                 : LOS
 
 ### Common Optical Alarms 
 
-
+```
 %PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS RX LOS LANE-0 :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
 %PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA RX CHROMATIC DISPERSION LOSS OF LOCK :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
 %PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA RX LOSS OF FRAME  :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
@@ -498,15 +509,16 @@ Detected Alarms                                 : LOS
 %PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA FEC DEGRADED :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
 %PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA FEC EXCESS DEGRADED :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
 %PKT_INFRA-FM-2-FAULT_CRITICAL : ALARM_CRITICAL :FLEXO-LOF :DECLARE :CoherentDSP0/0/0/10:
+%PKT_INFRA-FM-4-FAULT_MINOR : ALARM_MINOR :OSNR :DECLARE :Optics0/0/0/20
+```
+
+### Common Digital Alarms 
 
 ```
-%PKT_INFRA-FM-4-FAULT_MINOR : ALARM_MINOR :OSNR :DECLARE :Optics0/0/0/20
-``` 
-
-
-
-
-
+%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA FEC DEGRADED :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
+%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA FEC EXCESS DEGRADED :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
+%PKT_INFRA-FM-2-FAULT_CRITICAL : ALARM_CRITICAL :FLEXO-LOF :DECLARE :CoherentDSP0/0/0/10:
+```
 
 ## IOS-XR Performance Monitoring and Threshold Crossing Alerts 
 
