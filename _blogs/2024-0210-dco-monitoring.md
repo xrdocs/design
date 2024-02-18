@@ -347,10 +347,10 @@ Pre-FEC BER, and Q-margin relate to each other.
 
 |Q-margin| Pre-FEC BER | OSNR margin | Optical channel health|   
 |-----| ------- |-------|-------|   
-|< 0.5dB|> 1.5E-2 | < 1dB | Poor |  
-|0.5dB to 1dB |1.5E-2 to 1.0E-2 | 1dB to 2.2dB | Acceptable |  
-|1.0dB to 1.5dB |1.0E-2 to 7.0E-3 | 2.2dB to 3.4dB | Healthy |  
-|> 1.5dB | <7.0E-3 | > 3.4dB | $${\color{green}Very\space Healthy}$$ |  
+|< 0.5dB|> 1.5E-2 | < 1dB | $${\color{red}Unhealthy}$$ |  
+|0.5dB to 1dB |1.5E-2 to 1.0E-2 | 1dB to 2.2dB | $${\color{yellow} Acceptable}$$ |  
+|1.0dB to 1.5dB |1.0E-2 to 7.0E-3 | 2.2dB to 3.4dB | $${\color{green} Healthy}$$ |  
+|> 1.5dB | <7.0E-3 | > 3.4dB | $${\color{lightgreen}Very\space Healthy}$$ |  
 
 
 ## Environmental PM  
