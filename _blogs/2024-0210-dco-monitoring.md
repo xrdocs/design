@@ -198,6 +198,24 @@ In this section we will introduce the performance measurement data available
 with an explanation of what each component is, why it's important, and what is
 considered an ideal range of values.  
 
+## TL;DR What PM values to monitor and what to look for?  
+
+The rest of the document goes into detail about the PM data available and how to
+monitor them.  These however are the key values which should be monitored.      
+
+- Optical Receive Power (RX Power) 
+- Optical Transmit Power (TX Power)
+- Q-Margin 
+- OSNR 
+
+RX power, Q-Margin, and OSNR will be have some absolute value once the circuit 
+is operational. Each of these values have known minimums based on the DCO 
+specifications, but will be different for every operational circuit. It's 
+important to monitor the values for changes.  
+
+Note changes may occur due to other network changes such as adding more channels 
+on the same fiber span.  
+
 ## Optical Layer PM Data 
 
 ### Optical Power - Transmit  
@@ -270,8 +288,11 @@ remain low in most instances and is measured in dB. Keep in mind this is
 dB and not the dBm that optical power is expressed in.   
 
 ### Second-Order Polarization Mode Dispersion 
-SOPMD is a measure of the PMD as related to signal frequency. It This value is
-measured in picoseconds squared or ps^2.  
+SOPMD is a measure of the PMD rates of change related to signal frequency. The
+name is due to SOPMD being the second order diffeential with respect to PMD. The
+DGD value does not remain static so the DSP must compensate not only for the DGD
+value but the rates of change in DGD. This value is measured in picoseconds
+squared or ps^2.  
 
 ### Polarization Change Rate 
 As the polarized signals travel through the fiber, the fiber can cause changes
@@ -321,50 +342,109 @@ degradation occurs how much it can degrade before the signal is lost. A Q-Margin
 less than 1 is considered unhealthy. The Q-Margin is useful during both circuit
 turn-up as well as checking the ongoing health of the circuit.   
 
-## What PM values to monitor and what to look for?  
+## Environmental PM  
 
-As you've seen there are a number of PM values associated with the optical and 
-digital layer.  It can be daunting to determine what to monitor.  In the end the 
-most critical values to monitor are: 
+### Temperature 
+Modern DCO have multiple temperature sensors. The "temperature" reading reported 
+by the operating system may be the case temperature or the DSP temperature. The 
+laser component typically has its own temperature sensor and is reported as the 
+laser temperature.   
 
-- Q-Margin 
-- Optical Receive Power (RX Power) 
-- Optical Transmit Power (TX Power)
-- OSNR 
+### Voltage 
+The voltage supplied to the DCO is specified by various standards such as the 
+QSFP-DD MSA specifications. The voltage should be approximately 3.3v but can 
+vary. Larger fluctuations in the voltage indicate a hardware problem.  
 
-While all of the data can give insight into the behavior of the optical signal, 
-the TX Power, RX Power, and OSNR are the most critical components.  
-
-
-
-   Temp. Threshold(celsius)       80.00      -5.00         75.00        15.00
-         Voltage Threshold(volt)         3.46       3.13          3.43         3.16
-
-         LBC High Threshold = 98 %
-         Configured Tx Power = -10.00 dBm
-         Configured Tx Power(mW) = 0.10 mW
-         Configured CD High Threshold = 160000 ps/nm
-         Configured CD lower Threshold = -160000 ps/nm
-         Configured OSNR lower Threshold = 9.00 dB
-         Configured DGD Higher Threshold = 80.00 ps
-         Baud Rate =  59.8437500000 GBd
-         Modulation Type: 16QAM
-         Chromatic Dispersion 0 ps/nm
-         Configured CD-MIN -2400 ps/nm  CD-MAX 2400 ps/nm
-         Second Order Polarization Mode Dispersion = 0.00 ps^2
-         Optical Signal to Noise Ratio = 0.00 dB
-         SNR = 0.00 dB
-         Polarization Dependent Loss = 0.00 dB
-         Polarization Change Rate = 0.00 rad/s
-         Differential Group Delay = 0.00 ps
-
-         Temperature = 30.00 Celsius
-         Voltage = 3.37 V
+### Laser Bias Current (LBC) 
+The LBC is a measure of the bias current applied to the transmit laser used to
+maintain stable optical transmit power. This value may change due to
+fluctuations in voltage and temperature. The value can be measured either as an
+absolute value in milliamps or a percentage of the operating threshold of the 
+laser.  
 
 
 # IOS-XR DCO Monitoring 
+The PM values we've introduced will be used in monitoring the health of our 
+DCO circuit. We'll focus on IOS-XR as the network operating system, but similar 
+methods are usually available with other network operating systems.   
 
-## IOS-XR DCO Alarms 
+## IOS-XR DCO Events and Alarms 
+There are many alarms associated with the state of the optics. This is not meant 
+to be an exhaustive list of alarms, just highlight some of the more commonly seen 
+alarms during specific events.
+
+Platform alarms generated by DCO events are reported via the system log and
+output to remote monitoring tools as syslog messages and SNMP traps if enabled.
+These alarms will show up when executing a "show alarms" command on the CLI and
+retrieving alarms via YANG models such as openconfig-alarms and
+Cisco-IOS-XR-alarmgr-server-oper.   
+
+
+### Note on built-in PM alarm thresholds 
+Some DCO PM values are defined within the optics and optics driver and are not 
+user-configurable. These thresholds trigger system level alarms. 
+
+The following PM threshold values are defined for the optics controller.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+ Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+ ------------------------  ----------  ---------  ------------  -----------
+ Rx Power Threshold(dBm)         13.0      -24.0          10.0        -21.0
+ Rx Power Threshold(mW)          19.9        0.0          10.0          0.0
+ Tx Power Threshold(dBm)          4.0      -18.0           2.0        -16.0
+ Tx Power Threshold(mW)           2.5        0.0           1.5          0.0
+ LBC Threshold(mA)               0.00       0.00          0.00         0.00
+ Temp. Threshold(celsius)       80.00      -5.00         75.00        15.00
+ Voltage Threshold(volt)         3.46       3.13          3.43         3.16
+ LBC High Threshold = 98 %
+</pre> 
+</div> 
+
+The following PM threshold values are defined for the coherent DSP controller.   
+SF=Signal Fault and SD=Signal Degrade.    
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+BER Thresholds                                  : SF = 1.0E-5  SD = 1.0E-7
+</pre> 
+</div> 
+
+
+
+### Note on Persistent / Counted Alarms 
+Based on either an event or built-in PM threshold, specific alarms increment 
+over time. These are seen with the "show controller optics" CLI command or 
+appropriate YANG model.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+Alarm Statistics:
+
+         -------------
+         HIGH-RX-PWR = 0            LOW-RX-PWR = 0
+         HIGH-TX-PWR = 0            LOW-TX-PWR = 0
+         HIGH-LBC = 0               HIGH-DGD = 0
+         OOR-CD = 0                 OSNR = 18
+         WVL-OOL = 0                MEA  = 0
+         IMPROPER-REM = 0
+         TX-POWER-PROV-MISMATCH = 0
+
+</pre> 
+</div> 
+
+
+
+### Common Optical Alarms 
+
+
+
+```
+optics_driver[389]: %PKT_INFRA-FM-4-FAULT_MINOR : ALARM_MINOR :OSNR :DECLARE :Optics0/0/0/20
+``` 
+
+
+
 
 
 
