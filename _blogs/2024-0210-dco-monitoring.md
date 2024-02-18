@@ -412,7 +412,7 @@ BER Thresholds                                  : SF = 1.0E-5  SD = 1.0E-7
 
 
 
-### Note on Persistent / Counted Alarms 
+### Counted Optical Alarms 
 Based on either an event or built-in PM threshold, specific alarms increment 
 over time. These are seen with the "show controller optics" CLI command or 
 appropriate YANG model.   
@@ -433,7 +433,60 @@ Alarm Statistics:
 </pre> 
 </div> 
 
+|Alarm| Expansion | Comment |  
+|-----| ------- |-------|  
+|HIGH-RX-PWR | RX power too high || 
+|HIGH-TX-PWR | TX power too high || 
+|LOW-RX-PWR | RX power too low|| 
+|LOW-TX-PWR | TX power too low|| 
+|HIGH-LBC | Laser bias current too high || 
+|HIGH-DGD | Diffeential group delay too high || 
+|OOR-CD | Chromatic dispersion out of range || 
+|OSNR | Optical signal to noise ratio too low || 
+|WVL-OOL ||  
+|MEA| Mismatch equipment alarm | Optic speed not supported by port |  
+|IMPROPER-REM|Improper removal| Not applicable to IOS-XR routers |  
+|TX-POWER-PROV-MISMATCH| Difference in configured and actual value too large |  
 
+### Counted Digital Alarms 
+Based on either an event or built-in PM threshold, specific alarms increment 
+over time. These are seen with the "show controller coherentdsp" CLI command or 
+appropriate YANG model.   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+Alarm Information:
+LOS = 40        LOF = 0 LOM = 0
+OOF = 0 OOM = 0 AIS = 0
+IAE = 0 BIAE = 0        SF_BER = 0
+SD_BER = 0      BDI = 0 TIM = 0
+FECMISMATCH = 0 FEC-UNC = 0     FLEXO_GIDM = 0
+FLEXO-MM = 0    FLEXO-LOM = 0   FLEXO-RDI = 0
+FLEXO-LOF = 35
+Detected Alarms                                 : LOS
+</pre> 
+</div> 
+
+|Alarm| Expansion | Comment |  
+|-----| ------- |-------|  
+|LOS | Loss of signal || 
+|LOF | Loss of frame  || 
+|LOM | Loss of multi-frame|| 
+|OOF | Out of frame || 
+|OOM | Out of multi-frame|| 
+|IAE | Incoming alignment error || 
+|BIAE | Backward incoming alignment error || 
+|SF_BER | Signal fault due to high Bit-Error rate  || 
+|SD_BER | Signal degrade due to high Bit-Error rate  || 
+|BDI | Backward defect indication |  
+|TIM | Trace identifier mismatch|OTN TTI mismatch, not used|  
+|FECMISMATCH|FEC Mismatch between endpointds, not used| 
+|FEC-UNC| Uncorrectable words||   
+|FLEXO_GIDM| FlexO framing group ID mismatch|Can happen when one end is channelized and the other isn't| 
+|FLEXO_MM| FlexO mismatch|| 
+|FLEXO_LOM|FlexO framing Loss of multi-frame||
+|FLEXO-RDI|FlexO remote defect indicator|| 
+|FLEXO-LOF|FlexO loss of frame|| 
 
 ### Common Optical Alarms 
 
