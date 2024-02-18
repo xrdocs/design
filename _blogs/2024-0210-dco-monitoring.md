@@ -165,7 +165,7 @@ can be processed by the DSP. These are commonly referred to as opto-electric
 modules because they span both signal domains.     
 
 
-# IOS-XR DCO Components 
+# IOS-XR DCO Conventions  
 As we have seen the DCO has both Digital and Optical components, IOS-XR
 represents the optics in a similar manner as a way to better manage each layer, 
 including the PM data we gather and analyze.    
@@ -190,16 +190,184 @@ controller.
 It represents the digital layer of the DCO and is responsible for alarms and PM
 data associated with the digital signal.  
 
+# DCO Performance Measurement Data 
 
-# DCO Performance Data 
+## Overview 
+
+In this section we will introduce the performance measurement data available
+with an explanation of what each component is, why it's important, and what is
+considered an ideal range of values.  
+
+## Optical Layer PM Data 
+
+### Optical Power - Transmit  
+Transmit power, or TX power represents the strength of the optical signal
+leaving the DCO. It can be adjusted by user configuration.  In most cases
+leaving the TX power to the default value is advised. On the QDD-400G-ZR-S and
+QDD-400G-ZRP-S the default power for 400G mode is -10dBm. On the DP04QSDD-HE0
+the default power for 400G mode is 0dBm. Changes in the TX power can help identify 
+hardware issues. The TX power will fluctuate slightly but changes of more than 
+.2 dBm may indicate an issue.   
+
+### Optical Power - Receive  
+Receive power, or RX power represents the strength of the optical signal
+entering the DCO from the line side. There is a direct correlation between the
+RX power and the quality of the signal. The DCO has a defined receiver
+sensitivity range. If the RX power drops below the minimum RX sensitivity value,
+it may not be able to process the incoming signal. It is difficult to give a specific 
+acceptable range for RX power since other impairments such as noise may also degrade 
+the signal even at acceptable RX power levels. However, in practice the signal should 
+always be above -20 dBm.  
+
+### Optical Signal to Noise Ratio 
+OSNR is one of the key PM values in monitoring an optical signal. Background noise is
+inherent in almost all analog signals. It can also be introduced into the signal
+by different photonic elements. Amplifiers can introduce and increase noise. As
+the primary signal is amplified so is the noise inherent in analog signals.
+Measuring the true optical signal to noise ratio requires test measurement
+equipment which cannot be packaged in the size of a DCO. The DCO estimates the
+OSNR based on DSP compensation.   
+
+### Chromatic Dispersion
+Chromatic Dispersion is a linear optical impairment which degrades the
+overall signal and must be corrected by the DCO. Different wavelengths travel at
+different speeds, this can commonly be seen using a prism. 400G signals use
+75Ghz of spectrum which covers a wide band of frequencies so they do not all
+travel together. As the signal travels along the fiber the signal spreads out
+meaning the receive end must compensate for the delay between the beginning and
+end of the signal. The spread of the signal is measured in picoseconds/nanometer
+or ps/nm.   
+
+In IOS-XR the user can configure the "sweep" range used to compensate for the chromatic dispersion 
+using the cd-min and cd-max threshold values.  
+
+The user can also monitor the current estimated Chromatic Dispersion values.
+These values are derived from calculations done by the DSP during its CD
+compensation. 
+
+### Polarization Mode Dispersion 
+PMD is another type of signal dispersion or spread. PMD is unique to coherent
+signals and measures the spread in time between the X and Y polarized signals
+comprising the coherent signal. We don't measure PMD directly but several of the
+following PM values are used to measure the effect of PMD. PMD is typically
+introduced via imperfections in the fiber or mechanical manipulation of the
+fiber such as bending.   
+
+### Differential Group Delay 
+DGD is the measure of PMD and is used to express the difference in arrival time
+of the two orthogonal signals. DGD can also be known as First Order PMD or
+FOPMD. DGD is measured in picoseconds. Perfect fiber has no PMD/DGD but fiber
+used in the field is not perfect. Modern SM fiber can introduce .5-1ps of DGD
+over 100km, it is directly related to fiber length.  Optical components can also
+introduce DGD. DGD is wavelength dependent so may be different for different
+wavelengths, it can also be introduced by temperature fluctuations in the fiber.   
+
+### Polarization Dependent Loss 
+Signal polarization can also have another effect in introducing signal 
+loss as the signal propagates through the fiber. The value is dependent 
+on fiber length and is compensated for by the coherent DSP. The value should 
+remain low in most instances and is measured in dB. Keep in mind this is 
+dB and not the dBm that optical power is expressed in.   
+
+### Second-Order Polarization Mode Dispersion 
+SOPMD is a measure of the PMD as related to signal frequency. It This value is
+measured in picoseconds squared or ps^2.  
+
+### Polarization Change Rate 
+As the polarized signals travel through the fiber, the fiber can cause changes
+in the polarization state or SOP (State of Polarization). The coherent DSP 
+must compensate for these changes to properly decode the signal. The PCR is 
+measured in radians/second or rad/s since the state change is rotational. On 
+shorter fiber spans this value should be 0 but longer spans or poor fiber may 
+introduce higher values.   
+
+## Digital Layer PM Data 
+We've covered optical impairments in the analog optical domain. Ultimately any 
+type of signal degradation can lead to errors at the digital layer.  
+
+### Pre-FEC Bit Error Rate
+High speed coherent optics expect transmission errors at the bit level due to 
+optical signal impairments. Forward error correction uses an algorithm to send 
+extra data with the signal so it can be used to "correct" the original signal 
+when information is lost or incorrect. Modern algorithms are used to minimize 
+the amount of extra data which needs to be sent.  
+
+The Pre-FEC BER is expressed in a ratio of bit errors per samples bits, and at 
+the rates being used for ZR/ZR+ optics is very small. It's expressed in scientific 
+notation such as 3.7E-04, which is .00037.  It's difficult to monitor this as 
+an absolute value, but can be monitored for change over time to help identify 
+issues with the fiber. Q-Margin explained below is an easier value to monitor.   
+
+### Post-FEC BER and Uncorrectable Words 
+Post-FEC BER measures the amount of bits which are unable to be corrected, and
+ultimately lead to UCs or uncorrectable words/bytes. 
+
+Any value other than 0 means there is a critical issue with the signal, and in
+most cases due to the sharp FEC cliff it's unlikely the interface will be up if
+you are receiving bit errors.   
+
+### Quality Factor (Q-Factor) 
+The Q-Factor is a DSP calculated value closely related to the Pre-FEC BER and
+OSNR. The Q-Factor provides a minimum SNR value required to meet a certain BER
+requirement. Based on the properties of the DCO optics we know at a certain BER
+we require a specific SNR, if the BER is very high then we need a higher SNR.
+The Q-Factor expressed this relationship via a single value. On the DCO the
+value is based on measured BER over a specific time period.   
+
+### Quality Margin (Q-Margin)  
+The Q-Margin is a calculated value used to convey the health of the overall
+signal after being processed. It indicates how much signal margin exists and if
+degradation occurs how much it can degrade before the signal is lost. A Q-Margin
+less than 1 is considered unhealthy. The Q-Margin is useful during both circuit
+turn-up as well as checking the ongoing health of the circuit.   
+
+## What PM values to monitor and what to look for?  
+
+As you've seen there are a number of PM values associated with the optical and 
+digital layer.  It can be daunting to determine what to monitor.  In the end the 
+most critical values to monitor are: 
+
+- Q-Margin 
+- Optical Receive Power (RX Power) 
+- Optical Transmit Power (TX Power)
+- OSNR 
+
+While all of the data can give insight into the behavior of the optical signal, 
+the TX Power, RX Power, and OSNR are the most critical components.  
 
 
-# IOS-XR CLI Monitoring 
 
-# IOS-XR DCO Alarms 
+   Temp. Threshold(celsius)       80.00      -5.00         75.00        15.00
+         Voltage Threshold(volt)         3.46       3.13          3.43         3.16
 
-## Digital 
+         LBC High Threshold = 98 %
+         Configured Tx Power = -10.00 dBm
+         Configured Tx Power(mW) = 0.10 mW
+         Configured CD High Threshold = 160000 ps/nm
+         Configured CD lower Threshold = -160000 ps/nm
+         Configured OSNR lower Threshold = 9.00 dB
+         Configured DGD Higher Threshold = 80.00 ps
+         Baud Rate =  59.8437500000 GBd
+         Modulation Type: 16QAM
+         Chromatic Dispersion 0 ps/nm
+         Configured CD-MIN -2400 ps/nm  CD-MAX 2400 ps/nm
+         Second Order Polarization Mode Dispersion = 0.00 ps^2
+         Optical Signal to Noise Ratio = 0.00 dB
+         SNR = 0.00 dB
+         Polarization Dependent Loss = 0.00 dB
+         Polarization Change Rate = 0.00 rad/s
+         Differential Group Delay = 0.00 ps
 
-# IOS-XR Performance Monitoring and Threshold Crossing Alerts 
+         Temperature = 30.00 Celsius
+         Voltage = 3.37 V
+
+
+# IOS-XR DCO Monitoring 
+
+## IOS-XR DCO Alarms 
+
+
+
+## IOS-XR Performance Monitoring and Threshold Crossing Alerts 
 
 
