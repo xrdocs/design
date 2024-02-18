@@ -469,31 +469,38 @@ Detected Alarms                                 : LOS
 
 |Alarm| Expansion | Comment |  
 |-----| ------- |-------|  
-|LOS | Loss of signal || 
-|LOF | Loss of frame  || 
-|LOM | Loss of multi-frame|| 
-|OOF | Out of frame || 
-|OOM | Out of multi-frame|| 
-|IAE | Incoming alignment error || 
-|BIAE | Backward incoming alignment error || 
-|SF_BER | Signal fault due to high Bit-Error rate  || 
-|SD_BER | Signal degrade due to high Bit-Error rate  || 
-|BDI | Backward defect indication |  
-|TIM | Trace identifier mismatch|OTN TTI mismatch, not used|  
-|FECMISMATCH|FEC Mismatch between endpointds, not used| 
+|LOS | Loss of signal |In IOS-XR <24.1.1 this is based on the RX power being below the sensitivity threshold, but possible for signal to still be up| 
+|LOF | Loss of frame|Not used for ZR/ZR+| 
+|LOM | Loss of multi-frame|Not used for ZR/ZR+ |
+|OOF | Out of frame |Not used for ZR/ZR+ |
+|OOM | Out of multi-frame|Not used for ZR/ZR+ |
+|IAE | Incoming alignment error |Not used for ZR/ZR+ |  
+|BIAE | Backward incoming alignment error |Not used for ZR/ZR+ |
+|SF_BER | Signal fault due to high Bit-Error rate  |Not used for ZR/ZR+ | 
+|SD_BER | Signal degrade due to high Bit-Error rate  |Not used for ZR/ZR+ | 
+|BDI | Backward defect indication | Not used for ZR/ZR+| 
+|TIM | Trace identifier mismatch, OTN TTI mismatch|Not used for ZR/ZR+|  
+|FECMISMATCH|FEC Mismatch between endpoints| Not used for ZR/ZR+|
 |FEC-UNC| Uncorrectable words||   
-|FLEXO_GIDM| FlexO framing group ID mismatch|Can happen when one end is channelized and the other isn't| 
-|FLEXO_MM| FlexO mismatch|| 
-|FLEXO_LOM|FlexO framing Loss of multi-frame||
-|FLEXO-RDI|FlexO remote defect indicator|| 
-|FLEXO-LOF|FlexO loss of frame|| 
+|FLEXO_GIDM| FlexO framing group ID mismatch|Not used for ZR/ZR+| 
+|FLEXO_MM| FlexO multi-frame mismatch|Not used for ZR/ZR+| 
+|FLEXO_LOM|FlexO framing loss of multi-frame|Common alarm|
+|FLEXO-RDI|FlexO remote defect indicator|Not used for ZR/ZR+ |
+|FLEXO-LOF|FlexO loss of frame|Common alarm| 
 
 ### Common Optical Alarms 
 
 
+%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS RX LOS LANE-0 :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
+%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA RX CHROMATIC DISPERSION LOSS OF LOCK :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
+%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA RX LOSS OF FRAME  :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
+%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS RX LOL LANE-0 :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
+%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA FEC DEGRADED :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
+%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA FEC EXCESS DEGRADED :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
+%PKT_INFRA-FM-2-FAULT_CRITICAL : ALARM_CRITICAL :FLEXO-LOF :DECLARE :CoherentDSP0/0/0/10:
 
 ```
-optics_driver[389]: %PKT_INFRA-FM-4-FAULT_MINOR : ALARM_MINOR :OSNR :DECLARE :Optics0/0/0/20
+%PKT_INFRA-FM-4-FAULT_MINOR : ALARM_MINOR :OSNR :DECLARE :Optics0/0/0/20
 ``` 
 
 
