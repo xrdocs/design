@@ -379,7 +379,11 @@ The PM values we've introduced will be used in monitoring the health of our
 DCO circuit. We'll focus on IOS-XR as the network operating system, but similar 
 methods are usually available with other network operating systems.   
 
-## IOS-XR DCO Events and Alarms 
+## Current / Instantaneous Performance Data   
+
+
+
+## Events and Alarms 
 There are many alarms associated with the state of the optics. This is not meant 
 to be an exhaustive list of alarms, just highlight some of the more commonly seen 
 alarms during specific events.
@@ -549,30 +553,34 @@ Location        Severity     Group            Set Time                 Descripti
 ``` 
 
 
-## IOS-XR Performance Monitoring and Threshold Crossing Alerts 
-Another class of flexible monitoring and alerting is available to the user using 
-IOS-XR's Performance Measurement feature.  
+## IOS-XR Performance Measurement Engine and Threshold Crossing Alerts 
+Another class of flexible monitoring and alerting is available to the user using
+IOS-XR's Performance Measurement Engine feature.  
 
-### Performance Measurement Overview 
+### Performance Measurement Engine Overview 
 Select metric data in IOS-XR is collected and stored at regular intervals for
 consumption by the user or management systems. The data by default is collected
-across three different time periods or "bin/buckets": 10s, 30s, 15m, and 24h.
-Within each interval the min, max, and avg values are stored. The actual
-collection interval is dependent on the specific metric. As an example even
-though the minimum storage bucket is 30 seconds, some data is collected at a
-faster cadence such as every 5 seconds. The "flex-bin" option uses an interval
-of 10s.
+across three different time periods or "bins/buckets": 10s, 30s, 15m, and 24h.
+Within each period the min, max, and avg values during the period are
+stored. This can take some of the burden off the management system as it no 
+longer needs to calculate these values.   
+
+The actual collection interval is dependent on the specific metric. As
+an example even though the storage bucket is 30 seconds, some data is
+collected at a faster cadence such as every 5 seconds. The "flex-bin" option
+uses a period of 10s and is not user configurable.  The flex-bin period can be 
+used to mimic the behavior of current/instantaneous PM.   
 
 ### Performance Measurement History 
-Data collected using the PM infra is stored on the router for a number of time 
-intervals. The following table lists how many intervals are stored for each 
-time period. 
+Data collected using the PM infra is stored on the router for a number of time
+periods. The following table lists how many historical periods are stored for
+each time period. 
 
 **Note the data will NOT be retained across a router reload** 
 
 |Period| History buckets| Max history |  
 |-----| ------- |----| 
-|flex-bin (10s) | 1 | 10s |  
+|flex-bin (10s) | 1 | NA |  
 |30s | 30 | 15m | 
 |15m | 32 | 8h | 
 | 24h | 7 | 7d | 
@@ -611,6 +619,85 @@ The following table lists all of the available optics controller PM metrics
 
 **Note the last two metrics are associated with the electrical connection to the
 Ethernet PHY/NPU** 
+
+### Displaying and retrieving PM Engine Data 
+The data being collected by the PM Engine can be displayed using CLI commands or 
+retrieved using the following YANG models and paths.   
+
+The CLI command to output the optics controller PM Engine data is the following: 
+
+```
+show controllers optics 0/0/0/10 pm  <current,history> <flex-bin,30-sec,15-min,24-hour> optics 1
+```  
+
+Note the last "1" is the lane, which will always be 1 for DCO.  
+
+This results in the following output:   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:ron-poc-8201-1#show controllers optics 0/0/0/10 pm current 30-sec optics 1
+Mon Feb 19 09:53:38.238 PST
+
+Optics in the current interval [09:53:30 - 09:53:38 Mon Feb 19 2024]
+
+Optics current bucket type : Valid
+             MIN       AVG       MAX      Operational      Configured      TCA   Operational      Configured     TCA
+                                          Threshold(min)   Threshold(min) (min) Threshold(max)   Threshold(max) (max)
+LBC[mA ]     : 273       273       273      0                 NA              NO   524              NA              NO
+OPT[dBm]     : -9.98     -9.98     -9.98    -15.09            NA              NO   5.00             NA              YES
+OPR[dBm]     : -2.92     -2.92     -2.91    5.00              5.00            YES  8.00             10.00           YES
+CD[ps/nm]    : 2         2         3        -160000           NA              YES  160000           NA              YES
+DGD[ps ]     : 1.00      1.00      1.00     0.00              NA              NO   80.00            NA              NO
+SOPMD[ps^2]  : 41.00     44.89     48.00    0.00              NA              NO   2000.00          NA              NO
+OSNR[dB]     : 35.10     35.38     35.60    0.00              NA              YES  40.00            NA              YES
+PDL[dB]      : 0.60      0.66      0.70     0.00              NA              NO   7.00             NA              NO
+PCR[rad/s]   : 0.00      0.00      0.00     0.00              NA              NO   2500000.00       NA              NO
+RX_SIG[dBm]  : -3.15     -3.15     -3.14    -10.00            -10.00          YES  1.00             5.00            YES
+FREQ_OFF[Mhz]: -14       -13       -12      -3600             NA              NO   3600             NA              NO
+SNR[dB]      : 18.90     18.90     18.90    7.00              NA              NO   100.00           NA              NO
+</pre> 
+</div> 
+
+The CLI command to output the coherent DSP controller PM Engine data is the following: 
+
+```
+show controllers coherentDSP 0/0/0/10 pm <current,history> <flex-bin,30-sec,15-min,24-hour> fec 
+```  
+
+This results in the following output:   
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+RP/0/RP0/CPU0:ron-poc-8201-1#show controllers coherentDSP 0/0/0/10 pm current 30-sec fec
+Mon Feb 19 09:58:33.576 PST
+
+g709 FEC in the current interval [09:58:30 - 09:58:33 Mon Feb 19 2024]
+
+FEC current bucket type : Valid
+    EC-BITS   : 729415917               Threshold : 111484000000           TCA(enable)  : YES
+    UC-WORDS  : 0                       Threshold : 5                      TCA(enable)  : YES
+
+                                      MIN       AVG        MAX      Threshold      TCA     Threshold     TCA
+                                                                       (min)     (enable)    (max)     (enable)
+PreFEC BER                     :   3.2E-04   3.2E-04   3.2E-04      0E-15        NO       0E-15        NO
+PostFEC BER                    :     0E-15     0E-15     0E-15      0E-15        NO       0E-15        NO
+Q[dB]                          :     10.60     10.60     10.70      0.00         NO        0.00        NO
+Q_Margin[dB]                   :      4.10      4.10      4.10      5.00         YES       0.00        NO
+Host-Intf-0-FEC-BER            :     0E-15     0E-15     0E-15      0E-15        NO       0E-15        NO
+Host-Intf-0-FEC-FERC           :     0E-15     0E-15     0E-15      0E-15        NO       0E-15        NO
+</pre> 
+</div> 
+
+
+The data can also be retrieved using the following native YANG models and paths:  
+
+#### Optical PM Engine data native model path
+Cisco-IOS-XR-pmengine-oper:performance-management/optics
+
+#### Digital PM Engine data native model path 
+Cisco-IOS-XR-pmengine-oper:performance-management/otu/otu-ports/otu-port  
+
 
 ### PM Threshold Crossing Alert Overview 
 User defined TCAs can be set for the metrics the PM infrastructure collects. The 
