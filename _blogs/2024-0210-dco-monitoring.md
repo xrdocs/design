@@ -427,25 +427,52 @@ Q-Margin                                        : 4.10 dB
 </pre> 
 </div>
 
-### YANG data model for "current" Optical PM data 
-The following YANG model path can be used to retrieve all of the data shown 
-in the CLI command. Interfaces such as NETCONF, gNMI/GRPC, or native Cisco 
-MDT can be used.  
+### YANG data models for "current" PM data retrieval 
+The following YANG model paths can be used to retrieve all of the data shown 
+in the CLI commands. Interfaces such as NETCONF, gNMI/GRPC, or native Cisco 
+MDT can be used to retrieve the data on demand, on change, or via periodic 
+subscription.
+
+#### YANG data model for "current" Optical PM data 
 
 ```
 Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info 
 ``` 
 
-### YANG data model for "current" Digital PM data 
-The following YANG model path can be used to retrieve all of the data shown 
-in the CLI command. Interfaces such as NETCONF, gNMI/GRPC, or native Cisco 
-MDT can be used.  
+#### YANG data model for "current" Digital PM data 
 
 ```
 Cisco-IOS-XR-controller-otu-oper:otu/controllers/controller/info
 ``` 
 
+### SNMP MIBs for "current" PM data retrieval 
+In IOS-XR the optics and coherentdsp controllers are modeled as interfaces. The 
+SNMP OIDs used for DCO monitoring will reference the interface ifIndex for the 
+respective controller.  
 
+
+### SNMP MIB for "current" Optical PM data 
+The following Cisco native SNMP MIB can be used to retrieve the current PM data. 
+
+```
+CISCO-OPTICAL-MIB (OID 1.3.6.1.4.1.9.9.828)
+
+IF-MIB::ifDescr.27 = STRING: Optics0/0/0/24 
+CISCO-OPTICAL-MIB::coiOpticalControllerFrequency.27 = Gauge32: 1940000 100 MHz 
+```
+
+### SNMP MIB for "current" Digital PM data 
+The following Cisco native SNMP MIB can be used to retrieve the current PM data. 
+
+```
+CISCO-OTN-IF-MIB (OID 1.3.6.1.4.1.9.9.639)
+
+IF-MIB::ifDescr.65 = STRING: CoherentDSP0/0/0/24 
+CISCO-OTN-IF-MIB::coiIfControllerPreFECBERMantissa.65 = INTEGER: 140
+CISCO-OTN-IF-MIB::coiIfControllerPreFECBERExponent.65 = INTEGER: -5
+
+Previous values equal PreFEC BER of 1.4e-05
+```
 
 
 ## Events and Alarms 
