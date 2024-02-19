@@ -391,11 +391,14 @@ retrieving alarms via YANG models such as openconfig-alarms and
 Cisco-IOS-XR-alarmgr-server-oper.   
 
 
-### Note on built-in PM alarm thresholds 
-Some DCO PM values are defined within the optics and optics driver and are not 
-user-configurable. These thresholds trigger system level alarms. 
+### Optics Controller Alarm Thresholds  
+The following PM threshold values are defined for the optics controller. See 
+the table below on user-configurable values. When a threshold is crossed 
+the system will generate an alarm of different severity based on Low vs. High 
+crossing.   
 
-The following PM threshold values are defined for the optics controller.  
+It is recommended to leave the values at their defaults unless the user has 
+characterized the optical network closely to determine proper values.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
@@ -409,19 +412,25 @@ The following PM threshold values are defined for the optics controller.
  Temp. Threshold(celsius)       80.00      -5.00         75.00        15.00
  Voltage Threshold(volt)         3.46       3.13          3.43         3.16
  LBC High Threshold = 98 %
+ Configured CD High Threshold = 160000 ps/nm
+ Configured CD lower Threshold = -160000 ps/nm
+ Configured OSNR lower Threshold = 9.00 dB
+ Configured DGD Higher Threshold = 80.00 ps
 </pre> 
 </div> 
 
-The following PM threshold values are defined for the coherent DSP controller.   
-SF=Signal Fault and SD=Signal Degrade.    
-
-<div class="highlighter-rouge">
-<pre class="highlight">
-BER Thresholds                                  : SF = 1.0E-5  SD = 1.0E-7
-</pre> 
-</div> 
-
-
+|Parameter| Explanation| User-Configurable |  
+|-----| ------- |-------|  
+|Rx Power Threshold(dBm) | Receive power in dBm | No | 
+|Rx Power Threshold(mW) | Receive power in mW| No | 
+|Tx Power Threshold(dBm) | Transmit power in dBm | No | 
+|Tx Power Threshold(dBm) | Transmit power in mW| No | 
+|LBC High Threshold | Laser bias % of max | Yes, lbc-high-threshold command| 
+|Temp threshold | Case temperature of transceiver | No | 
+|CD High Threshold | Chromatic dispersion high | Yes, cd-high-threshold command | 
+|CD Low threshold | Chromatic dispersion low | Yes, cd-low-threshold command|  
+|OSNR Low threshold | Optical signal to noise ratio | Yes, osnr-low-threshold | 
+|DGD Low threshold | Differential group delay low value | Yes, dgd-low-threshold command | 
 
 ### Counted Optical Alarms 
 Based on either an event or built-in PM threshold, specific alarms increment 
@@ -503,12 +512,9 @@ Detected Alarms                                 : LOS
 
 ```
 %PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS RX LOS LANE-0 :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
+%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS RX LOL LANE-0 :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
 %PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA RX CHROMATIC DISPERSION LOSS OF LOCK :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
 %PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA RX LOSS OF FRAME  :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
-%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS RX LOL LANE-0 :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
-%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA FEC DEGRADED :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
-%PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA FEC EXCESS DEGRADED :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
-%PKT_INFRA-FM-2-FAULT_CRITICAL : ALARM_CRITICAL :FLEXO-LOF :DECLARE :CoherentDSP0/0/0/10:
 %PKT_INFRA-FM-4-FAULT_MINOR : ALARM_MINOR :OSNR :DECLARE :Optics0/0/0/20
 ```
 
@@ -519,6 +525,29 @@ Detected Alarms                                 : LOS
 %PKT_INFRA-FM-3-FAULT_MAJOR : ALARM_MAJOR :OPTICS MEDIA FEC EXCESS DEGRADED :DECLARE :0/RP0/CPU0:  Optics0/0/0/10
 %PKT_INFRA-FM-2-FAULT_CRITICAL : ALARM_CRITICAL :FLEXO-LOF :DECLARE :CoherentDSP0/0/0/10:
 ```
+
+### Common Alarms on Fiber Cut 
+
+The active alarms on the device can be shown using the "show alarms brief system active" 
+
+```
+
+--------------------------------------------------------------------------------
+Active Alarms (Brief) for 0/RP0
+--------------------------------------------------------------------------------
+Location        Severity     Group            Set Time                 Description                                                                                                                                  
+--------------------------------------------------------------------------------                                                                                  
+0/RP0/CPU0      Major        Software         11/30/2023 12:11:06 PST   Optics0/0/0/0 - hw_optics:  RX LOS LANE-0 ALARM                                                                                             
+0/RP0/CPU0      Major        Software         11/30/2023 12:11:06 PST   Optics0/0/0/0 - hw_optics:  RX POWER LANE-0 LOW ALARM                                                                                       
+
+--------------------------------------------------------------------------------
+Conditions (Brief) for 0/RP0
+--------------------------------------------------------------------------------
+Location        Severity     Group            Set Time                 Description                                                                                                                                  
+--------------------------------------------------------------------------------
+0/0             Critical     OTN              11/30/2023 12:11:06 PST  CoherentDSP0/0/0/0 - Incoming Payload Signal Absent 
+``` 
+
 
 ## IOS-XR Performance Monitoring and Threshold Crossing Alerts 
 
