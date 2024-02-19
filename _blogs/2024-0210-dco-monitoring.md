@@ -645,6 +645,8 @@ Reporting must be enabled for both min and max values for the metric and for
 specific time intervals.  
 
 ### TCA alert configuration example  
+This example shows configuring the TCAs via XR CLI, however the TCAs could also 
+be configured using the appropriate YANG models.  
 
 The following configuration does the following: 
 
