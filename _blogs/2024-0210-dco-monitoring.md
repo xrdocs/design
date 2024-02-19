@@ -502,9 +502,9 @@ Detected Alarms                                 : LOS
 |TIM | Trace identifier mismatch, OTN TTI mismatch|Not used for ZR/ZR+|  
 |FECMISMATCH|FEC Mismatch between endpoints| Not used for ZR/ZR+|
 |FEC-UNC| Uncorrectable words||   
-|FLEXO_GIDM| FlexO framing group ID mismatch|Not used for ZR/ZR+| 
-|FLEXO_MM| FlexO multi-frame mismatch|Not used for ZR/ZR+| 
-|FLEXO_LOM|FlexO framing loss of multi-frame|Common alarm|
+|FLEXO-GIDM| FlexO framing group ID mismatch|Not used for ZR/ZR+| 
+|FLEXO-MM| FlexO multi-frame mismatch|Not used for ZR/ZR+| 
+|FLEXO-LOM|FlexO framing loss of multi-frame|Common alarm|
 |FLEXO-RDI|FlexO remote defect indicator|Not used for ZR/ZR+ |
 |FLEXO-LOF|FlexO loss of frame|Common alarm| 
 
