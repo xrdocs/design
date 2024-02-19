@@ -379,7 +379,72 @@ The PM values we've introduced will be used in monitoring the health of our
 DCO circuit. We'll focus on IOS-XR as the network operating system, but similar 
 methods are usually available with other network operating systems.   
 
-## Current / Instantaneous Performance Data   
+## "Current" Performance Data   
+When the user issues show commands such as "show controller optics" and "show 
+controller coherentdsp" what is shown for PM data is the last read or "current" 
+value or the metric. Certain data is collected at different intervals but in 
+general all data shown has an update interval below 30s. The following tables 
+list the instant PM data available via different methods.  
+
+### CLI "show controller optics" Optical layer PM data 
+As you can see below the PM data we discussed in the overview section 
+is shown when issuing the command.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+         Laser Bias Current = 273.1 mA
+         Actual TX Power = -9.95 dBm
+         Actual TX Power(mW) = 0.10 mW
+         RX Power = -2.92 dBm
+         RX Power(mW) = 0.51 mW
+         RX Signal Power = -3.15 dBm
+         Frequency Offset = -1 MHz
+         Laser Temperature = 51.48 Celsius
+         Laser Age = 0 %
+         LBC High Threshold = 98 %
+         Chromatic Dispersion 2 ps/nm
+         Second Order Polarization Mode Dispersion = 46.00 ps^2
+         Optical Signal to Noise Ratio = 35.60 dB
+         SNR = 18.80 dB
+         Polarization Dependent Loss = 0.60 dB
+         Polarization Change Rate = 0.00 rad/s
+         Differential Group Delay = 1.00 ps
+         Temperature = 52.00 Celsius
+         Voltage = 3.29 V
+</pre> 
+</div>
+
+### CLI "show controller coherentdsp" Digital layer PM data 
+As you can see below the PM data we discussed in the overview section 
+is shown when issuing the command.  
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+PREFEC  BER                                     : 3.1E-04
+POSTFEC BER                                     : 0.0E+00
+Q-Factor                                        : 10.60 dB
+Q-Margin                                        : 4.10 dB
+</pre> 
+</div>
+
+### YANG data model for "current" Optical PM data 
+The following YANG model path can be used to retrieve all of the data shown 
+in the CLI command. Interfaces such as NETCONF, gNMI/GRPC, or native Cisco 
+MDT can be used.  
+
+```
+Cisco-IOS-XR-controller-optics-oper:optics-oper/optics-ports/optics-port/optics-info 
+``` 
+
+### YANG data model for "current" Digital PM data 
+The following YANG model path can be used to retrieve all of the data shown 
+in the CLI command. Interfaces such as NETCONF, gNMI/GRPC, or native Cisco 
+MDT can be used.  
+
+```
+Cisco-IOS-XR-controller-otu-oper:otu/controllers/controller/info
+``` 
+
 
 
 
@@ -697,6 +762,9 @@ Cisco-IOS-XR-pmengine-oper:performance-management/optics
 
 #### Digital PM Engine data native model path 
 Cisco-IOS-XR-pmengine-oper:performance-management/otu/otu-ports/otu-port  
+
+
+The PM Engine data can also be retrieved via the following SNMP MIB 
 
 
 ### PM Threshold Crossing Alert Overview 
