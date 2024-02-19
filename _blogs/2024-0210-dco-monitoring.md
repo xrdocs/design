@@ -550,5 +550,134 @@ Location        Severity     Group            Set Time                 Descripti
 
 
 ## IOS-XR Performance Monitoring and Threshold Crossing Alerts 
+Another class of flexible monitoring and alerting is available to the user using 
+IOS-XR's Performance Measurement feature.  
+
+### Performance Measurement Overview 
+Select metric data in IOS-XR is collected and stored at regular intervals for
+consumption by the user or management systems. The data by default is collected
+across three different time periods or "bin/buckets": 10s, 30s, 15m, and 24h.
+Within each interval the min, max, and avg values are stored. The actual
+collection interval is dependent on the specific metric. As an example even
+though the minimum storage bucket is 30 seconds, some data is collected at a
+faster cadence such as every 5 seconds. The "flex-bin" option uses an interval
+of 10s.
+
+### Performance Measurement History 
+Data collected using the PM infra is stored on the router for a number of time 
+intervals. The following table lists how many intervals are stored for each 
+time period. 
+
+**Note the data will NOT be retained across a router reload** 
+
+|Period| History buckets| Max history |  
+|-----| ------- |----| 
+|flex-bin (10s) | 1 | 10s |  
+|30s | 30 | 15m | 
+|15m | 32 | 8h | 
+| 24h | 7 | 7d | 
+
+
+### Optics Controller PM metrics 
+The following table lists all of the available optics controller PM metrics 
+
+|Metric | Units | Definition | 
+|-----| ------- |-------| 
+|LBC | mA | Laser bias current | 
+|OPT | dBm in .01 increment | Optical power transmit | 
+|OPR | dBm in .01 increment | Optical power receive | 
+|CD | ps/nm | Chromatic dispersion | 
+|DGD | ps | Differential group delay | 
+|OSNR| dB | Optical signal to noise ratio | 
+|SOPMD | ps^2 | Second order polarization mode dispersion | 
+|PDL|dB|Polarization dependent loss | 
+|PCR|rad/s|Polarization change rate| 
+|RX_SIG|dBm in .01 increments|Coherent signal power| 
+|FREQ_OFF|Mhz|Frequency offset, difference between expected and actual receive frequency| 
+|SNR|dB|Signal to noise ratio (not OSNR)| 
+
+### Coherent DSP Controller PM metrics 
+
+|Metric | Units | Definition | 
+|-----| ------- |-------| 
+|EC-BITS| NA | Number of error corrected bits in interval | 
+|UC-WORDS| NA | Uncorrectable words in interval | 
+|PreFEC BER| Rate | Pre-FEC bit error rate | 
+|PostFEC BER| Rate | Post-FEC bit error rate|
+|Q|dB|Quality factor| 
+|Q_Margin|Quality margin| 
+|Host-Intf-0-FEC-BER|Host side FEC it error rate| 
+|Host-Intf-0-FEC-FERC|Host side FEC received corrected|  
+
+**Note the last two metrics are associated with the electrical connection to the
+Ethernet PHY/NPU** 
+
+### PM Threshold Crossing Alert Overview 
+User defined TCAs can be set for the metrics the PM infrastructure collects. The 
+TCAs can be set for the min and max values collected. TCAs can be individually 
+set for each time interval. TCA also includes the ability to report when a 
+min or max TCA has been crossed. TCAs are not stored as system alarms, they are 
+recorded in the main system log and also reported as syslog/SNMP traps if the 
+system is configured to report those.   
+
+**Keep in mind that a TCA alert will be generated every time interval the alert 
+is configured for. If TCA reporting is enabled for a min RX power in the 30s bucket, 
+an alert will be generated every 30s the RX power is below the min threshold.**  
+
+### Performance measurement configuration 
+Performance measurement for all available metrics is enabled by default on DCO
+for both the optics controller and coherentdsp controller. See the tables below
+for a list of all PM metrics collected for each.
+
+### Threshold crossing alert configuration 
+Most metrics collected by the PM infrastructure have pre-defined TCA min/max
+values, but those can be changed by the user to match their specific deployment.   
+
+TCA reporting is not enabled by default on the optics and coherentdsp controller
+except for the following exception: The coherentDSP controller has two TCAs set
+by the system,"EC-BITS" and "UC-WORDS." The EC-BITS is a measurement of error
+corrected bits over the time interval and UC-WORDS is a measure of the
+uncorrectable words post-FEC. These are absolute values and not time-series
+metrics. The EC-BITS is set by the system based on the current rate of the DCO
+and should not be changed. 
+
+Reporting must be enabled for both min and max values for the metric and for 
+specific time intervals.  
+
+### TCA alert configuration example  
+
+The following configuration does the following: 
+
+- Enables TCA reporting for crossing the min threshold for opr,cd,osnr,rx-sig-pow 
+- Enables TCA report for crossing the max threshold for opt, opr, cd, osnr,rx-sig-pow 
+- Changes default optical power receive min threshold to 1 dBm (100*.01)
+- Changes default optical power receive max threshold to 10 dBm (1000*.01) 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+controller Optics0/0/0/10
+ pm 30-sec optics report opr min-tca
+ pm 30-sec optics report cd min-tca
+ pm 30-sec optics report osnr min-tca
+ pm 30-sec optics report rx-sig-pow min-tca
+ pm 30-sec optics report opt max-tca
+ pm 30-sec optics report opr max-tca
+ pm 30-sec optics report cd max-tca
+ pm 30-sec optics report osnr max-tca
+ pm 30-sec optics report rx-sig-pow max-tca
+ pm 30-sec optics threshold opr-dbm min 100
+ pm 30-sec optics threshold opr-dbm max 1000
+</pre> 
+</div> 
+
+### TCA alert message example 
+The following will be shown in the system logs when a TCA is crossed. This
+example is when the Q-Margin has dropped below the min value of 5.0. All PM TCA
+alarms will use the L1-PMENGINE-4-TCA nomenclature when being logged.  
+
+```
+RP/0/RP0/CPU0:2024 Feb  5 08:07:30.185 PST: optics_driver[192]: %L1-PMENGINE-4-TCA : Port  CoherentDSP0/0/0/10 reports FEC Q-MARGIN-MIN(NE) PM TCA with current value 4.10, threshold 5.00 in current 30-sec interval window
+```
+
 
 
