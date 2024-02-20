@@ -124,7 +124,7 @@ TI-LFA provides sub 50ms convergence for link and node protection. TI-LFA is com
 #### MPLS VPN Services
 One of the advantages of an IP/MPLS network is that it enables the deployment of VPN services.  Many people associate L3VPN and L2VPN with expensive business services.  But even small providers can benefit from judicious use of MPLS VPNs in residential deployments.
 
-In the simplest design, subscriber traffic arrives at the access device, receives an IP address via DHCP and gets access to the Internet via the global routing table. Many large, modern networks are being built to isolate the global routing table from the underlying infrastructure. In this case, the Internet global table is carried as an L3VPN service, leaving the infrastructure layer protected from both the global Internet.  
+In the simplest design, subscriber traffic arrives at the access device, receives an IP address via DHCP and gets access to the Internet via the global routing table. Many large, modern networks are being built to isolate the global routing table from the underlying infrastructure. In this case, the Internet global table is carried as an L3VPN service, leaving the infrastructure layer protected from the global Internet and subscribers.  
 
 The other use case for MPLS VPN services is when Broadband Network Gateway (BNG) is deployed for per-subscriber traffic management.  Because BNG requires more sophisticated treatment of the user traffic and, hence, more expensive forwarding hardware, the BNG device is often deployed in a centralized location to take advantage of economies of scale.  Access devices can be configured to backhaul Layer 2 subscriber traffic to the BNG device using EVPN pseudowires.
 
@@ -307,7 +307,7 @@ interface HundredGigE0/0/1/0
 
 **QoS Policy-Map Configuration**
 
-The following represent simple policies to classify on ingress (core facing interfaces only) and queue on egress.  For simplicity, only two classes and queues are used: high-priority (dscp 46) and default (everything else).
+The following represent simple policies to classify on ingress and queue on egress.  For simplicity, only two classes and queues are used: high-priority (dscp 46) and default (everything else).
 
 ```
 class-map match-any match-ef
@@ -477,7 +477,7 @@ l2vpn
   
 ## Per-subscriber policies with BNG
 
-The following configuration is used for a deployment of IPoE subscriber sessions. The configuration of some external elements such as the RADIUS authentication server are outside the scope of this document. For more information about the subscriber features and policy (including QoS, security ACLs, Lawful Intercept and more), see the [Broadband Network Gateway Configuration Guide for Cisco ASR 9000 Series Routers](https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/bng/configuration/guide/b-bng-cg-asr9000-78x.html).
+The following configuration is used for a deployment of IPoE subscriber sessions. The configuration of some external elements such as the RADIUS authentication server are outside the scope of this document. For more information about the subscriber features and policy (including RADIUS-based QoS, security ACLs, Lawful Intercept and more), see the [Broadband Network Gateway Configuration Guide for Cisco ASR 9000 Series Routers](https://www.cisco.com/c/en/us/td/docs/routers/asr9000/software/asr9k-r7-8/bng/configuration/guide/b-bng-cg-asr9000-78x.html).
 
 ![EVPN PW 5.jpg]({{site.baseurl}}/images/EVPN PW 5.jpg)
 
@@ -576,15 +576,35 @@ policy-map type control subscriber RBB_IPoE_PWHE
  end-policy-map
  
  dynamic-template
- type ipsubscriber PWHE_PBNG1
-  ipv4 verify unicast source reachable-via rx
-  ipv4 unnumbered Loopback1
-  ipv4 unreachables disable
-  ipv6 enable
+  type ipsubscriber PWHE_PBNG1
+   ipv4 verify unicast source reachable-via rx
+   ipv4 unnumbered Loopback1
+   ipv4 unreachables disable
+   ipv6 enable
  !
 !
 ```
 
+To enforce per-subscriber rate-limiting, you can define a simple QoS policy:
+
+```
+policy-map PLAN_100M
+ class class-default
+  police rate 100 mbps
+  !
+ !
+ end-policy-map
+!
+```
+
+And add it to the dynamic template:
+
+```
+dynamic-template
+ type ipsubscriber PWHE_PBNG1
+  service-policy output PLAN_100M
+```
+  
 ## Summary: Routed Access for Rural Broadband
 
 The Routed Access design brings the benefits of Converged SDN Transport to rural broadband networks with simple, flexible, smaller-scale approach to residential broadband. No matter what PON solution you deploy, Routed Access reduces the complexity associated with Layer 2 networks by introducing the many benefits of IP and Segment Routing as close to the PON network as possible.
