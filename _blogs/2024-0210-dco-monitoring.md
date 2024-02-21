@@ -865,3 +865,47 @@ RP/0/RP0/CPU0:2024 Feb  5 08:07:30.185 PST: optics_driver[192]: %L1-PMENGINE-4-T
 
 
 
+# Monitoring DCO using Cisco Network Automation 
+
+## Crosswork Network Controller 
+The Health Insights application within CNC can be used to monitor any available 
+telemetry sensor paths including the Optical and Digital PMs we've discussed.
+Health Insights can also be configured to alert based on different criteria such
+as deviations in measured valued or absolute value changes.  The Health Insights
+documentation located here can be used as a reference: 
+
+<https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/crosswork-cahi/6-0/User-Guide/cisco-crosswork-CLNA-6-0-user-guide/m_healthinsights600.html> 
+
+
+### Key Performance Indicators and KPI Profiles 
+A KPI in Health Insights is used to monitor a specific telemetry sensor PM
+attribute. In YANG these refer to the YANG operational mode leaf values.  
+
+A set of KPIs are grouped together as part of a KPI Profile. This allows the
+user to have a set of KPIs applied to a set of devices without having to manage
+per-device individual KPIs. When a KPI is added or removed from an active
+profile, telemetry collection will start for the devices using the KPI profile.  
+
+Health insights includes a built-in set of pre-defined KPIs under the 
+"Layer1-Optics" category. These sensor paths can be used to monitor both DCO and 
+gray optics.
+
+<img src="http://xrdocs.io/design/images/ron-hld/cnc-built-in-l1-optics.png" width="1000"/>
+<img src="http://xrdocs.io/design/images/ron-hld/cnc-built-in-l1-optics-kpi-profile.png" width="1000"/>
+
+
+
+### Custom KPIs and KPI Profiles
+Health Insights allows the user to customize the KPIs being used and group them 
+into KPI Profiles specific to the application.   
+
+Here we see a KPI Profile being used to monitor RX/TX Power and Q-Margin which 
+can then be applied to devices with DCO.   
+
+<img src="http://xrdocs.io/design/images/ron-hld/cnc-custom-ron-kpi-profile.png" width="1000"/>
+
+KPI graph being used specifically for DCO monitoring. Any sensor path leaf returning 
+data as numeric data can be graphed. If the data is non-numeric it cannot be 
+graphed but can be shown in a tabular format.   
+
+<img src="http://xrdocs.io/design/images/ron-hld/cnc-health-insights-dco-monitoring.png" width="1000"/>
