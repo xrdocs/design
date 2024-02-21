@@ -876,7 +876,7 @@ on the view.
 
 #### Link Assurance with PM Data 
 
-<img src="http://xrdocs.io/design/images/ron-hld/cnc-built-in-l1-optics.png" width="1000"/>
+<img src="http://xrdocs.io/design/images/ron-hld/ron-hco-link-assurance-3.png" width="1000"/>
 
 
 HCO's Performance application allows the user to explore the PM data at a device 
