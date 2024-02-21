@@ -867,7 +867,24 @@ RP/0/RP0/CPU0:2024 Feb  5 08:07:30.185 PST: optics_driver[192]: %L1-PMENGINE-4-T
 
 # Monitoring DCO using Cisco Network Automation 
 
-## Crosswork Network Controller 
+## Crosswork Hierarchical Controller 
+Crosswork Hierarchical Controller or HCO has capabilities for monitoring Routed
+Optical Networking PM for both the IP and Optical Line System layers in the same
+tool together. HCO's Link Assurance application  presents and end to end
+multi-layer view of circuits using DCO endpoints and overlays relevant PM data
+on the view. 
+
+#### Link Assurance with PM Data 
+
+<img src="http://xrdocs.io/design/images/ron-hld/cnc-built-in-l1-optics.png" width="1000"/>
+
+
+HCO's Performance application allows the user to explore the PM data at a device 
+and interface level in a tabular format. The user can query based on a device 
+or set of devices. The DCO data is 
+
+
+## Crosswork Network Controller Device Level Monitoring 
 The Health Insights application within CNC can be used to monitor any available 
 telemetry sensor paths including the Optical and Digital PMs we've discussed.
 Health Insights can also be configured to alert based on different criteria such
@@ -891,6 +908,8 @@ Health insights includes a built-in set of pre-defined KPIs under the
 gray optics.
 
 <img src="http://xrdocs.io/design/images/ron-hld/cnc-built-in-l1-optics.png" width="1000"/>
+
+<br>
 <img src="http://xrdocs.io/design/images/ron-hld/cnc-built-in-l1-optics-kpi-profile.png" width="1000"/>
 
 
