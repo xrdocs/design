@@ -130,8 +130,8 @@ data is derived from and how best to monitor the optics.
 <img src="http://xrdocs.io/design/images/ron-hld/coherent-optic-diagram.png" width="1000"/>
 
 ### Component Packaging 
-On modern DCO like Cisco's ZR/ZR+ all of the elements are copackaged leading to
-simpler design and more power efficiency.  
+On modern DCO like Cisco's ZR/ZR+ multiple elements are co-packaged leading to
+simpler design and greater power efficiency.  
 
 <img src="http://xrdocs.io/design/images/ron-hld/acacia-optics-picture.png" width="1000"/>
 
