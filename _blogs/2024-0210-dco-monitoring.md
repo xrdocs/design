@@ -821,7 +821,7 @@ by the system,"EC-BITS" and "UC-WORDS." The EC-BITS is a measurement of error
 corrected bits over the time interval and UC-WORDS is a measure of the
 uncorrectable words post-FEC. These are absolute values and not time-series
 metrics. The EC-BITS is set by the system based on the current rate of the DCO
-and should not be changed. 
+and should not be changed.
 
 Reporting must be enabled for both min and max values for the metric and for 
 specific time intervals.  
@@ -856,7 +856,8 @@ controller Optics0/0/0/10
 
 You can see below TCAs are now enabled for the appropriate parameters.  
 
-```diff 
+<div class="highlighter-rouge">
+<pre class="highlight">
 RP/0/RP0/CPU0:ron-poc-8201-1#show controllers optics 0/0/0/10 pm current 30-sec optics 1
 Thu Feb 22 06:15:22.811 PST
 
@@ -867,20 +868,18 @@ Optics current bucket type : Valid
                                           Threshold(min)   Threshold(min) (min) Threshold(max)   Threshold(max) (max)
 LBC[mA ]     : 273       273       273      0                 NA              NO   524              NA              NO
 OPT[dBm]     : -10.01    -10.00    -9.96    -15.09            NA              NO   5.00             NA              YES
-OPR[dBm]     : -2.96     -2.93     -2.91    5.00              5.00            YES  8.00             10.00           YES
-CD[ps/nm]    : 2         3         4        -160000           NA              YES  160000           NA              YES
+<font color=orange>OPR[dBm]     : -2.96     -2.93     -2.91    5.00              5.00            YES  8.00             10.00           YES
+CD[ps/nm]    : 2         3         4        -160000           NA              YES  160000           NA              YES</font> 
 DGD[ps ]     : 1.00      1.00      1.00     0.00              NA              NO   80.00            NA              NO
 SOPMD[ps^2]  : 43.00     51.22     59.00    0.00              NA              NO   2000.00          NA              NO
-OSNR[dB]     : 35.20     35.40     35.60    0.00              NA              YES  40.00            NA              YES
+<font color=orange>OSNR[dB]     : 35.20     35.40     35.60    0.00              NA              YES  40.00            NA              YES</font> 
 PDL[dB]      : 0.60      0.62      0.70     0.00              NA              NO   7.00             NA              NO
 PCR[rad/s]   : 0.00      0.00      0.00     0.00              NA              NO   2500000.00       NA              NO
-RX_SIG[dBm]  : -3.14     -3.14     -3.13    -10.00            -10.00          YES  1.00             5.00            YES
+<font color=orange>RX_SIG[dBm]  : -3.14     -3.14     -3.13    -10.00            -10.00          YES  1.00             5.00            YES</font> 
 FREQ_OFF[Mhz]: -12       -5        -2       -3600             NA              NO   3600             NA              NO
 SNR[dB]      : 18.80     18.83     18.90    7.00              NA              NO   100.00           NA              NO
-``` 
-
-
-
+</pre> 
+</div> 
 
 
 ### CoherentDSP (Digital) Controller TCA alert configuration example  
@@ -895,7 +894,7 @@ The following configuration does the following:
 <div class="highlighter-rouge">
 <pre class="highlight">
 controller CoherentDSP0/0/0/10
- <font color=red>pm 30-sec fec report Q-margin min-tca enable</font> 
+pm 30-sec fec report Q-margin min-tca enable</font> 
  pm 30-sec fec threshold Q-margin min 500
 </pre> 
 </div> 
@@ -904,7 +903,8 @@ You can see below TCA is now enabled for the min threshold for the 30-second
 bucket.  
 
 
-```
+<div class="highlighter-rouge">
+<pre class="highlight">
 RP/0/RP0/CPU0:ron-poc-8201-1#show controllers coherentDSP 0/0/0/10 pm current 30-sec fec
 Thu Feb 22 06:03:27.771 PST
 
@@ -918,11 +918,12 @@ FEC current bucket type : Valid
                                                                        (min)     (enable)    (max)     (enable)
 PreFEC BER                     :   2.9E-04   3.1E-04   3.2E-04      0E-15        NO       0E-15        NO
 PostFEC BER                    :     0E-15     0E-15     0E-15      0E-15        NO       0E-15        NO
-Q[dB]                          :     10.60     10.63     10.70          0.00        NO        0.00        NO
-Q_Margin[dB]                   :      4.10      4.10      4.10          5.00        YES       0.00        NO
+Q[dB]                          :     10.60     10.63     10.70      0.00         NO        0.00        NO
+<font color=orange>Q_Margin[dB]                   :      4.10      4.10      4.10      5.00         YES       0.00        NO</font> 
 Host-Intf-0-FEC-BER            :     0E-15   8.3E-14   2.3E-10      0E-15        NO       0E-15        NO
 Host-Intf-0-FEC-FERC           :     0E-15     0E-15     0E-15      0E-15        NO       0E-15        NO
-```
+</pre> 
+</div> 
 
 
 ### TCA alert message example 
