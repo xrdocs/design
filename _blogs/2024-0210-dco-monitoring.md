@@ -1007,3 +1007,22 @@ data as numeric data can be graphed. If the data is non-numeric it cannot be
 graphed but can be shown in a tabular format.   
 
 <img src="http://xrdocs.io/design/images/ron-hld/cnc-health-insights-dco-monitoring.png" width="1000"/>
+
+# Additional Resources 
+
+### Routed Optical Networking Design Guide
+
+<https://xrdocs.io/design/blogs/latest-routed-optical-networking-hld> 
+
+### Routed Optical Networking Landing Page 
+
+<https://www.cisco.com/site/us/en/solutions/routed-optical-networking/index.html> 
+
+### Crosswork Network Automation Home 
+<https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/crosswork-hierarchical-controller/solution-overview-c22-744695.html>
+
+### Crosswork Network Controller 
+<https://www.cisco.com/c/en/us/products/cloud-systems-management/crosswork-network-controller/index.html> 
+
+### Crosswork Hierarchical Controller 
+<https://www.cisco.com/c/en/us/products/cloud-systems-management/crosswork-hierarchical-controller/index.html>
