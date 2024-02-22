@@ -664,7 +664,7 @@ uses a period of 10s and is not user configurable.  The flex-bin period can be
 used to mimic the behavior of current/instantaneous PM.   
 
 ### Performance Measurement History 
-Data collected using the PM infra is stored on the router for a number of time
+Data collected using the PM Engine is stored on the router for a number of time
 periods. The following table lists how many historical periods are stored for
 each time period. 
 
@@ -826,14 +826,14 @@ and should not be changed.
 Reporting must be enabled for both min and max values for the metric and for 
 specific time intervals.  
 
-### TCA alert configuration example  
+### Optical Controller TCA alert configuration example  
 This example shows configuring the TCAs via XR CLI, however the TCAs could also 
 be configured using the appropriate YANG models.  
 
 The following configuration does the following: 
 
 - Enables TCA reporting for crossing the min threshold for opr,cd,osnr,rx-sig-pow 
-- Enables TCA report for crossing the max threshold for opt, opr, cd, osnr,rx-sig-pow 
+- Enables TCA reporting for crossing the max threshold for opt, opr, cd, osnr,rx-sig-pow 
 - Changes default optical power receive min threshold to 1 dBm (100*.01)
 - Changes default optical power receive max threshold to 10 dBm (1000*.01) 
 
@@ -854,6 +854,77 @@ controller Optics0/0/0/10
 </pre> 
 </div> 
 
+You can see below TCAs are now enabled for the appropriate parameters.  
+
+```
+RP/0/RP0/CPU0:ron-poc-8201-1#show controllers optics 0/0/0/10 pm current 30-sec optics 1
+Thu Feb 22 06:15:22.811 PST
+
+Optics in the current interval [06:15:00 - 06:15:22 Thu Feb 22 2024]
+
+Optics current bucket type : Valid
+             MIN       AVG       MAX      Operational      Configured      TCA   Operational      Configured     TCA
+                                          Threshold(min)   Threshold(min) (min) Threshold(max)   Threshold(max) (max)
+LBC[mA ]     : 273       273       273      0                 NA              NO   524              NA              NO
+OPT[dBm]     : -10.01    -10.00    -9.96    -15.09            NA              NO   5.00             NA              YES
+OPR[dBm]     : -2.96     -2.93     -2.91    5.00              5.00            YES  8.00             10.00           YES
+CD[ps/nm]    : 2         3         4        -160000           NA              YES  160000           NA              YES
+DGD[ps ]     : 1.00      1.00      1.00     0.00              NA              NO   80.00            NA              NO
+SOPMD[ps^2]  : 43.00     51.22     59.00    0.00              NA              NO   2000.00          NA              NO
+OSNR[dB]     : 35.20     35.40     35.60    0.00              NA              YES  40.00            NA              YES
+PDL[dB]      : 0.60      0.62      0.70     0.00              NA              NO   7.00             NA              NO
+PCR[rad/s]   : 0.00      0.00      0.00     0.00              NA              NO   2500000.00       NA              NO
+RX_SIG[dBm]  : -3.14     -3.14     -3.13    -10.00            -10.00          YES  1.00             5.00            YES
+FREQ_OFF[Mhz]: -12       -5        -2       -3600             NA              NO   3600             NA              NO
+SNR[dB]      : 18.80     18.83     18.90    7.00              NA              NO   100.00           NA              NO
+``` 
+
+
+
+
+
+### CoherentDSP (Digital) Controller TCA alert configuration example  
+This example shows configuring the TCAs via XR CLI, however the TCAs could also 
+be configured using the appropriate YANG models.  
+
+The following configuration does the following: 
+
+- Enables TCA reporting for crossing the min threshold for Q-margin  
+- Changes default Q-margin min threshold to 5 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+controller CoherentDSP0/0/0/10
+ pm 30-sec fec report Q-margin min-tca enable
+ pm 30-sec fec threshold Q-margin min 500
+</pre> 
+</div> 
+
+You can see below TCA is now enabled for the min threshold for the 30-second
+bucket.  
+
+
+```
+RP/0/RP0/CPU0:ron-poc-8201-1#show controllers coherentDSP 0/0/0/10 pm current 30-sec fec
+Thu Feb 22 06:03:27.771 PST
+
+g709 FEC in the current interval [06:03:00 - 06:03:27 Thu Feb 22 2024]
+
+FEC current bucket type : Valid
+    EC-BITS   : 4326181146              Threshold : 111484000000           TCA(enable)  : YES
+    UC-WORDS  : 0                       Threshold : 5                      TCA(enable)  : YES
+
+                                      MIN       AVG        MAX      Threshold      TCA     Threshold     TCA
+                                                                       (min)     (enable)    (max)     (enable)
+PreFEC BER                     :   2.9E-04   3.1E-04   3.2E-04      0E-15        NO       0E-15        NO
+PostFEC BER                    :     0E-15     0E-15     0E-15      0E-15        NO       0E-15        NO
+Q[dB]                          :     10.60     10.63     10.70          0.00        NO        0.00        NO
+Q_Margin[dB]                   :      4.10      4.10      4.10          5.00        YES       0.00        NO
+Host-Intf-0-FEC-BER            :     0E-15   8.3E-14   2.3E-10      0E-15        NO       0E-15        NO
+Host-Intf-0-FEC-FERC           :     0E-15     0E-15     0E-15      0E-15        NO       0E-15        NO
+```
+
+
 ### TCA alert message example 
 The following will be shown in the system logs when a TCA is crossed. This
 example is when the Q-Margin has dropped below the min value of 5.0. All PM TCA
@@ -862,8 +933,6 @@ alarms will use the L1-PMENGINE-4-TCA nomenclature when being logged.
 ```
 RP/0/RP0/CPU0:2024 Feb  5 08:07:30.185 PST: optics_driver[192]: %L1-PMENGINE-4-TCA : Port  CoherentDSP0/0/0/10 reports FEC Q-MARGIN-MIN(NE) PM TCA with current value 4.10, threshold 5.00 in current 30-sec interval window
 ```
-
-
 
 # Monitoring DCO using Cisco Network Automation 
 
