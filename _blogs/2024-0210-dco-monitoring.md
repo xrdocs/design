@@ -159,10 +159,10 @@ electrical analog to an optical signal.
 While the DSP takes on many functions performed by photonic components in the
 past, we still need photonic components to send/receive light across fiber. The
 optical components within the DCO are similar to those found in non-DCO
-applications. Common components are the TLA (Tunable Laser Assembly) generating
-the signal along with TOFs (Tunable Optical Filter) and other pure photonic
-components such as splitters, combiners, and waveguides. In higher power optics,
-an integrated EDFA is used to amplify the signal before it leaves the DCO.   
+applications. Common components are the TLA (Tunable Laser Assembly) generating the signal along with 
+TOFs (Tunable Optical Filter) and other pure photonic components such as 
+splitters, combiners, and waveguides. In higher power optics, an integrated EDFA 
+is used to amplify the signal before it leaves the DCO.   
 
 ## Photonic Integrated Circuit (PIC) 
 
@@ -807,18 +807,20 @@ example given below the parent path is shown and then the path for retrieving
 the current dataset for the 30 second time period. "second30" can be replaced 
 with minute15, hour24, or flex-bin.   
 
-#### YANG data model for PM Engine Optical PM data 
+#### YANG data model for current or historical PM Engine Optical PM data 
 
 ```
 Cisco-IOS-XR-pmengine-oper:performance-management/optics
+Cisco-IOS-XR-pmengine-oper:performance-management-history/global/periodic/optics-history/optics-port-histories
 Cisco-IOS-XR-pmengine-oper:performance-management/optics/optics-ports/optics-port/optics-current/optics-second30/optics-second30-optics/optics-second30-optic 
 ``` 
 
-#### YANG data model for PM Engine Digital PM data  
+#### YANG data model for current or historical PM Engine Digital PM data  
 
 ```
-Cisco-IOS-XR-pmengine-oper:performance-management/otu/otu-ports/otu-port/otu-current/otu-second30/otu-second30fecs/otu-second30fec 
 Cisco-IOS-XR-pmengine-oper:performance-management/otu
+Cisco-IOS-XR-pmengine-oper:performance-management-history/global/periodic/otu-history 
+Cisco-IOS-XR-pmengine-oper:performance-management/otu/otu-ports/otu-port/otu-current/otu-second30/otu-second30fecs/otu-second30fec
 ``` 
 
 The data can also be retrieved using the following native YANG models and paths:  
