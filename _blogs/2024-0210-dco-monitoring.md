@@ -856,7 +856,7 @@ controller Optics0/0/0/10
 
 You can see below TCAs are now enabled for the appropriate parameters.  
 
-```
+```diff 
 RP/0/RP0/CPU0:ron-poc-8201-1#show controllers optics 0/0/0/10 pm current 30-sec optics 1
 Thu Feb 22 06:15:22.811 PST
 
@@ -895,7 +895,7 @@ The following configuration does the following:
 <div class="highlighter-rouge">
 <pre class="highlight">
 controller CoherentDSP0/0/0/10
- pm 30-sec fec report Q-margin min-tca enable
+ <font color=red>pm 30-sec fec report Q-margin min-tca enable</font> 
  pm 30-sec fec threshold Q-margin min 500
 </pre> 
 </div> 
