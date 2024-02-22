@@ -977,15 +977,18 @@ Health insights includes a built-in set of pre-defined KPIs under the
 "Layer1-Optics" category. These sensor paths can be used to monitor both DCO and 
 gray optics.
 
+
+#### L1 Optics Available PM Metrics  
 <img src="http://xrdocs.io/design/images/ron-hld/cnc-built-in-l1-optics.png" width="1000"/>
 
-<br>
+#### L1 Optics KPI Profile 
 <img src="http://xrdocs.io/design/images/ron-hld/cnc-built-in-l1-optics-kpi-profile.png" width="1000"/>
-<br> 
-L1 optics power data 
+
+#### L1 optics power data 
 <img src="http://xrdocs.io/design/images/ron-hld/cnc-l1-optics-data.png" width="1000"/>
 <br> 
-L1 optics temperature data 
+
+#### L1 optics temperature data 
 <img src="http://xrdocs.io/design/images/ron-hld/cnc-l1-optics-temp.png" width="1000"/>
 
 
