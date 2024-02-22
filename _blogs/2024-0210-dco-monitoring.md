@@ -981,6 +981,9 @@ gray optics.
 
 <br>
 <img src="http://xrdocs.io/design/images/ron-hld/cnc-built-in-l1-optics-kpi-profile.png" width="1000"/>
+<br> 
+L1 Optical power data 
+<img src="http://xrdocs.io/design/images/ron-hld/cnc-l1-optics-data.png" width="1000"/>
 
 
 
