@@ -216,7 +216,8 @@ considered an ideal range of values.
 The rest of the document goes into detail about the PM data available and how to
 monitor them.  These however are the key values which should be monitored.      
 
-- Optical Receive Power (RX Power)  
+- Totcal Optical Receive Power (RX Power) 
+- Optical Signal Receive Power (RX Signal Power)  
 - Q-Factor 
 - Q-Margin 
 
@@ -239,15 +240,30 @@ the default power for 400G mode is 0dBm. Changes in the TX power can help identi
 hardware issues. The TX power will fluctuate slightly but changes of more than 
 .2 dBm may indicate an issue.   
 
-### Optical Power - Receive  
+### Optical Power (Total) - Receive  
 Receive power, or RX power represents the strength of the optical signal
 entering the DCO from the line side. There is a direct correlation between the
 RX power and the quality of the signal. The DCO has a defined receiver
 sensitivity range. If the RX power drops below the minimum RX sensitivity value,
-it may not be able to process the incoming signal. It is difficult to give a specific 
-acceptable range for RX power since other impairments such as noise may also degrade 
-the signal even at acceptable RX power levels. However, in practice the signal should 
-always be above -20 dBm.  
+it may not be able to process the incoming signal. It is difficult to give a
+specific acceptable range for RX power since other impairments such as noise may
+also degrade the signal even at acceptable RX power levels. However, in practice
+the signal should always be above -20 dBm. The total optical power is measured
+at the ingress point into the optic.   
+
+**Note in IOS-XR the minimum reported power is -40dBm indicating there is no 
+signal present.  
+
+### Optical Power (Signal) - Receive
+Receive signal power represents the signal strength of the coherent channel the
+DCO is tuned to receive. it's important to represent both the total power and
+the signal power since total power indicates there is some optical signal being
+received from the far end, and the RX signal power indicates the correct wavelength 
+is being received. If the total RX power is in the normal range and the RX signal 
+power is very low it indicates a frequency configuration issue.    
+
+**Note in IOS-XR the minimum reported power is -40dBm indicating there is no 
+signal present.  
 
 ### Optical Signal to Noise Ratio 
 OSNR is one of the key PM values in monitoring an optical signal. Background noise is
@@ -401,7 +417,9 @@ list the instant PM data available via different methods.
 
 ### CLI "show controller optics" Optical layer PM data 
 As you can see below the PM data we discussed in the overview section 
-is shown when issuing the command.  
+is shown when issuing the command.  The "RX Power" is the total optical receive 
+power, the "RX Signal Power" is the power of the specific coherent channel the 
+DCO is tuned to receive.  
 
 <div class="highlighter-rouge">
 <pre class="highlight">
