@@ -328,7 +328,24 @@ in the polarization state or SOP (State of Polarization). The coherent DSP
 must compensate for these changes to properly decode the signal. The PCR is 
 measured in radians/second or rad/s since the state change is rotational. On 
 shorter fiber spans this value should be 0 but longer spans or poor fiber may 
-introduce higher values.   
+introduce higher values.  
+
+
+### General guidelines for acceptable values 
+The following represents the range of values for each optical PM metric and what 
+is considered a "good" value.  The "range" represents the range of reporting 
+on Cisco ZR/ZR+ DCO.   
+
+|Metric| Units | Range | Healthy range | Comment |    
+|-----| ------- |-------|-------|-------|  
+|Optical Power - Receive | dBm or mW | -33 to +15| -14 to +8 | High alarm is set to +10, low to -24 | 
+|Optical Signal Power - Receive | dBm or mW | -33 to +15 | -14 to +8 | High alarm is set to +10, low to -24 | 
+|Optical Signal Power - Transmit | dBm or mW | -15 to +5 | -12 to +2 | Healthy depends on DCO model and mode | 
+|OSNR | dB | 16.5 to 28.5 | need comment | Healthy range changes dependent on mode | 
+|CD | ps/nm | -100 to 100 | need comment |  |    
+|DGD | ps | -10 to 10| | need comment |  
+|PCR| rad/s | 0-50 | need comment | |  
+|PDL| dB | | |  
 
 ## Digital Layer PM Data 
 We've covered optical impairments in the analog optical domain. Ultimately any 
@@ -709,7 +726,7 @@ each time period.
 | 24h | 7 | 7d | 
 
 
-### Optics Controller PM metrics 
+### Optics Controller PM Engine metrics 
 The following table lists all of the available optics controller PM metrics 
 
 |Metric | Units | Definition | 
@@ -727,7 +744,7 @@ The following table lists all of the available optics controller PM metrics
 |FREQ_OFF|Mhz|Frequency offset, difference between expected and actual receive frequency| 
 |SNR|dB|Signal to noise ratio (not OSNR)| 
 
-### Coherent DSP Controller PM metrics 
+### Coherent DSP Controller PM Engine metrics 
 
 |Metric | Units | Definition | 
 |-----| ------- |-------| 
@@ -1066,6 +1083,12 @@ data as numeric data can be graphed. If the data is non-numeric it cannot be
 graphed but can be shown in a tabular format.   
 
 <img src="http://xrdocs.io/design/images/ron-hld/cnc-health-insights-dco-monitoring.png" width="1000"/>
+
+The following shows alerts triggered by our custom KPIs. A critical alarm is raised when the 
+Q-Factor of the DCO drops below .5 for a specific amount of time, and clears when the 
+Q-Factor returns to a nominal value.  
+
+<img src="http://xrdocs.io/design/images/ron-hld/cnc-qfactor-alarm.png" width="1000"/>
 
 # Additional Resources 
 
