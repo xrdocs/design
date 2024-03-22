@@ -1088,7 +1088,7 @@ The following shows alerts triggered by our custom KPIs. A critical alarm is rai
 Q-Factor of the DCO drops below .5 for a specific amount of time, and clears when the 
 Q-Factor returns to a nominal value.  
 
-<img src="http://xrdocs.io/design/images/ron-hld/cnc-qfactor-alarm.png" width="1000"/>
+<img src="http://xrdocs.io/design/images/ron-hld/cnc-qfactor-alarpng" width="1000"/>
 
 # Additional Resources 
 
