@@ -3,7 +3,7 @@ published: true
 date: '2025-10-01 15:22 -0600'
 title: Cisco Routed Optical Networking 
 author: Phil Bedard
-permalink: /blogs/latest-routed-optical-networking-hld-test  
+permalink: /blogs/latest-routed-optical-networking-hld
 excerpt: Routed Optical Networking 4.0  
 tags:
   - iosxr
@@ -11,14 +11,14 @@ tags:
   - optical  
   - ron 
   - routing 
-position: hidden 
+position: top 
 ---
 {% include toc %}
 
 
-### PDF Download 
+### PDF Download
 
-<https://github.com/ios-xr/design/blob/master/Routed-Optical-Networking/2024-05-01-cst-routed-optical-4_0.pdf> 
+<https://github.com/ios-xr/design/blob/master/Routed-Optical-Networking/2025-10-01-cst-routed-optical-4_0.pdf>
 
 # Revision History
 
@@ -120,10 +120,10 @@ optical line systems at a site level as opposed to managing individual nodes.
 COSM represents a single point of management for the optical site aggregating
 logging, alarm, and performance data for the single or multi-shelf node. When
 multiple physical shelves in a site run COSM it can be deployed in a HA
-configuration.    
+configuration.
 
 More information about COSM can be found later in this guide or at the following
-URL: 
+URL:
 
 <https://www.cisco.com/c/en/us/td/docs/optical/cosm/711x/installation/guide/b-cosm-install-guide-r7-11-x/get-started.html> 
 
@@ -136,7 +136,7 @@ support to SVO based NCS 2000 installations and adds additional network
 monitoring capabilities.  The standards-based TAPI 2.1 NBI remains interface
 with upstream network controllers. More information on CONC 25.1.2 can be found
 later in this document and at the following 
-URL: 
+URL:
 
 <https://www.cisco.com/c/en/us/support/optical-networking/optical-network-controller/series.html>
 

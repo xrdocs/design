@@ -3,7 +3,7 @@ published: true
 date: '2024-05-01 15:22 -0600'
 title: Cisco Routed Optical Networking 
 author: Phil Bedard
-permalink: /blogs/latest-routed-optical-networking-hld  
+permalink: /blogs/routed-optical-networking-hld-3  
 excerpt: Routed Optical Networking 3.0  
 tags:
   - iosxr
