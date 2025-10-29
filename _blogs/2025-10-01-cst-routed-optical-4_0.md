@@ -52,10 +52,10 @@ The 4.0 release of Routed Optical Networking introduces new industry-leading
 digital coherent optics and enhanced IP+optical automation. 
 
 
-## 100G QSFP28 tuneable DWDM optics
+## 100G QSFP28 tunable DWDM optics
 
 The DP01QS28-E20 and DP01QS28-E25 transceivers enhances the Routed Optical Networking solution by adding a 100G-only 
-tuneable optic which be used across both QSFP28 and QSFP-DD ports. This expands the support 
+tunable optic which be used across both QSFP28 and QSFP-DD ports. This expands the support 
 for Routed Optical Networking to devices with QSFP28 ports, unlocking new use cases across
 access and aggregation networks. 
 
@@ -294,10 +294,10 @@ The following modes are supported in Routed Optical Networking version
 |400G | 60.1 | 16QAM - OpenZR mode | 
 
 ### QSFP28 100G ZR DWDM transceiver **New for 4.0**
-The new Cisco DP01QS28-E20 and DP01QS28-E25 QSFP28 form factor 100G ZR tuneable
+The new Cisco DP01QS28-E20 and DP01QS28-E25 QSFP28 form factor 100G ZR tunable
 DWDM transceivers extend support of the solution to QSFP28 ports. This allows
 users to utilize digital coherent optics in lower bandwidth devices without
-QSFP-DD ports, extending potential applications. The optics are tuneable across
+QSFP-DD ports, extending potential applications. The optics are tunable across
 the C-band and support unamplified distances of approximately 80km and amplified
 distances up to 300km. The transceiver uses a baud rate of 27.95GBd, QPSK
 modulation, and industry standard SC-FEC.  The nominal launch power in all modes
