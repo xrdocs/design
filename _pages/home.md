@@ -15,11 +15,58 @@ date: null
       <div class="archive__item">
           <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
            margin-left: auto; margin-right: auto;">
+            <img src="{{ base_path }}/images/design_lp/ron-icon-new.png" alt="" />
+          </div>
+        <div class="archive__item-body">
+            <h2 class="archive__item-title">Routed Optical Networking Design 4.0&nbsp; 
+            <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
+            <div class="archive__item-excerpt" style="font-size: 0.65em;">
+              <p>Update to the Routed Optical Networking Design.  The 4.0 version of the design introduces Cisco new 400G 
+              Ultra Long Haul coherent optics, 100G QSFP28 coherent optics, and enhancements to our IP+Optical automation.     
+             </p>
+            </div>
+            <p>
+            <a href="{{ base_path }}/blogs/latest-routed-optical-networking-hld" 
+                  class="btn ">Routed Optical Networking 4.0 📖</a>
+                  </p>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="feature__wrapper">
+    <div class="feature__item--right">
+      <div class="archive__item">
+          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
+           margin-left: auto; margin-right: auto;">
+            <img src="{{ base_path }}/images/design_lp/asn-icon-new.png" alt="" />
+          </div>
+        <div class="archive__item-body">
+            <h2 class="archive__item-title">Agile Services Networking 1.1&nbsp; 
+            <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
+            <div class="archive__item-excerpt" style="font-size: 0.65em;">
+              <p>Read about Cisco's new Agile Services Networking network architecture, an evolved validated solution architecture enabling service providers to build agile modern networks in the AI era.
+             </p>
+            </div>
+            <p>
+            <a href="{{ base_path }}/blogs/latest-asn-metro-hld" 
+                  class="btn ">Agile Services Networking 1.1 📖</a>
+                  </p>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="feature__wrapper">
+    <div class="feature__item--right">
+      <div class="archive__item">
+          <div class="archive__item-teaser center" style="max-height: 300px; max-width: 300px;display: block;
+           margin-left: auto; margin-right: auto;">
             <img src="{{ base_path }}/images/design_lp/ron-icon.png" alt="" />
           </div>
         <div class="archive__item-body">
             <h2 class="archive__item-title">Routed Optical Networking Design 3.0&nbsp; 
-            <img src="{{ base_path }}/images/design_lp/updated.png" alt="" /></h2>
+            </h2>
             <div class="archive__item-excerpt" style="font-size: 0.65em;">
               <p>Update to the Routed Optical Networking Design.  The 3.0 version of the design introduces simplifies optical transport using the QDD Optical Line System, new 100G/400G P2P DCO optics, 
                  and many additions and enhancements to Cisco's automation portfolio managing IP+Optical networks.    
