@@ -129,10 +129,10 @@ Providers:
 
 ## Agile Metro high-level building blocks 
 
-### Cisco routers covering all operator use cases  
-### Advanced Network Operating Systems (NOS) 
-### Network Automation 
-### Architectural principles providing the basic building block for building agile, efficient, and scalable networks 
+- Cisco routers covering all operator use cases  
+- Advanced Network Operating Systems (NOS) 
+- Network Automation 
+- Architectural principles providing the basic building block for building agile, efficient, and scalable networks 
 
 ## Key Agile Metro features  
 
