@@ -525,24 +525,23 @@ Operators can solve most traffic engineering use cases with Flex-Algo. Capabilit
 
 #### Flex-Algo Metrics  
 
-Delay: 
-
+__Delay__  
 Delay utilizes the measured or statically configured delay of each link to compute an end to end lowest latency path. Delay values are computed or defined using SR Performance Measurement.   
 
-Generic:  
+__Generic__  
 The generic metric type is used by operators to build a custom topology based on their own metrics. The generic metric for each link is defined in the IS-IS configuration for each link. The Flex-Algo topology will only include nodes/links with the generic metric defined, and will follow the lowest cost path using those user-defined metrics. 
 TE: 
 The TE metric is an additional metric which can be assigned to each link. The TE metric is advertised in the standard IS-IS traffic engineering TLVs.  
 
 #### Flex-Algo Constraints 
 
-Affinity: 
+__Affinity__
 Affinity uses standard unidirectional traffic engineering affinities (groups) to include or exclude links from the topology. IOS-XR also supports reverse affinities, meaning if the affinity is being sent from node B to A, A will take that link into account when computing the Flex-Algo. One use case is if an affinity is being applied by the remote node on the link due to packet errors.  
 
-Minimum Bandwidth: 
+__Minimum Bandwidth__ 
 The minimum bandwidth metric is uses to prune links below a certain bandwidth value. This is useful for networks with a mix of high and low speed links to ensure traffic does not take a low speed path. An example is a network with 10G access rings connected to a higher speed aggregation network. High speed traffic between aggregation locations should never traverse the access rings, and this is easily achievable using the minimum bandwidth constraint. 
 
-Maximum Delay: 
+__Maximum Delay__ 
 Maximum delay uses the measured or statically set SR-PM delay values to prune high delay links from the network. While the delay metric will calculate the lowest delay path, this will ensure that path never takes high delay links.  
 
 #### Path Computation across SR Flex-Algo Network 
