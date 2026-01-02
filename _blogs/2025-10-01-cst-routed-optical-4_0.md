@@ -333,7 +333,7 @@ The following part numbers are used for Cisco's ZR400 and OpenZR+ MSA transceive
 
 |Standard|Part| 
 |--------|----|
-400ZR| QDD-400G-ZR-S| 
+|400ZR| QDD-400G-ZR-S| 
 |OpenZR+| QDD-400G-ZRP-S|
 |High Power OpenZR+| DP04QSDD-HE0|
 

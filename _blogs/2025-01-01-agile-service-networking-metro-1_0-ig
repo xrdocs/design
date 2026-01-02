@@ -65,17 +65,18 @@ see the overview High Level Design document at <https://xrdocs.io/design/blogs/l
 | Cisco Edge Protect DDoS | 25.2.1 |  
 | Cisco CX Edge Fabric NSO services | 1.0 |  
 
-  - Key technologies
+- Key technologies
+   - Packet transport and traffic engineering: Segment-Routing (SRv6 or SR-MPLS)
+   - Network Availability: TI-LFA/Anycast-SID
+   - Services: BGP-based L2 and L3 Virtual Private Network services
+   (EVPN and L3VPN/mVPN)
+   - Network Timing: G.8275.1 and G.8275.2
+   - IP and Optical Convergence: Routed Optical Networking using Cisco Digital Coherent Optics
+   - DDoS Protection: Cisco Edge Protect DDoS
+   - XGS-PON: Cisco Routed PON
+   - Network Automation: Cisco Crosswork Automation Family  
 
-      - Packet transport and traffic engineering: Segment-Routing (SRv6 or SR-MPLS)
-      - Network Availability: TI-LFA/Anycast-SID
-      - Services: BGP-based L2 and L3 Virtual Private Network services
-        (EVPN and L3VPN/mVPN)
-      - Network Timing: G.8275.1 and G.8275.2
-      - IP and Optical Convergence: Routed Optical Networking using Cisco Digital Coherent Optics
-      - DDoS Protection: Cisco Edge Protect DDoS
-      - XGS-PON: Cisco Routed PON
-      - Network Automation: Cisco Crosswork Automation Family  
+<br> 
 
 
 # Agile Services Networking use cases
